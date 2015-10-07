@@ -1,0 +1,112 @@
+// Helper styles
+
+.gi-desktop {
+  @include mobile {
+    display: none;
+  }
+}
+
+.gi-mobile {
+  display: none;
+  @include mobile {
+    display: block
+  }
+}
+
+%button {
+  display: inline-block;
+  padding: 0.4em 0.8em;
+  border: 1px solid $red;
+  border-radius: 0.4em;
+  font-size: 1.4em;
+  background-color: none;
+  color: $red;
+  @include transition (all 0.1s ease-out);
+  &:hover {
+    cursor: pointer;
+    background-color: $red;
+    color: white;
+    @include transition (all 0.1s ease-in);
+    a {
+      color: #fff;
+      @include transition (all 0.1s ease-out);
+    }
+  }
+  a {
+    color: $red;
+    text-decoration: none;
+  }
+}
+
+%input {
+  display: inline-block;
+  padding: 0.3em 0.5em;
+  border: 1px solid $text;
+  border-radius: 0.4em;
+  font-size: 1.3em;
+  background-color: none;
+  color: $text;
+  @include transition (all 0.1s ease-out);
+  @include placeholder {
+    font-family: $font-regular;
+  }
+  &:focus {
+    cursor: pointer;
+    color: $text;
+    box-shadow: inset 0px 0px 0px 1px $text;
+    outline: none;
+    @include transition (all 0.1s ease-in);
+    @include placeholder {
+      opacity: 0.4;
+    }
+  }
+}
+
+.button {
+  @extend %input;
+  background: none;
+  width: 100%;
+  font-size: 1.8em;
+  text-align: center;
+  cursor: pointer;
+  &:hover {
+    color: $red;
+    border: 1px solid $red;
+  }
+  &:active {
+    color: white;
+    background-color: $red;
+  }
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  &:after {
+    @include user-select(none);
+    pointer-events: none;
+    content: "";
+    height: 0;
+    width: 0;
+    @include triangle(10px 8px, $text, down);
+    position: absolute;
+    top: 50%;
+    margin-top: -3px;
+    right: 7px;
+    @include transition (all 0.1s ease-out);
+  }
+  &:hover:after {
+    @include transition (all 0.1s ease-in);
+    @include triangle(10px 8px, $red, down);
+  }
+}
+
+.help-toggle {
+  color: $lightgray;
+  padding-left: 0.2em;
+  cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: $red;
+  }
+}

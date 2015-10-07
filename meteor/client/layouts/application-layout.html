@@ -1,0 +1,26 @@
+<template name="applicationLayout">
+
+  <header class="header-edit">
+    {{ > header }}
+  </header>
+
+  <section>
+
+    <article class="main-area">
+      {{ > yield "type" }}
+      {{ > yield "preview" }}
+      {{ > yield "output" }}
+      {{ > yield "overlay" }}
+    </article>
+
+    <aside class="options-area">
+      {{ > yield "aside"}}
+    </aside>
+
+  </section>
+
+  <footer>
+    {{ > footer }}
+  </footer>
+
+</template>

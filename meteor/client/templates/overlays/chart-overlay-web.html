@@ -1,0 +1,65 @@
+<template name="chartOverlayWeb">
+
+  <div class="overlay-header">
+    <h3>Web export</h3>
+      <div class="overlay-close">&times;</div>
+  </div>
+
+  <div class="overlay-web">
+
+    <div class="web-export web-export-web">
+      <h3>Web</h3>
+
+      <p>Web images are sized at 460px, 620px, and 940px wide, and can be 3&times;2, 16&times;9, or 1&times;1.</p>
+
+      <form class="web-export-picker">
+
+        <div class="select-wrapper">
+          <select type="choice" name="width" class="select-web-export-width">
+            <option value="460">460px</option>
+            <option value="620">620px</option>
+            <option value="940">940px</option>
+          </select>
+        </div>
+
+        <div class="select-wrapper">
+          <select type="choice" name="ratio" class="select-web-export-ratio">
+            <option value="67%">3&times;2</option>
+            <option value="56.25%">16&times;9</option>
+            <option value="100%">1&times;1</option>
+            <option value="150%">2&times;3</option>
+            <option value="200%">2&times;1</option>
+          </select>
+        </div>
+
+        <input class="web-export-submit" value="Download" type="submit">
+
+      </form>
+
+    </div>
+
+    <div class="web-export web-export-social">
+      <h3>Social</h3>
+
+      <p>Social images are sized to match the aspect ratios of their respective platforms&rsquo; &ldquo;cards&rdquo;.</p>
+
+      <div class="web-export-button" data-width="440" data-scale="2" data-ratio="50%" data-descriptor="twitter">Twitter</div>
+
+      <div class="web-export-button" data-width="472" data-scale="2" data-ratio="83%" data-descriptor="facebook">Facebook</div>
+
+    </div>
+
+    <div class="web-export web-export-video">
+      <h3>Video</h3>
+
+      <p>Video images are sized at either 1080p (regular HD) or 2160p (4K HD), with an aspect ratio of 16&times;9.</p>
+
+      <div class="web-export-button" data-width="1920" data-scale="1" data-ratio="56.25%" data-descriptor="video">1080p</div>
+
+      <div class="web-export-button" data-width="1920" data-scale="2" data-ratio="56.25%" data-descriptor="video">2160p</div>
+
+    </div>
+
+  </div>
+
+</template>

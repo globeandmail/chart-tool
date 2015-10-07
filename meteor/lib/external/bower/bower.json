@@ -1,0 +1,12 @@
+{
+  "name": "billboard",
+  "version": "0.0.1",
+  "dependencies": {
+    "d3": "3.5.3",
+    "d3-tip": "0.6.6"
+  },
+  "private": true,
+  "resolutions": {
+    "d3": "3.5.3"
+  }
+}

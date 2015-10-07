@@ -1,0 +1,16 @@
+.currently-editing {
+  h4 {
+    margin: 0;
+    border-bottom: 1px solid $text;
+    margin-bottom: 0.6em;
+  }
+  ul {
+    margin: 0;
+  }
+  li {
+    padding-bottom: 0.2em;
+  }
+  .current {
+    font-family: $font-bold;
+  }
+}

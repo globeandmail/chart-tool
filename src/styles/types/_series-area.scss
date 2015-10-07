@@ -1,0 +1,51 @@
+.#{$prefix}area {
+  .#{$prefix}series_group .#{$prefix}line {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .#{$prefix}series_group .#{$prefix}fill {
+    fill: $grey4;
+  }
+  .#{$prefix}series_group.#{$prefix}multiple {
+    .#{$prefix}line.#{$prefix}highlight {
+      stroke: #fff;
+      stroke-width: 2px;
+    }
+    @for $i from 1 through 6 {
+      .#{$prefix}line-#{$i} {
+        stroke: white;
+        stroke-width: 2px;
+      }
+    }
+  }
+  .#{$prefix}stacked .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}area.#{$prefix}line {
+    fill: none;
+    stroke: white;
+    stroke-width: 3px;
+  }
+}
+
+.#{$prefix}area.stacked .#{$prefix}series_group .#{$prefix}line {
+  stroke-width: 3px;
+}
+
+.#{$prefix}rob .#{$prefix}line.#{$prefix}highlight,
+.#{$prefix}series.#{$prefix}highlight .#{$prefix}line {
+  stroke: $red;
+  stroke-width: 2px;
+}
+
+.#{$prefix}investor .#{$prefix}line.#{$prefix}highlight,
+.#{$prefix}series.#{$prefix}highlight .#{$prefix}line {
+  stroke: $orange;
+  stroke-width: 2px;
+}
+
+.#{$prefix}rob .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
+  fill: $red;
+}
+
+.#{$prefix}investor .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
+  fill: $orange;
+}

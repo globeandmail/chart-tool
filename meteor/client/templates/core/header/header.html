@@ -1,0 +1,27 @@
+<template name="header">
+  <div class="header-edit">
+
+    <div class="topbar"></div>
+    <div class="header-baseline">
+      <h1 class="help"><a href="http://confluence.colo.theglobeandmail.com/display/ed/Chart+Tool" target="_blank">Help</a></h1>
+
+      <div class="header-grid">
+        <div class="chart-slug">
+          <input type="text" name="slug" class="input-slug-edit" placeholder="{{ slug }}" value="{{ slug }}">
+          <div class="edit-indicator">Edit</div>
+        </div>
+
+        <div class="header-edit-nav">
+          <div class="header-list"><a href="/list">Archive</a></div>
+          <div class="header-new"><a href="/new">New chart</a></div>
+        </div>
+      </div>
+
+      <div class="saved-indicator">
+        <span class="save-state"></span>
+        <span class="save-icon"><img src="/images/save-icon.svg"></span>
+      </div>
+
+    </div>
+  </div>
+</template>

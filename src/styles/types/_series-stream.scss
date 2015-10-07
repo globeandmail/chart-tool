@@ -1,0 +1,17 @@
+.#{$prefix}series_group .#{$prefix}stream-series {
+  fill: $grey4;
+}
+
+.gc-rob .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
+  fill: $red;
+}
+
+.gc-investor .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
+  fill: $orange;
+}
+
+.#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}line {
+  fill: none;
+  stroke: white;
+  stroke-width: 3px;
+}

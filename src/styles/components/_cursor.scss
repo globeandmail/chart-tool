@@ -1,0 +1,27 @@
+.cursor {
+  opacity:0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.cursor.active {
+  opacity: 1;
+}
+
+.cursor line {
+  stroke: #000;
+  stroke-dasharray: 1, 2;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cursor.active line {
+  opacity: 1;
+}
+
+.cursor .label {
+	font-family: 'GMSanC';
+  font-size: 14px;
+}

@@ -1,0 +1,58 @@
+// These typefaces are copyrighted to The Globe and Mail; please don't copy them
+
+$fontpath: "http://beta.images.theglobeandmail.com/media/www/fonts";
+
+// pratt light
+@font-face {
+  font-family: 'PrattLight';
+  src: url('#{$fontpath}/pratt_light-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt_light-webfont.woff') format('woff'),
+    url('#{$fontpath}/pratt_light-webfont.ttf') format('truetype'),
+    url('#{$fontpath}/pratt_light-webfont.svg#pratt-light') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// pratt regular
+@font-face {
+  font-family: 'PrattRegular';
+  src: url('#{$fontpath}/pratt-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt-webfont.woff?v3') format('woff'),
+    url('#{$fontpath}/pratt-webfont.ttf?v3') format('truetype'),
+    url('#{$fontpath}/pratt-webfont.svg#webfont2bFOq9gT?v3') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// pratt bold
+@font-face {
+  font-family: 'PrattBold';
+  src: url('#{$fontpath}/pratt_bold-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt_bold-webfont.woff') format('woff'),
+    url('#{$fontpath}/pratt_bold-webfont.ttf') format('truetype'),
+    url('#{$fontpath}/pratt_bold-webfont.svg#pratt_bold-webfont') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// pratt black
+@font-face {
+  font-family: 'PrattBlack';
+  src: url('#{$fontpath}/pratt_black-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt_black-webfont.woff') format('woff'),
+    url('#{$fontpath}/pratt_black-webfont.ttf') format('truetype'),
+    url('#{$fontpath}/pratt_black-webfont.svg#pratt_blackregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// font-stack
+
+$font-light: 'PrattLight', Helvetica, sans-serif;
+$font-regular: 'PrattRegular', Helvetica, sans-serif;
+$font-bold: 'PrattBold', Helvetica, sans-serif;
+$font-black: 'PrattBlack', Helvetica, sans-serif;

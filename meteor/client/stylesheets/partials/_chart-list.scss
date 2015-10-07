@@ -1,0 +1,102 @@
+// chart-list and chart-entry
+
+.search, .charts-list, .chart-single, .charts-list_new {
+  @include row();
+  @include shift(5);
+  @include span-columns(14);
+}
+
+.search {
+  margin-bottom: 4em;
+  position: relative;
+  input {
+    font-size: 2em;
+    width: 100%;
+    @extend %input;
+  }
+  ul {
+    position: absolute;
+    padding: 0.5em;
+    background-color: rgba(255,255,255,.95);
+    width: 100%;
+  }
+  a {
+    color: $text;
+    text-decoration: none;
+  }
+  li {
+    padding: 0;
+    margin-bottom: 0.4em;
+    font-size: 2em;
+    border-bottom: 1px solid rgba(255,255,255,0);
+    color: $text;
+    @include transition (all 0.15s ease-out);
+    &:hover {
+      border-bottom: 1px solid $red;
+      color: $red;
+      @include transition (all 0.15s ease-in);
+    }
+  }
+}
+
+.chart-entry {
+  margin-bottom: 6em;
+  img {
+    width: 100%;
+  }
+  ul {
+    font-size: 1.4em;
+    li {
+      padding-bottom: 0.3em;
+    }
+    span {
+      font-family: $font-bold;
+    }
+  }
+}
+
+.top-line {
+  display: block;
+  @include clearfix;
+  margin-bottom: 0.6em;
+  .slug, .show, .edit {
+    display: block;
+    font-size: 2em;
+  }
+  .slug {
+    float: left;
+    font-family: $font-bold;
+  }
+  .chart-links {
+    float: right;
+  }
+  .show, .edit{
+    display: inline;
+    padding-left: 0.4em;
+    a {
+      text-decoration: none;
+      color: $verylightgray;
+      @include transition (all 0.1s ease-out);
+      &:hover {
+        color: $red;
+        @include transition (all 0.1s ease-in);
+      }
+    }
+  }
+}
+
+.charts-list_new {
+  text-align: right;
+  padding: 0 0.1em 0.5em 0;
+  display: inline;
+  font-size: 1.4em;
+  a {
+    text-decoration: none;
+    color: $verylightgray;
+    @include transition (all 0.1s ease-out);
+    &:hover {
+      color: $red;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+}

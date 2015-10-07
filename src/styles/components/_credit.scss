@@ -1,0 +1,9 @@
+.#{$prefix}chart_source, .#{$prefix}chart_credit {
+  font-family: $utility-font;
+  font-size: $utility-size;
+  padding-top: 2px;
+  padding-left: 0;
+  display: inline-block;
+  min-width: 50px;
+  text-transform: uppercase;
+}

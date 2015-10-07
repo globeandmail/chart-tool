@@ -1,0 +1,193 @@
+<template name="chartEditAside">
+
+  {{ > yield "status" }}
+
+  <div class="edit-box">
+    <h3>Data</h3>
+
+    <div class="unit-edit edit-box_toggle edit-box_active" data-state="visible">
+
+      <div class="unit-edit">
+        <h4>Data</h4>
+        <textarea type="text" name="pasteData" placeholder="Paste your spreadsheet data here" class="input-data-edit">{{ data }}</textarea>
+      </div>
+
+      {{ #if isTimeSeries }}
+        <div class="unit-edit unit-edit-time time-format-edit">
+          <h4>Date format <a href="#" class="help-toggle help-date-construction">?</a></h4>
+          <div class="select-wrapper">
+            <select class="select-date-construction">
+              <option value="%Y-%m-%d" selected="{{ dateSelected '%Y-%m-%d' }}">YYYY-MM-DD</option>
+              <option value="%Y-%d-%m" selected="{{ dateSelected '%Y-%d-%m' }}">YYYY-DD-MM</option>
+              <option value="%y-%m-%d" selected="{{ dateSelected '%y-%m-%d' }}">YY-MM-DD</option>
+              <option value="%y-%d-%m" selected="{{ dateSelected '%y-%d-%m' }}">YY-DD-MM</option>
+              <option value="%m-%d-%Y" selected="{{ dateSelected '%m-%d-%Y' }}">MM-DD-YYYY</option>
+              <option value="%m-%e-%Y" selected="{{ dateSelected '%m-%e-%Y' }}">MM-D-YYYY</option>
+              <option value="%m-%d-%y" selected="{{ dateSelected '%m-%d-%y' }}">MM-DD-YY</option>
+              <option value="%d-%m-%Y" selected="{{ dateSelected '%d-%m-%Y' }}">DD-MM-YYYY</option>
+              <option value="%d-%m-%y" selected="{{ dateSelected '%d-%m-%y' }}">DD-MM-YY</option>
+              <option value="%Y" selected="{{ dateSelected '%Y' }}">YYYY</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="unit-edit unit-edit-time time-hours-edit">
+          <h4>Hours <a href="#" class="help-toggle help-time-hours-edit">?</a></h4>
+          <input class="input-checkbox-hours" type="checkbox" name="Hours" checked="{{ hasHours }}">
+        </div>
+
+        <div class="unit-edit">
+          <h4>Your dates should match: <a href="#" class="help-toggle help-date-calc">?</a></h4>
+          <div class="date-calculation">{{ dateCalc }}</div>
+        </div>
+
+      {{ /if }}
+
+      <div class="unit-edit index-edit">
+        <h4>Index <a href="#" class="help-toggle help-index-edit">?</a></h4>
+        <input type="number" name="index" placeholder="100" class="input-index input-field" value="{{ index }}">
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="edit-box">
+    <h3>X-axis</h3>
+    <div class="unit-edit edit-box_toggle" data-state="hidden">
+
+      {{ #if isTimeSeries }}
+        {{ #if xAxFormatCustom }}
+          <div class="x-axis-format-custom">
+            <input type="text" name="custom-date" class="input-custom-x input-field" value="{{ xAxCustom }}" placeholder="Custom format">
+            <a href="#" class="help-toggle help-x-axis-custom">?</a>
+          </div>
+        {{ /if }}
+        <div class="unit-edit ordinal-edit">
+          <h4>Use ordinal scale <a href="#" class="help-toggle help-ordinal">?</a></h4>
+          <input class="input-checkbox-ordinal" type="checkbox" name="isOrdinal" checked="{{ isOrdinal 'true' }}">
+        </div>
+      {{ /if }}
+
+      <div class="unit-edit unit-edit-half x-nice-edit">
+        <h4>Niceify <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
+        <input class="input-checkbox-x-nice" type="checkbox" name="xNice" checked="{{ xNice }}">
+      </div>
+
+      <div class="unit-edit unit-edit-half unit-edit-hide x-rescale-edit">
+        <h4>Rescale <a href="#" class="help-toggle help-x-rescale-edit">?</a></h4>
+        <input class="input-checkbox-x-rescale" type="checkbox" name="xRescale" checked="{{ xRescale }}">
+      </div>
+
+    </div>
+  </div>
+
+  <div class="edit-box">
+    <h3>Y-axis</h3>
+    <div class="edit-box_toggle" data-state="hidden">
+
+      <div class="unit-edit">
+        <h4>Formatting</h4>
+        <div class="y-prefix-edit">
+          <input type="text" name="prefix" placeholder="$" class="input-prefix-y input-field" value="{{ y_axis.prefix }}">
+        </div>
+
+        <div class="y-formatval-edit">
+          <div class="select-wrapper">
+            <select class="select-formatval-y">
+              <option value="comma" selected="{{ yAxisFormatSelected 'comma' }}">1,234</option>
+              <option value="general" selected="{{ yAxisFormatSelected 'general' }}">1234</option>
+              <!-- <option value="si" selected="{{ yAxisFormatSelected 'si' }}">1.2m</option> -->
+              <option value="round1" selected="{{ yAxisFormatSelected 'round1' }}">12.3</option>
+              <option value="round2" selected="{{ yAxisFormatSelected 'round2' }}">12.34</option>
+              <option value="round3" selected="{{ yAxisFormatSelected 'round3' }}">12.345</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="y-suffix-edit">
+          <input type="text" name="suffix" placeholder="%" class="input-suffix-y input-field" value="{{ y_axis.suffix }}">
+        </div>
+      </div>
+
+      <div class="unit-edit y-axisval-edit">
+        <h4>Custom range</h4>
+        <span>
+        {{ #if isNotStackableExpandable }}
+          <input type="number" name="min" placeholder="Min" class="input-min-y input-field" value="{{ y_axis.min }}">
+          <span class="axisval-to"> to </span>
+        {{ /if }}
+          <input type="number" name="max" placeholder="Max" class="input-max-y input-field" value="{{ y_axis.max }}">
+        </span>
+      </div>
+
+      <div class="unit-edit y-ticks-edit">
+        <h4>Ticks <a href="#" class="help-toggle help-y-ticks-edit">?</a></h4>
+        <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-y input-field" value="{{ y_axis.ticks }}">
+      </div>
+
+      <div class="unit-edit unit-edit-half y-nice-edit">
+        <h4>Niceify <a href="#" class="help-toggle help-y-nice-edit">?</a></h4>
+        <input class="input-checkbox-y-nice" type="checkbox" name="yNice" checked="{{ yNice }}">
+      </div>
+
+      <div class="unit-edit unit-edit-half y-rescale-edit">
+        <h4>Rescale <a href="#" class="help-toggle help-y-rescale-edit">?</a></h4>
+        <input class="input-checkbox-y-rescale" type="checkbox" name="yRescale" checked="{{ yRescale }}">
+      </div>
+
+    </div>
+  </div>
+
+  <div class="edit-box">
+    <h3>Styling</h3>
+    <div class="edit-box_toggle" data-state="hidden">
+
+      <div class="unit-edit color-edit">
+        <h4>Pick a colour palette</h4>
+        <form action="" class="color-radios">
+          <ul>
+            <li>
+              <input id="colorRob" type="radio" name="color" value="rob" class="input-radio input-radio-rob" checked="{{ classChecked 'rob' }}">
+              <label for="colorRob">News &amp; ROB</label>
+            </li>
+            <li>
+              <input id="colorInvestor" type="radio" name="color" value="investor" class="input-radio input-radio-investor" checked="{{ classChecked 'investor' }}">
+              <label for="colorInvestor">Globe Investor</label>
+            </li>
+          </ul>
+        </form>
+      </div>
+
+      {{ #if isStackableExpandable }}
+        <div class="unit-edit stacked-edit">
+          <h4>Stacked? <a href="#" class="help-toggle help-stacked">?</a></h4>
+          <input class="input-checkbox-stacked" type="checkbox" name="isStacked" checked="{{ isStacked 'true' }}">
+        </div>
+      {{ /if }}
+
+      {{ #if isTimeSeries }}
+        <div class="unit-edit interpolation-edit">
+          <h4>Interpolation <a href="#" class="help-toggle help-interpolation">?</a></h4>
+          <div class="select-wrapper">
+            <select class="select-interpolation">
+              <option value="linear" selected="{{ interpSelected 'linear' }}">Linear</option>
+              <option value="step-before" selected="{{ interpSelected 'step-before' }}">Step-before</option>
+              <option value="step-after" selected="{{ interpSelected 'step-after' }}">Step-after</option>
+              <option value="monotone" selected="{{ interpSelected 'monotone' }}">Monotone</option>
+              <option value="cardinal" selected="{{ interpSelected 'cardinal' }}">Cardinal</option>
+            </select>
+          </div>
+        </div>
+      {{ /if }}
+
+      <div class="unit-edit tips-edit">
+        <h4>Show tips? <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
+        <input class="input-checkbox-tips" type="checkbox" name="Tips" checked="{{ options.tips }}">
+      </div>
+
+    </div>
+
+  </div>
+
+</template>

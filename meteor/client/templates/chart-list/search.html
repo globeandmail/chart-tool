@@ -1,0 +1,24 @@
+<template name="searchBox">
+  <div class="search">
+    {{ > esInput index="charts" placeholder="Search…" class="input-search" }}
+
+    {{#ifEsIsSearching index="charts"}}
+      <ul class="search-results">
+        <li>Searching&hellip;</li>
+      </ul>
+    {{else}}
+      <ul class="search-results">
+        {{ #esEach index="charts" }}
+          <a href="/chart/{{ _id }}" class="derp"><li>{{ slug }}</li></a>
+        {{ /esEach }}
+      </ul>
+    {{/ifEsIsSearching}}
+
+    {{#ifEsHasNoResults index="charts"}}
+      <ul class="search-results">
+        <li>No results found.</li>
+      </ul>
+    {{/ifEsHasNoResults}}
+
+  </div>
+</template>

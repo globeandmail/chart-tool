@@ -1,0 +1,25 @@
+# Meteor packages used by this project, one per line.
+# Check this file (and the other files in this directory) into your repository.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-platform
+mquandalle:bower
+jparker:crypto-md5
+jparker:crypto-core
+iron:router
+fourseven:scss@=1.0.0
+jquery
+
+
+jparker:crypto-base64
+percolate:momentum
+classcraft:meteor-wkhtmltopdf
+kevohagan:sweetalert
+matteodem:easy-search
+meteorhacks:kadira
+meteorhacks:zones
+tmeasday:presence
+http
+d3js:d3

@@ -1,0 +1,20 @@
+.gi-credit {
+  border-top: 1px solid #dedede;
+  padding-top: 2px;
+  font-family: Verdana, sans serif;
+  text-transform: uppercase;
+  text-align: left;
+  font-size: 10px;
+  color: $verylightgray;
+  margin-bottom: 20px;
+  @include mobile {
+    font-size: 13px;
+  }
+  a {
+    color: $verylightgray;
+    text-decoration: none;
+    &:hover {
+      color: $red;
+    }
+  }
+}

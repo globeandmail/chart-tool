@@ -1,0 +1,20 @@
+<template name="chartShow">
+  <div class="chart-entry">
+    <div class="top-line">
+      <div class="slug">{{ slug }}</div>
+      <div class="chart-links">
+        {{ #if isList }}
+        <div class="show"><a href="/chart/{{ _id }}">Show</a></div>
+        {{ /if }}
+        <div class="edit"><a href="/chart/edit/{{ _id }}">Edit</a></div>
+      </div>
+    </div>
+    <img src="{{ img }}">
+    <ul>
+      <li><span>ID:</span> {{ _id }}</li>
+      <li><span>Created:</span> {{ createdAt }}</li>
+      <li><span>Last edited:</span> {{ lastEdited }}</li>
+      <li><span>MD5:</span> {{ md5 }}</li>
+    </ul>
+  </div>
+</template>

@@ -1,0 +1,51 @@
+.#{$prefix}axis path {
+  display: none;
+}
+
+.#{$prefix}yAxis .#{$prefix}minor line {
+  stroke: $stroke-color;
+  stroke-dasharray: 1, 3;
+  shape-rendering: crispEdges;
+}
+
+.#{$prefix}axis-group g.tick line {
+  stroke: $stroke-color;
+}
+
+.#{$prefix}yAxis g.tick text {
+  text-anchor: end !important;
+}
+
+.#{$prefix}axis-group path {
+  shape-rendering: crispEdges;
+  stroke: $stroke-color;
+}
+
+.#{$prefix}axis-group text {
+  font-size: $utility-size;
+  font-family: $utility-font;
+}
+
+.#{$prefix}axis-group path {
+  shape-rendering: crispEdges;
+  stroke: $stroke-color;
+}
+
+.#{$prefix}axis-group .major-tick line  {
+  display: inline;
+  stroke: $stroke-color;
+}
+
+.last-tick-hide {
+  display: none;
+}
+
+.#{$prefix}axis-group path.domain {
+  display: none;
+}
+
+.#{$prefix}zero-line {
+  stroke-width: 1px;
+  stroke: #333;
+  stroke-linecap: square;
+}

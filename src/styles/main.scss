@@ -1,0 +1,34 @@
+@import "./settings/colors";
+@import "./settings/fonts";
+@import "./settings/settings";
+
+@import "./components/header";
+@import "./components/axis";
+@import "./components/credit";
+@import "./components/tips";
+
+@import "./types/series-line";
+@import "./types/series-area";
+@import "./types/series-bar";
+@import "./types/series-stream";
+@import "./types/series-column";
+
+// @import "debug";
+
+.#{$prefix}bg {
+	fill: white;
+}
+
+.#{$prefix}chart_svg {
+  display: block;
+}
+
+.#{$prefix}chart {
+  width: $width;
+  height: auto;
+  line-height: 1.4em;
+  font-size: $utility-size;
+  background-color: white;
+  font-family: $utility-font;
+  margin: $margin;
+}

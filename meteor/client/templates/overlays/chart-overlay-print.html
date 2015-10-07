@@ -1,0 +1,65 @@
+<template name="chartOverlayPrint">
+
+  <div class="overlay-header">
+    <h3>Print export</h3>
+      <div class="overlay-close">&times;</div>
+  </div>
+
+  <div class="overlay-print">
+
+    <div class="print-export-preview">
+      <h3>Preview</h3>
+      <p>A preview of your exported chart. Note that type will seem small since it&rsquo;s set for print.</p>
+      <div class="print-export-preview-chart"></div>
+    </div>
+
+    <div class="print-export-options">
+      <h3>Export</h3>
+
+      <p>Print charts can be exported at 1col, 2col, 3col and 4col sizes. Select a width (and optionally a line depth), then download your print-ready hi-res JPG or editable PDF.</p>
+
+      {{ #with print_data }}
+
+        <form class="print-export-form" action="/chart/pdf/download/{{ _id }}" method="post" enctype="multipart/form-data">
+
+          <ul>
+            <li>
+              <input name="columns" id="print-1col" type="radio" value="1col" class="input-radio" checked="{{ isChecked '1col' }}">
+              <label for="print-1col">1 column</label>
+            </li>
+            <li>
+              <input name="columns" id="print-2col" type="radio" value="2col" class="input-radio" checked="{{ isChecked '2col' }}">
+              <label for="print-2col">2 columns</label>
+            </li>
+            <li>
+              <input name="columns" id="print-3col" type="radio" value="3col" class="input-radio" checked="{{ isChecked '3col' }}">
+              <label for="print-3col">3 columns</label>
+            </li>
+            <li>
+              <input name="columns" id="print-4col" type="radio" value="4col" class="input-radio" checked="{{ isChecked '4col' }}">
+              <label for="print-4col">4 columns</label>
+            </li>
+
+            <li>
+              <h4>Optional</h4>
+            </li>
+
+            <li>
+              <input name="lines" id="print-lines" type="number" value="{{ print.lines }}" class="input-field input-lines" placeholder="20">
+              <label for="print-lines">Lines</label>
+            </li>
+
+          </ul>
+
+          <input class="print-export-button_pdf" value="Generate Editable PDF" type="button">
+
+        </form>
+
+      {{ /with }}
+
+    </div>
+
+
+  </div>
+
+</template>

@@ -1,0 +1,18 @@
+<template name="chartEditEmbed">
+{{{ angleBracket }}}!-- CHART TOOL v{{ version }}-{{ build }} -->
+{{{ angleBracket }}}!-- edited: {{ lastEdited }} -->
+{{{ angleBracket }}}!-- slug: {{ slug }} -->
+<div class="{{ prefix }}chart" data-chartid="{{ prefix }}{{ _id }}">
+  <script>
+    (function(root) {
+      var data = {{ embedJSON }};
+      root.__charttool = root.__charttool || [];
+      root.__charttool.push({id: '{{ prefix }}{{ _id }}', data: data});
+    })(this);
+  </script>
+  {{{ angleBracket }}}!--[if IE]>
+    <img src="{{ img }}">
+  {{{ angleBracket }}}![endif]-->
+</div>
+
+</template>

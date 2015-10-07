@@ -1,0 +1,8 @@
+<template name="chartList">
+  {{ > searchBox }}
+  <div class="charts-list">
+    {{ #each chartEntries }}
+      {{ > chartShow }}
+    {{ /each }}
+  </div>
+</template>

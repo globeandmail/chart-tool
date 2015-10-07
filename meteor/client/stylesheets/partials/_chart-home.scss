@@ -1,0 +1,60 @@
+// specific to the "home" view
+
+.chart-home {
+  margin-top: 3em;
+  @include span-columns(18);
+  @include shift(3);
+}
+
+.welcome {
+  margin: 0;
+  font-size: 4.2em;
+  font-family: $font-light;
+  letter-spacing: -3px;
+  text-align: center;
+  text-rendering: optimizeLegibilty;
+  border-bottom: 2px solid lighten($lightgray, 15%);
+  margin-bottom: 0.4em;
+}
+
+h2 {
+  font-size: 1.6em;
+  text-align: center;
+  margin-bottom: 1.3em;
+}
+
+.button-pick {
+  margin: 0 auto;
+  display: block;
+}
+
+.button-home {
+  width: 70%;
+  margin: 0 auto 0.7em auto;
+  padding: 0.6em 0;
+  border-radius: 0.5em;
+  display: block;
+  a {
+    color: $text;
+    text-decoration: none;
+    font-weight: normal;
+  }
+  &:hover {
+    background-color: $red;
+    a {
+      color: white;
+    }
+  }
+}
+
+.coming-soon {
+  font-size: 1.3em;
+  padding: 0;
+  margin: 2.4em 0 0.8em 0;
+  text-align: center;
+}
+
+.inactive {
+  opacity: 0.35;
+  pointer-events: none;
+}
