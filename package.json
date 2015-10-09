@@ -35,6 +35,10 @@
     "mongo",
     "globe"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:globeandmail/chart-tool.git"
+  },
   "contributors": [{
     "author": "Tom Cardoso",
     "email": "tcardoso@globeandmail.com"
