@@ -1,7 +1,7 @@
 var settings = require("./chart-tool-settings").xAxisTicks;
 
 var xAxisSettings = {
-  diplay: true,
+  display: true,
   scale: "time",
   ticks: "auto",
   orient: "bottom",

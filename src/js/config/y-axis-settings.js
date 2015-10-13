@@ -1,8 +1,7 @@
 var settings = require("./chart-tool-settings");
 
 var yAxisSettings = {
-
-  diplay: true,
+  display: true,
   scale: "linear",
   ticks: "auto",
   orient: "right",
