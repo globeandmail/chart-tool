@@ -125,7 +125,9 @@ function appendYAxis(axisGroup, obj, scale, axis, axisName) {
   axisNode.selectAll(".tick text")
     .attr("transform", "translate(0,0)")
     .call(updateTextY, axisNode, obj, axis, axisObj)
-    .attr("transform", "translate(" + ( -(obj.dimensions.width - obj.dimensions.labelWidth)) + ",0)");
+    .attr({
+      "transform": "translate(" + ( -(obj.dimensions.width - obj.dimensions.labelWidth)) + ",0)"
+    });
 
   axisNode.selectAll(".tick line")
     .attr({
@@ -137,17 +139,10 @@ function appendYAxis(axisGroup, obj, scale, axis, axisName) {
 
 function timeAxis(axisNode, obj, scale, axis, axisSettings) {
 
-  var timeDiff = require("../../utils/utils").timeDiff;
-
-  if (!axisSettings.widthThreshold) {
-    axisSettings.widthThreshold = require("../../config/chart-tool-settings.js").xAxisTicks.widthThreshold;
-  }
-
-  var domain = scale.domain();
-
-  var ctx = timeDiff(domain[0], domain[1], 3);
-
-  var currentFormat = determineFormat(ctx);
+  var timeDiff = require("../../utils/utils").timeDiff,
+      domain = scale.domain(),
+      ctx = timeDiff(domain[0], domain[1], 3),
+      currentFormat = determineFormat(ctx);
 
   axis.tickFormat(currentFormat);
 
@@ -177,7 +172,7 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
       "dy": axisSettings.dy + "em"
     })
     .style("text-anchor", "start")
-    .call(formatText, ctx, axisSettings.ems);
+    .call(formatText, ctx, axisSettings.ems, obj.monthsAbr);
 
   axisNode.selectAll(".tick")
     .call(dropTicks);
@@ -241,9 +236,8 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
 // text formatting functions
 
-function formatText(selection, ctx, ems) {
+function formatText(selection, ctx, ems, monthsAbr) {
 
-  var monthsAbr = require("../../config/chart-tool-settings").monthsAbr;
   var prevYear,
       prevMonth,
       prevDate,
@@ -416,6 +410,29 @@ function updateTextY(textNode, axisNode, obj, axis, axisObj) {
       var textChar = sel.node().getBoundingClientRect().width;
       arr.push(textChar);
       return sel.text();
+    })
+    .attr({
+      "dy": function() {
+        if (obj.yAxis.dy !== "") {
+          return obj.yAxis.dy + "em";
+        } else {
+          return d3.select(this).attr("dy");
+        }
+      },
+      "x": function() {
+        if (obj.yAxis.textX !== "") {
+          return obj.yAxis.textX;
+        } else {
+          return d3.select(this).attr("x");
+        }
+      },
+      "y": function() {
+        if (obj.yAxis.textY !== "") {
+          return obj.yAxis.textY;
+        } else {
+          return d3.select(this).attr("y");
+        }
+      }
     });
 
   obj.dimensions.labelWidth = d3.max(arr);
@@ -424,8 +441,8 @@ function updateTextY(textNode, axisNode, obj, axis, axisObj) {
 
 function repositionTextY(text, dimensions) {
   var x = text.attr("x");
-  text.attr("transform", "translate(" + (dimensions.labelWidth - (x - 1)) + ",0)")
-
+  text.attr("transform", "translate(" + (dimensions.labelWidth - (x - 1)) + ",0)");
+  text.attr("x", (2 * x));
 }
 
 // Clones current text selection and appends
@@ -546,10 +563,6 @@ function tickFinderY(scale, tickCount, tickSettings) {
   // the last value in the array matches the domain max value
   // if so, tries to find the tick number closest to 5 out of the winners,
   // and returns that arr to the scale for use
-
-  if (!tickSettings) {
-    tickSettings = require("../../config/chart-tool-settings.js").yAxisTicks;
-  }
 
   var min = scale.domain()[0],
       max = scale.domain()[1];

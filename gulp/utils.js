@@ -27,8 +27,8 @@ gulp.task("_jsdoc", shell.task([
 
 gulp.task('_set-version', function() {
   gulp.src(gulpConfig.libSettings)
-    .pipe(replace(/version:.*/, "version: '" + p.version + "',"))
-    .pipe(replace(/build:.*/, "build: '" + p.buildVer + "',"))
+    .pipe(replace(/version: '([a-z0-9.]+)'/, "version: '" + p.version + "'"))
+    .pipe(replace(/build: '([a-z0-9.]+)'/, "build: '" + p.buildVer + "'"))
     .pipe(gulp.dest(gulpConfig.libScripts + "/config/"));
 
   gulp.src(gulpConfig.meteorSettings)
@@ -60,5 +60,6 @@ gulp.task('buildver', function() {
 gulp.task("_watch", ["_webpack-build-dev", "_scss"], function(done) {
   gulp.watch(gulpConfig.libScripts + "/**/*", ["_webpack-build-dev"]);
   gulp.watch(gulpConfig.libStylesheets + "/**/*", ['_scss']);
+  gulp.watch("./chart-tool-config.json", ["_webpack-build-dev", '_scss']);
   done();
 });

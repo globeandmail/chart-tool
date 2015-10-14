@@ -1,0 +1,76 @@
+{
+
+  "prefix": "ct-",
+  "monthsAbr": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec", "Jan"],
+
+  "debounce": 500,
+  "ratioMobile": 1.15,
+  "ratioDesktop": 0.65,
+  "scaleMultiplier": 1.25,
+
+  "dateFormat": "%Y-%m-%d",
+  "timeFormat": "%H:%M",
+
+  "margins": {
+    "top": 0,
+    "right": 0,
+    "bottom": 0,
+    "left": 0
+  },
+
+  "yAxis": {
+    "display": true,
+    "scale": "linear",
+    "ticks": "auto",
+    "orient": "right",
+    "format": "comma",
+    "prefix": "",
+    "suffix": "",
+    "min": "",
+    "max": "",
+    "rescale": false,
+    "nice": true,
+
+    "paddingRight": 9,
+    "tickLowerBound": 3,
+    "tickUpperBound": 8,
+    "tickGoal": 5,
+    "dy": "",
+    "textX": 0,
+    "textY": ""
+  },
+
+  "xAxis": {
+    "display": true,
+    "scale": "time",
+    "ticks": "auto",
+    "orient": "bottom",
+    "format": "auto",
+    "prefix": "",
+    "suffix": "",
+    "min": "",
+    "max": "",
+    "rescale": false,
+    "nice": false,
+
+    "tickTarget": 6,
+    "ticksSmall": 4,
+    "widthThreshold": 420,
+    "dy": 0.7,
+    "upper": {
+      "tickHeight": 7,
+      "textX": 6,
+      "textY": 7
+    },
+    "lower": {
+      "tickHeight": 12,
+      "textX": 6,
+      "textY": 2
+    }
+  },
+
+  "bands": {
+    "padding": 0.08,
+    "offset": 0.12
+  }
+}

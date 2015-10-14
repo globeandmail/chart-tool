@@ -1,8 +1,10 @@
-var settings = require("./chart-tool-settings");
+var version = { version: '1.1.0', build: '0' };
+var settings = require("json!../../../chart-tool-config.json");
 
-var chartDefault = {
+module.exports = {
 
-  version: "",
+  version: version.version,
+  build: version.build,
   id: "",
   data: "",
   dateFormat: "%Y-%m-%d",
@@ -43,9 +45,8 @@ var chartDefault = {
 
   range: {},
   series: {},
-  dimensions: require("./dimension-settings"),
-  xAxis: require("./x-axis-settings"),
-  yAxis: require("./y-axis-settings"),
+  xAxis: settings.xAxis,
+  yAxis: settings.yAxis,
 
   exportable: false, // this can be overwritten by the backend as needed
   editable: false,
@@ -53,8 +54,36 @@ var chartDefault = {
   prefix: settings.prefix,
   debounce: settings.debounce,
   scaleMultiplier: settings.scaleMultiplier,
-  colorScale: settings.colorScale
+  monthsAbr: settings.monthsAbr,
+
+  dimensions: {
+    width: 0,
+    height: function() {
+      var ratioScale = d3.scale.linear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
+      return Math.round(ratioScale(this.width));
+    },
+    ratioMobile: settings.ratioMobile,
+    ratioDesktop: settings.ratioDesktop,
+    margins: settings.margins,
+    headerHeight: 0,
+    footerHeight: 0,
+    xAxisHeight: 0,
+    yAxisHeight: function() {
+      return (this.height() - (this.headerHeight + this.footerHeight + this.xAxisHeight));
+    },
+    xAxisWidth: 0,
+    labelWidth: 0,
+    yAxisPaddingRight: settings.yAxis.paddingRight,
+    tickWidth: function() {
+      return (this.width - (this.labelWidth + this.yAxisPaddingRight));
+    },
+    bands: {
+      padding: settings.bands.padding,
+      offset: settings.bands.offset,
+      outerPadding: function() {
+        return (this.padding / 2);
+      }
+    }
+  }
 
 };
-
-module.exports = chartDefault;

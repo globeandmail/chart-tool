@@ -4,8 +4,7 @@ function LineChart(node, obj) {
       scaleModule = require("../components/scale"),
       Axis = axisModule.axisManager,
       Scale = scaleModule.scaleManager,
-      Tips = require("../components/tips"),
-      colorScale = require("../../config/chart-tool-settings").colorScale;
+      Tips = require("../components/tips");
 
   //  scales
   var xScaleObj = new Scale(obj, "xAxis"),

@@ -18,6 +18,7 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.6",
     "jsdoc": "^3.3.2",
+    "json-loader": "^0.5.3",
     "opn": "^3.0.2",
     "webpack": "^1.10.0",
     "yargs": "^3.15.0"
@@ -39,15 +40,19 @@
     "type": "git",
     "url": "git@github.com:globeandmail/chart-tool.git"
   },
-  "contributors": [{
-    "author": "Tom Cardoso",
-    "email": "tcardoso@globeandmail.com"
-  }, {
-    "author": "Jeremy Agius",
-    "email": "jagius@globeandmail.com"
-  }, {
-    "author": "Michael Pereira",
-    "email": "mpereira@globeandmail.com"
-  }],
+  "contributors": [
+    {
+      "author": "Tom Cardoso",
+      "email": "tcardoso@globeandmail.com"
+    },
+    {
+      "author": "Jeremy Agius",
+      "email": "jagius@globeandmail.com"
+    },
+    {
+      "author": "Michael Pereira",
+      "email": "mpereira@globeandmail.com"
+    }
+  ],
   "license": "MIT"
 }

@@ -4,8 +4,7 @@ function AreaChart(node, obj) {
       scaleModule = require("../components/scale"),
       Axis = axisModule.axisManager,
       Scale = scaleModule.scaleManager,
-      Tips = require("../components/tips"),
-      colorScale = require("../../config/chart-tool-settings").colorScale;
+      Tips = require("../components/tips");
 
   //  scales
   var xScaleObj = new Scale(obj, "xAxis"),
@@ -86,14 +85,6 @@ function AreaChart(node, obj) {
   // and set the colours in the correct order
 
   var secondaryArr = secondaryArr.reverse();
-
-  // for (var i = 0; i < secondaryArr.length; i++){
-  //   if (i < colorScale.length) {
-  //     secondaryArr[i].style('fill', colorScale[i]);
-  //   } else {
-  //     secondaryArr[i].style('fill', colorScale[colorScale.length - 1]);
-  //   }
-  // }
 
   var hArea = d3.svg.area().interpolate(obj.interpolation)
     .defined(function(d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
