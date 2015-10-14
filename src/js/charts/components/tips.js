@@ -47,7 +47,7 @@ function hideTips(tipNodes, obj) {
 function mouseIdle(tipNodes, obj, timeout) {
   return setTimeout(function() {
     hideTips(tipNodes, obj);
-  }, 5000);
+  }, obj.tipTimeout);
 }
 
 function tipsManager(node, obj) {

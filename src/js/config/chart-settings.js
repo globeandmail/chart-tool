@@ -7,8 +7,8 @@ module.exports = {
   build: version.build,
   id: "",
   data: "",
-  dateFormat: "%Y-%m-%d",
-  timeFormat: "%H:%M",
+  dateFormat: settings.dateFormat,
+  timeFormat: settings.timeFormat,
   heading: "",
   qualifier: "",
   source: "",
@@ -53,6 +53,7 @@ module.exports = {
 
   prefix: settings.prefix,
   debounce: settings.debounce,
+  tipTimeout: settings.tipTimeout,
   scaleMultiplier: settings.scaleMultiplier,
   monthsAbr: settings.monthsAbr,
 

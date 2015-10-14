@@ -4,6 +4,7 @@
   "monthsAbr": ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec", "Jan"],
 
   "debounce": 500,
+  "tipTimeout": 5000,
   "ratioMobile": 1.15,
   "ratioDesktop": 0.65,
   "scaleMultiplier": 1.25,
