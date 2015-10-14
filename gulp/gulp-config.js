@@ -16,7 +16,7 @@ var libPath           = "./src",
     meteorPath        = "./meteor",
     meteorBundle      = meteorPath + "/lib/charts/scripts",
     meteorSettings    = meteorPath + "/lib/settings.js",
-    meteorBuildPath   = buildPath + "/meteor",
+    meteorBuildPath   = "." + buildPath + "/meteor",
 
 module.exports = {
   libPath: libPath,
