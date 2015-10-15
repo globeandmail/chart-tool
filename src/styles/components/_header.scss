@@ -35,23 +35,23 @@
   height: 10px;
   border-radius: 10px;
   width: 10px;
-  background: $red;
+  background: $primary-color;
   margin-right: 4px;
 }
 
 .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon,
 .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon {
-  background: $grey1;
+  background: $shade1;
 }
 
 .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
 .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
-  background: $grey2;
+  background: $shade2;
 }
 
 .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
 .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
-  background: $grey3;
+  background: $shade3;
 }
 
 .seriesAmount5 {
@@ -62,17 +62,17 @@
 
   .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
   .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
-    background: $grey1;
+    background: $shade1;
   }
 
   .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
   .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
-    background: $grey2;
+    background: $shade2;
   }
 
   .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon,
   .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon {
-    background: $grey3;
+    background: $shade3;
   }
 
 }
@@ -81,12 +81,12 @@
   background: $black;
 }
 
-.#{$prefix}investor .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
-  background: $orange;
+.#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
+  background: $alternate-color;
 }
 
-.#{$prefix}rob .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
-  background: $red;
+.#{$prefix}primary .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
+  background: $primary-color;
 }
 
 .#{$prefix}news .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon {

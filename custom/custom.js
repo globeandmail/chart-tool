@@ -3,7 +3,7 @@
  * @param  {Object} node         The main container group for the chart.
  * @param  {Object} chartRecipe  Object that contains settings for the chart.
  * @param  {Object} rendered     An object containing references to all rendered chart elements, including axes, scales, paths, nodes, and so forth.
- * @return {Object}      Optional. Return
+ * @return {Object}              Optional.
  */
 function custom(node, chartRecipe, rendered) {
 
