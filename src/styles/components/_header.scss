@@ -1,12 +1,10 @@
 // heading
 
 .#{$prefix}chart_title {
-  font-family: $heading-font;
-  font-size: $heading-size;
   margin-bottom: 0px;
   padding: 0;
-  line-height: 1em;
   padding-bottom: 2px;
+  @extend %heading-font;
   &:only-child {
     padding-bottom: 15px;
   }
@@ -15,14 +13,13 @@
 // legend
 
 .#{$prefix}chart_legend {
-  padding-bottom: $utility-size;
+  padding-bottom: $utility-font-size;
 }
 
 .#{$prefix}chart_legend .#{$prefix}legend_item {
   display: inline-block;
   margin-right: 1em;
-  font-family: $utility-font;
-  font-size: $utility-size;
+  @extend %utility-font;
 }
 .#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text{
   display: inline-block;
@@ -96,19 +93,16 @@
 // qualifier
 
 .#{$prefix}chart_qualifier {
-  font-family: $utility-font;
   margin: 0;
-  font-size: $utility-size;
-  line-height: $utility-size;
   background: white;
   height: auto;
+  @extend %utility-font;
 }
 
 .#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {
   display: inline-block;
   margin-right: 10px;
   padding-bottom: 0px;
-  font-size: $utility-size;
-  line-height: $utility-size;
   vertical-align: middle;
+  @extend %utility-font;
 }

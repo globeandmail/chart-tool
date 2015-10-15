@@ -1,6 +1,7 @@
-@import "./settings/colors";
 @import "./settings/fonts";
 @import "./settings/settings";
+
+@import "../../custom/base";
 
 @import "./components/header";
 @import "./components/axis";
@@ -26,9 +27,9 @@
 .#{$prefix}chart {
   width: $width;
   height: auto;
-  line-height: 1.4em;
-  font-size: $utility-size;
   background-color: white;
-  font-family: $utility-font;
   margin: $margin;
+  @extend %utility-font;
 }
+
+@import "../../custom/custom.scss";

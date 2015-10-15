@@ -7,7 +7,7 @@ var gulp = require('gulp'),
 
 var gulpConfig = require('./gulp-config.js');
 
-var sourceCss = gulpConfig.libStylesheets + '/*.scss';
+var sourceCss = gulpConfig.libStylesheets + '/main.scss';
 var buildCss = gulpConfig.buildCssPath + "/css";
 
 gulp.task('_scss', function() {

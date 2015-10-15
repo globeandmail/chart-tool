@@ -3,13 +3,14 @@
 }
 
 .#{$prefix}yAxis .#{$prefix}minor line {
-  stroke: $stroke-color;
-  stroke-dasharray: 1, 3;
+  stroke: $axis-stroke-color;
+  stroke-dasharray: $axis-stroke-dasharray;
   shape-rendering: crispEdges;
 }
 
 .#{$prefix}axis-group g.tick line {
-  stroke: $stroke-color;
+  stroke: $axis-stroke-color;
+  stroke-width: $axis-stroke-width;
 }
 
 .#{$prefix}yAxis g.tick text {
@@ -18,22 +19,24 @@
 
 .#{$prefix}axis-group path {
   shape-rendering: crispEdges;
-  stroke: $stroke-color;
+  stroke: $axis-stroke-color;
+  stroke-width: $axis-stroke-width;
 }
 
 .#{$prefix}axis-group text {
-  font-size: $utility-size;
-  font-family: $utility-font;
+  @extend %utility-font;
 }
 
 .#{$prefix}axis-group path {
   shape-rendering: crispEdges;
-  stroke: $stroke-color;
+  stroke: $axis-stroke-color;
+  stroke-width: $axis-stroke-width;
 }
 
 .#{$prefix}axis-group .major-tick line  {
   display: inline;
-  stroke: $stroke-color;
+  stroke: $axis-stroke-color;
+  stroke-width: $axis-stroke-width;
 }
 
 .last-tick-hide {
@@ -45,7 +48,7 @@
 }
 
 .#{$prefix}zero-line {
-  stroke-width: 1px;
-  stroke: #333;
+  stroke-width: $axis-stroke-width;
+  stroke: $axis-stroke-color;
   stroke-linecap: square;
 }

@@ -19,8 +19,7 @@
 
 .#{$prefix}tip_text {
   fill: $black;
-  font-family: $utility-font;
-  font-size: $utility-size;
+  @extend %utility-font;
 }
 
 .#{$prefix}tip_line-x {
@@ -31,9 +30,9 @@
     opacity: 1;
   }
   line {
-    stroke: $stroke-color;
-    stroke-dasharray: 1, 2;
-    stroke-width: 1px;
+    stroke: $axis-stroke-color;
+    stroke-dasharray: $axis-stroke-dasharray;
+    stroke-width: $axis-stroke-width;
     shape-rendering: crispEdges;
   }
 }
