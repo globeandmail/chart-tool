@@ -192,7 +192,7 @@
 
   } else {
 
-    console.error("No D3 library detected.");
+    console.error("Chart Tool: no D3 library detected.");
 
   }
 

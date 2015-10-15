@@ -39,6 +39,11 @@ function ChartManager(container, obj) {
     rendered.tips = components.tips(node, chartRecipe);
   }
 
+  if (chartRecipe.CUSTOM) {
+    var custom = require("../../../custom/custom.js");
+    rendered.custom = custom(node, chartRecipe, rendered);
+  }
+
   return chartRecipe;
 
 };

@@ -1,8 +1,9 @@
 var version = { version: '1.1.0', build: '0' };
-var settings = require("json!../../../chart-tool-config.json");
+var settings = require("json!../../../custom/chart-tool-config.json");
 
 module.exports = {
 
+  CUSTOM: settings.CUSTOM,
   version: version.version,
   build: version.build,
   id: "",
