@@ -9,4 +9,4 @@ This folder contains a series of files that allow you to customize your Chart To
 
 ### A note on class prefixes
 
-Chart Tool charts are aggressively namespaced. If you want to override chart class prefixes (for instance, changing all chart classes from `ct-[chart-element-here]` to 'globe-[chart-element-here]'), you'll need to make that change in two places: `chart-tool-config.json`'s `prefix` property, and `base.scss`'s `$prefix` SASS variable.
+Chart Tool charts are aggressively namespaced. If you want to override chart class prefixes (for instance, changing all chart classes from `ct-[chart-element-here]` to `globe-[chart-element-here]`), you'll need to make that change in two places: `chart-tool-config.json`'s `prefix` property, and `base.scss`'s `$prefix` SASS variable.
