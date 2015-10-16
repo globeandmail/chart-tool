@@ -29,7 +29,8 @@ gulp.task("_webpack-build", function(callback) {
     gulp.src([gulpConfig.buildPath + "/bundle.js", gulpConfig.buildPath + "/bundle.js.map"])
       .pipe(gulp.dest(gulpConfig.meteorBundle));
 
-      gulp.src()meteorSettings
+    gulp.src([gulpConfig.buildPath + "/meteorSettings.js", gulpConfig.buildPath + "/meteorSettings.js.map"])
+      .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/config/'));
 
   });
 });
@@ -50,6 +51,9 @@ gulp.task("_webpack-build-dev", function(done) {
 
     gulp.src([gulpConfig.buildPath + "/bundle.js", gulpConfig.buildPath + "/bundle.js.map"])
       .pipe(gulp.dest(gulpConfig.meteorBundle));
+
+    gulp.src([gulpConfig.buildPath + "/meteorSettings.js", gulpConfig.buildPath + "/meteorSettings.js.map"])
+      .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/config/'));
 
     done();
   });

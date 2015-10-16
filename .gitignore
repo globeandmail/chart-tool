@@ -2,6 +2,8 @@
 
 bundle.js
 bundle.js.map
+dist/meteorSettings.js
+dist/meteorSettings.js.map
 
 ### Custom NPM repository ###
 .npmrc

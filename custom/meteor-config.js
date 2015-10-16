@@ -1,5 +1,5 @@
-var config = require("./chart-tool-config.json"),
-    p = require("../package.json");
+var config = require("json!./chart-tool-config.json"),
+    p = require("json!../package.json");
 
 app_version = p.version;
 app_build = p.buildVer;
@@ -7,7 +7,7 @@ prefix = config.prefix;
 
 app_settings = {
 
-  animal_api: "http://ed-lab.colo.theglobeandmail.com:8080/api/name",
+  animal_api: "http://www.whimsicalwordimal.com/api/name",
   names: [
     "Sardonic Salamander",
     "Obstreperous Okapi",
@@ -26,7 +26,7 @@ app_settings = {
   ],
 
   defaults: {
-    source_prefix: "",
+    source_prefix: "CHART TOOL",
     source_suffix: " » SOURCE:"
   },
 
@@ -39,7 +39,7 @@ app_settings = {
     qualifier: "",
     deck: "",
     source: "",
-    class: "",
+    class: "primary",
     date_format: config.dateFormat,
     time_format: config.timeFormat,
     hasHours: false,
@@ -61,8 +61,32 @@ app_settings = {
       series: false,
       indexed: false
     },
-    x_axis: config.xAxis,
-    y_axis: config.yAxis,
+    x_axis: {
+      display: config.xAxis.display,
+      scale: config.xAxis.scale,
+      ticks: config.xAxis.ticks,
+      orient: config.xAxis.orient,
+      format: config.xAxis.format,
+      prefix: config.xAxis.prefix,
+      suffix: config.xAxis.suffix,
+      min: config.xAxis.min,
+      max: config.xAxis.max,
+      rescale: config.xAxis.rescale,
+      nice: config.xAxis.nice
+    },
+    y_axis: {
+      display: config.yAxis.display,
+      scale: config.yAxis.scale,
+      ticks: config.yAxis.ticks,
+      orient: config.yAxis.orient,
+      format: config.yAxis.format,
+      prefix: config.yAxis.prefix,
+      suffix: config.yAxis.suffix,
+      min: config.yAxis.min,
+      max: config.yAxis.max,
+      rescale: config.yAxis.rescale,
+      nice: config.yAxis.nice
+    },
 
     series: [{
       style: "",
@@ -96,7 +120,7 @@ app_settings = {
       pointers: {}
     },
 
-  }
+  },
 
   print: {
     default_cols: "2col",

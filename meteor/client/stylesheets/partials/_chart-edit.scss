@@ -21,13 +21,13 @@
     cursor: pointer;
     @include transition (all 0.1s ease-out);
     &:hover {
-      color: $red;
+      color: $primary-color;
       @include transition (all 0.1s ease-in);
-      border-color: $red;
+      border-color: $primary-color;
     }
   }
   h4 {
-    font-family: $font-bold;
+    @extend %interface-font-bold;
     font-size: 1.2em;
     margin: 0.7em 0 0.5em 0;
   }
@@ -37,7 +37,7 @@
 }
 
 select {
-  font-family: $font-regular;
+  @extend %interface-font-regular;
   font-size: 1.3em;
   border: 1px solid $text;
   outline: none;
@@ -47,9 +47,9 @@ select {
   @include appearance(none);
   @include transition (all 0.1s ease-out);
   &:hover {
-    color: $red;
+    color: $primary-color;
     cursor: pointer;
-    border-color: $red;
+    border-color: $primary-color;
     @include transition (all 0.1s ease-in);
   }
 }
@@ -166,14 +166,11 @@ select {
     margin-bottom: -2px;
     @include appearance(none);
   }
-  .input-radio-news:checked {
-    background-color: $news;
+  .input-radio-primary:checked {
+    background-color: $primary-color;
   }
-  .input-radio-rob:checked {
-    background-color: $rob;
-  }
-  .input-radio-investor:checked {
-    background-color: $investor;
+  .input-radio-alternate:checked {
+    background-color: $alternate-color;
   }
 }
 
@@ -234,7 +231,7 @@ select {
 }
 
 .chart-types {
-  font-family: $font-bold;
+  @extend %interface-font-black;
   outline: none;
   background: transparent;
   width: auto;
@@ -244,7 +241,7 @@ select {
   @include appearance(none);
   @include transition (all 0.1s ease-out);
   &:hover {
-    color: $red;
+    color: $primary-color;
     cursor: pointer;
     @include transition (all 0.1s ease-in);
   }
@@ -256,8 +253,8 @@ select {
     font-size: 1em;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    color: $red;
-    font-family: $font-black;
+    color: $primary-color;
+    @extend %interface-font-black;
     margin: 0;
     border-bottom: 1px solid lighten($verylightgray, 10%);
     margin-bottom: 0.75em;
@@ -316,7 +313,7 @@ select {
 
 // Title, qualifier and source contentEditable fields
 
-.gc-chart_title, .gc-chart_qualifier, .gc-chart_source {
+.#{$prefix}chart_title, .#{$prefix}chart_qualifier, .#{$prefix}chart_source {
   &:hover {
     cursor: text;
   }
@@ -326,28 +323,28 @@ select {
   }
 }
 
-.gc-chart_title {
+.#{$prefix}chart_title {
   &:empty:before {
     content: "Please include a chart title";
     color: $verylightgray;
   }
 }
 
-.gc-chart_qualifier {
+.#{$prefix}chart_qualifier {
   &:empty:before {
     content: "Please include a chart qualifier";
     color: $verylightgray;
   }
 }
 
-.gc-chart_credit {
+.#{$prefix}chart_credit {
   &:hover {
     cursor: text;
     background-color: lighten($lightgray, 27%);
   }
 }
 
-.gc-chart_source {
+.#{$prefix}chart_source {
   text-transform: uppercase;
   &:empty:before {
     content: "Please include a chart source";

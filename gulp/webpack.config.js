@@ -6,12 +6,11 @@ module.exports = {
   cache: true,
   entry: {
     bundle: gulpConfig.libScripts + "/index",
-    meteorSettings: "./custom/meteor-config.js"
+    meteorSettings: gulpConfig.customPath + "/meteor-config"
   },
   output: {
     path: gulpConfig.buildPath,
-    filename: "[name].js",
-    publicPath: "/assets/"
+    filename: "[name].js"
   },
   module: {
     loaders: []

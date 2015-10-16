@@ -32,8 +32,8 @@
     color: $text;
     @include transition (all 0.15s ease-out);
     &:hover {
-      border-bottom: 1px solid $red;
-      color: $red;
+      border-bottom: 1px solid $primary-color;
+      color: $primary-color;
       @include transition (all 0.15s ease-in);
     }
   }
@@ -50,7 +50,7 @@
       padding-bottom: 0.3em;
     }
     span {
-      font-family: $font-bold;
+      @extend %interface-font-bold;
     }
   }
 }
@@ -65,7 +65,7 @@
   }
   .slug {
     float: left;
-    font-family: $font-bold;
+    @extend %interface-font-bold;
   }
   .chart-links {
     float: right;
@@ -78,7 +78,7 @@
       color: $verylightgray;
       @include transition (all 0.1s ease-out);
       &:hover {
-        color: $red;
+        color: $primary-color;
         @include transition (all 0.1s ease-in);
       }
     }
@@ -95,7 +95,7 @@
     color: $verylightgray;
     @include transition (all 0.1s ease-out);
     &:hover {
-      color: $red;
+      color: $primary-color;
       @include transition (all 0.1s ease-in);
     }
   }

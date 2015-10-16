@@ -3,7 +3,8 @@
 @import "base/normalize";
 @import "base/mixins";
 @import "base/fonts";
-@import "base/color";
+@import "base/settings";
+@import "base/custom-settings";
 @import "base/helpers";
 @import "base/sweetalert";
 
@@ -16,6 +17,8 @@ html {
   overflow-y: scroll;
   position: relative;
   min-height: 100%;
+  font-family: Georgia !important;
+  @extend %interface-font-regular;
 }
 
 body {
@@ -23,7 +26,6 @@ body {
   font-size: 16px;
   color: $text;
   line-height: 1.2;
-  font-family: $font-regular;
   text-rendering: optimizeLegibility;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -31,7 +33,11 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, strong, b {
-  font-weight: normal;
+  @extend %interface-font-bold;
+}
+
+a, p {
+  @extend %interface-font-regular;
 }
 
 ul {

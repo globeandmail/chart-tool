@@ -1,4 +1,5 @@
-@import "partials/settings";
+@import "partials/base/settings";
+@import "partials/base/custom-settings";
 
 // Debug style
 
@@ -22,16 +23,6 @@ $two-pt: ptToPx(2.0);
 $six-five-pt: 8px; // actually renders at 6.15pt
 $eight-pt: 10px; // actually renders at 7.69pt
 $nine-pt: 12.0px; // actually renders at 9.22pt
-
-$print-red: #CC2A23;
-$print-orange: #ab6720;
-
-$grey1: #555;
-$grey2: #999;
-$grey3: #ccc;
-$grey4: #EEE;
-$grey5: #F5F5F5;
-$black: #000;
 
 .chart-pdf, .print-export-preview-chart, .chart-print-export {
 
