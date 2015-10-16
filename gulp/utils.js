@@ -26,6 +26,10 @@ gulp.task("_jsdoc", shell.task([
 ]));
 
 gulp.task('_set-version', function() {
+  gulp.src("./README.md")
+    .pipe(replace(/### Version\n\n([a-z0-9.]+)/, "### Version\n\n" + p.version))
+    .pipe(gulp.dest('./'));
+
   gulp.src(gulpConfig.libSettings)
     .pipe(replace(/version: '([a-z0-9.]+)'/, "version: '" + p.version + "'"))
     .pipe(replace(/build: '([a-z0-9.]+)'/, "build: '" + p.buildVer + "'"))

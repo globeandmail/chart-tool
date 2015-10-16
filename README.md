@@ -84,16 +84,17 @@ You have several Gulp commands at your disposal:
 * `gulp buildver`: Returns the buildVer variable present in `package.json`. Optionally, can accept a `set` argument which edits the buildVer value. For instance, `gulp buildver --set=12` will set the buildVer in package.json to "12".
 
 ### Version
+
 1.1.0
 
 ### Documentation
 
 Chart Tool is still under active development, so better, more comprehensive documentation is forthcoming. If you've got any questions in the meantime, feel free to send us an email:
 
-[Tom Cardoso](mailto:tcardoso@globeandmail.com)
-[Jeremy Agius](mailto:jagius@globeandmail.com)
-[Michael Pereira](mailto:mpereira@globeandmail.com)
-[Matt Frehner](mailto:mfrehner@globeandmail.com)
+[Tom Cardoso](mailto:tcardoso@globeandmail.com)  
+[Jeremy Agius](mailto:jagius@globeandmail.com)  
+[Michael Pereira](mailto:mpereira@globeandmail.com)  
+[Matt Frehner](mailto:mfrehner@globeandmail.com)  
 
 ### License note
 
