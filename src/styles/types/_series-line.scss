@@ -20,26 +20,26 @@
   }
 }
 
-.#{$prefix}rob .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
-.#{$prefix}rob .#{$prefix}line:only-child {
-  stroke: $red;
+.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
+.#{$prefix}primary .#{$prefix}line:only-child {
+  stroke: $primary-color;
 }
 
-.#{$prefix}investor .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
-.#{$prefix}investor .#{$prefix}line:only-child {
-  stroke: $orange;
+.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
+.#{$prefix}alternate .#{$prefix}line:only-child {
+  stroke: $alternate-color;
 }
 
 .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
-  stroke: $grey1;
+  stroke: $shade1;
 }
 
 .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
-  stroke: $grey2;
+  stroke: $shade2;
 }
 
 .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
-  stroke: $grey3;
+  stroke: $shade3;
 }
 
 .#{$prefix}series-5 {
@@ -49,14 +49,14 @@
   }
 
   .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
-    stroke: $grey1;
+    stroke: $shade1;
   }
 
   .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
-    stroke: $grey2;
+    stroke: $shade2;
   }
 
   .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-4 {
-    stroke: $grey3;
+    stroke: $shade3;
   }
 }

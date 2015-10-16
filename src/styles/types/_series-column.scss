@@ -10,31 +10,31 @@
   fill: $black;
 }
 
-.#{$prefix}investor .#{$prefix}series_group .#{$prefix}series_1 rect {
-  fill: $orange;
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}series_1 rect {
+  fill: $alternate-color;
 }
 
-.#{$prefix}rob .#{$prefix}series_group .#{$prefix}series_1 rect {
-  fill: $red;
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}series_1 rect {
+  fill: $primary-color;
 }
 
 .#{$prefix}news .#{$prefix}series_group .#{$prefix}series:only-child rect,
-.#{$prefix}investor .#{$prefix}series_group .#{$prefix}series:only-child rect,
-.#{$prefix}rob .#{$prefix}series_group .#{$prefix}series:only-child rect {
-  fill: $grey2;
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}series:only-child rect,
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}series:only-child rect {
+  fill: $shade2;
 }
 
 
 .#{$prefix}series_group .#{$prefix}series_2 rect {
-  fill: $grey1;
+  fill: $shade1;
 }
 
 .#{$prefix}series_group .#{$prefix}series_3 rect {
-  fill: $grey2;
+  fill: $shade2;
 }
 
 .#{$prefix}series_group .#{$prefix}series_4 rect {
-  fill: $grey3;
+  fill: $shade3;
 }
 
 
@@ -45,15 +45,15 @@
   }
 
   .#{$prefix}series_group .#{$prefix}series_3 rect {
-    fill: $grey1;
+    fill: $shade1;
   }
 
   .#{$prefix}series_group .#{$prefix}series_4 rect {
-    fill: $grey2;
+    fill: $shade2;
   }
 
   .#{$prefix}series_group .#{$prefix}series_5 rect {
-    fill: $grey3;
+    fill: $shade3;
   }
 
 }
@@ -66,18 +66,18 @@
   fill: $black;
 }
 
-.#{$prefix}investor .#{$prefix}series_group .#{$prefix}column-1 rect {
-  fill: $orange;
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-1 rect {
+  fill: $alternate-color;
 }
 
-.#{$prefix}rob .#{$prefix}series_group .#{$prefix}column-1 rect {
-  fill: $red;
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-1 rect {
+  fill: $primary-color;
 }
 
 .#{$prefix}news .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect,
-.#{$prefix}investor .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect,
-.#{$prefix}rob .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect {
-  fill: $grey2;
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect,
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect {
+  fill: $shade2;
 }
 
 
@@ -92,41 +92,41 @@ causing a more specific selector to be set for the non-stacked variant of the fi
 
 
 .#{$prefix}news .#{$prefix}series_group .#{$prefix}column-2 rect,
-.#{$prefix}rob .#{$prefix}series_group .#{$prefix}column-2 rect,
-.#{$prefix}investor .#{$prefix}series_group .#{$prefix}column-2 rect {
-  fill: $grey1;
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-2 rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-2 rect {
+  fill: $shade1;
 }
 
 .#{$prefix}news .#{$prefix}series_group .#{$prefix}column-3 rect,
-.#{$prefix}rob .#{$prefix}series_group .#{$prefix}column-3 rect,
-.#{$prefix}investor .#{$prefix}series_group .#{$prefix}column-3 rect {
-  fill: $grey2;
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-3 rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-3 rect {
+  fill: $shade2;
 
 }
 
 .#{$prefix}news .#{$prefix}series_group .#{$prefix}column-4 rect,
-.#{$prefix}rob .#{$prefix}series_group .#{$prefix}column-4 rect,
-.#{$prefix}investor .#{$prefix}series_group .#{$prefix}column-4 rect {
-  fill: $grey3;
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-4 rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-4 rect {
+  fill: $shade3;
 }
 
 
 .seriesAmount5 {
   .#{$prefix}news .#{$prefix}series_group .#{$prefix}column-2 rect,
-  .#{$prefix}rob .#{$prefix}series_group .#{$prefix}column-2 rect,
-  .#{$prefix}investor .#{$prefix}series_group .#{$prefix}column-2 rect {
+  .#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-2 rect,
+  .#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-2 rect {
     fill: $black;
   }
 
   .#{$prefix}series_group .#{$prefix}column-3 rect {
-    fill: $grey1;
+    fill: $shade1;
   }
 
   .#{$prefix}series_group .#{$prefix}column-4 rect {
-    fill: $grey2;
+    fill: $shade2;
   }
 
   .#{$prefix}series_group .#{$prefix}column-5 rect {
-    fill: $grey3;
+    fill: $shade3;
   }
 }

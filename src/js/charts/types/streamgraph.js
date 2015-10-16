@@ -4,8 +4,7 @@ function StreamgraphChart(node, obj) {
       scaleModule = require("../components/scale"),
       Axis = axisModule.axisManager,
       Scale = scaleModule.scaleManager,
-      Tips = require("../components/tips"),
-      colorScale = require("../../config/chart-tool-settings").colorScale;
+      Tips = require("../components/tips");
 
   //  scales
   var xScaleObj = new Scale(obj, "xAxis"),
@@ -25,7 +24,7 @@ function StreamgraphChart(node, obj) {
   }));
 
   yScaleObj.scale.domain([0, d3.max(seriesData[seriesData.length - 1], function(d) {
-    var scaleMultiplier = require("../../config/chart-tool-settings").scaleMultiplier;
+    var scaleMultiplier = obj.scaleMultiplier;
     return (d.y0 + d.y) * scaleMultiplier;
   })]);
 
@@ -74,16 +73,7 @@ function StreamgraphChart(node, obj) {
       }
       return output;
     })
-    .attr("d", area)
-    .style('fill', function(d, i) {
-      if (i !== obj.seriesHighlight()) {
-        var output = colorScale[i - 1];
-        if (i >= colorScale.length) {
-          output = colorScale[colorScale.length-1];
-        }
-        return output;
-      }
-    });
+    .attr("d", area);
 
   series.append("path")
     .attr("class", function() { return obj.prefix + "stream-series " + obj.prefix + "line"; })

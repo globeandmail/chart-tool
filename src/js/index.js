@@ -20,8 +20,7 @@
           drawn = [];
 
       var settings = require("./config/chart-settings"),
-          utils = require("./utils/utils"),
-          config = require("./config/chart-tool-settings");
+          utils = require("./utils/utils");
 
       var dispatcher = d3.dispatch("start", "finish", "redraw", "hoverIn", "hoverOut", "click");
 
@@ -168,11 +167,11 @@
         },
 
         wat: function wat() {
-          console.info("ChartTool v" + config.version + " is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: www.github.com/globeandmail/chart-tool");
+          console.info("ChartTool v" + settings.version + " is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: www.github.com/globeandmail/chart-tool");
         },
 
-        version: config.version,
-        build: config.build,
+        version: settings.version,
+        build: settings.build,
         settings: require("./config/chart-settings"),
         charts: require("./charts/manager"),
         components: require("./charts/components/components"),
@@ -193,7 +192,7 @@
 
   } else {
 
-    console.error("No D3 library detected.");
+    console.error("Chart Tool: no D3 library detected.");
 
   }
 

@@ -5,11 +5,11 @@
     stroke-linejoin: round;
   }
   .#{$prefix}series_group .#{$prefix}fill {
-    fill: $grey4;
+    fill: $shade4;
   }
   .#{$prefix}series_group.#{$prefix}multiple {
     .#{$prefix}line.#{$prefix}highlight {
-      stroke: #fff;
+      stroke: white;
       stroke-width: 2px;
     }
     @for $i from 1 through 6 {
@@ -30,22 +30,22 @@
   stroke-width: 3px;
 }
 
-.#{$prefix}rob .#{$prefix}line.#{$prefix}highlight,
+.#{$prefix}primary .#{$prefix}line.#{$prefix}highlight,
 .#{$prefix}series.#{$prefix}highlight .#{$prefix}line {
-  stroke: $red;
+  stroke: $primary-color;
   stroke-width: 2px;
 }
 
-.#{$prefix}investor .#{$prefix}line.#{$prefix}highlight,
+.#{$prefix}alternate .#{$prefix}line.#{$prefix}highlight,
 .#{$prefix}series.#{$prefix}highlight .#{$prefix}line {
-  stroke: $orange;
+  stroke: $alternate-color;
   stroke-width: 2px;
 }
 
-.#{$prefix}rob .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
-  fill: $red;
+.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
+  fill: $primary-color;
 }
 
-.#{$prefix}investor .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
-  fill: $orange;
+.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
+  fill: $alternate-color;
 }

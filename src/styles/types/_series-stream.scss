@@ -1,13 +1,13 @@
 .#{$prefix}series_group .#{$prefix}stream-series {
-  fill: $grey4;
+  fill: $shade4;
 }
 
-.gc-rob .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
-  fill: $red;
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
+  fill: $primary-color;
 }
 
-.gc-investor .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
-  fill: $orange;
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
+  fill: $alternate-color;
 }
 
 .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}line {

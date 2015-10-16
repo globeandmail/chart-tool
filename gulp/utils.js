@@ -26,10 +26,18 @@ gulp.task("_jsdoc", shell.task([
 ]));
 
 gulp.task('_set-version', function() {
+  gulp.src("./README.md")
+    .pipe(replace(/### Version\n\n([a-z0-9.]+)/, "### Version\n\n" + p.version))
+    .pipe(gulp.dest('./'));
+
   gulp.src(gulpConfig.libSettings)
-    .pipe(replace(/version:.*/, "version: '" + p.version + "',"))
-    .pipe(replace(/build:.*/, "build: '" + p.buildVer + "',"))
+    .pipe(replace(/version: '([a-z0-9.]+)'/, "version: '" + p.version + "'"))
+    .pipe(replace(/build: '([a-z0-9.]+)'/, "build: '" + p.buildVer + "'"))
     .pipe(gulp.dest(gulpConfig.libScripts + "/config/"));
+
+  gulp.src(gulpConfig.libScripts + "/index.js")
+    .pipe(replace(/\s\*\s@version\s([a-z0-9.]+)/, " * @version " + p.version))
+    .pipe(gulp.dest(gulpConfig.libScripts));
 
   gulp.src(gulpConfig.meteorSettings)
     .pipe(replace(/app_version.*/, "app_version = '" + p.version + "';"))
@@ -60,5 +68,6 @@ gulp.task('buildver', function() {
 gulp.task("_watch", ["_webpack-build-dev", "_scss"], function(done) {
   gulp.watch(gulpConfig.libScripts + "/**/*", ["_webpack-build-dev"]);
   gulp.watch(gulpConfig.libStylesheets + "/**/*", ['_scss']);
+  gulp.watch("./custom/**/*", ["_webpack-build-dev", '_scss']);
   done();
 });

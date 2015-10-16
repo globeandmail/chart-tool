@@ -19,8 +19,7 @@
 
 .#{$prefix}tip_text {
   fill: $black;
-  font-family: $utility-font;
-  font-size: $utility-size;
+  @extend %utility-font;
 }
 
 .#{$prefix}tip_line-x {
@@ -31,31 +30,31 @@
     opacity: 1;
   }
   line {
-    stroke: $stroke-color;
-    stroke-dasharray: 1, 2;
-    stroke-width: 1px;
+    stroke: $axis-stroke-color;
+    stroke-dasharray: $axis-stroke-dasharray;
+    stroke-width: $axis-stroke-width;
     shape-rendering: crispEdges;
   }
 }
 
 .#{$prefix}tip .#{$prefix}tip_circle  {
-  fill: $red;
+  fill: $primary-color;
 }
 
 .#{$prefix}tip .#{$prefix}tip_circle-2  {
-  fill: $grey1;
+  fill: $shade1;
 }
 
 .#{$prefix}tip .#{$prefix}tip_circle-3  {
-  fill: $grey2;
+  fill: $shade2;
 }
 
 .#{$prefix}tip .#{$prefix}tip_circle-4  {
-  fill: $grey3;
+  fill: $shade3;
 }
 
 .#{$prefix}tip .#{$prefix}tip_circle-5  {
-  fill: $red;
+  fill: $primary-color;
 }
 
 .#{$prefix}series-5 {
@@ -63,12 +62,12 @@
     fill: $black;
   }
   .#{$prefix}tip .#{$prefix}tip_circle-3  {
-    fill: $grey1;
+    fill: $shade1;
   }
   .#{$prefix}tip .#{$prefix}tip_circle-4  {
-    fill: $grey2;
+    fill: $shade2;
   }
   .#{$prefix}tip .#{$prefix}tip_circle-5  {
-    fill: $grey3;
+    fill: $shade3;
   }
 }
