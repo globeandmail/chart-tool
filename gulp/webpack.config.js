@@ -5,11 +5,12 @@ var path = require("path"),
 module.exports = {
   cache: true,
   entry: {
-    index: gulpConfig.libScripts + "/index",
+    bundle: gulpConfig.libScripts + "/index",
+    meteorSettings: "./custom/meteor-config.js"
   },
   output: {
     path: gulpConfig.buildPath,
-    filename: "bundle.js",
+    filename: "[name].js",
     publicPath: "/assets/"
   },
   module: {

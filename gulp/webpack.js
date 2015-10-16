@@ -4,10 +4,6 @@ var gulp = require("gulp"),
     webpackConfig = require("./webpack.config.js"),
     gulpConfig = require("./gulp-config.js");
 
-// Build and watch cycle (another option for development)
-// Advantage: No server required, can run app from filesystem
-// Disadvantage: Requests are not blocked until bundle is available,
-
 gulp.task("_webpack-build", function(callback) {
   // modify some webpack config options
   var myConfig = Object.create(webpackConfig);
@@ -32,6 +28,8 @@ gulp.task("_webpack-build", function(callback) {
 
     gulp.src([gulpConfig.buildPath + "/bundle.js", gulpConfig.buildPath + "/bundle.js.map"])
       .pipe(gulp.dest(gulpConfig.meteorBundle));
+
+      gulp.src()meteorSettings
 
   });
 });
