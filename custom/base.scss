@@ -36,6 +36,31 @@
 //   line-height: $utility-font-line-height;
 // }
 
+// $interface-font-light: "PrattLight", serif;
+// $interface-font-regular: "PrattRegular", serif;
+// $interface-font-bold: "PrattBold", serif;
+// $interface-font-black: "PrattBlack", serif;
+
+// @mixin interface-font-light {
+//   font-family: $interface-font-light;
+//   font-weight: normal;
+// }
+
+// @mixin interface-font-regular {
+//   font-family: $interface-font-regular;
+//   font-weight: normal;
+// }
+
+// @mixin interface-font-bold {
+//   font-family: $interface-font-bold;
+//   font-weight: normal;
+// }
+
+// @mixin interface-font-black {
+//   font-family: $interface-font-black;
+//   font-weight: normal;
+// }
+
 // // Colors
 
 // $primary-color: #CE2A23;

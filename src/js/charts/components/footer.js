@@ -16,6 +16,7 @@ function footerComponent(node, obj) {
 
   if (obj.editable === true) {
     sourceField.attr("contentEditable", true);
+    sourceField.classed("editable-chart_source", true);
   }
 
   var fogHeight = foreignObjectGroup.node().getBoundingClientRect().height;

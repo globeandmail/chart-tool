@@ -11,6 +11,6 @@
     padding-bottom: 0.2em;
   }
   .current {
-    @extend %interface-font-bold;
+    @include interface-font-bold;
   }
 }

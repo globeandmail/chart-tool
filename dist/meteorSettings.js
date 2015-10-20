@@ -85,7 +85,7 @@
 	    heading: "",
 	    qualifier: "",
 	    deck: "",
-	    source: "",
+	    source: "CHART TOOL",
 	    class: "primary",
 	    date_format: config.dateFormat,
 	    time_format: config.timeFormat,

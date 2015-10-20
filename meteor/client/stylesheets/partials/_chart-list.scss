@@ -50,7 +50,7 @@
       padding-bottom: 0.3em;
     }
     span {
-      @extend %interface-font-bold;
+      @include interface-font-bold;
     }
   }
 }
@@ -65,7 +65,7 @@
   }
   .slug {
     float: left;
-    @extend %interface-font-bold;
+    @include interface-font-bold;
   }
   .chart-links {
     float: right;

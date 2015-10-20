@@ -27,7 +27,7 @@
     }
   }
   h4 {
-    @extend %interface-font-bold;
+    @include interface-font-bold;
     font-size: 1.2em;
     margin: 0.7em 0 0.5em 0;
   }
@@ -37,7 +37,7 @@
 }
 
 select {
-  @extend %interface-font-regular;
+  @include interface-font-regular;
   font-size: 1.3em;
   border: 1px solid $text;
   outline: none;
@@ -102,7 +102,7 @@ select {
 }
 
 .time-hours-edit {
-  margin-left: 0.8em;
+  margin-left: 0.6em;
   input {
     margin-top: 0.6em;
   }
@@ -231,7 +231,7 @@ select {
 }
 
 .chart-types {
-  @extend %interface-font-black;
+  @include interface-font-bold;
   outline: none;
   background: transparent;
   width: auto;
@@ -254,7 +254,7 @@ select {
     letter-spacing: 0.02em;
     text-transform: uppercase;
     color: $primary-color;
-    @extend %interface-font-black;
+    @include interface-font-black;
     margin: 0;
     border-bottom: 1px solid lighten($verylightgray, 10%);
     margin-bottom: 0.75em;
@@ -283,7 +283,7 @@ select {
 }
 
 .embed-code {
-  span {
+  h3 span {
     color: $verylightgray;
   }
 }

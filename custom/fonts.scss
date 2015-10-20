@@ -1,72 +1,52 @@
-// $fontpath: "http://beta.images.theglobeandmail.com/media/www/fonts";
+$fontpath: "http://beta.images.theglobeandmail.com/media/www/fonts";
 
-// // pratt light
-// @font-face {
-//   font-family: 'PrattLight';
-//   src: url('#{$fontpath}/pratt_light-webfont.eot');
-//   src: local('?'),
-//     url('#{$fontpath}/pratt_light-webfont.woff') format('woff'),
-//     url('#{$fontpath}/pratt_light-webfont.ttf') format('truetype'),
-//     url('#{$fontpath}/pratt_light-webfont.svg#pratt-light') format('svg');
-//   font-weight: normal;
-//   font-style: normal;
-// }
+// pratt light
+@font-face {
+  font-family: 'PrattLight';
+  src: url('#{$fontpath}/pratt_light-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt_light-webfont.woff') format('woff'),
+    url('#{$fontpath}/pratt_light-webfont.ttf') format('truetype'),
+    url('#{$fontpath}/pratt_light-webfont.svg#pratt-light') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
-// // pratt regular
-// @font-face {
-//   font-family: 'PrattRegular';
-//   src: url('#{$fontpath}/pratt-webfont.eot');
-//   src: local('?'),
-//     url('#{$fontpath}/pratt-webfont.woff?v3') format('woff'),
-//     url('#{$fontpath}/pratt-webfont.ttf?v3') format('truetype'),
-//     url('#{$fontpath}/pratt-webfont.svg#webfont2bFOq9gT?v3') format('svg');
-//   font-weight: normal;
-//   font-style: normal;
-// }
+// pratt regular
+@font-face {
+  font-family: 'PrattRegular';
+  src: url('#{$fontpath}/pratt-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt-webfont.woff?v3') format('woff'),
+    url('#{$fontpath}/pratt-webfont.ttf?v3') format('truetype'),
+    url('#{$fontpath}/pratt-webfont.svg#webfont2bFOq9gT?v3') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
-// // pratt bold
-// @font-face {
-//   font-family: 'PrattBold';
-//   src: url('#{$fontpath}/pratt_bold-webfont.eot');
-//   src: local('?'),
-//     url('#{$fontpath}/pratt_bold-webfont.woff') format('woff'),
-//     url('#{$fontpath}/pratt_bold-webfont.ttf') format('truetype'),
-//     url('#{$fontpath}/pratt_bold-webfont.svg#pratt_bold-webfont') format('svg');
-//   font-weight: normal;
-//   font-style: normal;
-// }
+// pratt bold
+@font-face {
+  font-family: 'PrattBold';
+  src: url('#{$fontpath}/pratt_bold-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt_bold-webfont.woff') format('woff'),
+    url('#{$fontpath}/pratt_bold-webfont.ttf') format('truetype'),
+    url('#{$fontpath}/pratt_bold-webfont.svg#pratt_bold-webfont') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
-// // pratt black
-// @font-face {
-//   font-family: 'PrattBlack';
-//   src: url('#{$fontpath}/pratt_black-webfont.eot');
-//   src: local('?'),
-//     url('#{$fontpath}/pratt_black-webfont.woff') format('woff'),
-//     url('#{$fontpath}/pratt_black-webfont.ttf') format('truetype'),
-//     url('#{$fontpath}/pratt_black-webfont.svg#pratt_blackregular') format('svg');
-//   font-weight: normal;
-//   font-style: normal;
-// }
-
-// %interface-font-light {
-//   font-family: "PrattLight", serif;
-//   font-weight: normal;
-// }
-
-// %interface-font-regular {
-//   font-family: "PrattRegular", serif;
-//   font-weight: normal;
-// }
-
-// %interface-font-bold {
-//   font-family: "PrattBold", serif;
-//   font-weight: normal;
-// }
-
-// %interface-font-black {
-//   font-family: "PrattBlack", sans-serif;
-//   font-weight: normal;
-// }
+// pratt black
+@font-face {
+  font-family: 'PrattBlack';
+  src: url('#{$fontpath}/pratt_black-webfont.eot');
+  src: local('?'),
+    url('#{$fontpath}/pratt_black-webfont.woff') format('woff'),
+    url('#{$fontpath}/pratt_black-webfont.ttf') format('truetype'),
+    url('#{$fontpath}/pratt_black-webfont.svg#pratt_blackregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 @font-face {
   font-family: 'GMSanC';

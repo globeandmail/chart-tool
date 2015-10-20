@@ -24,7 +24,7 @@ header {
     }
   }
   h1 {
-    @extend %interface-font-light;
+    @include interface-font-light;
     color: $text;
     font-size: 1.7em;
     letter-spacing: -0.01em;
@@ -67,7 +67,7 @@ header {
   padding-left: 0.3em;
   font-size: 1.7em;
   color: $text;
-  @extend %interface-font-light;
+  @include interface-font-light;
   opacity: 0.2;
   @include transition (all 0.1s ease-out);
   cursor: pointer;
@@ -78,7 +78,7 @@ header {
   top: 0.9em;
   right: 0.5em;
   font-size: 1.7em;
-  @extend %interface-font-light;
+  @include interface-font-light;
   @media screen and (max-width: 1340px) {
     display: none;
   }
@@ -110,7 +110,7 @@ header {
 
 .input-slug-edit {
   font-size: 1.7em;
-  @extend %interface-font-bold;
+  @include interface-font-bold;
   border: none;
   color: $text;
   padding: 0.3em 0 0.4em 0;
@@ -148,7 +148,7 @@ header {
   text-align: right;
   padding-right: 0.6em;
   a {
-    @extend %interface-font-regular;
+    @include interface-font-regular;
     display: inline;
     color: $text;
     text-decoration: none;

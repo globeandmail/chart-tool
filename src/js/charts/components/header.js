@@ -18,6 +18,7 @@ function headerComponent(node, obj) {
 
   if (obj.editable === true) {
     titleField.attr("contentEditable", true);
+    titleField.classed("editable-chart_title", true);
   }
 
   // if we do need a legend

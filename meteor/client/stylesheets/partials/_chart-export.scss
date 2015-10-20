@@ -147,7 +147,7 @@
   }
   h4 {
     text-transform: none;
-    @extend %interface-font-bold;
+    @include interface-font-bold;
     font-size: 1.2em;
     margin: 0.7em 0 0.5em 0;
   }

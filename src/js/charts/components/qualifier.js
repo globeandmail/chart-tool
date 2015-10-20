@@ -14,12 +14,12 @@ function qualifierComponent(node, obj) {
       .attr("xmlns", "http://www.w3.org/1999/xhtml");
 
     var qualifierField = foreignObjectGroup.append("div")
-      .classed(obj.prefix + "chart_qualifier", true)
-        .attr({
-          "contentEditable": true,
-          "xmlns": "http://www.w3.org/1999/xhtml"
-        })
-       .text(obj.qualifier);
+      .attr({
+        "class": obj.prefix + "chart_qualifier editable-chart_qualifier",
+        "contentEditable": true,
+        "xmlns": "http://www.w3.org/1999/xhtml"
+      })
+      .text(obj.qualifier);
 
     foreignObject
       .attr("width", qualifierField.node().getBoundingClientRect().width + 15);

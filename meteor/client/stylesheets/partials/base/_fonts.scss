@@ -1,19 +1,24 @@
-%interface-font-light {
-  font-family: Georgia, serif;
+$interface-font-light: Georgia, serif;
+$interface-font-regular: Georgia, serif;
+$interface-font-bold: Georgia, serif;
+$interface-font-black: Georgia, serif;
+
+@mixin interface-font-light {
+  font-family: $interface-font-light;
   font-weight: normal;
 }
 
-%interface-font-regular {
-  font-family: Georgia, serif;
+@mixin interface-font-regular {
+  font-family: $interface-font-regular;
   font-weight: normal;
 }
 
-%interface-font-bold {
-  font-family: Georgia, serif;
-  font-weight: normal;
+@mixin interface-font-bold {
+  font-family: $interface-font-bold;
+  font-weight: bold;
 }
 
-%interface-font-black {
-  font-family: Helvetica, sans-serif;
+@mixin interface-font-black {
+  font-family: $interface-font-black;
   font-weight: bold;
 }

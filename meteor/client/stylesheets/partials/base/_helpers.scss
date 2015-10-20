@@ -35,7 +35,7 @@
   color: $text;
   @include transition (all 0.1s ease-out);
   @include placeholder {
-    @extend %interface-font-regular;
+    @include interface-font-regular;
   }
   &:focus {
     cursor: pointer;

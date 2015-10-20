@@ -20,7 +20,7 @@
   @include transition (all 0.1s ease-out);
   @include placeholder {
     color: $verylightgray;
-    @extend %interface-font-light;
+    @include interface-font-light;
     letter-spacing: -0.03em;
   }
   &:focus {

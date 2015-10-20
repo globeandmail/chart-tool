@@ -9,7 +9,7 @@
 .welcome {
   margin: 0;
   font-size: 4.2em;
-  @extend %interface-font-light;
+  @include interface-font-light;
   letter-spacing: -3px;
   text-align: center;
   text-rendering: optimizeLegibilty;

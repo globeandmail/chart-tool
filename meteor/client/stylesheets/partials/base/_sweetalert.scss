@@ -22,7 +22,7 @@
 	$padding: 17px;
 
 	background-color: white;
-	@extend %interface-font-regular;
+	@include interface-font-regular;
 	width: $width;
 	padding: $padding;
 	border-radius: 5px;
@@ -51,7 +51,7 @@
 		color: $text;
 		font-size: 2em;
 		text-align: center;
-		@extend %interface-font-bold;
+		@include interface-font-bold;
 		text-transform: none;
 		position: relative;
 		margin: 25px 0;

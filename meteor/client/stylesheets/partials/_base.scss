@@ -17,8 +17,7 @@ html {
   overflow-y: scroll;
   position: relative;
   min-height: 100%;
-  font-family: Georgia !important;
-  @extend %interface-font-regular;
+  @include interface-font-regular;
 }
 
 body {
@@ -30,14 +29,12 @@ body {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
   margin-bottom: 30px;
+  @include interface-font-regular;
 }
 
 h1, h2, h3, h4, h5, h6, strong, b {
-  @extend %interface-font-bold;
-}
-
-a, p {
-  @extend %interface-font-regular;
+  @include interface-font-regular;
+  font-weight: normal;
 }
 
 ul {
