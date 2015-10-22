@@ -63,7 +63,7 @@ function ColumnChart(node, obj) {
           return obj.data.keys[i + 1];
         },
         "transform": function(d) {
-          return "translate(" + (xScale(d.key)) + "," + obj.dimensions.headerHeight + ")";
+          return "translate(" + (xScale(d.key)) + ",0)";
         }
       });
 

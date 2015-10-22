@@ -68,7 +68,7 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
   }
 
   axisGroup
-    .attr("transform", "translate(0," + (obj.dimensions.headerHeight + obj.dimensions.yAxisHeight()) + ")");
+    .attr("transform", "translate(0," + obj.dimensions.yAxisHeight() + ")");
 
   var axisNode = axisGroup.append("g")
     .attr("class", obj.prefix + "x-axis");
@@ -109,7 +109,7 @@ function appendYAxis(axisGroup, obj, scale, axis, axisName) {
   obj.dimensions.yAxisPaddingRight = axisSettings.paddingRight;
 
   axisGroup
-    .attr("transform", "translate(0," + obj.dimensions.headerHeight + ")");
+    .attr("transform", "translate(0,0)");
 
   var axisNode = axisGroup.append("g")
     .attr("class", obj.prefix + "y-axis");
@@ -650,7 +650,7 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
   }
 
   xAxisObj.node
-    .attr("transform", "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + (obj.dimensions.height() - (obj.dimensions.xAxisHeight + obj.dimensions.footerHeight)) + ")");
+    .attr("transform", "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
   // once the axis is fully drawn, check that we don"t have any ticks
   // extending beyond the width of the SVG. if so, drop it like its hot
@@ -674,8 +674,8 @@ function addZeroLine(obj, node, Axis) {
         "transform": refGroup.attr("transform"),
         "x1": refLine.attr("x1"),
         "x2": refLine.attr("x2"),
-        "y1": obj.dimensions.headerHeight,
-        "y2": obj.dimensions.headerHeight
+        "y1": 0,
+        "y2": 0
       })
       .style("shape-rendering", "crispEdges");
 

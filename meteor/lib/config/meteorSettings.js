@@ -45,7 +45,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(4),
+	var config = __webpack_require__(2),
 	    p = __webpack_require__(24);
 	
 	app_version = p.version;
@@ -85,6 +85,7 @@
 	  chart: {
 	    version: app_version,
 	    build: app_build,
+	    prefix: prefix,
 	    slug: "",
 	    heading: "",
 	    qualifier: "",
@@ -210,7 +211,7 @@
 
 /***/ },
 
-/***/ 4:
+/***/ 2:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -239,7 +240,7 @@
 		"dateFormat": "%Y-%m-%d",
 		"timeFormat": "%H:%M",
 		"margins": {
-			"top": 0,
+			"top": 10,
 			"right": 0,
 			"bottom": 0,
 			"left": 0

@@ -58,7 +58,7 @@ function AreaChart(node, obj) {
         .datum(obj.data.data)
         .attr({
           "d": area,
-          "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+          "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)",
           "class": function() {
             var output = obj.prefix + "fill " + obj.prefix + "fill-" + (i);
             return output;
@@ -69,7 +69,7 @@ function AreaChart(node, obj) {
         .datum(obj.data.data)
         .attr({
           "d": line,
-          "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+          "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)",
           "class": function() {
             var output = obj.prefix + "line " + obj.prefix + "line-" + (i);
             return output;
@@ -101,7 +101,7 @@ function AreaChart(node, obj) {
     .datum(obj.data.data)
     .attr({
       "d": hArea,
-      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)",
       "class": function() {
         var output = obj.prefix + "fill " + obj.prefix + "fill-" + (obj.seriesHighlight()) + " " + obj.prefix + "highlight";
         return output;
@@ -112,7 +112,7 @@ function AreaChart(node, obj) {
     .datum(obj.data.data)
     .attr({
       "d": hLine,
-      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)",
       "class": function() {
         var output = obj.prefix + "line " + obj.prefix + "line-" + (obj.seriesHighlight()) + " " + obj.prefix + "highlight";
         return output;

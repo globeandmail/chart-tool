@@ -51,7 +51,7 @@ function LineChart(node, obj) {
         .datum(obj.data.data)
         .attr({
           "d": line,
-          "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+          "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)",
           "class": function() {
             var output = obj.prefix + "line " + obj.prefix + "line-" + (i);
             return output;
@@ -79,7 +79,7 @@ function LineChart(node, obj) {
   seriesGroup.append("path")
     .datum(obj.data.data)
     .attr({
-      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)",
       "class": function() {
         var output = obj.prefix + "line " + obj.prefix + "line-" + (obj.seriesHighlight()) + " " + obj.prefix + "highlight";
         return output;

@@ -64,6 +64,9 @@ module.exports = {
       var ratioScale = d3.scale.linear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
       return Math.round(ratioScale(this.width));
     },
+    computedHeight: function() {
+      return (this.height() - this.headerHeight - this.footerHeight - this.margins.top);
+    },
     ratioMobile: settings.ratioMobile,
     ratioDesktop: settings.ratioDesktop,
     margins: settings.margins,
@@ -71,7 +74,7 @@ module.exports = {
     footerHeight: 0,
     xAxisHeight: 0,
     yAxisHeight: function() {
-      return (this.height() - (this.headerHeight + this.footerHeight + this.xAxisHeight));
+      return (this.computedHeight() - this.xAxisHeight);
     },
     xAxisWidth: 0,
     labelWidth: 0,
