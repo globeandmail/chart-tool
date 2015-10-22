@@ -62,7 +62,15 @@ embed = function(obj) {
 
 deleteNullProps = function(obj, recurse) {
   for (var i in obj) {
-    if (obj[i] === null) {
+    if (Object.getPrototypeOf(obj[i]) === Object.prototype) {
+      if (Object.keys(obj[i]).length === 0) {
+        delete obj[i];
+      }
+    } else if (Array.isArray(obj[i]) && obj[i].length === 0) {
+      delete obj[i];
+    } else if (typeof obj[i] === "string" && obj[i] === "") {
+      delete obj[i];
+    } else if (obj[i] === null) {
       delete obj[i];
     } else if (recurse && typeof obj[i] === 'object') {
       deleteNullProps(obj[i], recurse);
@@ -275,7 +283,11 @@ standardizeDates = function(data, oldFormat, newFormat) {
 
   for (var i = 1; i < jsonData.data.length; i++ ) {
     var date = currFormat.parse(jsonData.data[i][0]);
-    jsonData.data[i][0] = stdFormat(date);
+    if (date !== null) {
+      jsonData.data[i][0] = stdFormat(date);
+    } else {
+      throw new Meteor.Error("Incompatible date formatting", "Make sure your data date formatting matches the formatting dropdown.");
+    }
   }
 
   var csvOptions = {

@@ -56,12 +56,12 @@ function StreamgraphChart(node, obj) {
       "stroke": function() { return "white"; }
     });
 
-  var area = d3.svg.area().interpolate(obj.interpolation)
+  var area = d3.svg.area().interpolate(obj.options.interpolation)
     .x(function(d) { return xScale(d.x); })
     .y0(function(d) { return yScale(d.y0); })
     .y1(function(d) { return yScale(d.y0 + d.y); });
 
-  var line = d3.svg.line().interpolate(obj.interpolation)
+  var line = d3.svg.line().interpolate(obj.options.interpolation)
     .x(function(d) { return xScale(d.x); })
     .y(function(d) { return yScale(d.y0 + d.y); });
 

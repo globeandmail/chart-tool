@@ -30,10 +30,14 @@ app_settings = {
     source_suffix: " » SOURCE:"
   },
 
+  primary: "NEWS & ROB",
+  alternate: "Globe Investor",
+
+  help: "http://confluence.colo.theglobeandmail.com/display/ed/Chart+Tool",
+
   chart: {
     version: app_version,
     build: app_build,
-    prefix: prefix,
     slug: "",
     heading: "",
     qualifier: "",
@@ -88,38 +92,36 @@ app_settings = {
       nice: config.yAxis.nice
     },
 
-    series: [{
-      style: "",
-      emphasis: {},
-      pointers: {}
-    }],
+    series: [],
     mobile: {},
     annotations: {},
 
     // for when series are indexed to a value
     index: "",
-    range: [{
-      //x or y
-      axis: "",
-      //key to use as start location
-      start: "",
-      //optional - if not specified a line is shown instead
-      end: "",
-      label: ""
-    }],
+    range: [],
 
     img: "",
     print: {
       columns: "2col",
       lines: 20
-    },
+    }
 
-    empty_series: {
-      style: "",
-      emphasis: {},
-      pointers: {}
-    },
+  },
 
+  empty_series: {
+    style: "",
+    emphasis: {},
+    pointers: {}
+  },
+
+  empty_range: {
+    //x or y
+    axis: "",
+    //key to use as start location
+    start: "",
+    //optional - if not specified a line is shown instead
+    end: "",
+    label: ""
   },
 
   print: {

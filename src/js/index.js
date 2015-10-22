@@ -28,7 +28,7 @@
         if (d3.keys(dispatcher).indexOf(prop) > -1) {
           dispatcher.on(prop, dispatchFunctions[prop]);
         } else {
-          console.error("Chart Tool does not offer a dispatcher of type '" + prop + "'. For available dispatcher types, please see the ChartTool.dispatch() method." );
+          throw "Chart Tool does not offer a dispatcher of type '" + prop + "'. For available dispatcher types, please see the ChartTool.dispatch() method." ;
         }
       }
 

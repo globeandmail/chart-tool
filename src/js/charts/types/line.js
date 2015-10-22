@@ -42,7 +42,7 @@ function LineChart(node, obj) {
 
     if (i !== obj.seriesHighlight()) {
 
-      var line = d3.svg.line().interpolate(obj.interpolation)
+      var line = d3.svg.line().interpolate(obj.options.interpolation)
         .defined(function(d) { return !isNaN(d.series[i].val); })
         .x(function(d) { return xScale(d.key); })
         .y(function(d) { return yScale(d.series[i].val); });
@@ -71,7 +71,7 @@ function LineChart(node, obj) {
 
   var secondaryArr = secondaryArr.reverse();
 
-  var hLine = d3.svg.line().interpolate(obj.interpolation)
+  var hLine = d3.svg.line().interpolate(obj.options.interpolation)
     .defined(function(d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
     .x(function(d) { return xScale(d.key); })
     .y(function(d) { return yScale(d.series[obj.seriesHighlight()].val); });

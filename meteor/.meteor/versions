@@ -55,7 +55,7 @@ meteor-platform@1.2.3
 meteorhacks:aggregate@1.2.1
 meteorhacks:collection-utils@1.2.0
 meteorhacks:inject-initial@1.0.2
-meteorhacks:kadira@2.23.6
+meteorhacks:kadira@2.24.0
 meteorhacks:meteorx@1.4.1
 meteorhacks:zones@1.6.0
 minifiers@1.1.7
@@ -65,7 +65,7 @@ mobile-status-bar@1.0.6
 mongo@1.1.2
 mongo-id@1.0.1
 mongo-livedata@1.0.9
-mquandalle:bower@1.5.2
+mquandalle:bower@1.5.2_1
 npm-mongo@1.4.39_1
 observe-sequence@1.0.7
 ordered-dict@1.0.4

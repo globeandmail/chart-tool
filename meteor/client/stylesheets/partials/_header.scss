@@ -49,9 +49,10 @@ header {
   }
 }
 
-.help a {
+.help {
   color: $text;
   @include transition (all 0.1s ease-out);
+  cursor: pointer;
   &:hover {
     color: $primary-color;
     @include transition (all 0.1s ease-in);

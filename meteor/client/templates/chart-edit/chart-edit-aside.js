@@ -122,6 +122,9 @@ Template.chartEditAside.helpers({
     if (axis) {
       if (axis.format.number === val) { return "selected"; }
     }
+  },
+  primaryOrAlternate: function(val) {
+    return app_settings[val] || val.toUpperCase();
   }
 });
 

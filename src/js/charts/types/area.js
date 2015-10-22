@@ -44,13 +44,13 @@ function AreaChart(node, obj) {
 
     if (i !== obj.seriesHighlight()) {
 
-      var area = d3.svg.area().interpolate(obj.interpolation)
+      var area = d3.svg.area().interpolate(obj.options.interpolation)
         .defined(function(d) { return !isNaN(d.series[i].val); })
         .x(function(d) { return xScale(d.key); })
         .y0(yScale(0))
         .y1(function(d) { return yScale(d.series[i].val); });
 
-      var line = d3.svg.line().interpolate(obj.interpolation)
+      var line = d3.svg.line().interpolate(obj.options.interpolation)
         .x(function(d) { return xScale(d.key); })
         .y(function(d) { return yScale(d.series[i].val); });
 
@@ -86,13 +86,13 @@ function AreaChart(node, obj) {
 
   var secondaryArr = secondaryArr.reverse();
 
-  var hArea = d3.svg.area().interpolate(obj.interpolation)
+  var hArea = d3.svg.area().interpolate(obj.options.interpolation)
     .defined(function(d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
     .x(function(d) { return xScale(d.key); })
     .y0(yScale(0))
     .y1(function(d) { return yScale(d.series[obj.seriesHighlight()].val); });
 
-  var hLine = d3.svg.line().interpolate(obj.interpolation)
+  var hLine = d3.svg.line().interpolate(obj.options.interpolation)
     .defined(function(d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
     .x(function(d) { return xScale(d.key); })
     .y(function(d) { return yScale(d.series[obj.seriesHighlight()].val); });

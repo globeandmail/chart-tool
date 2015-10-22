@@ -22,7 +22,9 @@ gulp.task('lib-serve', function(callback) {
 
 gulp.task('meteor-serve', function(callback) {
   runSequence('_set-version',
-    ['_watch', '_meteor-dev', '_browsersync'],
+    '_watch',
+    '_meteor-dev',
+    '_browsersync',
     callback);
 });
 
