@@ -37,7 +37,7 @@
         </div>
 
         <div class="unit-edit">
-          <h4>Your dates should match: <a href="#" class="help-toggle help-date-calc">?</a></h4>
+          <h4>Your dates should match  <a href="#" class="help-toggle help-date-calc">?</a></h4>
           <div class="date-calculation">{{ dateCalc }}</div>
         </div>
 
@@ -148,12 +148,12 @@
         <form action="" class="color-radios">
           <ul>
             <li>
-              <input id="colorRob" type="radio" name="color" value="primary" class="input-radio input-radio-rob" checked="{{ classChecked 'primary' }}">
-              <label for="colorRob">News &amp; ROB</label>
+              <input id="colorPrimary" type="radio" name="color" value="primary" class="input-radio input-radio-primary" checked="{{ classChecked 'primary' }}">
+              <label for="colorPrimary">{{ primaryOrAlternate "primary" }}</label>
             </li>
             <li>
-              <input id="colorInvestor" type="radio" name="color" value="alternate" class="input-radio input-radio-investor" checked="{{ classChecked 'alternate' }}">
-              <label for="colorInvestor">Globe Investor</label>
+              <input id="colorAlternate" type="radio" name="color" value="alternate" class="input-radio input-radio-alternate" checked="{{ classChecked 'alternate' }}">
+              <label for="colorAlternate">{{ primaryOrAlternate "alternate" }}</label>
             </li>
           </ul>
         </form>
@@ -182,7 +182,7 @@
       {{ /if }}
 
       <div class="unit-edit tips-edit">
-        <h4>Show tips? <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
+        <h4>Show tips <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
         <input class="input-checkbox-tips" type="checkbox" name="Tips" checked="{{ options.tips }}">
       </div>
 

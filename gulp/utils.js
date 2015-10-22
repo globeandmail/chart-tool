@@ -25,7 +25,7 @@ gulp.task("_jsdoc", shell.task([
   "./node_modules/.bin/jsdoc -c ./jsdoc.json ./src"
 ]));
 
-gulp.task('_set-version', function() {
+gulp.task('_set-version', function(done) {
   gulp.src("./README.md")
     .pipe(replace(/### Version\n\n([a-z0-9.]+)/, "### Version\n\n" + p.version))
     .pipe(gulp.dest('./'));
@@ -43,6 +43,8 @@ gulp.task('_set-version', function() {
     .pipe(replace(/app_version.*/, "app_version = '" + p.version + "';"))
     .pipe(replace(/app_build.*/, "app_build = '" + p.buildVer + "';"))
     .pipe(gulp.dest(gulpConfig.meteorPath + "/lib/"));
+
+  done();
 });
 
 gulp.task('buildver', function() {

@@ -12,7 +12,7 @@ footer {
     color: $text;
     margin: 0;
     padding: 0;
-    font-family: $font-regular;
+    @include interface-font-regular;
     text-transform: uppercase;
     font-size: 0.9em;
     padding: 0.55em;
@@ -20,16 +20,12 @@ footer {
       color: $text;
       text-decoration: none;
       &:hover {
-        color: $red;
+        color: $primary-color;
       }
     }
   }
   .version {
     float: left;
     text-align: left;
-  }
-  .copyright {
-    float: right;
-    text-align: right;
   }
 }

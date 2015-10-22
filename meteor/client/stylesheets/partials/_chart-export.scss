@@ -46,7 +46,7 @@
     @include user-select(none);
     &:hover {
       opacity: 1;
-      color: $red;
+      color: $primary-color;
       @include transition (all 0.1s ease-in);
     }
   }
@@ -76,7 +76,7 @@
   margin-bottom: 0.6em;
   font-size: 1.6em;
   &:hover {
-    border: 1px solid $red;
+    border: 1px solid $primary-color;
   }
 }
 
@@ -139,7 +139,7 @@
     font-size: 1.2em;
   }
   .input-radio:checked {
-    background-color: $red;
+    background-color: $primary-color;
     box-shadow: inset 0px 0px 0px 3px white;
   }
   .input-lines {
@@ -147,7 +147,7 @@
   }
   h4 {
     text-transform: none;
-    font-family: $font-bold;
+    @include interface-font-bold;
     font-size: 1.2em;
     margin: 0.7em 0 0.5em 0;
   }

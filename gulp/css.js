@@ -19,6 +19,14 @@ gulp.task('_scss', function() {
     .pipe(gulp.dest(gulpConfig.libStylesheets + "/build"));
 
   gulp.src(gulpConfig.libStylesheets + "/settings/_settings.scss")
+    .pipe(gulp.dest(gulpConfig.meteorPath + "/client/stylesheets/partials/base"));
+
+  gulp.src(gulpConfig.customPath + "/base.scss")
+    .pipe(rename("_custom-settings.scss"))
+    .pipe(gulp.dest(gulpConfig.meteorPath + "/client/stylesheets/partials/base"));
+
+  gulp.src(gulpConfig.customPath + "/meteor-custom.scss")
+    .pipe(rename("_custom.scss"))
     .pipe(gulp.dest(gulpConfig.meteorPath + "/client/stylesheets/partials"));
 });
 

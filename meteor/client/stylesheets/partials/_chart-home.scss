@@ -9,7 +9,7 @@
 .welcome {
   margin: 0;
   font-size: 4.2em;
-  font-family: $font-light;
+  @include interface-font-light;
   letter-spacing: -3px;
   text-align: center;
   text-rendering: optimizeLegibilty;
@@ -37,10 +37,9 @@ h2 {
   a {
     color: $text;
     text-decoration: none;
-    font-weight: normal;
   }
   &:hover {
-    background-color: $red;
+    background-color: $primary-color;
     a {
       color: white;
     }

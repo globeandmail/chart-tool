@@ -22,7 +22,7 @@
 	$padding: 17px;
 
 	background-color: white;
-	font-family: $font-regular;
+	@include interface-font-regular;
 	width: $width;
 	padding: $padding;
 	border-radius: 5px;
@@ -51,7 +51,7 @@
 		color: $text;
 		font-size: 2em;
 		text-align: center;
-		font-family: $font-bold;
+		@include interface-font-bold;
 		text-transform: none;
 		position: relative;
 		margin: 25px 0;
@@ -74,7 +74,7 @@
 
 	button {
 		@extend %button;
-		color: $red;
+		color: $primary-color;
 		box-shadow: none;
 		font-size: 1.4em;
 		padding: 10px 32px;
@@ -82,7 +82,7 @@
 		cursor: pointer;
 		&:hover {
 			color: white;
-			background-color: $red !important;
+			background-color: $primary-color !important;
 		}
 		&:focus {
 			outline: none;
@@ -117,7 +117,6 @@
 	}
 
 	.sa-icon {
-		// $red: 		#F27474;
 		$orange: 	#F8BB86;
 		$blue: 		#C9DAE1;
 		$green: 	#A5DC86;
@@ -134,7 +133,7 @@
 		box-sizing: content-box;
 
 		&.sa-error {
-			border-color: $red;
+			border-color: $primary-color;
 
 			.sa-x-mark {
 				position: relative;
@@ -145,7 +144,7 @@
 				position: absolute;
 				height: 5px;
 				width: 47px;
-				background-color: $red;
+				background-color: $primary-color;
 				display: block;
 				top: 37px;
 				border-radius: 2px;

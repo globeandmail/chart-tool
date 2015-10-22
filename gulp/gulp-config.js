@@ -4,6 +4,7 @@ var libPath           = "./src",
     libScripts        = libPath + "/js"
     libStylesheets    = libPath + "/styles",
     libSettings       = libPath + "/js/config/chart-settings.js",
+    customPath        = "./custom",
 
     meteorPort        = 3000,
     browserSyncPort   = 3030,
@@ -15,7 +16,7 @@ var libPath           = "./src",
 
     meteorPath        = "./meteor",
     meteorBundle      = meteorPath + "/lib/charts/scripts",
-    meteorSettings    = meteorPath + "/lib/settings.js",
+    meteorSettings    = meteorPath + "/lib/config/settings.js",
     meteorBuildPath   = "." + buildPath + "/meteor",
 
 module.exports = {
@@ -23,6 +24,7 @@ module.exports = {
   libScripts: libScripts,
   libStylesheets: libStylesheets,
   libSettings: libSettings,
+  customPath: customPath,
 
   meteorPort: meteorPort,
   browserSyncPort: browserSyncPort,

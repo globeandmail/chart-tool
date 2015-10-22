@@ -16,7 +16,7 @@ header {
     width: 100%;
     &:after {
       content: "";
-      background-color: $red;
+      background-color: $primary-color;
       height: 2px;
       width: 100%;
       position: absolute;
@@ -24,7 +24,7 @@ header {
     }
   }
   h1 {
-    font-family: $font-light;
+    @include interface-font-light;
     color: $text;
     font-size: 1.7em;
     letter-spacing: -0.01em;
@@ -49,11 +49,12 @@ header {
   }
 }
 
-.help a {
+.help {
   color: $text;
   @include transition (all 0.1s ease-out);
+  cursor: pointer;
   &:hover {
-    color: $red;
+    color: $primary-color;
     @include transition (all 0.1s ease-in);
   }
 }
@@ -67,7 +68,7 @@ header {
   padding-left: 0.3em;
   font-size: 1.7em;
   color: $text;
-  font-family: $font-light;
+  @include interface-font-light;
   opacity: 0.2;
   @include transition (all 0.1s ease-out);
   cursor: pointer;
@@ -78,7 +79,7 @@ header {
   top: 0.9em;
   right: 0.5em;
   font-size: 1.7em;
-  font-family: $font-light;
+  @include interface-font-light;
   @media screen and (max-width: 1340px) {
     display: none;
   }
@@ -110,7 +111,7 @@ header {
 
 .input-slug-edit {
   font-size: 1.7em;
-  font-family: $font-bold;
+  @include interface-font-bold;
   border: none;
   color: $text;
   padding: 0.3em 0 0.4em 0;
@@ -148,12 +149,13 @@ header {
   text-align: right;
   padding-right: 0.6em;
   a {
+    @include interface-font-regular;
     display: inline;
     color: $text;
     text-decoration: none;
     @include transition (all 0.1s ease-out);
     &:hover {
-      color: $red;
+      color: $primary-color;
       @include transition (all 0.1s ease-in);
     }
   }

@@ -78,7 +78,7 @@ generateImg = function(obj) {
   drawChart(container, obj);
 
   //add required attributes to svg tag
-  var svg = d3.select(div).select('.gc-chart_svg')
+  var svg = d3.select(div).select('.' + prefix + 'chart_svg')
     .attr("version", 1.1)
     .attr("xmlns", "http://www.w3.org/2000/svg")
     .attr("width", width);
