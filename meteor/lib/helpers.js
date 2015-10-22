@@ -39,7 +39,8 @@ cleanEmbed = function(data) {
     "md5",
     "date_format",
     "print",
-    "img"
+    "img",
+    "prefix"
   );
   var chartObj = deleteProp(data, arr);
   var newData = csvFormat(data);

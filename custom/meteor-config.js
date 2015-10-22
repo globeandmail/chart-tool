@@ -38,6 +38,7 @@ app_settings = {
   chart: {
     version: app_version,
     build: app_build,
+    prefix: prefix,
     slug: "",
     heading: "",
     qualifier: "",
