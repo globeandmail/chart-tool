@@ -76,15 +76,16 @@ function tipsManager(node, obj) {
 
 function appendTipElements(node, obj) {
 
-  var chartNode = d3.select(node.node().parentNode);
+  var chartNode = d3.select(node.node().parentNode.parentNode),
+      svgNode = d3.select(node.node().parentNode);
 
-  var tip = chartNode.append("g")
+  var tip = svgNode.append("g")
     .attr("class", obj.prefix + "tip");
 
   var tipBox = tip.append("g")
     .attr({
       "class": obj.prefix + "tip_box",
-      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.headerHeight + 7) + ")"
+      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"
     });
 
   tipBox.append("rect")
@@ -127,9 +128,7 @@ function appendTipElements(node, obj) {
     });
 
   tipGroup.append("text")
-    .text(function(d) {
-      return d.val;
-    })
+    .text(function(d) { return d.val; })
     .attr({
       "class": function(d, i) {
         return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i + 1));
@@ -147,9 +146,9 @@ function appendTipElements(node, obj) {
   var overlay = tip.append("rect")
     .attr({
       "class": obj.prefix + "tip_overlay",
-      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
       "width": obj.dimensions.tickWidth(),
-      "height": obj.dimensions.height() - obj.dimensions.headerHeight - obj.dimensions.footerHeight
+      "height": obj.dimensions.computedHeight()
     });
 
   var xTipLine = tip.append("g")
@@ -160,6 +159,7 @@ function appendTipElements(node, obj) {
 
   return {
     chart: chartNode,
+    svg: svgNode,
     xLine: xTipLine,
     overlay: overlay,
     tipBox: tipBox,
@@ -196,6 +196,21 @@ function LineChartTips(tipNodes, obj) {
         return obj.yAxis.prefix + formatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
       });
 
+    tipGroup
+      .attr({
+        "transform": function() {
+          if (cursor.x > obj.dimensions.tickWidth() / 2) {
+            // tipbox pointing left
+            var x = obj.dimensions.tipPadding.left;
+          } else {
+            // tipbox pointing right
+            var x = obj.dimensions.tipPadding.left;
+          }
+          var y = obj.dimensions.tipPadding.top;
+          return "translate(" + x + "," + y + ")";
+        }
+      });
+
     // tipNodes.tip
     //   .selectAll("." + obj.prefix + "tip_path-circle")
     //     .data(tipData.series)
@@ -214,16 +229,16 @@ function LineChartTips(tipNodes, obj) {
 
     tipNodes.chart.select("." + obj.prefix + "tip_rect")
       .attr({
-        "width": tipGroup.node().getBoundingClientRect().width,
-        "height": tipGroup.node().getBoundingClientRect().height
+        "width": tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left +  + obj.dimensions.tipPadding.right,
+        "height": tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top +  + obj.dimensions.tipPadding.bottom
       });
 
     tipNodes.xLine.select("line")
       .attr({
         "x1": cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "x2": cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-        "y1": obj.dimensions.headerHeight,
-        "y2": obj.dimensions.headerHeight + obj.dimensions.yAxisHeight()
+        "y1": 0,
+        "y2": obj.dimensions.yAxisHeight()
       });
 
     var getTranslate = require("../../utils/utils").getTranslateXY;
@@ -234,11 +249,13 @@ function LineChartTips(tipNodes, obj) {
       .attr({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
-            var x = cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width;
+            // tipbox pointing left
+            var x = cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
           } else {
-            var x = cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight;
+            // tipbox pointing right
+            var x = cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
           }
-          return "translate(" + x + "," + tipBoxTranslate[1] + ")";
+          return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
         }
       });
 

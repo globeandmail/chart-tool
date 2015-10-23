@@ -245,6 +245,16 @@
 			"bottom": 0,
 			"left": 0
 		},
+		"tipOffset": {
+			"vertical": 4,
+			"horizontal": 1
+		},
+		"tipPadding": {
+			"top": 4,
+			"right": 9,
+			"bottom": 4,
+			"left": 9
+		},
 		"yAxis": {
 			"display": true,
 			"scale": "linear",

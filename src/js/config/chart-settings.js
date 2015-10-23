@@ -73,6 +73,8 @@ module.exports = {
     ratioMobile: settings.ratioMobile,
     ratioDesktop: settings.ratioDesktop,
     padding: settings.padding,
+    tipPadding: settings.tipPadding,
+    tipOffset: settings.tipOffset,
     headerHeight: 0,
     footerHeight: 0,
     xAxisHeight: 0,
