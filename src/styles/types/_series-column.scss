@@ -1,0 +1,46 @@
+.#{$prefix}series_group .#{$prefix}column rect {
+  stroke-width: 0;
+}
+
+.#{$prefix}series_group .#{$prefix}series rect {
+  stroke-width: 1px;
+}
+
+.#{$prefix}news .#{$prefix}series_group .#{$prefix}series_1 rect {
+  fill: $black;
+}
+
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}series_1 rect {
+  fill: $alternate-color;
+}
+
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}series_1 rect {
+  fill: $primary-color;
+}
+
+.#{$prefix}news .#{$prefix}series_group .#{$prefix}series:only-child rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}series:only-child rect,
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}series:only-child rect {
+  fill: $shade2;
+}
+
+//not stacked
+.#{$prefix}news .#{$prefix}series_group .#{$prefix}column-1 rect {
+  fill: $black;
+}
+
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-1 rect {
+  fill: $alternate-color;
+}
+
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-1 rect {
+  fill: $primary-color;
+}
+
+.#{$prefix}news .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect,
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect {
+  fill: $shade2;
+}
+
+
