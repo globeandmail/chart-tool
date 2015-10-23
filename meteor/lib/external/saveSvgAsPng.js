@@ -137,6 +137,7 @@
         canvas.width = image.width;
         canvas.height = image.height;
         var context = canvas.getContext('2d');
+
         context.drawImage(image, 0, 0);
 
         var a = document.createElement('a');

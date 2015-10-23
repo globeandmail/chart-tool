@@ -45,7 +45,7 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(4),
+	var config = __webpack_require__(2),
 	    p = __webpack_require__(24);
 	
 	app_version = p.version;
@@ -85,6 +85,7 @@
 	  chart: {
 	    version: app_version,
 	    build: app_build,
+	    prefix: prefix,
 	    slug: "",
 	    heading: "",
 	    qualifier: "",
@@ -210,7 +211,7 @@
 
 /***/ },
 
-/***/ 4:
+/***/ 2:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -238,11 +239,21 @@
 		"scaleMultiplier": 1.25,
 		"dateFormat": "%Y-%m-%d",
 		"timeFormat": "%H:%M",
-		"margins": {
-			"top": 0,
-			"right": 0,
+		"padding": {
+			"top": 10,
+			"right": 2,
 			"bottom": 0,
 			"left": 0
+		},
+		"tipOffset": {
+			"vertical": 4,
+			"horizontal": 1
+		},
+		"tipPadding": {
+			"top": 4,
+			"right": 9,
+			"bottom": 4,
+			"left": 9
 		},
 		"yAxis": {
 			"display": true,

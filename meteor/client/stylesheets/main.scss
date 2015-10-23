@@ -1,6 +1,10 @@
 @import "partials/bourbon/bourbon";
 @import "partials/neat/neat";
 
+@import "partials/settings";
+@import "partials/fonts";
+@import "partials/custom-settings";
+
 @import "partials/base";
 @import "partials/header";
 @import "partials/footer";
@@ -13,5 +17,5 @@
 @import "partials/loading";
 @import "partials/notfound";
 
-@import "print";
+@import "partials/print";
 @import "partials/custom";

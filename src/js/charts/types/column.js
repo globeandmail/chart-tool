@@ -29,7 +29,7 @@ function ColumnChart(node, obj) {
       }
       return output;
     })
-    .attr("transform", "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)");
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
 
   // hack to get time-series columns to work. should maybe be rewritten?
   if (xScaleObj.obj.rangeType === "range") {
@@ -63,7 +63,7 @@ function ColumnChart(node, obj) {
           return obj.data.keys[i + 1];
         },
         "transform": function(d) {
-          return "translate(" + (xScale(d.key)) + "," + obj.dimensions.headerHeight + ")";
+          return "translate(" + (xScale(d.key)) + ",0)";
         }
       });
 

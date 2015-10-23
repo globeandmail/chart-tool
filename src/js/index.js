@@ -192,7 +192,9 @@
 
   } else {
 
-    console.error("Chart Tool: no D3 library detected.");
+    if (!root.Meteor) {
+      console.error("Chart Tool: no D3 library detected.");
+    }
 
   }
 
