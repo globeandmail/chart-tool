@@ -1,8 +1,4 @@
 
-.#{$prefix}series_group .#{$prefix}stream-series {
-  fill: $shade4;
-}
-
 .#{$prefix}primary .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
   fill: $primary-color;
 }
@@ -14,5 +10,5 @@
 .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}line {
   fill: none;
   stroke: white;
-  stroke-width: 3px;
+  stroke-width: 1px;
 }

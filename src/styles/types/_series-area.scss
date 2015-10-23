@@ -22,12 +22,12 @@
   .#{$prefix}stacked .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}area.#{$prefix}line {
     fill: none;
     stroke: white;
-    stroke-width: 3px;
+    stroke-width: 2px;
   }
 }
 
 .#{$prefix}area.stacked .#{$prefix}series_group .#{$prefix}line {
-  stroke-width: 3px;
+  stroke-width: 2px;
 }
 
 .#{$prefix}primary .#{$prefix}line.#{$prefix}highlight,
