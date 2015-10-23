@@ -2,3 +2,252 @@
 //   font-size: $utility-font-size;
 //   padding-top: 2px;
 // }
+
+
+/*Right now the way the columns and stacked columns are classed in js,
+there is a bit of a conflict. Columns series are zero indexed but they probably shouldn't be.
+We should probably change this going forward.
+The nesting of columns in groups is also slightly different in stacked/non-stacked which is
+causing a more specific selector to be set for the non-stacked variant of the first series below.
+*/
+
+
+
+
+.#{$prefix}news .#{$prefix}series_group .#{$prefix}column-2 rect,
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-2 rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-2 rect {
+  fill: $shade1;
+}
+
+.#{$prefix}news .#{$prefix}series_group .#{$prefix}column-3 rect,
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-3 rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-3 rect {
+  fill: $shade2;
+
+}
+
+.#{$prefix}news .#{$prefix}series_group .#{$prefix}column-4 rect,
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-4 rect,
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-4 rect {
+  fill: $shade3;
+}
+
+
+.seriesAmount5 {
+  .#{$prefix}news .#{$prefix}series_group .#{$prefix}column-2 rect,
+  .#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-2 rect,
+  .#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-2 rect {
+    fill: $black;
+  }
+
+  .#{$prefix}series_group .#{$prefix}column-3 rect {
+    fill: $shade1;
+  }
+
+  .#{$prefix}series_group .#{$prefix}column-4 rect {
+    fill: $shade2;
+  }
+
+  .#{$prefix}series_group .#{$prefix}column-5 rect {
+    fill: $shade3;
+  }
+}
+
+
+.#{$prefix}series_group .#{$prefix}series_2 rect {
+  fill: $shade1;
+}
+
+.#{$prefix}series_group .#{$prefix}series_3 rect {
+  fill: $shade2;
+}
+
+.#{$prefix}series_group .#{$prefix}series_4 rect {
+  fill: $shade3;
+}
+
+
+.#{$prefix}series-5 {
+
+  .#{$prefix}series_group .#{$prefix}series_2 rect {
+    fill: $black;
+  }
+
+  .#{$prefix}series_group .#{$prefix}series_3 rect {
+    fill: $shade1;
+  }
+
+  .#{$prefix}series_group .#{$prefix}series_4 rect {
+    fill: $shade2;
+  }
+
+  .#{$prefix}series_group .#{$prefix}series_5 rect {
+    fill: $shade3;
+  }
+
+}
+
+
+.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
+  fill: $primary-color;
+}
+
+.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}highlight {
+  fill: $alternate-color;
+}
+
+.#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill-1 {
+  fill: $alternate-color;
+}
+
+.#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill-2 {
+  fill: $shade1;
+}
+
+.#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill-3 {
+  fill: $shade2;
+}
+
+.#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill-4 {
+  fill: $shade3;
+}
+
+.#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill-5 {
+  fill: $shade4;
+}
+
+
+
+
+
+.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
+  stroke: $shade1;
+}
+
+.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
+  stroke: $shade2;
+}
+
+.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
+  stroke: $shade3;
+}
+
+
+.#{$prefix}series-5 {
+
+  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
+    stroke: $black;
+  }
+
+  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
+    stroke: $shade1;
+  }
+
+  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
+    stroke: $shade2;
+  }
+
+  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-4 {
+    stroke: $shade3;
+  }
+
+}
+
+
+
+.#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon,
+.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon {
+  background: $shade1;
+}
+
+.#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
+.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
+  background: $shade2;
+}
+
+.#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
+.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
+  background: $shade3;
+}
+
+.seriesAmount5 {
+  .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon,
+  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon {
+    background: $black;
+  }
+
+  .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
+  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
+    background: $shade1;
+  }
+
+  .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
+  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
+    background: $shade2;
+  }
+
+  .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon,
+  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon {
+    background: $shade3;
+  }
+
+}
+
+
+
+.#{$prefix}news .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
+  background: $black;
+}
+
+.#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
+  background: $alternate-color;
+}
+
+.#{$prefix}primary .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
+  background: $primary-color;
+}
+
+.#{$prefix}news .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon {
+  background: $black;
+}
+
+
+
+.#{$prefix}tip .#{$prefix}tip_circle  {
+  fill: $primary-color;
+}
+
+.#{$prefix}tip .#{$prefix}tip_circle-2  {
+  fill: $shade1;
+}
+
+.#{$prefix}tip .#{$prefix}tip_circle-3  {
+  fill: $shade2;
+}
+
+.#{$prefix}tip .#{$prefix}tip_circle-4  {
+  fill: $shade3;
+}
+
+.#{$prefix}tip .#{$prefix}tip_circle-5  {
+  fill: $primary-color;
+}
+
+.#{$prefix}series-5 {
+  .#{$prefix}tip .#{$prefix}tip_circle-2  {
+    fill: $black;
+  }
+  .#{$prefix}tip .#{$prefix}tip_circle-3  {
+    fill: $shade1;
+  }
+  .#{$prefix}tip .#{$prefix}tip_circle-4  {
+    fill: $shade2;
+  }
+  .#{$prefix}tip .#{$prefix}tip_circle-5  {
+    fill: $shade3;
+  }
+}
+
+
+

@@ -1,5 +1,4 @@
 // heading
-
 .#{$prefix}chart_title {
   margin-bottom: 0px;
   padding: 0;
@@ -11,7 +10,6 @@
 }
 
 // legend
-
 .#{$prefix}chart_legend {
   padding-bottom: $utility-font-size;
 }
@@ -36,65 +34,10 @@
   margin-right: 4px;
 }
 
-.#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon,
-.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon {
-  background: $shade1;
-}
-
-.#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
-.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
-  background: $shade2;
-}
-
-.#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
-.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
-  background: $shade3;
-}
-
-.seriesAmount5 {
-  .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon {
-    background: $black;
-  }
-
-  .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
-    background: $shade1;
-  }
-
-  .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
-    background: $shade2;
-  }
-
-  .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon {
-    background: $shade3;
-  }
-
-}
-
-.#{$prefix}news .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
-  background: $black;
-}
-
-.#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
-  background: $alternate-color;
-}
-
-.#{$prefix}primary .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
-  background: $primary-color;
-}
-
-.#{$prefix}news .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon {
-  background: $black;
-}
-
 // qualifier
-
 .#{$prefix}chart_qualifier {
   margin: 0;
-  background: white;
+  background: $white;
   height: auto;
   @extend %utility-font;
 }

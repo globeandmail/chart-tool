@@ -30,33 +30,3 @@
   stroke: $alternate-color;
 }
 
-.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
-  stroke: $shade1;
-}
-
-.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
-  stroke: $shade2;
-}
-
-.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
-  stroke: $shade3;
-}
-
-.#{$prefix}series-5 {
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
-    stroke: $black;
-  }
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
-    stroke: $shade1;
-  }
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
-    stroke: $shade2;
-  }
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-4 {
-    stroke: $shade3;
-  }
-}

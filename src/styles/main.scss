@@ -16,7 +16,7 @@
 // @import "debug";
 
 .#{$prefix}bg {
-	fill: white;
+	fill: $white;
 }
 
 .#{$prefix}chart_svg {
@@ -26,9 +26,9 @@
 .#{$prefix}chart {
   width: $width;
   height: auto;
-  background-color: white;
+  background-color: $white;
   margin: $margin;
   @extend %utility-font;
 }
 
-@import "../../custom/custom.scss";
+// @import "../../custom/custom.scss";
