@@ -51,6 +51,7 @@ function AreaChart(node, obj) {
         .y1(function(d) { return yScale(d.series[i].val); });
 
       var line = d3.svg.line().interpolate(obj.options.interpolation)
+        .defined(function(d) { return !isNaN(d.series[i].val); })
         .x(function(d) { return xScale(d.key); })
         .y(function(d) { return yScale(d.series[i].val); });
 
