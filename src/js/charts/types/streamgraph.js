@@ -43,7 +43,7 @@ function StreamgraphChart(node, obj) {
     .attr({
       "class": obj.prefix + "series_group",
       "transform": function() {
-        return "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)"
+        return "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"
     }});
 
   // Add a group for each cause.

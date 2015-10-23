@@ -60,16 +60,19 @@ module.exports = {
 
   dimensions: {
     width: 0,
+    computedWidth: function() {
+      return this.width - this.padding.right - this.padding.left;
+    },
     height: function() {
       var ratioScale = d3.scale.linear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
       return Math.round(ratioScale(this.width));
     },
     computedHeight: function() {
-      return (this.height() - this.headerHeight - this.footerHeight - this.margins.top);
+      return (this.height() - this.headerHeight - this.footerHeight - this.padding.top - this.padding.bottom);
     },
     ratioMobile: settings.ratioMobile,
     ratioDesktop: settings.ratioDesktop,
-    margins: settings.margins,
+    padding: settings.padding,
     headerHeight: 0,
     footerHeight: 0,
     xAxisHeight: 0,
@@ -80,7 +83,7 @@ module.exports = {
     labelWidth: 0,
     yAxisPaddingRight: settings.yAxis.paddingRight,
     tickWidth: function() {
-      return (this.width - (this.labelWidth + this.yAxisPaddingRight));
+      return (this.computedWidth() - (this.labelWidth + this.yAxisPaddingRight));
     },
     bands: {
       padding: settings.bands.padding,

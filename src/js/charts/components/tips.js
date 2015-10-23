@@ -84,7 +84,7 @@ function appendTipElements(node, obj) {
   var tipBox = tip.append("g")
     .attr({
       "class": obj.prefix + "tip_box",
-      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + (obj.dimensions.headerHeight + 7) + ")"
+      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.headerHeight + 7) + ")"
     });
 
   tipBox.append("rect")
@@ -147,7 +147,7 @@ function appendTipElements(node, obj) {
   var overlay = tip.append("rect")
     .attr({
       "class": obj.prefix + "tip_overlay",
-      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
       "width": obj.dimensions.tickWidth(),
       "height": obj.dimensions.height() - obj.dimensions.headerHeight - obj.dimensions.footerHeight
     });

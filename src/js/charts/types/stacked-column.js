@@ -47,7 +47,7 @@ function StackedColumnChart(node, obj) {
       return output;
     })
     .attr("transform", function() {
-      return "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ",0)";
+      return "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)";
     })
 
   // Add a group for each cause.

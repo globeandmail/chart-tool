@@ -239,9 +239,9 @@
 		"scaleMultiplier": 1.25,
 		"dateFormat": "%Y-%m-%d",
 		"timeFormat": "%H:%M",
-		"margins": {
+		"padding": {
 			"top": 10,
-			"right": 0,
+			"right": 2,
 			"bottom": 0,
 			"left": 0
 		},
