@@ -54,7 +54,7 @@ function StackedColumnChart(node, obj) {
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
     .data(seriesData)
     .enter().append("svg:g")
-    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i + 1); });
+    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
 
 
   // xScale.rangeRoundBands(xScale, obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding())

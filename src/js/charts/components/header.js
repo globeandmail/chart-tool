@@ -40,7 +40,7 @@ function headerComponent(node, obj) {
       .enter()
       .append("div")
       .attr("class", function(d, i) {
-        return obj.prefix + "legend_item " + obj.prefix + "legend_item_" + (i + 1);
+        return obj.prefix + "legend_item " + obj.prefix + "legend_item_" + (i);
       });
 
     legendItem.append("span")
