@@ -1,5 +1,5 @@
 .#{$prefix}chart_source, .#{$prefix}chart_credit {
-  @extend %utility-font;
+  @include utility-font;
   padding-top: 5px;
   padding-left: 0;
   display: inline-block;

@@ -26,6 +26,11 @@ causing a more specific selector to be set for the non-stacked variant of the fi
     stroke: $shade#{$i};
   }
 
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$i} .#{$prefix}column-#{$i} rect,
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$i} rect.#{$prefix}column {
+    stroke: $shade#{$i};
+  }
+
 
 }
 

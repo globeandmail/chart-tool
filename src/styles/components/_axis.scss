@@ -24,7 +24,7 @@
 }
 
 .#{$prefix}axis-group text {
-  @extend %utility-font;
+@include utility-font;
 }
 
 .#{$prefix}axis-group path {

@@ -28,7 +28,7 @@
   height: auto;
   background-color: $white;
   margin: $margin;
-  @extend %utility-font;
+  @include utility-font;
 }
 
 // @import "../../custom/custom.scss";

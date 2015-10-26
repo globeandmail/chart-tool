@@ -19,7 +19,7 @@
 
 .#{$prefix}tip_text {
   fill: $black;
-  @extend %utility-font;
+  @include utility-font;
 }
 
 .#{$prefix}tip_line-x {

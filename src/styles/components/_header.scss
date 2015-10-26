@@ -3,7 +3,7 @@
   margin-bottom: 0px;
   padding: 0;
   padding-bottom: 2px;
-  @extend %heading-font;
+  @include heading-font;
   &:only-child {
     padding-bottom: 15px;
   }
@@ -17,7 +17,7 @@
 .#{$prefix}chart_legend .#{$prefix}legend_item {
   display: inline-block;
   margin-right: 1em;
-  @extend %utility-font;
+  @include utility-font;
 }
 .#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text{
   display: inline-block;
@@ -44,7 +44,7 @@
   margin: 0;
   background: $white;
   height: auto;
-  @extend %utility-font;
+  @include utility-font;
 }
 
 .#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {
@@ -52,5 +52,5 @@
   margin-right: 10px;
   padding-bottom: 0px;
   vertical-align: middle;
-  @extend %utility-font;
+  @include utility-font;
 }
