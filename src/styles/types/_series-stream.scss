@@ -7,8 +7,12 @@
   fill: $alternate-color;
 }
 
+.#{$prefix}series_group .#{$prefix}stream-series {
+  fill: $shade2;
+}
+
 .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}line {
   fill: none;
-  stroke: white;
-  stroke-width: 1px;
+  stroke: $white;
+  stroke-width: 2px;
 }

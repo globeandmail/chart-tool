@@ -38,5 +38,9 @@
 }
 
 .#{$prefix}tip .#{$prefix}tip_circle  {
+  fill: $shade2;
+}
+
+.#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-1  {
   fill: $primary-color;
 }

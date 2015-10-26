@@ -4,8 +4,12 @@ $prefix: "ct-";
 $width: 100%;
 $margin: 0 0 20px 0;
 
-// Fonts
+$series-count-default: 4;
+$series-count-max: 6;
 
+
+
+// Fonts
 $heading-font-family: "Helvetica";
 $heading-font-weight: bold;
 $heading-font-style: normal;
@@ -34,8 +38,9 @@ $utility-font-line-height: 16px;
   line-height: $utility-font-line-height;
 }
 
-// Colors
 
+
+// Colors
 $primary-color: #CE2A23;
 $alternate-color: #D9770B;
 $shade1: #555;

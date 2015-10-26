@@ -1,32 +1,21 @@
-.#{$prefix}series_group .#{$prefix}line {
+
+.#{$prefix}series_group .#{$prefix}line,
+.#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+  stroke: $shade2;
+  stroke-width: 1px;
 }
 
-.#{$prefix}series_group .#{$prefix}line:only-of-type {
+
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-0 {
   stroke-width: 2px;
-}
-
-.#{$prefix}series_group.#{$prefix}multiple {
-  .#{$prefix}line {
-    stroke-width: 2px;
-  }
-  .#{$prefix}line.#{$prefix}highlight {
-    stroke-width: 2px;
-  }
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
-    stroke-width: 2px;
-  }
-}
-
-.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
-.#{$prefix}primary .#{$prefix}line:only-child {
   stroke: $primary-color;
 }
 
-.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
-.#{$prefix}alternate .#{$prefix}line:only-child {
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-0 {
+  stroke-width: 2px;
   stroke: $alternate-color;
 }
 

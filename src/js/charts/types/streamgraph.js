@@ -50,11 +50,7 @@ function StreamgraphChart(node, obj) {
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
     .data(seriesData)
     .enter().append("svg:g")
-    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i + 1); })
-    .style({
-      "fill": function() { return "red"; },
-      "stroke": function() { return "white"; }
-    });
+    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i + 1); });
 
   var area = d3.svg.area().interpolate(obj.options.interpolation)
     .x(function(d) { return xScale(d.x); })
