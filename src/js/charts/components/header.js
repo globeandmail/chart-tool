@@ -4,13 +4,14 @@ function headerComponent(container, obj) {
 
   var headerGroup = d3.select(container)
     .append("div")
-    .classed(obj.prefix + "chart_title", true);
+    .classed(obj.prefix + "chart_title-group", true);
 
-  headerGroup.append("span")
+  headerGroup.append("div")
+    .classed(obj.prefix + "chart_title", true)
     .text(obj.heading);
 
   if (obj.editable) {
-    headerGroup
+    headerGroup.select(".chart_title")
       .attr("contentEditable", true)
       .classed("editable-chart_title", true);
   }

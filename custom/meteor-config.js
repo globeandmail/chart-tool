@@ -7,6 +7,11 @@ prefix = config.prefix;
 
 app_settings = {
 
+  s3: {
+    base_path: "images/",
+    expiration: 30000
+  },
+
   animal_api: "http://www.whimsicalwordimal.com/api/name",
   names: [
     "Sardonic Salamander",
