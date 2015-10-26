@@ -19,19 +19,19 @@ causing a more specific selector to be set for the non-stacked variant of the fi
 */
 
 
-@for $i from 1 through $series-count-default {
+// $shades: $shade1, $shade2, $shade3, $shade4, $shade5;
 
-  // Series $i
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-#{$i} {
-    stroke: $shade#{$i};
-  }
+// @for $counter from 1 to $series-count-max {
 
-  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$i} .#{$prefix}column-#{$i} rect,
-  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$i} rect.#{$prefix}column {
-    stroke: $shade#{$i};
-  }
+//   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+//   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
+//     stroke: nth($shades, $counter);
+//   }
 
+//   .#{$prefix}series_group .#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line,
+//   .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-#{$counter} {
+//     stroke: nth($shades, $counter);
+//   }
 
-}
-
+// }
 
