@@ -102,6 +102,7 @@ dist/bundle.js
 dist/bundle.js.map
 meteor/lib/charts/scripts/bundle.js
 meteor/lib/charts/scripts/bundle.js.map
+meteor/lib/charts/stylesheets/main.css
 meteor/lib/config/meteorSettings.js
 meteor/lib/charts/meteorSettings.js.map
 .meteor/meteorite
