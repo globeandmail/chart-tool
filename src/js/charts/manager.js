@@ -15,19 +15,26 @@ function ChartManager(container, obj) {
       components = require("./components/components");
 
   var chartRecipe = new Recipe(settings, obj);
-  var node = components.base(container, chartRecipe);
-  var rendered = chartRecipe.rendered = {};
 
-  rendered.container = node;
+  var rendered = chartRecipe.rendered = {};
 
   // check that each section is needed
   if (chartRecipe.options.head) {
-    rendered.header = components.header(node, chartRecipe);
+    rendered.header = components.header(container, chartRecipe);
   }
 
   if (chartRecipe.options.footer) {
-    rendered.footer = components.footer(node, chartRecipe);
+    rendered.footer = components.footer(container, chartRecipe);
   }
+
+  var node = components.base(container, chartRecipe);
+
+  rendered.container = node;
+
+  // components.base.resize(container, chartRecipe);
+
+  // chartRecipe.dimensions.headerHeight = 0;
+  // chartRecipe.dimensions.footerHeight = 0;
 
   rendered.plot = components.plot(node, chartRecipe);
 

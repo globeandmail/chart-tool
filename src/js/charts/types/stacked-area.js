@@ -58,7 +58,7 @@ function StackedAreaChart(node, obj) {
     .data(seriesData)
     .enter().append("svg:g")
     .attr({
-      "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + obj.dimensions.headerHeight + ")",
+      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
       "class": function(d, i) {
         var output = obj.prefix + "series " + obj.prefix + "series_" + (i);
         if (i === obj.seriesHighlight()) {

@@ -14,11 +14,23 @@
   "dateFormat": "%Y-%m-%d",
   "timeFormat": "%H:%M",
 
-  "margins": {
-    "top": 0,
-    "right": 0,
+  "padding": {
+    "top": 10,
+    "right": 2,
     "bottom": 0,
     "left": 0
+  },
+
+  "tipOffset": {
+    "vertical": 4,
+    "horizontal": 1
+  },
+
+  "tipPadding": {
+    "top": 4,
+    "right": 9,
+    "bottom": 4,
+    "left": 9
   },
 
   "yAxis": {

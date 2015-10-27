@@ -1,37 +1,20 @@
-function footerComponent(node, obj) {
+function footerComponent(container, obj) {
 
-  var foreignObject = node.append("foreignObject")
-    .attr({
-     "class": obj.prefix + "fo_bottom",
-     "width": "100%"
-    });
-
-  var foreignObjectGroup = foreignObject.append("xhtml:div")
-    .attr("xmlns", "http://www.w3.org/1999/xhtml");
-
-  var sourceField = foreignObjectGroup.append("div")
+  var footerGroup = d3.select(container)
+    .append("div")
     .classed(obj.prefix + "chart_source", true)
-    .attr("xmlns", "http://www.w3.org/1999/xhtml")
     .text(obj.source);
 
-  if (obj.editable === true) {
-    sourceField.attr("contentEditable", true);
-    sourceField.classed("editable-chart_source", true);
+  if (obj.editable) {
+    footerGroup
+      .attr("contentEditable", true)
+      .classed("editable-chart_source", true);
   }
 
-  var fogHeight = foreignObjectGroup.node().getBoundingClientRect().height;
-
-  // set the height attribute of the footer
-  foreignObject.attr("height", fogHeight);
-
-  foreignObject.attr("transform", "translate(0," + (obj.dimensions.height() - fogHeight) + ")");
-
-  obj.dimensions.footerHeight = fogHeight;
+  obj.dimensions.footerHeight = footerGroup.node().getBoundingClientRect().height;
 
   return {
-    foreignObject: foreignObject,
-    foreignObjectGroup: foreignObjectGroup,
-    sourceField: sourceField
+    footerGroup: footerGroup
   };
 
 }

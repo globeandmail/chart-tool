@@ -3,4 +3,4 @@ Meteor.methods({
     this.unblock();
     return Meteor.http.get(app_settings.animal_api);
   }
-})
+});

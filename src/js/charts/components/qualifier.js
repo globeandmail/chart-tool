@@ -28,7 +28,7 @@ function qualifierComponent(node, obj) {
       .attr("height", qualifierField.node().getBoundingClientRect().height);
 
     foreignObject
-      .attr("transform", "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + ( - (qualifierField.node().getBoundingClientRect().height) / 2 ) + ")");
+      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (qualifierField.node().getBoundingClientRect().height) / 2 ) + ")");
 
   } else {
 
@@ -46,7 +46,7 @@ function qualifierComponent(node, obj) {
       .attr({
         "dy": "0.32em",
         "y": "0",
-        "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + ", 0)"
+        "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)"
       });
 
     qualifierBg
@@ -57,7 +57,7 @@ function qualifierComponent(node, obj) {
         "x": "-1",
         "width": (textWidth * 0.865) + 1,
         "height": textBox.height,
-        "transform": "translate(" + (obj.dimensions.width - obj.dimensions.tickWidth()) + "," + ( - (textBox.height / 2) ) + ")"
+        "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (textBox.height / 2) ) + ")"
       });
 
   }
