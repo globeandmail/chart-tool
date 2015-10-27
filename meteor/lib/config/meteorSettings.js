@@ -77,10 +77,7 @@
 	    "Booked Baboon"
 	  ],
 	
-	  defaults: {
-	    source_prefix: "CHART TOOL",
-	    source_suffix: " » SOURCE:"
-	  },
+	  source_suffix: " » SOURCE:",
 	
 	  primary: "NEWS & ROB",
 	  alternate: "Globe Investor",

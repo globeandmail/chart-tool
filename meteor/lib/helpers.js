@@ -38,6 +38,7 @@ cleanEmbed = function(data) {
     "source",
     "md5",
     "date_format",
+    "time_format",
     "print",
     "img",
     "prefix"
@@ -55,29 +56,24 @@ embed = function(obj) {
     "qualifier": escapeStr(obj.qualifier),
     "source": escapeStr(obj.source)
   };
-
   data["chart"] = cleanEmbed(obj);
-
   return data;
 }
 
-deleteNullProps = function(obj, recurse) {
+deleteNullProps = function(obj) {
   for (var i in obj) {
-    if (Object.getPrototypeOf(obj[i]) === Object.prototype) {
-      if (Object.keys(obj[i]).length === 0) {
+    if ((obj[i] === null) || (obj[i] === undefined)) {
+      delete obj[i];
+    } else if (obj[i] === "") {
+      delete obj[i];
+    } else if (typeof obj[i] === 'object') {
+      if (Object.keys(obj[i]).length) {
+        deleteNullProps(obj[i]);
+      } else {
         delete obj[i];
       }
-    } else if (Array.isArray(obj[i]) && obj[i].length === 0) {
-      delete obj[i];
-    } else if (typeof obj[i] === "string" && obj[i] === "") {
-      delete obj[i];
-    } else if (obj[i] === null) {
-      delete obj[i];
-    } else if (recurse && typeof obj[i] === 'object') {
-      deleteNullProps(obj[i], recurse);
     }
   }
-
   return obj;
 }
 

@@ -27,14 +27,7 @@ function ChartManager(container, obj) {
     rendered.footer = components.footer(container, chartRecipe);
   }
 
-  var node = components.base(container, chartRecipe);
-
-  rendered.container = node;
-
-  // components.base.resize(container, chartRecipe);
-
-  // chartRecipe.dimensions.headerHeight = 0;
-  // chartRecipe.dimensions.footerHeight = 0;
+  var node = rendered.container = components.base(container, chartRecipe);
 
   rendered.plot = components.plot(node, chartRecipe);
 

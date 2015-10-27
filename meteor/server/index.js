@@ -6,9 +6,9 @@ Meteor.methods({
 });
 
 S3.config = {
-  key: process.env.S3_KEY || undefined,
-  secret: process.env.S3_SECRET || undefined,
-  bucket: process.env.S3_BUCKET || undefined,
+  key: process.env.S3_KEY || "abc",
+  secret: process.env.S3_SECRET || "abc",
+  bucket: process.env.S3_BUCKET || "abc",
   region: 'us-west-2'
 };
 
