@@ -1,14 +1,16 @@
 
-.#{$prefix}primary .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}stream-0 {
   fill: $primary-color;
 }
 
-.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}highlight {
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}stream-0 {
   fill: $alternate-color;
 }
 
 .#{$prefix}series_group .#{$prefix}stream-series {
   fill: $shade2;
+  stroke: $white;
+  stroke-width: 2px;
 }
 
 .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}line {

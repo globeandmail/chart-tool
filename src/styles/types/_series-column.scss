@@ -15,9 +15,12 @@
   fill: $shade2;
 }
 
-.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}column-0 rect,
-.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 rect.#{$prefix}column,
 .#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-0 rect  {
+  fill: $shade2;
+}
+
+.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}column-0 rect,
+.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 rect.#{$prefix}column {
   fill: $primary-color;
 }
 

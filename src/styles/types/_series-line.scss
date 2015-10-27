@@ -8,14 +8,14 @@
   stroke-width: 1px;
 }
 
-
+.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}-line-0,
 .#{$prefix}primary .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-0 {
-  stroke-width: 2px;
+  stroke-width: 4px;
   stroke: $primary-color;
 }
 
+.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}-line-0,
 .#{$prefix}alternate .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-0 {
-  stroke-width: 2px;
+  stroke-width: 4px;
   stroke: $alternate-color;
 }
-

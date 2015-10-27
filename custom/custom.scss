@@ -19,19 +19,59 @@ causing a more specific selector to be set for the non-stacked variant of the fi
 */
 
 
-// $shades: $shade1, $shade2, $shade3, $shade4, $shade5;
+$shades: $shade1, $shade2, $shade3, $shade4, $shade5;
 
-// @for $counter from 1 to $series-count-max {
+@for $counter from 1 to $series-count-max {
 
-//   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
-//   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
-//     stroke: nth($shades, $counter);
-//   }
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
+    stroke: nth($shades, $counter);
+  }
 
-//   .#{$prefix}series_group .#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line,
-//   .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-#{$counter} {
-//     stroke: nth($shades, $counter);
-//   }
+  .#{$prefix}series_group .#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line,
+  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-#{$counter} {
+    stroke: nth($shades, $counter);
+  }
 
-// }
+  .#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
+  .#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
+    fill: nth($shades, $counter);
+  }
+
+  .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}stream-#{$counter}  {
+    fill: nth($shades, $counter);
+    stroke: $white;
+    stroke-width: 1px;
+  }
+
+  .#{$prefix}series_group .#{$prefix}stream-series .#{$prefix}line-#{$counter} {
+    fill: none;
+    stroke: $white;
+    stroke-width: 1px;
+  }
+
+  .#{$prefix}primary .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter},
+  .#{$prefix}alternate .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter} {
+    stroke-width: 2px;
+    stroke: nth($shades, $counter);
+  }
+
+  .#{$prefix}primary.#{$prefix}line .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter},
+  .#{$prefix}alternate.#{$prefix}line .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter} {
+    stroke-width: 2px;
+    stroke: nth($shades, $counter);
+  }
+
+  .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
+    background: nth($shades, $counter);
+  }
+
+  .#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+  .#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
+    fill: nth($shades, $counter);
+    stroke-width: 2px;
+    stroke: $white;
+  }
+
+}
 
