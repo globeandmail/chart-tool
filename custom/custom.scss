@@ -1,15 +1,3 @@
-// .#{$prefix}chart_source, .#{$prefix}chart_credit {
-//   font-size: $utility-font-size;
-//   padding-top: 2px;
-// }
-
-
-/*Right now the way the columns and stacked columns are classed in js,
-there is a bit of a conflict. Columns series are zero indexed but they probably shouldn't be.
-We should probably change this going forward.
-The nesting of columns in groups is also slightly different in stacked/non-stacked which is
-causing a more specific selector to be set for the non-stacked variant of the first series below.
-*/
 
 /*
 * Charts default to expecting max 4 series of data
@@ -18,59 +6,89 @@ causing a more specific selector to be set for the non-stacked variant of the fi
 * This is automatially calculated & applied for multi-series sets
 */
 
+/* Redundant but clear */
 
-$shades: $shade1, $shade2, $shade3, $shade4, $shade5;
+$shadesMax: $black, $shade1, $shade2, $shade3, $shade4;
+@for $counter from 1 through $series-count-max {
 
-@for $counter from 1 to $series-count-max {
-
-  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
-  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
-    stroke: nth($shades, $counter);
+  .#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+    stroke: nth($shadesMax, $counter);
   }
 
-  .#{$prefix}series_group .#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line,
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-#{$counter} {
-    stroke: nth($shades, $counter);
+  .#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
+    fill: nth($shadesMax, $counter);
   }
 
-  .#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
-  .#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
-    fill: nth($shades, $counter);
+  .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+  .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
+    fill: nth($shadesMax, $counter);
   }
 
-  .#{$prefix}series_group .#{$prefix}stream-series.#{$prefix}stream-#{$counter}  {
-    fill: nth($shades, $counter);
-    stroke: $white;
-    stroke-width: 1px;
+  .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+  .#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column-#{$counter} rect {
+    fill: nth($shadesMax, $counter);
   }
 
-  .#{$prefix}series_group .#{$prefix}stream-series .#{$prefix}line-#{$counter} {
+  .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series {
+    fill: nth($shadesMax, $counter);
+  }
+
+  .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line {
     fill: none;
     stroke: $white;
     stroke-width: 1px;
   }
 
-  .#{$prefix}primary .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter},
-  .#{$prefix}alternate .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter} {
-    stroke-width: 2px;
-    stroke: nth($shades, $counter);
+  .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
+    background: nth($shadesMax, $counter);
   }
 
-  .#{$prefix}primary.#{$prefix}line .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter},
-  .#{$prefix}alternate.#{$prefix}line .#{$prefix}series_group .#{$prefix}line.#{$prefix}-line-#{$counter} {
-    stroke-width: 2px;
-    stroke: nth($shades, $counter);
+  .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+    fill: nth($shadesMax, $counter);
+  }
+
+}
+
+
+$shadesDefault: $shade1, $shade2, $shade3, $shade4;
+@for $counter from 1 through $series-count-default {
+
+  .#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+    stroke: nth($shadesDefault, $counter);
+  }
+
+  .#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
+   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
+    fill: nth($shadesDefault, $counter);
+  }
+
+  .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+  .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
+    fill: nth($shadesDefault, $counter);
+  }
+
+  .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+  .#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column-#{$counter} rect {
+    fill: nth($shadesDefault, $counter);
+  }
+
+  .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series {
+    fill: nth($shadesDefault, $counter);
+  }
+
+  .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line {
+    fill: none;
+    stroke: $white;
+    stroke-width: 1px;
   }
 
   .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
-    background: nth($shades, $counter);
+    background: nth($shadesDefault, $counter);
   }
 
-  .#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
-  .#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
-    fill: nth($shades, $counter);
-    stroke-width: 2px;
-    stroke: $white;
+  .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+    fill: nth($shadesDefault, $counter);
   }
 
 }

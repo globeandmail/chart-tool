@@ -41,6 +41,12 @@
   fill: $shade2;
 }
 
-.#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-1  {
+.#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0  {
   fill: $primary-color;
 }
+
+.#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0  {
+  fill: $alternate-color;
+}
+
+

@@ -1,10 +1,10 @@
 
-.#{$prefix}series_group .#{$prefix}bar rect{
+.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect{
   fill: $primary-color;
   stroke-width: 0;
 }
 
-.#{$prefix}series_group .#{$prefix}multiple .#{$prefix}bar rect{
+.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}multiple .#{$prefix}bar rect{
   fill: $shade2;
   stroke-width: 0;
 }

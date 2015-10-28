@@ -19,12 +19,12 @@
   margin-right: 1em;
   @include utility-font;
 }
-.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text{
+.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text {
   display: inline-block;
   vertical-align: middle;
 }
 
-.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_icon{
+.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_icon {
   display: inline-block;
   vertical-align: middle;
   height: 10px;
@@ -34,10 +34,9 @@
   margin-right: 4px;
 }
 
-.#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon{
+.#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
   background: $primary-color;
 }
-
 
 // qualifier
 .#{$prefix}chart_qualifier {

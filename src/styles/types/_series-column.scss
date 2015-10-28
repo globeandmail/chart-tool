@@ -1,32 +1,21 @@
 
-.#{$prefix}series_group .#{$prefix}column rect {
-  stroke-width: 0;
-}
-
-.#{$prefix}series_group rect {
+.#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect,
+.#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect,
+.#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group rect.#{$prefix}column,
+.#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group rect.#{$prefix}column,
+.#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}column,
+.#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}column {
   stroke-width: 1px;
   stroke: $white;
-}
-
-.#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}column,
-.#{$prefix}series_group .#{$prefix}column rect,
-.#{$prefix}series_group .#{$prefix}series:only-child rect,
-.#{$prefix}series_group .#{$prefix}series_0:only-child .#{$prefix}column-1 rect {
   fill: $shade2;
 }
 
-.#{$prefix}primary .#{$prefix}series_group .#{$prefix}column-0 rect  {
-  fill: $shade2;
-}
-
-.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}column-0 rect,
-.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 rect.#{$prefix}column {
+.#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}column-0 rect,
+.#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 rect.#{$prefix}column {
   fill: $primary-color;
 }
 
-.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}column-0 rect,
-.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}column-0 rect,
-.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}column-0 rect {
+.#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}column-0 rect,
+.#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column-0 rect {
   fill: $alternate-color;
 }
-

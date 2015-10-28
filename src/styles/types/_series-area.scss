@@ -1,33 +1,34 @@
 
-.#{$prefix}series_group .#{$prefix}line {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke: $white;
-  stroke-width: 2px;
+.#{$prefix}primary.#{$prefix}type_area,
+.#{$prefix}alternate.#{$prefix}type_area {
+
+  .#{$prefix}series_group .#{$prefix}fill {
+    fill: $shade2;
+  }
+
+  .#{$prefix}series_group .#{$prefix}line,
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: $white;
+    stroke-width: 2px;
+  }
+
 }
 
-.#{$prefix}stacked .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
-  stroke: $white;
-  stroke-width: 2px;
-}
-
-.#{$prefix}series_group .#{$prefix}fill {
-  fill: $shade2;
-}
-
-.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-0 {
+.#{$prefix}primary.#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-0 {
   fill: $primary-color;
 }
 
-.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-0 {
+.#{$prefix}alternate.#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-0 {
   fill: $alternate-color;
 }
 
-.#{$prefix}primary .#{$prefix}line.#{$prefix}line-0 {
+.#{$prefix}primary.#{$prefix}type_area .#{$prefix}line.#{$prefix}line-0 {
   stroke: $primary-color;
 }
 
-.#{$prefix}alternate .#{$prefix}line.#{$prefix}line-0 {
+.#{$prefix}alternate.#{$prefix}type_area .#{$prefix}line.#{$prefix}line-0 {
   stroke: $alternate-color;
 }
