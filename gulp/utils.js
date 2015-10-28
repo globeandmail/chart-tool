@@ -68,8 +68,8 @@ gulp.task('buildver', function() {
 });
 
 gulp.task("_watch", ["_webpack-build-dev", "_scss"], function(done) {
-  // gulp.watch(gulpConfig.libScripts + "/**/*", ["_webpack-build-dev"]);
-  // gulp.watch(gulpConfig.libStylesheets + "/**/*", ['_scss']);
-  // gulp.watch("./custom/**/*", ["_webpack-build-dev", '_scss']);
+  gulp.watch(gulpConfig.libScripts + "/**/*", ["_webpack-build-dev"]);
+  gulp.watch(gulpConfig.libStylesheets + "/**/*", ['_scss']);
+  gulp.watch("./custom/**/*", ["_webpack-build-dev", '_scss']);
   done();
 });
