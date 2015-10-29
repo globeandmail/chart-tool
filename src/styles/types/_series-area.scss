@@ -1,10 +1,5 @@
-
 .#{$prefix}primary.#{$prefix}type_area,
 .#{$prefix}alternate.#{$prefix}type_area {
-
-  .#{$prefix}series_group .#{$prefix}fill {
-    fill: $shade2;
-  }
 
   .#{$prefix}series_group .#{$prefix}line,
   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
@@ -12,7 +7,7 @@
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke: $white;
-    stroke-width: 2px;
+    stroke-width: $line-stroke-width;
   }
 
 }
@@ -21,14 +16,36 @@
   fill: $primary-color;
 }
 
-.#{$prefix}alternate.#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-0 {
-  fill: $alternate-color;
-}
-
 .#{$prefix}primary.#{$prefix}type_area .#{$prefix}line.#{$prefix}line-0 {
   stroke: $primary-color;
 }
 
+.#{$prefix}primary .#{$prefix}series_group .#{$prefix}fill {
+  fill: $primary-shade-1;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}primary.#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
+    fill: nth($primaryShades, $counter);
+  }
+}
+
+.#{$prefix}alternate.#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-0 {
+  fill: $alternate-color;
+}
+
 .#{$prefix}alternate.#{$prefix}type_area .#{$prefix}line.#{$prefix}line-0 {
   stroke: $alternate-color;
+}
+
+.#{$prefix}alternate .#{$prefix}series_group .#{$prefix}fill {
+  fill: $alternate-shade-1;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}alternate.#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
+    fill: nth($alternateShades, $counter);
+  }
 }

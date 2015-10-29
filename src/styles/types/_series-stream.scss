@@ -1,26 +1,34 @@
+.#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series {
+  fill: $primary-shade-1;
+}
 
-.#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series,
-.#{$prefix}alternate.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series {
-  fill: $shade2;
-  stroke: $white;
-  stroke-width: 1px;
+.#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_0 .#{$prefix}stream-series {
+  fill: $primary-color;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series {
+    fill: nth($primaryShades, $counter);
+  }
+}
+
+.#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series {
+  fill: $alternate-shade-1;
+}
+
+.#{$prefix}alternate.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_0 .#{$prefix}stream-series {
+  fill: $alternate-color;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}alternate.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series {
+    fill: nth($alternateShades, $counter);
+  }
 }
 
 .#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series.#{$prefix}line,
 .#{$prefix}alternate.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series.#{$prefix}line {
   fill: none;
   stroke: $white;
-  stroke-width: 1px;
-}
-
-.#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_0 .#{$prefix}stream-series {
-  fill: $primary-color;
-  stroke: $white;
-  stroke-width: 2px;
-}
-
-.#{$prefix}alternate.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_0 .#{$prefix}stream-series {
-  fill: $alternate-color;
-  stroke: $white;
-  stroke-width: 2px;
+  stroke-width: $line-stroke-width;
 }

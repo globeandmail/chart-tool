@@ -1,4 +1,3 @@
-
 .#{$prefix}primary.#{$prefix}type_line,
 .#{$prefix}alternate.#{$prefix}type_line {
 
@@ -7,18 +6,27 @@
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke: $shade2;
-    stroke-width: 1px;
+    stroke-width: $line-stroke-width;
   }
 
 }
 
 .#{$prefix}primary.#{$prefix}type_line .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-0 {
   stroke: $primary-color;
-  stroke-width: 2px;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}primary.#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+    stroke: nth($primaryShades, $counter);
+  }
 }
 
 .#{$prefix}alternate.#{$prefix}type_line .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-0 {
   stroke: $alternate-color;
-  stroke-width: 2px;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}alternate.#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+    stroke: nth($alternateShades, $counter);
+  }
 }

@@ -63,13 +63,22 @@
 
 
 // // Colors
-// $primary-color: #08519c;
-// $alternate-color: #ec7014;
-// $shade1: #4292c6;
-// $shade2: #6baed6;
-// $shade3: #9ecae1;
-// $shade4: #c6dbef;
-// $shade5: #deebf7;
+// $primary-color: #CE2A23;
+// $primary-shade-1: #555;
+// $primary-shade-2: #999;
+// $primary-shade-3: #CCC;
+// $primary-shade-4: #EEE;
+// $primary-shade-5: #F5F5F5;
+// $primaryShades: $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4, $primary-shade-5;
+
+// $alternate-color: #D9770B;
+// $alternate-shade-1: #555;
+// $alternate-shade-2: #999;
+// $alternate-shade-3: #CCC;
+// $alternate-shade-4: #EEE;
+// $alternate-shade-5: #F5F5F5;
+// $alternateShades: $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4, $alternate-shade-5;
+
 // $black: #000;
 // $text: #333;
 // $lightgray: #ababab;
@@ -78,4 +87,7 @@
 // $axis-stroke-color: $black;
 // $axis-stroke-width: 1px;
 // $axis-stroke-dasharray: 1, 3px;
+// $line-stroke-width: 2px;
 
+// $series-count-default: 4;
+// $series-count-max: 5;

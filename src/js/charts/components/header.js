@@ -4,7 +4,7 @@ function headerComponent(container, obj) {
 
   var headerGroup = d3.select(container)
     .append("div")
-    .classed(obj.prefix + "chart_title", true);
+    .classed(obj.prefix + "chart_title " + obj.prefix + obj.customClass, true);
 
   headerGroup.append("span")
     .text(obj.heading);

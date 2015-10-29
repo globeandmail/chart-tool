@@ -45,9 +45,9 @@ gulp.task('lib-build', function(callback) {
 
 gulp.task('default', function(callback) {
   runSequence('_set-version',
-    '_watch',
     '_webpack-build-dev',
     '_browsersync',
     '_meteor-dev',
+    '_watch',
     callback);
 });
