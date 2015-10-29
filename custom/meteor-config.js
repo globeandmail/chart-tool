@@ -8,6 +8,7 @@ prefix = config.prefix;
 app_settings = {
 
   s3: {
+    enable: true,
     base_path: "images/",
     expiration: 30000,
     bucket: "chart-tool",
