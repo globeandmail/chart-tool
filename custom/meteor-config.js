@@ -9,7 +9,9 @@ app_settings = {
 
   s3: {
     base_path: "images/",
-    expiration: 30000
+    expiration: 30000,
+    bucket: "chart-tool",
+    region: "us-west-2"
   },
 
   animal_api: "http://www.whimsicalwordimal.com/api/name",
