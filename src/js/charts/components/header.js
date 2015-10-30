@@ -4,7 +4,7 @@ function headerComponent(container, obj) {
 
   var headerGroup = d3.select(container)
     .append("div")
-    .classed(obj.prefix + "chart_title", true);
+    .classed(obj.prefix + "chart_title " + obj.prefix + obj.customClass, true);
 
   headerGroup.append("span")
     .text(obj.heading);
@@ -30,7 +30,7 @@ function headerComponent(container, obj) {
       .enter()
       .append("div")
       .attr("class", function(d, i) {
-        return obj.prefix + "legend_item " + obj.prefix + "legend_item_" + (i + 1);
+        return obj.prefix + "legend_item " + obj.prefix + "legend_item_" + (i);
       });
 
     legendItem.append("span")

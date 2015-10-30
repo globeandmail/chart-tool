@@ -103,7 +103,7 @@ function appendTipElements(node, obj) {
     .enter()
     .append("g")
     .attr("class", function(d, i) {
-      obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i + 1)
+      obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i)
     });
 
   var legendIcon = chartNode.select("." + obj.prefix + "legend_item_icon").node();
@@ -118,7 +118,7 @@ function appendTipElements(node, obj) {
     .append("circle")
     .attr({
       "class": function(d, i) {
-        return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i + 1));
+        return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
       },
       "r": function(d, i) { return radius; },
       "cx": function() { return radius; },
@@ -131,7 +131,7 @@ function appendTipElements(node, obj) {
     .text(function(d) { return d.val; })
     .attr({
       "class": function(d, i) {
-        return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i + 1));
+        return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i));
       },
       "data-series": function(d, i) { return d.key; },
       "x": function() {

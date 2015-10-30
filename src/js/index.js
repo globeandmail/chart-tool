@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-(function ChartInit(root) {
+(function ChartToolInit(root) {
 
   if (root.d3) {
 

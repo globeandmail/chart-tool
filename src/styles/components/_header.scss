@@ -1,17 +1,15 @@
 // heading
-
 .#{$prefix}chart_title {
   margin-bottom: 0px;
   padding: 0;
   padding-bottom: 2px;
-  @extend %heading-font;
+  @include heading-font;
   &:only-child {
     padding-bottom: 15px;
   }
 }
 
 // legend
-
 .#{$prefix}chart_legend {
   padding: 4px 0;
 }
@@ -19,84 +17,44 @@
 .#{$prefix}chart_legend .#{$prefix}legend_item {
   display: inline-block;
   margin-right: 1em;
-  @extend %utility-font;
+  @include utility-font;
 }
-.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text{
+.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text {
   display: inline-block;
   vertical-align: middle;
 }
 
-.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_icon{
+.#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_icon {
   display: inline-block;
   vertical-align: middle;
   height: 10px;
   border-radius: 10px;
   width: 10px;
-  background: $primary-color;
   margin-right: 4px;
 }
 
-.#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon,
-.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon {
-  background: $shade1;
-}
-
-.#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
-.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
-  background: $shade2;
-}
-
-.#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
-.#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
-  background: $shade3;
-}
-
-.seriesAmount5 {
-  .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_2 .#{$prefix}legend_item_icon {
-    background: $black;
-  }
-
-  .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_3 .#{$prefix}legend_item_icon {
-    background: $shade1;
-  }
-
-  .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_4 .#{$prefix}legend_item_icon {
-    background: $shade2;
-  }
-
-  .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon,
-  .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_5 .#{$prefix}legend_item_icon {
-    background: $shade3;
-  }
-
-}
-
-.#{$prefix}news .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
-  background: $black;
-}
-
-.#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
-  background: $alternate-color;
-}
-
-.#{$prefix}primary .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon  {
+.#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
   background: $primary-color;
 }
 
-.#{$prefix}news .#{$prefix}chart_svg.column .#{$prefix}chart_legend .#{$prefix}legend_item_1 .#{$prefix}legend_item_icon {
-  background: $black;
+.#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
+  background: $alternate-color;
+}
+
+.#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle-0 {
+  fill: $primary-color;
+}
+
+.#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle-0 {
+  fill: $alternate-color;
 }
 
 // qualifier
-
 .#{$prefix}chart_qualifier {
   margin: 0;
-  background: white;
+  background: $white;
   height: auto;
-  @extend %utility-font;
+  @include utility-font;
 }
 
 .#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {
@@ -104,5 +62,25 @@
   margin-right: 10px;
   padding-bottom: 0px;
   vertical-align: middle;
-  @extend %utility-font;
+  @include utility-font;
+}
+
+@for $counter from 1 through $series-count-max {
+
+  .#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon {
+    background: nth($primaryShades, $counter);
+  }
+
+  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+    fill: nth($primaryShades, $counter);
+  }
+
+  .#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
+    background: nth($alternateShades, $counter);
+  }
+
+  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+    fill: nth($alternateShades, $counter);
+  }
+
 }

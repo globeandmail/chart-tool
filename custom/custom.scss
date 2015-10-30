@@ -1,4 +1,95 @@
-// .#{$prefix}chart_source, .#{$prefix}chart_credit {
-//   font-size: $utility-font-size;
-//   padding-top: 2px;
+
+// /*
+// * Charts default to expecting max 4 series of data
+// * This can be over-written by defining rules for
+// * #{$prefix}series-n where n is the number of series.
+// * This is automatially calculated & applied for multi-series sets
+// */
+
+// /* Redundant but clear */
+
+// $shadesMax: $black, $shade1, $shade2, $shade3, $shade4;
+// @for $counter from 1 through $series-count-max {
+
+//   .#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+//     stroke: nth($shadesMax, $counter);
+//   }
+
+//   .#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
+//   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
+//     fill: nth($shadesMax, $counter);
+//   }
+
+//   .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+//   .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
+//     fill: nth($shadesMax, $counter);
+//   }
+
+//   .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+//   .#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column-#{$counter} rect {
+//     fill: nth($shadesMax, $counter);
+//   }
+
+//   .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series {
+//     fill: nth($shadesMax, $counter);
+//   }
+
+//   .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line {
+//     fill: none;
+//     stroke: $white;
+//     stroke-width: 1px;
+//   }
+
+//   .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
+//     background: nth($shadesMax, $counter);
+//   }
+
+//   .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+//     fill: nth($shadesMax, $counter);
+//   }
+
 // }
+
+
+// $shadesDefault: $shade1, $shade2, $shade3, $shade4;
+// @for $counter from 1 through $series-count-default {
+
+//   .#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+//     stroke: nth($shadesDefault, $counter);
+//   }
+
+//   .#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter},
+//    .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}fill.#{$prefix}fill-#{$counter} {
+//     fill: nth($shadesDefault, $counter);
+//   }
+
+//   .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+//   .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}column {
+//     fill: nth($shadesDefault, $counter);
+//   }
+
+//   .#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,
+//   .#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column-#{$counter} rect {
+//     fill: nth($shadesDefault, $counter);
+//   }
+
+//   .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series {
+//     fill: nth($shadesDefault, $counter);
+//   }
+
+//   .#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series.#{$prefix}series_#{$counter} .#{$prefix}stream-series.#{$prefix}line {
+//     fill: none;
+//     stroke: $white;
+//     stroke-width: 1px;
+//   }
+
+//   .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
+//     background: nth($shadesDefault, $counter);
+//   }
+
+//   .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+//     fill: nth($shadesDefault, $counter);
+//   }
+
+// }
+

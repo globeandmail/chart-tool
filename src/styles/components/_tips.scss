@@ -1,7 +1,7 @@
 // temporary styles
 
 .#{$prefix}tip_overlay {
-  fill: white;
+  fill: $white;
   opacity: 0;
 }
 
@@ -14,12 +14,12 @@
 }
 
 .#{$prefix}tip_rect {
-  fill: white;
+  fill: $white;
 }
 
 .#{$prefix}tip_text {
   fill: $black;
-  @extend %utility-font;
+  @include utility-font;
 }
 
 .#{$prefix}tip_line-x {
@@ -37,37 +37,16 @@
   }
 }
 
-.#{$prefix}tip .#{$prefix}tip_circle  {
-  fill: $primary-color;
-}
+// .#{$prefix}tip .#{$prefix}tip_circle  {
+//   fill: $shade2;
+// }
 
-.#{$prefix}tip .#{$prefix}tip_circle-2  {
-  fill: $shade1;
-}
+// .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0  {
+//   fill: $primary-color;
+// }
 
-.#{$prefix}tip .#{$prefix}tip_circle-3  {
-  fill: $shade2;
-}
+// .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0  {
+//   fill: $alternate-color;
+// }
 
-.#{$prefix}tip .#{$prefix}tip_circle-4  {
-  fill: $shade3;
-}
 
-.#{$prefix}tip .#{$prefix}tip_circle-5  {
-  fill: $primary-color;
-}
-
-.#{$prefix}series-5 {
-  .#{$prefix}tip .#{$prefix}tip_circle-2  {
-    fill: $black;
-  }
-  .#{$prefix}tip .#{$prefix}tip_circle-3  {
-    fill: $shade1;
-  }
-  .#{$prefix}tip .#{$prefix}tip_circle-4  {
-    fill: $shade2;
-  }
-  .#{$prefix}tip .#{$prefix}tip_circle-5  {
-    fill: $shade3;
-  }
-}

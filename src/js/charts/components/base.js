@@ -3,7 +3,7 @@ function append(container, obj) {
   var chartBase = d3.select(container)
     .insert("svg", "." + obj.prefix + "chart_source")
     .attr({
-      "class": obj.baseClass() + "_svg " + obj.prefix + obj.customClass + " " + obj.prefix + obj.options.type + " " + obj.prefix + "series-" + obj.data.seriesAmount,
+      "class": obj.baseClass() + "_svg " + obj.prefix + obj.customClass + " " + obj.prefix + "type_" + obj.options.type + " " + obj.prefix + "series-" + obj.data.seriesAmount,
       "width": obj.dimensions.computedWidth(),
       "height": obj.dimensions.computedHeight()
     })

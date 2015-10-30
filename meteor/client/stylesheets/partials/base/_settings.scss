@@ -4,21 +4,16 @@ $prefix: "ct-";
 $width: 100%;
 $margin: 0 0 20px 0;
 
-// Fonts
+$series-count-default: 4;
+$series-count-max: 6;
 
+
+// Fonts
 $heading-font-family: "Helvetica";
 $heading-font-weight: bold;
 $heading-font-style: normal;
 $heading-font-size: 14px;
 $heading-font-line-height: 17px;
-
-%heading-font {
-  font-family: $heading-font-family;
-  font-weight: $heading-font-weight;
-  font-style: $heading-font-style;
-  font-size: $heading-font-size;
-  line-height: $heading-font-line-height;
-}
 
 $utility-font-family: "Helvetica";
 $utility-font-weight: normal;
@@ -26,7 +21,16 @@ $utility-font-style: normal;
 $utility-font-size: 12px;
 $utility-font-line-height: 16px;
 
-%utility-font {
+
+@mixin heading-font {
+  font-family: $heading-font-family;
+  font-weight: $heading-font-weight;
+  font-style: $heading-font-style;
+  font-size: $heading-font-size;
+  line-height: $heading-font-line-height;
+}
+
+@mixin utility-font {
   font-family: $utility-font-family;
   font-weight: $utility-font-weight;
   font-style: $utility-font-style;
@@ -35,7 +39,6 @@ $utility-font-line-height: 16px;
 }
 
 // Colors
-
 $primary-color: #CE2A23;
 $alternate-color: #D9770B;
 $shade1: #555;
@@ -47,6 +50,8 @@ $black: #000;
 $text: #333;
 $lightgray: #ababab;
 $verylightgray: #cacaca;
+$white : #fff;
+
 $axis-stroke-color: $black;
 $axis-stroke-width: 1px;
 $axis-stroke-dasharray: 1, 3px;

@@ -50,11 +50,7 @@ function StreamgraphChart(node, obj) {
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
     .data(seriesData)
     .enter().append("svg:g")
-    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i + 1); })
-    .style({
-      "fill": function() { return "red"; },
-      "stroke": function() { return "white"; }
-    });
+    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
 
   var area = d3.svg.area().interpolate(obj.options.interpolation)
     // .defined(function(d) {return !isNaN(d.y); })
@@ -69,9 +65,9 @@ function StreamgraphChart(node, obj) {
 
   series.append("path")
     .attr("class", function(d, i) {
-      var output = obj.prefix + "stream-series " + obj.prefix + "stream-" + (i + 1);
+      var output = obj.prefix + "stream-series " + obj.prefix + "stream-" + (i);
       if (i === obj.seriesHighlight()) {
-        output = obj.prefix + "stream-series " + obj.prefix + "stream-" + (i + 1) + " " + obj.prefix + "highlight";
+        output = obj.prefix + "stream-series " + obj.prefix + "stream-" + (i) + " " + obj.prefix + "highlight";
       }
       return output;
     })

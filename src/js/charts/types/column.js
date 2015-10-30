@@ -54,7 +54,7 @@ function ColumnChart(node, obj) {
       .data(obj.data.data).enter()
       .append("g")
       .attr({
-        "class": obj.prefix + "column " + obj.prefix + "column-" + (i + 1),
+        "class": obj.prefix + "column " + obj.prefix + "column-" + (i),
         "data-series": i,
         "data-key": function(d) {
           return d.key;

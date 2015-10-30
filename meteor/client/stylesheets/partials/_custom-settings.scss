@@ -61,19 +61,33 @@
 //   font-weight: normal;
 // }
 
-// // Colors
 
+// // Colors
 // $primary-color: #CE2A23;
+// $primary-shade-1: #555;
+// $primary-shade-2: #999;
+// $primary-shade-3: #CCC;
+// $primary-shade-4: #EEE;
+// $primary-shade-5: #F5F5F5;
+// $primaryShades: $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4, $primary-shade-5;
+
 // $alternate-color: #D9770B;
-// $shade1: #555;
-// $shade2: #999;
-// $shade3: #ccc;
-// $shade4: #EEE;
-// $shade5: #F5F5F5;
+// $alternate-shade-1: #555;
+// $alternate-shade-2: #999;
+// $alternate-shade-3: #CCC;
+// $alternate-shade-4: #EEE;
+// $alternate-shade-5: #F5F5F5;
+// $alternateShades: $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4, $alternate-shade-5;
+
 // $black: #000;
 // $text: #333;
 // $lightgray: #ababab;
 // $verylightgray: #cacaca;
+// $white : #fff;
 // $axis-stroke-color: $black;
 // $axis-stroke-width: 1px;
 // $axis-stroke-dasharray: 1, 3px;
+// $line-stroke-width: 2px;
+
+// $series-count-default: 4;
+// $series-count-max: 5;
