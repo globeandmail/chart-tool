@@ -35,12 +35,16 @@ function showTips(tipNodes, obj) {
     .classed(obj.prefix + "active", true);
   tipNodes.tipBox
     .classed(obj.prefix + "active", true);
+  tipNodes.tipPathCircles
+    .classed(obj.prefix + "active", true);
 }
 
 function hideTips(tipNodes, obj) {
   tipNodes.xLine
     .classed(obj.prefix + "active", false);
   tipNodes.tipBox
+    .classed(obj.prefix + "active", false);
+  tipNodes.tipPathCircles
     .classed(obj.prefix + "active", false);
 }
 
@@ -82,6 +86,12 @@ function appendTipElements(node, obj) {
   var tip = svgNode.append("g")
     .attr("class", obj.prefix + "tip");
 
+  var xTipLine = tip.append("g")
+    .attr("class", obj.prefix + "tip_line-x")
+    .classed(obj.prefix + "active", false);
+
+  xTipLine.append("line");
+
   var tipBox = tip.append("g")
     .attr({
       "class": obj.prefix + "tip_box",
@@ -103,7 +113,7 @@ function appendTipElements(node, obj) {
     .enter()
     .append("g")
     .attr("class", function(d, i) {
-      obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i)
+      return obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i);
     });
 
   var legendIcon = chartNode.select("." + obj.prefix + "legend_item_icon").node();
@@ -151,19 +161,29 @@ function appendTipElements(node, obj) {
       "height": obj.dimensions.computedHeight()
     });
 
-  var xTipLine = tip.append("g")
-    .attr("class", obj.prefix + "tip_line-x")
-    .classed(obj.prefix + "active", false);
+  var tipPathCircles = tip.append("g")
+    .attr("class", obj.prefix + "tip_path-circle-group");
 
-  xTipLine.append("line");
+  tipPathCircles
+    .selectAll("circle")
+    .data(obj.data.data[0].series)
+    .enter()
+    .append("circle")
+    .attr({
+      "class": function(d, i) {
+        return (obj.prefix + "tip_path-circle " + obj.prefix + "tip_path-circle-" + (i));
+      },
+      "r": function(d, i) { return radius / 1.75; }
+    });
 
   return {
     chart: chartNode,
     svg: svgNode,
-    xLine: xTipLine,
+    tip: tip,
     overlay: overlay,
+    xLine: xTipLine,
     tipBox: tipBox,
-    tip: tip
+    tipPathCircles: tipPathCircles
   };
 
 }
@@ -193,7 +213,18 @@ function LineChartTips(tipNodes, obj) {
       .text(function(d, i) {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
-        return obj.yAxis.prefix + formatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+        if (d.val) {
+          return obj.yAxis.prefix + formatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+        } else {
+          return "n/a";
+        }
+      });
+
+    tipGroup
+      .selectAll("." + obj.prefix + "tip_text-group")
+      .data(tipData.series)
+      .classed(obj.prefix + "active", function(d, i) {
+        return d.val ? true : false;
       });
 
     tipGroup
@@ -211,20 +242,16 @@ function LineChartTips(tipNodes, obj) {
         }
       });
 
-    // tipNodes.tip
-    //   .selectAll("." + obj.prefix + "tip_path-circle")
-    //     .data(tipData.series)
-    //     .append("circle")
-    //     .attr({
-    //       "class": function(d, i) {
-    //         return (obj.prefix + "tip_path-circle " + obj.prefix + "tip_path-circle-" + (i + 1));
-    //       },
-    //       "r": function(d, i) { return radius; },
-    //       "cx": function() { return radius; },
-    //       "cy": function(d, i) {
-    //         return ( i * parseInt(d3.select(this).style("font-size")) * 1.13 + 9);
-    //       }
-    //     });
+    tipNodes.tip
+      .selectAll("." + obj.prefix + "tip_path-circle")
+        .data(tipData.series)
+        .classed(obj.prefix + "active", function(d) { return d.val ? true : false; })
+        .attr({
+          "cx": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+          "cy": function(d) {
+            if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
+          }
+        });
 
 
     tipNodes.chart.select("." + obj.prefix + "tip_rect")
@@ -235,8 +262,8 @@ function LineChartTips(tipNodes, obj) {
 
     tipNodes.xLine.select("line")
       .attr({
-        "x1": cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-        "x2": cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        "x1": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        "x2": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "y1": 0,
         "y2": obj.dimensions.yAxisHeight()
       });
@@ -250,10 +277,10 @@ function LineChartTips(tipNodes, obj) {
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
-            var x = cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
           } else {
             // tipbox pointing right
-            var x = cursor.x + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
           }
           return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
         }
