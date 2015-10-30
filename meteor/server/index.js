@@ -5,11 +5,11 @@ Meteor.methods({
   }
 });
 
-S3.config = {
-  key: process.env.S3_KEY || "undefined",
-  secret: process.env.S3_SECRET || "undefined",
-  bucket: app_settings.s3.bucket || "undefined",
-  region: app_settings.s3.region || "undefined"
-};
-
-console.log(S3.config);
+if (app_settings.s3.enable) {
+  S3.config = {
+    key: process.env.S3_CHARTTOOL_KEY,
+    secret: process.env.S3_CHARTTOOL_SECRET,
+    bucket: app_settings.s3.bucket,
+    region: app_settings.s3.region
+  };
+}

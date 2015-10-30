@@ -11,7 +11,7 @@ app_settings = {
     enable: true,
     base_path: "images/",
     expiration: 30000,
-    bucket: "chart-tool",
+    bucket: "chart-tool-dev",
     region: "us-west-2"
   },
 
