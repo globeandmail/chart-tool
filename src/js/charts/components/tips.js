@@ -186,7 +186,7 @@ function appendTipElements(node, obj) {
       "class": function(d, i) {
         return (obj.prefix + "tip_path-circle " + obj.prefix + "tip_path-circle-" + (i));
       },
-      "r": 2.5
+      "r": 2.75
     });
 
   return {
@@ -535,6 +535,166 @@ function AreaChartTips(tipNodes, obj) {
 }
 
 function StackedAreaChartTips(tipNodes, obj) {
+
+  var cursor = cursorPos(tipNodes.overlay),
+      tipData = getTipData(obj, cursor);
+
+  var isUndefined = 0;
+
+  for (var i = 0; i < tipData.series.length; i++) {
+    if (tipData.series[i].val === "__undefined__") {
+      isUndefined++;
+    }
+  }
+
+  if (!isUndefined) {
+
+    var tipGroup = tipNodes.tipGroup;
+
+    var yFormatter = require("./axis").setTickFormatY,
+        timeDiff = require("../../utils/utils").timeDiff;
+        domain = obj.rendered.plot.xScaleObj.scale.domain(),
+        ctx = timeDiff(domain[0], domain[1], 6);
+
+    tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
+      .data(tipData.series)
+      .text(function(d, i) {
+        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
+        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
+        if (d.val) {
+          return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+        } else {
+          return "n/a";
+        }
+      });
+
+    tipNodes.tipTextDate
+      .text(function() {
+        var d = tipData.key;
+        var dStr;
+        switch (ctx) {
+          case "years":
+            dStr = d.getFullYear();
+            break;
+          case "months":
+            dMonth = obj.monthsAbr[d.getMonth()];
+            dDate = d.getDate();
+            dYear = d.getFullYear();
+            dStr = dMonth + ". " + dDate + ", " + dYear;
+            break;
+          case "weeks":
+          case "days":
+            dMonth = obj.monthsAbr[d.getMonth()];
+            dDate = d.getDate();
+            dYear = d.getFullYear();
+            dStr = dMonth + ". " + dDate;
+            break;
+          case "hours":
+
+            dDate = d.getDate();
+            dHour = d.getHours();
+            dMinute = d.getMinutes();
+
+            var dHourStr,
+                dMinuteStr;
+
+            // Convert from 24h time
+            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
+
+            if (dHour === 0){
+              dHourStr = 12;
+            } else if (dHour > 12) {
+              dHourStr = dHour - 12;
+            } else {
+              dHourStr = dHour;
+            }
+
+            // Make minutes follow Globe style
+            if (dMinute === 0) {
+              dMinuteStr = '';
+            } else if(dMinute < 10) {
+              dMinuteStr = ':0' + dMinute;
+            } else {
+              dMinuteStr = ':' + dMinute;
+            }
+
+            dStr = dHourStr + dMinuteStr + ' ' + suffix;
+
+            break;
+          default:
+            dStr = d;
+            break;
+        }
+
+        return dStr;
+      });
+
+    tipGroup
+      .selectAll("." + obj.prefix + "tip_text-group")
+      .data(tipData.series)
+      .classed(obj.prefix + "active", function(d, i) {
+        return d.val ? true : false;
+      });
+
+    tipGroup
+      .attr({
+        "transform": function() {
+          if (cursor.x > obj.dimensions.tickWidth() / 2) {
+            // tipbox pointing left
+            var x = obj.dimensions.tipPadding.left;
+          } else {
+            // tipbox pointing right
+            var x = obj.dimensions.tipPadding.left;
+          }
+          var y = obj.dimensions.tipPadding.top;
+          return "translate(" + x + "," + y + ")";
+        }
+      });
+
+    tipNodes.tip
+      .selectAll("." + obj.prefix + "tip_path-circle")
+        .data(tipData.series)
+        .classed(obj.prefix + "active", function(d) { return d.val ? true : false; })
+        .attr({
+          "cx": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+          "cy": function(d) {
+            if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
+          }
+        });
+
+    tipNodes.tipRect
+      .attr({
+        "width": tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left +  + obj.dimensions.tipPadding.right,
+        "height": tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top +  + obj.dimensions.tipPadding.bottom
+      });
+
+    tipNodes.xLine.select("line")
+      .attr({
+        "x1": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        "x2": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        "y1": 0,
+        "y2": obj.dimensions.yAxisHeight()
+      });
+
+    var getTranslate = require("../../utils/utils").getTranslateXY;
+
+    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
+
+    tipNodes.tipBox
+      .attr({
+        "transform": function() {
+          if (cursor.x > obj.dimensions.tickWidth() / 2) {
+            // tipbox pointing left
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+          } else {
+            // tipbox pointing right
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+          }
+          return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
+        }
+      });
+
+  }
 
 }
 

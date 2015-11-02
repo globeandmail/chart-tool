@@ -23,11 +23,6 @@ function StackedAreaChart(node, obj) {
     });
   }));
 
-  yScaleObj.scale.domain([0, d3.max(seriesData[seriesData.length - 1], function(d) {
-    var scaleMultiplier = obj.scaleMultiplier;
-    return (d.y0 + d.y) * scaleMultiplier;
-  })]);
-
   //  axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
