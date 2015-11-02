@@ -97,6 +97,7 @@ function parse(csv, inputDateFormat, index, stacked, type) {
           legend: keys[key],
           x: d.key,
           y: Number(d.series[key].val),
+          raw: d
         };
       });
     }));

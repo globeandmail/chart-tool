@@ -11,23 +11,6 @@ function StackedColumnChart(node, obj) {
       yScaleObj = new Scale(obj, "yAxis"),
       xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  var stack = d3.layout.stack();
-
-  var seriesData = stack(d3.range(obj.data.seriesAmount).map(function(key) {
-    return obj.data.data.map(function(d) {
-      return {
-        legend: obj.data.keys[key],
-        x: d.key,
-        y: Number(d.series[key].val),
-        raw: d
-      };
-    });
-  }));
-
-  yScale.domain([0, d3.max(seriesData[seriesData.length - 1], function(d) {
-    return (d.y0 + d.y);
-  })]);
-
   if (obj.yAxis.nice) { yScale.nice(); }
 
   //  axes
@@ -52,7 +35,7 @@ function StackedColumnChart(node, obj) {
 
   // Add a group for each cause.
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
-    .data(seriesData)
+    .data(obj.data.stackedData)
     .enter().append("svg:g")
     .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
 
