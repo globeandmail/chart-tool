@@ -22,6 +22,10 @@
   @include utility-font;
 }
 
+.#{$prefix}tip_text-date {
+  font-weight: bold;
+}
+
 .#{$prefix}tip_line-x {
   opacity: 0;
   transition: opacity 0.3s;
