@@ -11,18 +11,6 @@ function StreamgraphChart(node, obj) {
       yScaleObj = new Scale(obj, "yAxis"),
       xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  var stack = d3.layout.stack().offset("silhouette");
-
-  var seriesData = stack(d3.range(obj.data.seriesAmount).map(function(key) {
-    return obj.data.data.map(function(d) {
-      return {
-        legend: obj.data.keys[key],
-        x: d.key,
-        y: Number(d.series[key].val)
-      };
-    });
-  }));
-
   //  axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
@@ -43,8 +31,8 @@ function StreamgraphChart(node, obj) {
 
   // Add a group for each cause.
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
-    .data(seriesData)
-    .enter().append("svg:g")
+    .data(obj.data.stackedData)
+    .enter().append("g")
     .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
 
   var area = d3.svg.area().interpolate(obj.options.interpolation)

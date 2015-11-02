@@ -97,7 +97,7 @@ function setRange(obj, axisType) {
 
 function setDomain(obj, axis) {
 
-  var data = obj.data.data;
+  var data = obj.data;
   var domain;
 
   // included fallbacks just in case
@@ -124,7 +124,7 @@ function setDateDomain(data, min, max) {
   if (min && max) {
     var startDate = min, endDate = max;
   } else {
-    var dateRange = d3.extent(data, function(d) { return d.key; });
+    var dateRange = d3.extent(data.data, function(d) { return d.key; });
     var startDate = min || new Date(dateRange[0]),
         endDate = max || new Date(dateRange[1]);
   }
@@ -136,28 +136,16 @@ function setNumericalDomain(data, min, max, stacked) {
   var minVal, maxVal;
   var mArr = [];
 
-  d3.map(data, function(d) {
+  d3.map(data.data, function(d) {
     for (var j = 0; j < d.series.length; j++) {
       mArr.push(Number(d.series[j].val));
     }
   });
 
   if (stacked) {
-    var seriesAmount = data[0].series.length;
-    var stack = d3.layout.stack();
-    var seriesData = stack(d3.range(seriesAmount).map(function(key) {
-      return data.map(function(d) {
-        return {
-          x: d.key,
-          y: Number(d.series[key].val),
-        };
-      });
-    }));
-
-    maxVal = d3.max(seriesData[seriesData.length - 1], function(d) {
+    maxVal = d3.max(data.stackedData[data.stackedData.length - 1], function(d) {
       return (d.y0 + d.y);
     });
-
   } else {
     maxVal = d3.max(mArr);
   }
@@ -177,7 +165,7 @@ function setNumericalDomain(data, min, max, stacked) {
 }
 
 function setDiscreteDomain(data) {
-  return data.map(function(d) { return d.key; });
+  return data.data.map(function(d) { return d.key; });
 }
 
 function rescale(scale, axisType, axisObj) {

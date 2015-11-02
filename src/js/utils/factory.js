@@ -75,7 +75,7 @@ function RecipeFactory(settings, obj) {
   t.dateFormat       = chart.dateFormat                       || t.dateFormat;
 
   t.dateFormat = dataParse.inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
-  t.data = dataParse.parse(chart.data, t.dateFormat, o.index) || t.data;
+  t.data = dataParse.parse(chart.data, t.dateFormat, o.index, o.stacked, o.type) || t.data;
 
   return t;
 

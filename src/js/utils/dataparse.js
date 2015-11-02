@@ -28,7 +28,7 @@ function inputDate(scaleType, defaultFormat, declaredFormat) {
  * @param  {String} index           Value to index the data to, if there is one
  * @return { {csv: String, data: Array, seriesAmount: Integer, keys: Array} }                 An object with the original CSV string, the newly-formatted data, the number of series in the data and an array of keys used.
  */
-function parse(csv, inputDateFormat, index) {
+function parse(csv, inputDateFormat, index, stacked, type) {
 
   var keys,
       val,
@@ -85,11 +85,29 @@ function parse(csv, inputDateFormat, index) {
 
   var seriesAmount = data[0].series.length;
 
+  if (stacked) {
+    if (type === "stream") {
+      var stack = d3.layout.stack().offset("silhouette");
+    } else {
+      var stack = d3.layout.stack();
+    }
+    var stackedData = stack(d3.range(seriesAmount).map(function(key) {
+      return data.map(function(d) {
+        return {
+          legend: keys[key],
+          x: d.key,
+          y: Number(d.series[key].val),
+        };
+      });
+    }));
+  }
+
   return {
     csv: csv,
     data: data,
     seriesAmount: seriesAmount,
-    keys: keys
+    keys: keys,
+    stackedData: stackedData || undefined
   }
 }
 
