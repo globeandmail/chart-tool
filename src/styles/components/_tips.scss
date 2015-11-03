@@ -49,6 +49,11 @@
   fill: $alternate-color;
 }
 
+.#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle-0,
+.#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle-0 {
+  fill: $white;
+}
+
 .#{$prefix}tip .#{$prefix}tip_text-group.#{$prefix}active,
 .#{$prefix}tip .#{$prefix}tip_path-circle-group.#{$prefix}active,
 .#{$prefix}tip .#{$prefix}tip_path-circle.#{$prefix}active {
@@ -65,7 +70,6 @@
   opacity: 0.3;
 }
 
-
 @for $counter from 1 through $series-count-max {
 
   .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter},
@@ -78,8 +82,9 @@
     fill: nth($alternateShades, $counter);
   }
 
-}
-
-.#{$prefix}tip_path-circle {
+  .#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter},
+  .#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter}  {
+    fill: $white;
+  }
 
 }

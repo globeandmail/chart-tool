@@ -94,7 +94,7 @@ function parse(csv, inputDateFormat, index, stacked, type) {
     var stackedData = stack(d3.range(seriesAmount).map(function(key) {
       return data.map(function(d) {
         return {
-          legend: keys[key],
+          legend: keys[key + 1],
           x: d.key,
           y: Number(d.series[key].val),
           raw: d
