@@ -25,7 +25,7 @@ function cursorPos(overlay) {
   };
 }
 
-function getTipData(obj, cursor, stacked) {
+function getTipData(obj, cursor) {
 
   var xScale = obj.rendered.plot.xScaleObj.scale,
       yScale = obj.rendered.plot.xScaleObj.scale,
@@ -33,9 +33,9 @@ function getTipData(obj, cursor, stacked) {
 
   var tipData;
 
-  if (stacked) {
+  if (obj.options.stacked) {
     var data = obj.data.stackedData;
-    var i = bisector(data, xVal, stacked);
+    var i = bisector(data, xVal, obj.options.stacked);
 
     var arr = [],
         refIndex;
@@ -46,11 +46,10 @@ function getTipData(obj, cursor, stacked) {
       } else {
         var d0 = data[k][i[k] - 1],
             d1 = data[k][i[k]];
-        refIndex = xVal - d0.x > d1.x - xVal ? (i[k] - 1) : i[k];
+        refIndex = xVal - d0.x > d1.x - xVal ? i[k] : (i[k] - 1);
         arr.push(data[k][refIndex]);
       }
-
-    };
+    }
 
     tipData = arr;
 
