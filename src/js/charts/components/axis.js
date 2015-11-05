@@ -73,8 +73,6 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
   var axisNode = axisGroup.append("g")
     .attr("class", obj.prefix + "x-axis");
 
-  axisNode.call(axis);
-
   switch(axisObj.scale) {
     case "time":
     case "date":
@@ -88,6 +86,9 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
     case "ordinal":
     case "discrete":
       discreteAxis(axisNode, scale, axis, axisSettings, obj.dimensions);
+      break;
+    case "ordinal-time":
+      ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
   }
 
@@ -224,6 +225,52 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
       "x1": xPos,
       "x2": xPos
     });
+
+}
+
+function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
+
+  var timeDiff = require("../../utils/utils").timeDiff,
+      domain = scale.domain(),
+      ctx = timeDiff(domain[0], domain[1], 3),
+      currentFormat = determineFormat(ctx);
+
+  axis.tickFormat(currentFormat);
+
+  var ticks;
+
+  var tickGoal;
+  if (axisSettings.ticks === 'auto') {
+    tickGoal = axisSettings.tickTarget;
+  } else {
+    tickGoal = axisSettings.ticks;
+  }
+
+  if (obj.dimensions.tickWidth() > axisSettings.widthThreshold) {
+    ticks = ordinalTimeTickFinderX(domain, ctx, tickGoal);
+  } else {
+    ticks = ordinalTimeTickFinderX(domain, ctx, axisSettings.ticksSmall);
+  }
+
+  // debugger;
+
+  obj.data.data.length
+
+  axis.tickValues(ticks);
+
+  axisNode.call(axis);
+
+  axisNode.selectAll("text")
+    .attr({
+      "x": axisSettings.upper.textX,
+      "y": axisSettings.upper.textY,
+      "dy": axisSettings.dy + "em"
+    })
+    .style("text-anchor", "start")
+    .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+
+  axisNode.selectAll(".tick")
+    .call(dropTicks);
 
 }
 
@@ -540,6 +587,10 @@ function tickFinderX(domain, period, tickGoal) {
   if ( startDiff > (tickDiff / 2) ) { tickArr.unshift(startDate); }
 
   return tickArr;
+
+}
+
+function ordinalTimeTickFinderX(domain, period, tickGoal) {
 
 }
 

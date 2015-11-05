@@ -39,10 +39,15 @@ function setScaleType(type) {
     scaleType = d3.time.scale();
   } else if (type === "ordinal") {
     scaleType = d3.scale.ordinal();
+  } else if (type === "ordinal-time") {
+    var weekday = require("../../helpers/weekday");
+    scaleType = d3.scale.dayselect(weekday);
   } else {
     // quantitative scale
     switch(type) {
-      case "linear": scaleType = d3.scale.linear(); break;
+      case "linear":
+        scaleType = d3.scale.linear();
+        break;
       case "identity": scaleType = d3.scale.identity(); break;
       case "pow": scaleType = d3.scale.pow(); break;
       case "sqrt": scaleType = d3.scale.sqrt(); break;
@@ -66,6 +71,7 @@ function setRangeType(axis) {
     case "date":
     case "linear":
     case "numerical":
+    case "ordinal-time":
       type = "range";
       break;
     case "ordinal":
@@ -104,6 +110,7 @@ function setDomain(obj, axis) {
   switch(axis.scale) {
     case "time":
     case "date":
+    case "ordinal-time":
       domain = setDateDomain(data, axis.min, axis.max);
       break;
     case "linear":
@@ -209,11 +216,9 @@ function niceify(scale, axisType, scaleObj) {
 }
 
 function niceifyTime(scale, context) {
-
   var getTimeInterval = require("../../utils/utils").timeInterval;
   var timeInterval = getTimeInterval(context);
   scale.domain(scale.domain()).nice(timeInterval);
-
 }
 
 function niceifyNumerical(scale) {

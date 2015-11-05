@@ -90,6 +90,8 @@ function mouseIdle(tipNodes, obj, timeout) {
   }, obj.tipTimeout);
 }
 
+var timeout;
+
 function tipsManager(node, obj) {
 
   var tipNodes = appendTipElements(node, obj);
@@ -106,7 +108,6 @@ function tipsManager(node, obj) {
     .on("mouseout", function() { hideTips(tipNodes, obj); })
     .on("mousemove", function() {
       showTips(tipNodes, obj);
-      var timeout;
       clearTimeout(timeout);
       timeout = mouseIdle(tipNodes, obj, timeout);
       return fns[obj.options.type](tipNodes, obj);

@@ -13,10 +13,10 @@
  */
 function inputDate(scaleType, defaultFormat, declaredFormat) {
 
-  if (scaleType !== "time") {
-    return undefined;
-  } else {
+  if ((scaleType === "time") || (scaleType === "ordinal-time")) {
     return declaredFormat || defaultFormat;
+  } else {
+    return undefined;
   }
 
 }
@@ -35,10 +35,10 @@ function parse(csv, inputDateFormat, index, stacked, type) {
       firstVal;
 
   var data = d3.csv.parse(csv, function(d, i) {
+
     var obj = {};
-    if (i === 0) {
-      keys = d3.keys(d);
-    }
+
+    if (i === 0) { keys = d3.keys(d); }
 
     if (inputDateFormat) {
       var dateFormat = d3.time.format(inputDateFormat);
@@ -48,6 +48,7 @@ function parse(csv, inputDateFormat, index, stacked, type) {
     }
 
     obj.series = [];
+
     for (var j = 1; j < d3.keys(d).length; j++) {
 
       var key = d3.keys(d)[j];
