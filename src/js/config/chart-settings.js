@@ -1,6 +1,8 @@
 var version = { version: '1.1.0', build: '0' };
 var settings = require("json!../../../custom/chart-tool-config.json");
 
+d3.scale.dayselect = require("../helpers/dayselect.js");
+
 module.exports = {
 
   CUSTOM: settings.CUSTOM,
