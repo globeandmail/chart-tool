@@ -14,7 +14,7 @@ function append(container, obj) {
       }
     });
 
-  // background
+  // background rect
   chartBase
     .append("rect")
     .attr({
@@ -24,9 +24,6 @@ function append(container, obj) {
       "width": obj.dimensions.computedWidth(),
       "height": obj.dimensions.computedHeight()
     });
-
-  // need to remember to reduce the width by 5px or so
-  // so that paths have space for linecaps
 
   var graph = chartBase.append("g").attr("class", obj.prefix + "graph");
 

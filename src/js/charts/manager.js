@@ -31,11 +31,6 @@ function ChartManager(container, obj) {
 
   rendered.container = node;
 
-  // components.base.resize(container, chartRecipe);
-
-  // chartRecipe.dimensions.headerHeight = 0;
-  // chartRecipe.dimensions.footerHeight = 0;
-
   rendered.plot = components.plot(node, chartRecipe);
 
   if (chartRecipe.options.qualifier) {
