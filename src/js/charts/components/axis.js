@@ -83,7 +83,7 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
     case "linear":
     case "numerical":
       // function doesn't exist yet:
-      // numericalAxis(axisNode, scale, axis, axisSettings, obj.prefix);
+      // numericalAxis(axisNode, scale, axis, axisSettings, obj);
       break;
     case "ordinal":
     case "discrete":
@@ -223,6 +223,42 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
       "y2": axisSettings.upper.tickHeight,
       "x1": xPos,
       "x2": xPos
+    });
+
+}
+
+function numericalAxis(axisNode, scale, axis, axisSettings, obj) {
+
+  // var axisObj = obj[axisName],
+  //     axisSettings;
+
+  // if (obj.exportable && obj.exportable.y_axis) {
+  //   axisSettings = obj.exportable.y_axis;
+  // } else {
+  //   axisSettings = axisObj;
+  // }
+
+  // obj.dimensions.yAxisPaddingRight = axisSettings.paddingRight;
+
+  // axis.tickValues(tickFinderY(scale, axisObj.ticks, axisSettings));
+
+  axisNode.call(axis);
+
+  // axisNode.selectAll("g")
+  //   .filter(function(d) { return d; })
+  //   .classed(obj.prefix + "minor", true);
+
+  // axisNode.selectAll(".tick text")
+  //   .attr("transform", "translate(0,0)")
+  //   .call(updateTextY, axisNode, obj, axis, axisObj)
+  //   .attr({
+  //     "transform": "translate(" + ( -(obj.dimensions.computedWidth() - obj.dimensions.labelWidth)) + ",0)"
+  //   });
+
+  axisNode.selectAll(".tick line")
+    .attr({
+      "y1": -(obj.dimensions.computedHeight()),
+      "y2": 0
     });
 
 }

@@ -45,8 +45,8 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(4),
-	    p = __webpack_require__(24);
+	var config = __webpack_require__(2),
+	    p = __webpack_require__(25);
 	
 	app_version = p.version;
 	app_build = p.buildVer;
@@ -211,7 +211,7 @@
 
 /***/ },
 
-/***/ 4:
+/***/ 2:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -310,7 +310,7 @@
 
 /***/ },
 
-/***/ 24:
+/***/ 25:
 /***/ function(module, exports) {
 
 	module.exports = {

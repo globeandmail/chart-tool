@@ -36,26 +36,27 @@ function RecipeFactory(settings, obj) {
   t.xAxis            = helpers.extend(t.xAxis, chart.x_axis)  || t.xAxis;
   t.yAxis            = helpers.extend(t.yAxis, chart.y_axis)  || t.yAxis;
 
-  var o = t.options;
+  var o = t.options,
+      co = chart.options;
 
   //  "options" area of embed code
   o.type             = chart.options.type                     || o.type;
   o.interpolation    = chart.options.interpolation            || o.interpolation;
-  o.stacked          = chart.options.stacked                  || o.stacked;
-  o.expanded         = chart.options.expanded                 || o.expanded;
-  o.head             = chart.options.head                     || o.head;
-  o.deck             = chart.options.deck                     || o.deck;
-  o.legend           = chart.options.legend                   || o.legend;
-  o.qualifier        = chart.options.qualifier                || o.qualifier;
-  o.footer           = chart.options.footer                   || o.footer;
-  o.x_axis           = chart.options.x_axis                   || o.x_axis;
-  o.y_axis           = chart.options.y_axis                   || o.y_axis;
-  o.tips             = chart.options.tips                     || o.tips;
-  o.annotations      = chart.options.annotations              || o.annotations;
-  o.range            = chart.options.range                    || o.range;
-  o.series           = chart.options.series                   || o.series;
-  o.index            = chart.options.indexed                  || o.index;
 
+  o.stacked     = !helpers.isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
+  o.expanded    = !helpers.isUndefined(co.expanded) === true ? co.expanded       : o.expanded;
+  o.head        = !helpers.isUndefined(co.head) === true ? co.head               : o.head;
+  o.deck        = !helpers.isUndefined(co.deck) === true ? co.deck               : o.deck;
+  o.legend      = !helpers.isUndefined(co.legend) === true ? co.legend           : o.legend;
+  o.qualifier   = !helpers.isUndefined(co.qualifier) === true ? co.qualifier     : o.qualifier;
+  o.footer      = !helpers.isUndefined(co.footer) === true ? co.footer           : o.footer;
+  o.x_axis      = !helpers.isUndefined(co.x_axis) === true ? co.x_axis           : o.x_axis;
+  o.y_axis      = !helpers.isUndefined(co.y_axis) === true ? co.y_axis           : o.y_axis;
+  o.tips        = !helpers.isUndefined(co.tips) === true ? co.tips               : o.tips;
+  o.annotations = !helpers.isUndefined(co.annotations) === true ? co.annotations : o.annotations;
+  o.range       = !helpers.isUndefined(co.range) === true ? co.range             : o.range;
+  o.series      = !helpers.isUndefined(co.series) === true ? co.series           : o.series;
+  o.index       = !helpers.isUndefined(co.indexed) === true ? co.indexed         : o.index;
 
   //  these are specific to the t object and don't exist in the embed
   t.baseClass        = embed.baseClass                        || t.baseClass;

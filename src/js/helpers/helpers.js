@@ -37,6 +37,14 @@ function isEmpty(val) {
 }
 
 /**
+ * Simple check for whether a value is undefined or not
+ * @return {Boolean}
+ */
+function isUndefined(val) {
+  return val === undefined ? true : false;
+}
+
+/**
  * Given two arrays, returns only unique values in those arrays.
  * @param  {Array} a1
  * @param  {Array} a2
@@ -126,6 +134,7 @@ module.exports = {
   isInteger: isInteger,
   isFloat: isFloat,
   isEmpty: isEmpty,
+  isUndefined: isUndefined,
   extend: extend,
   arrayDiff: arrayDiff,
   arraySame: arraySame,
