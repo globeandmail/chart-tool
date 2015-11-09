@@ -32,9 +32,9 @@ function BarChart(node, obj) {
     .classed(obj.prefix + "minor", true);
 
 
-
-
-
+  // because the elements will be appended in reverse due to the
+  // bar chart operating on the y-axis, need to reverse the dataset.
+  obj.data.data.reverse();
 
   //  scales
   var yScaleObj = new Scale(obj, "yAxis"),
@@ -60,6 +60,24 @@ function BarChart(node, obj) {
   yAxisGroup.attr("transform", "translate(" + obj.dimensions.labelWidth + ",0)");
 
 
+
+
+
+  // run label width calculations here
+
+  // run tickFinder calculation here
+
+  if (obj.exportable && obj.exportable.x_axis) {
+    xAxisSettings = obj.exportable.x_axis;
+  } else {
+    xAxisSettings = obj.xAxis;
+  }
+
+  var tickFinderX = axisModule.tickFinderY;
+
+  var ticks = tickFinderX(xScale, obj.xAxis.ticks, xAxisSettings);
+
+  // need to write a tickFinder that has a tickTarget and a ticksSmall, like with the regular xAxis.
 
 
 
@@ -113,20 +131,15 @@ function BarChart(node, obj) {
 
     var barItem = series
       .selectAll("." + obj.prefix + "bar")
-      .data(obj.data.data)
-      .enter()
+      .data(obj.data.data).enter()
       .append("g")
       .attr({
         "class": obj.prefix + "bar " + obj.prefix + "bar-" + (i),
         "data-series": i,
-        "data-key": function(d) {
-          return d.key;
-        },
-        "data-legend": function() {
-          return obj.data.keys[i + 1];
-        },
+        "data-key": function(d) { return d.key; },
+        "data-legend": function() { return obj.data.keys[i + 1]; },
         "transform": function(d) {
-          return "translate(0," + (yScale(d.key)) + ")";
+          return "translate(0," + yScale(d.key) + ")";
         }
       });
 
@@ -153,16 +166,14 @@ function BarChart(node, obj) {
 
   // axisModule.addZeroLine(obj, node, yAxisObj);
 
-  // return {
-  //   xScaleObj: xScaleObj,
-  //   yScaleObj: yScaleObj,
-  //   xAxisObj: xAxisObj,
-  //   yAxisObj: yAxisObj,
-  //   seriesGroup: seriesGroup,
-  //   series: series,
-  //   singleColumn: singleColumn,
-  //   columnItem: columnItem
-  // };
+  return {
+    xScaleObj: xScaleObj,
+    yScaleObj: yScaleObj,
+    seriesGroup: seriesGroup,
+    series: series,
+    singleBar: singleBar,
+    barItem: barItem
+  };
 
 };
 

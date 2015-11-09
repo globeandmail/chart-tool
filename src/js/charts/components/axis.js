@@ -21,7 +21,7 @@ function axisManager(node, obj, scale, axisType) {
   if (axisType === "xAxis") {
     appendXAxis(axisGroup, obj, scale, axis, axisType);
   } else if (axisType === "yAxis") {
-    appendYAxis(axisGroup, obj, scale, axis, axisType, axisObj);
+    appendYAxis(axisGroup, obj, scale, axis, axisType);
   }
 
   return {
