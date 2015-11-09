@@ -25,10 +25,8 @@ function append(container, obj) {
       "height": obj.dimensions.computedHeight()
     });
 
-  // need to remember to reduce the width by 5px or so
-  // so that paths have space for linecaps
-
-  var graph = chartBase.append("g").attr("class", obj.prefix + "graph");
+  var graph = chartBase.append("g")
+    .attr("class", obj.prefix + "graph");
 
   return graph;
 

@@ -6,6 +6,36 @@ function BarChart(node, obj) {
     Scale = scaleModule.scaleManager,
     Tips = require("../components/tips");
 
+
+
+
+
+  var xScaleObj = new Scale(obj, "xAxis"),
+    xScale = xScaleObj.scale;
+
+  var xAxis = d3.svg.axis()
+    .scale(xScale)
+    .orient("bottom");
+
+  var xAxisGroup = node.append("g")
+    .attr("class", obj.prefix + "axis-group" + " " + obj.prefix + "xAxis")
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
+
+  var xAxisNode = xAxisGroup.append("g")
+    .attr("class", obj.prefix + "x-axis")
+    .call(xAxis);
+
+  obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
+
+  xAxisNode.selectAll("g")
+    .filter(function(d) { return d; })
+    .classed(obj.prefix + "minor", true);
+
+
+
+
+
+
   //  scales
   var yScaleObj = new Scale(obj, "yAxis"),
     yScale = yScaleObj.scale;
@@ -15,7 +45,7 @@ function BarChart(node, obj) {
     .orient("left");
 
   var yAxisGroup = node.append("g")
-    .attr("class", obj.prefix + "axis-group" + " " + obj.prefix + "y-axis-group")
+    .attr("class", obj.prefix + "axis-group" + " " + obj.prefix + "yAxis")
     .attr("transform", "translate(0,0)");
 
   var yAxisNode = yAxisGroup.append("g")
@@ -31,40 +61,34 @@ function BarChart(node, obj) {
 
 
 
-  var xScaleObj = new Scale(obj, "xAxis"),
-    xScale = xScaleObj.scale;
 
-  var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("bottom");
 
-  var xAxisGroup = node.append("g")
-    .attr("class", obj.prefix + "axis-group" + " " + obj.prefix + "x-axis-group")
-    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
 
-  var xAxisNode = xAxisGroup.append("g")
-    .attr("class", obj.prefix + "x-axis")
-    .call(xAxis);
+  xScale.range([0, obj.dimensions.tickWidth()]);
 
-  obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
+  xAxisNode.call(xAxis);
 
-  // yScale.range([0, obj.dimensions.yAxisHeight()]);
+  xAxisGroup
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
-  // yAxisNode.call(yAxis);
+  var xAxisWidth = d3.transform(xAxisGroup.attr("transform")).translate[0] + xAxisGroup.node().getBBox().width;
+
+  if (xAxisWidth > obj.dimensions.computedWidth()) {
+
+    var allTicks = xAxisNode.selectAll(".tick")[0];
+    var lastTickPos = d3.transform(d3.select(allTicks[allTicks.length - 1]).attr("transform")).translate[0];
+
+    xScale.range([0, obj.dimensions.tickWidth() - (xAxisWidth - obj.dimensions.computedWidth())]);
+
+    xAxisNode.call(xAxis);
+
+  }
 
   xAxisNode.selectAll("line")
     .attr({
-      "y1": 0,
-      "y2": obj.dimensions.yAxisHeight()
+      "y1": -(obj.dimensions.yAxisHeight()),
+      "y2": 0
     });
-
-  // debugger;
-
-
-  // obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
-
-
-
 
 
 
