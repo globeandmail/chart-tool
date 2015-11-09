@@ -7,7 +7,9 @@ function BarChart(node, obj) {
     Tips = require("../components/tips");
 
 
-
+  // because the elements will be appended in reverse due to the
+  // bar chart operating on the y-axis, need to reverse the dataset.
+  obj.data.data.reverse();
 
 
   var xScaleObj = new Scale(obj, "xAxis"),
@@ -32,10 +34,6 @@ function BarChart(node, obj) {
     .classed(obj.prefix + "minor", true);
 
 
-  // because the elements will be appended in reverse due to the
-  // bar chart operating on the y-axis, need to reverse the dataset.
-  obj.data.data.reverse();
-
   //  scales
   var yScaleObj = new Scale(obj, "yAxis"),
     yScale = yScaleObj.scale;
@@ -55,6 +53,11 @@ function BarChart(node, obj) {
   yAxisNode.selectAll("line").remove();
   yAxisNode.selectAll("text").attr("x", 0);
 
+  if (yAxisNode.node().getBBox().width > (obj.dimensions.computedWidth() / 3.5)) {
+    // run label width calculations here
+    debugger;
+  }
+
   obj.dimensions.labelWidth = yAxisNode.node().getBBox().width;
 
   yAxisGroup.attr("transform", "translate(" + obj.dimensions.labelWidth + ",0)");
@@ -63,7 +66,7 @@ function BarChart(node, obj) {
 
 
 
-  // run label width calculations here
+
 
   // run tickFinder calculation here
 
@@ -89,6 +92,8 @@ function BarChart(node, obj) {
   xAxisGroup
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
+  // need to add prefix and suffix to last tick text value
+
   var xAxisWidth = d3.transform(xAxisGroup.attr("transform")).translate[0] + xAxisGroup.node().getBBox().width;
 
   if (xAxisWidth > obj.dimensions.computedWidth()) {
@@ -99,6 +104,8 @@ function BarChart(node, obj) {
     xScale.range([0, obj.dimensions.tickWidth() - (xAxisWidth - obj.dimensions.computedWidth())]);
 
     xAxisNode.call(xAxis);
+
+    // need to re-add prefix and suffix to last tick text value
 
   }
 
@@ -115,7 +122,6 @@ function BarChart(node, obj) {
     .attr("class", function() {
       var output = obj.prefix + "series_group";
       if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'multiple' class so we can target
         output += " " + obj.prefix + "multiple";
       }
       return output;
@@ -161,10 +167,6 @@ function BarChart(node, obj) {
       });
 
   }
-
-  // axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
-
-  // axisModule.addZeroLine(obj, node, yAxisObj);
 
   return {
     xScaleObj: xScaleObj,
