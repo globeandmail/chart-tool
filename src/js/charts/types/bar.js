@@ -53,9 +53,23 @@ function BarChart(node, obj) {
   yAxisNode.selectAll("line").remove();
   yAxisNode.selectAll("text").attr("x", 0);
 
-  if (yAxisNode.node().getBBox().width > (obj.dimensions.computedWidth() / 3.5)) {
-    // run label width calculations here
-    debugger;
+  var maxLabelWidth = obj.dimensions.computedWidth() / 3.5;
+
+  if (yAxisNode.node().getBBox().width > maxLabelWidth) {
+    var wrapText = require("../../utils/utils").wrapText;
+    yAxisNode.selectAll("text")
+      .call(wrapText, maxLabelWidth)
+      .each(function() {
+        var tspans = d3.select(this).selectAll("tspan"),
+            tspanCount = tspans[0].length,
+            textHeight = d3.select(this).node().getBBox().height;
+        if (tspanCount > 1) {
+          tspans
+            .attr({
+              "y": -((textHeight / tspanCount / 2) * (tspanCount - 1))
+            });
+        }
+      });
   }
 
   obj.dimensions.labelWidth = yAxisNode.node().getBBox().width;
@@ -67,8 +81,8 @@ function BarChart(node, obj) {
 
 
 
-
   // run tickFinder calculation here
+
 
   if (obj.exportable && obj.exportable.x_axis) {
     xAxisSettings = obj.exportable.x_axis;

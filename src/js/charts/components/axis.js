@@ -199,7 +199,7 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
   axisNode.selectAll("text")
     .style("text-anchor", "middle")
     .attr("dy", axisSettings.dy + "em")
-    .call(wrapText, bandStep, dimensions.bands.padding);
+    .call(wrapText, bandStep);
 
   var xPos = (- (bandStep / 2) - (bandStep * dimensions.bands.outerPadding()));
 
