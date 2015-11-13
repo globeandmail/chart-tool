@@ -381,6 +381,7 @@ function setTickFormatY(format, d, lastTick) {
   var isFloat = require("../../helpers/helpers").isFloat;
 
   var currentFormat;
+
   switch (format) {
     case "general":
       currentFormat = d3.format("g")(d);
@@ -418,19 +419,32 @@ function setTickFormatY(format, d, lastTick) {
 
 }
 
-function updateTextY(textNode, axisNode, obj, axis, axisObj) {
+function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
+
+  var lastTick = axis.tickValues()[axis.tickValues().length - 1];
+
+  textNodes
+    .text(function(d, i) {
+      var val = setTickFormatY(axisObj.format, d, lastTick);
+      if (i === axis.tickValues().length - 1) {
+        val = (axisObj.prefix || "") + val + (axisObj.suffix || "");
+      }
+      return val;
+    });
+
+}
+
+function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
   var arr = [],
       lastTick = axis.tickValues()[axis.tickValues().length - 1];
 
-  textNode
+  textNodes
     .attr("transform", "translate(0,0)")
     .text(function(d, i) {
       var val = setTickFormatY(axisObj.format, d, lastTick);
-      if (!axisObj.prefix) { axisObj.prefix = ""; }
-      if (!axisObj.suffix) { axisObj.suffix = ""; }
       if (i === axis.tickValues().length - 1) {
-        val = axisObj.prefix + val + axisObj.suffix;
+        val = (axisObj.prefix || "") + val + (axisObj.suffix || "");
       }
       return val;
     })
@@ -442,22 +456,22 @@ function updateTextY(textNode, axisNode, obj, axis, axisObj) {
     })
     .attr({
       "dy": function() {
-        if (obj.yAxis.dy !== "") {
-          return obj.yAxis.dy + "em";
+        if (axisObj.dy !== "") {
+          return axisObj.dy + "em";
         } else {
           return d3.select(this).attr("dy");
         }
       },
       "x": function() {
-        if (obj.yAxis.textX !== "") {
-          return obj.yAxis.textX;
+        if (axisObj.textX !== "") {
+          return axisObj.textX;
         } else {
           return d3.select(this).attr("x");
         }
       },
       "y": function() {
-        if (obj.yAxis.textY !== "") {
-          return obj.yAxis.textY;
+        if (axisObj.textY !== "") {
+          return axisObj.textY;
         } else {
           return d3.select(this).attr("y");
         }
@@ -724,6 +738,7 @@ module.exports = {
   discreteAxis: discreteAxis,
   formatText: formatText,
   setTickFormatY: setTickFormatY,
+  updateTextX: updateTextX,
   updateTextY: updateTextY,
   repositionTextY: repositionTextY,
   newTextNode: newTextNode,

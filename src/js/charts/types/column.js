@@ -38,8 +38,6 @@ function ColumnChart(node, obj) {
 
     var interval = getTimeInterval(getTimeDiff(xScale.domain()[0], xScale.domain()[1],1));
 
-    // debugger;
-
     var singleColumn = (obj.dimensions.tickWidth() / obj.data.data.length);
   } else {
     var singleColumn = xScale.rangeBand() / obj.data.seriesAmount;

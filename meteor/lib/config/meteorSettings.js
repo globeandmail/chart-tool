@@ -271,6 +271,7 @@
 			"tickLowerBound": 3,
 			"tickUpperBound": 8,
 			"tickGoal": 5,
+			"widthThreshold": 420,
 			"dy": "",
 			"textX": 0,
 			"textY": ""
@@ -302,6 +303,7 @@
 				"textY": 2
 			}
 		},
+		"barHeight": 30,
 		"bands": {
 			"padding": 0.08,
 			"offset": 0.12

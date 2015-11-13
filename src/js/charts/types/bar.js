@@ -6,11 +6,9 @@ function BarChart(node, obj) {
     Scale = scaleModule.scaleManager,
     Tips = require("../components/tips");
 
-
   // because the elements will be appended in reverse due to the
   // bar chart operating on the y-axis, need to reverse the dataset.
   obj.data.data.reverse();
-
 
   var xScaleObj = new Scale(obj, "xAxis"),
     xScale = xScaleObj.scale;
@@ -34,9 +32,24 @@ function BarChart(node, obj) {
     .classed(obj.prefix + "minor", true);
 
 
+
   //  scales
   var yScaleObj = new Scale(obj, "yAxis"),
     yScale = yScaleObj.scale;
+
+  if (!obj.exportable) {
+
+    var totalBarHeight = (obj.dimensions.barHeight * obj.data.data.length * obj.data.seriesAmount);
+
+    yScale.rangeRoundBands([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding());
+
+    obj.dimensions.yAxisHeight = yScale.rangeBand() * obj.data.seriesAmount * obj.data.data.length;
+
+    obj.dimensions.computedHeight = function() {
+      return (this.yAxisHeight + this.xAxisHeight - this.headerHeight - this.footerHeight - this.padding.top - this.padding.bottom);
+    }
+
+  }
 
   var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -53,7 +66,11 @@ function BarChart(node, obj) {
   yAxisNode.selectAll("line").remove();
   yAxisNode.selectAll("text").attr("x", 0);
 
-  var maxLabelWidth = obj.dimensions.computedWidth() / 3.5;
+  if (obj.dimensions.width > obj.yAxis.widthThreshold) {
+    var maxLabelWidth = obj.dimensions.computedWidth() / 3.5;
+  } else {
+    var maxLabelWidth = obj.dimensions.computedWidth() / 3;
+  }
 
   if (yAxisNode.node().getBBox().width > maxLabelWidth) {
     var wrapText = require("../../utils/utils").wrapText;
@@ -66,7 +83,7 @@ function BarChart(node, obj) {
         if (tspanCount > 1) {
           tspans
             .attr({
-              "y": -((textHeight / tspanCount / 2) * (tspanCount - 1))
+              "y": ((textHeight / tspanCount) / 2) - (textHeight / 2)
             });
         }
       });
@@ -79,11 +96,6 @@ function BarChart(node, obj) {
 
 
 
-
-
-  // run tickFinder calculation here
-
-
   if (obj.exportable && obj.exportable.x_axis) {
     xAxisSettings = obj.exportable.x_axis;
   } else {
@@ -92,21 +104,25 @@ function BarChart(node, obj) {
 
   var tickFinderX = axisModule.tickFinderY;
 
-  var ticks = tickFinderX(xScale, obj.xAxis.ticks, xAxisSettings);
+  if (obj.xAxis.widthThreshold > obj.dimensions.width) {
+    var xAxisTickSettings = { tickLowerBound: 3, tickUpperBound: 8, tickGoal: 6 };
+  } else {
+    var xAxisTickSettings = { tickLowerBound: 3, tickUpperBound: 8, tickGoal: 4 };
+  }
 
-  // need to write a tickFinder that has a tickTarget and a ticksSmall, like with the regular xAxis.
-
-
-
+  var ticks = tickFinderX(xScale, obj.xAxis.ticks, xAxisTickSettings);
 
   xScale.range([0, obj.dimensions.tickWidth()]);
 
+  xAxis.tickValues(ticks);
+
   xAxisNode.call(xAxis);
+
+  xAxisNode.selectAll(".tick text")
+    .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
   xAxisGroup
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
-
-  // need to add prefix and suffix to last tick text value
 
   var xAxisWidth = d3.transform(xAxisGroup.attr("transform")).translate[0] + xAxisGroup.node().getBBox().width;
 
@@ -119,18 +135,23 @@ function BarChart(node, obj) {
 
     xAxisNode.call(xAxis);
 
-    // need to re-add prefix and suffix to last tick text value
+    xAxisNode.selectAll(".tick text")
+      .text(function(d, i) {
+        var lastTick = xAxis.tickValues()[xAxis.tickValues().length - 1];
+        var val = axisModule.setTickFormatY(obj.xAxis.format, d, lastTick);
+        if (i === xAxis.tickValues().length - 1) {
+          val = (obj.xAxis.prefix || "") + val + (obj.xAxis.suffix || "");
+        }
+        return val;
+      });
 
   }
 
   xAxisNode.selectAll("line")
     .attr({
-      "y1": -(obj.dimensions.yAxisHeight()),
+      "y1": -(obj.dimensions.yAxisHeight),
       "y2": 0
     });
-
-
-
 
   var seriesGroup = node.append("g")
     .attr("class", function() {
@@ -141,7 +162,6 @@ function BarChart(node, obj) {
       return output;
     })
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
-
 
   var singleBar = yScale.rangeBand() / obj.data.seriesAmount;
 
@@ -169,7 +189,7 @@ function BarChart(node, obj) {
           return d.series[i].val < 0 ? "negative" : "positive";
         },
         "x": function(d) {
-          return yScale(Math.max(0, d.series[i].val));
+          return xScale(Math.min(0, d.series[i].val));
         },
         "y": function() {
           return i * singleBar;
@@ -181,6 +201,21 @@ function BarChart(node, obj) {
       });
 
   }
+
+  // if (!obj.exportable) {
+
+    // obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
+
+    // xAxisGroup
+    //   .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
+
+    // xAxisNode.selectAll("line")
+    //   .attr({
+    //     "y1": -(obj.dimensions.yAxisHeight()),
+    //     "y2": 0
+    //   });
+
+  // }
 
   return {
     xScaleObj: xScaleObj,

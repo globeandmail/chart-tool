@@ -87,6 +87,7 @@ module.exports = {
     tickWidth: function() {
       return (this.computedWidth() - (this.labelWidth + this.yAxisPaddingRight));
     },
+    barHeight: settings.barHeight,
     bands: {
       padding: settings.bands.padding,
       offset: settings.bands.offset,
