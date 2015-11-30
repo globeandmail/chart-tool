@@ -2,6 +2,7 @@ function plot(node, obj) {
 
   var draw = {
     line: require("../types/line"),
+    multiline: require("../types/multiline"),
     area: require("../types/area"),
     stackedArea: require("../types/stacked-area"),
     column: require("../types/column"),
@@ -15,6 +16,10 @@ function plot(node, obj) {
 
     case "line":
       chartRef = draw.line(node, obj);
+      break;
+
+    case "multiline":
+      chartRef = draw.multiline(node, obj);
       break;
 
     case "area":

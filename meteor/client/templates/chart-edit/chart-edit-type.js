@@ -11,6 +11,12 @@ Template.chartEditType.events({
         updateAndSave("updateStacked", this, defaults.stacked );
         updateAndSave("updateXScale", this, "time");
         break;
+      case "multiline":
+        updateAndSave("updateType", this, type );
+        updateAndSave("updateInterpolation", this, defaults.interpolation );
+        updateAndSave("updateStacked", this, defaults.stacked );
+        updateAndSave("updateXScale", this, "time");
+        break;
       case "area":
         updateAndSave("updateType", this, type );
         updateAndSave("updateInterpolation", this, defaults.interpolation );
