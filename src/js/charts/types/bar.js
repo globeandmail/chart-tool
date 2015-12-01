@@ -10,8 +10,10 @@ function BarChart(node, obj) {
   // bar chart operating on the y-axis, need to reverse the dataset.
   obj.data.data.reverse();
 
+  var xAxisOffset = 10;
+
   var xScaleObj = new Scale(obj, "xAxis"),
-    xScale = xScaleObj.scale;
+      xScale = xScaleObj.scale;
 
   var xAxis = d3.svg.axis()
     .scale(xScale)
@@ -25,17 +27,21 @@ function BarChart(node, obj) {
     .attr("class", obj.prefix + "x-axis")
     .call(xAxis);
 
-  obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
+  var textLengths = [];
+
+  xAxisNode.selectAll("text").each(function() { textLengths.push(d3.select(this).node().getBoundingClientRect().height); })
+
+  var tallestText = textLengths.reduce(function(a, b) { return (a > b ? a : b) });
+
+  obj.dimensions.xAxisHeight = tallestText + xAxisOffset;
 
   xAxisNode.selectAll("g")
     .filter(function(d) { return d; })
     .classed(obj.prefix + "minor", true);
 
-
-
   //  scales
   var yScaleObj = new Scale(obj, "yAxis"),
-    yScale = yScaleObj.scale;
+      yScale = yScaleObj.scale;
 
   if (!obj.exportable) {
 
@@ -45,9 +51,7 @@ function BarChart(node, obj) {
 
     obj.dimensions.yAxisHeight = yScale.rangeBand() * obj.data.seriesAmount * obj.data.data.length;
 
-    obj.dimensions.computedHeight = function() {
-      return (this.yAxisHeight + this.xAxisHeight - this.headerHeight - this.footerHeight - this.padding.top - this.padding.bottom);
-    }
+    obj.dimensions.computedHeight = function() { return this.xAxisHeight; }
 
   }
 
@@ -122,7 +126,7 @@ function BarChart(node, obj) {
     .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
   xAxisGroup
-    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() + obj.dimensions.xAxisHeight) + ")");
 
   var xAxisWidth = d3.transform(xAxisGroup.attr("transform")).translate[0] + xAxisGroup.node().getBBox().width;
 
@@ -146,12 +150,6 @@ function BarChart(node, obj) {
       });
 
   }
-
-  xAxisNode.selectAll("line")
-    .attr({
-      "y1": -(obj.dimensions.yAxisHeight),
-      "y2": 0
-    });
 
   var seriesGroup = node.append("g")
     .attr("class", function() {
@@ -202,20 +200,38 @@ function BarChart(node, obj) {
 
   }
 
-  // if (!obj.exportable) {
+  xAxisNode.selectAll("line")
+    .attr({
+      "y1": -(seriesGroup.node().getBoundingClientRect().height),
+      "y2": 0
+    });
 
-    // obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
+  xAxisGroup
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (seriesGroup.node().getBoundingClientRect().height) + ")");
 
-    // xAxisGroup
-    //   .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
+  if (!obj.exportable) {
 
-    // xAxisNode.selectAll("line")
-    //   .attr({
-    //     "y1": -(obj.dimensions.yAxisHeight()),
-    //     "y2": 0
-    //   });
+    xAxisNode.selectAll("line")
+      .attr({
+        "y1": -(seriesGroup.node().getBoundingClientRect().height + xAxisOffset - 1),
+        "y2": 0
+      });
 
-  // }
+  xAxisGroup
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (seriesGroup.node().getBoundingClientRect().height + (xAxisOffset / 2)) + ")");
+
+    obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
+
+    d3.select(node.node().parentNode)
+      .attr("height", obj.dimensions.computedHeight());
+
+    d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
+      .attr({
+        "y": -(xAxisOffset / 2),
+        "height": obj.dimensions.computedHeight()
+      });
+
+  }
 
   return {
     xScaleObj: xScaleObj,

@@ -67,7 +67,7 @@ function RecipeFactory(settings, obj) {
   t.editable         = chart.editable                         || t.editable;
 
   if (t.exportable) {
-    t.dimensions.width = chart.exportable.width;
+    t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
     t.dimensions.height = function() { return chart.exportable.height; }
   }
 
