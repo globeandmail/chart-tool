@@ -35,11 +35,6 @@ function DynamicBarChart(node, obj) {
 
   obj.dimensions.xAxisHeight = tallestText + xAxisOffset;
 
-  // now that we know the height of text plus space, can subtract that from
-  // computedHeight to get proper height of lines and seriesGroup
-
-  var computedInnerHeight = obj.dimensions.computedHeight - obj.dimensions.xAxisHeight;
-
   xAxisNode.selectAll("g")
     .filter(function(d) { return d; })
     .classed(obj.prefix + "minor", true);
@@ -192,12 +187,12 @@ function DynamicBarChart(node, obj) {
 
   xAxisNode.selectAll("line")
     .attr({
-      "y1": -(seriesGroup.node().getBoundingClientRect().height),
+      "y1": -(obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight),
       "y2": 0
-    });
+  });
 
   xAxisGroup
-    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (seriesGroup.node().getBoundingClientRect().height) + ")");
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
   return {
     xScaleObj: xScaleObj,
@@ -402,15 +397,6 @@ function FixedBarChart(node, obj) {
       });
 
   }
-
-  xAxisNode.selectAll("line")
-    .attr({
-      "y1": -(seriesGroup.node().getBoundingClientRect().height),
-      "y2": 0
-    });
-
-  xAxisGroup
-    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (seriesGroup.node().getBoundingClientRect().height) + ")");
 
   xAxisNode.selectAll("line")
     .attr({
