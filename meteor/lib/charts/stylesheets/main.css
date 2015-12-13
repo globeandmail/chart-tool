@@ -339,13 +339,80 @@
 .ct-series_group.ct-multiple .ct-fill.ct-fill-5 {
   fill: #fee5d9; }
 
-.ct-type_bar .ct-series_group .ct-bar rect {
-  fill: #08519c;
-  stroke-width: 0; }
+.ct-primary.ct-type_bar .ct-series_group .ct-bar rect,
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar rect,
+.ct-primary.ct-type_bar .ct-series_group rect.ct-bar,
+.ct-alternate.ct-type_bar .ct-series_group rect.ct-bar,
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple rect.ct-bar,
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple rect.ct-bar {
+  stroke-width: 1px;
+  stroke: #fff; }
 
-.ct-type_bar .ct-series_group .ct-multiple .ct-bar rect {
-  fill: #3182bd;
-  stroke-width: 0; }
+.ct-primary.ct-type_bar .ct-series_group .ct-bar rect,
+.ct-primary.ct-type_bar .ct-series_group rect.ct-bar {
+  fill: #3182bd; }
+
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar rect,
+.ct-alternate.ct-type_bar .ct-series_group rect.ct-bar {
+  fill: #de2d26; }
+
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_0 .ct-bar-0 rect,
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_0 rect.ct-bar {
+  fill: #08519c; }
+
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_0 .ct-bar-0 rect,
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar-0 rect {
+  fill: #a50f15; }
+
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_1 .ct-bar-1 rect,
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_1 rect.ct-bar,
+.ct-primary.ct-type_bar .ct-series_group .ct-bar-1 rect {
+  fill: #3182bd; }
+
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_1 .ct-bar-1 rect,
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_1 rect.ct-bar,
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar-1 rect {
+  fill: #de2d26; }
+
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_2 .ct-bar-2 rect,
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_2 rect.ct-bar,
+.ct-primary.ct-type_bar .ct-series_group .ct-bar-2 rect {
+  fill: #6baed6; }
+
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_2 .ct-bar-2 rect,
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_2 rect.ct-bar,
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar-2 rect {
+  fill: #fb6a4a; }
+
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_3 .ct-bar-3 rect,
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_3 rect.ct-bar,
+.ct-primary.ct-type_bar .ct-series_group .ct-bar-3 rect {
+  fill: #9ecae1; }
+
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_3 .ct-bar-3 rect,
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_3 rect.ct-bar,
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar-3 rect {
+  fill: #fc9272; }
+
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_4 .ct-bar-4 rect,
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_4 rect.ct-bar,
+.ct-primary.ct-type_bar .ct-series_group .ct-bar-4 rect {
+  fill: #c6dbef; }
+
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_4 .ct-bar-4 rect,
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_4 rect.ct-bar,
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar-4 rect {
+  fill: #fcbba1; }
+
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_5 .ct-bar-5 rect,
+.ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_5 rect.ct-bar,
+.ct-primary.ct-type_bar .ct-series_group .ct-bar-5 rect {
+  fill: #eff3ff; }
+
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_5 .ct-bar-5 rect,
+.ct-alternate.ct-type_bar .ct-series_group.ct-multiple .ct-series_5 rect.ct-bar,
+.ct-alternate.ct-type_bar .ct-series_group .ct-bar-5 rect {
+  fill: #fee5d9; }
 
 .ct-primary.ct-type_stream .ct-series_group .ct-series .ct-stream-series {
   fill: #3182bd; }

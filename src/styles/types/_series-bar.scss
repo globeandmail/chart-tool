@@ -1,10 +1,47 @@
 
-.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect{
-  fill: $primary-color;
-  stroke-width: 0;
+.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect,
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect,
+.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group rect.#{$prefix}bar,
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group rect.#{$prefix}bar,
+.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}bar,
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}bar {
+  stroke-width: 1px;
+  stroke: $white;
 }
 
-.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}multiple .#{$prefix}bar rect{
+.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect,
+.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group rect.#{$prefix}bar {
   fill: $primary-shade-1;
-  stroke-width: 0;
+}
+
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect,
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group rect.#{$prefix}bar {
+  fill: $alternate-shade-1;
+}
+
+.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}bar-0 rect,
+.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 rect.#{$prefix}bar {
+  fill: $primary-color;
+}
+
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_0 .#{$prefix}bar-0 rect,
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-0 rect {
+  fill: $alternate-color;
+}
+
+
+@for $counter from 1 through $series-count-max {
+
+  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}bar-#{$counter} rect,
+  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}bar,
+  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-#{$counter} rect {
+    fill: nth($primaryShades, $counter);
+  }
+
+  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}bar-#{$counter} rect,
+  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} rect.#{$prefix}bar,
+  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-#{$counter} rect {
+    fill: nth($alternateShades, $counter);
+  }
+
 }

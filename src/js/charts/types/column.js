@@ -54,12 +54,8 @@ function ColumnChart(node, obj) {
       .attr({
         "class": obj.prefix + "column " + obj.prefix + "column-" + (i),
         "data-series": i,
-        "data-key": function(d) {
-          return d.key;
-        },
-        "data-legend": function() {
-          return obj.data.keys[i + 1];
-        },
+        "data-key": function(d) { return d.key; },
+        "data-legend": function() { return obj.data.keys[i + 1]; },
         "transform": function(d) {
           return "translate(" + (xScale(d.key)) + ",0)";
         }
@@ -79,14 +75,13 @@ function ColumnChart(node, obj) {
         "height": function(d) {
           return Math.abs(yScale(d.series[i].val) - yScale(0));
         },
+        // temporary hack for time-series columns
         "width": function(d) { return ((obj.dimensions.tickWidth() / 67) - 1); }
       });
 
     if (obj.data.seriesAmount > 1) {
-
       var columnOffset = obj.dimensions.bands.offset;
-
-      columnItem.select("rect")
+      columnItem.selectAll("rect")
         .attr({
           "x": function() {
             return ((i * singleColumn) + (singleColumn * (columnOffset / 2)));

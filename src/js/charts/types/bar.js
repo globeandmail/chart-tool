@@ -183,6 +183,17 @@ function DynamicBarChart(node, obj) {
         "height": function(d) { return singleBar; }
       });
 
+    if (obj.data.seriesAmount > 1) {
+      var barOffset = obj.dimensions.bands.offset;
+      barItem.selectAll("rect")
+        .attr({
+          "y": function() {
+            return ((i * singleBar) + (singleBar * (barOffset / 2)));
+          },
+          "height": singleBar - (singleBar * barOffset)
+        });
+    }
+
   }
 
   xAxisNode.selectAll("line")
@@ -254,7 +265,7 @@ function FixedBarChart(node, obj) {
 
   yScale.rangeRoundBands([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding());
 
-  obj.dimensions.yAxisHeight = yScale.rangeBand() * obj.data.seriesAmount * obj.data.data.length;
+  obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding() * 2);
 
   var yAxis = d3.svg.axis()
     .scale(yScale)
@@ -324,7 +335,7 @@ function FixedBarChart(node, obj) {
     .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
   xAxisGroup
-    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (tallestText + xAxisOffset) + ")");
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + totalBarHeight + ")");
 
   var xAxisWidth = d3.transform(xAxisGroup.attr("transform")).translate[0] + xAxisGroup.node().getBBox().width;
 
@@ -396,27 +407,38 @@ function FixedBarChart(node, obj) {
         "height": function(d) { return singleBar; }
       });
 
+    if (obj.data.seriesAmount > 1) {
+      var barOffset = obj.dimensions.bands.offset;
+      barItem.selectAll("rect")
+        .attr({
+          "y": function() {
+            return ((i * singleBar) + (singleBar * (barOffset / 2)));
+          },
+          "height": singleBar - (singleBar * barOffset)
+        });
+    }
+
   }
 
   xAxisNode.selectAll("line")
     .attr({
-      "y1": -(seriesGroup.node().getBoundingClientRect().height + xAxisOffset - 1),
+      "y1": -(totalBarHeight),
       "y2": 0
     });
 
   xAxisGroup
-    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (seriesGroup.node().getBoundingClientRect().height + (xAxisOffset / 2)) + ")");
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (totalBarHeight) + ")");
 
-  obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
+  // obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
 
   d3.select(node.node().parentNode)
-    .attr("height", obj.dimensions.xAxisHeight);
+    .attr("height", totalBarHeight + obj.dimensions.xAxisHeight);
 
-  d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
-    .attr({
-      "y": -(xAxisOffset / 2),
-      "height": obj.dimensions.xAxisHeight
-    });
+  // d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
+  //   .attr({
+  //     "y": -(xAxisOffset / 2),
+  //     "height": obj.dimensions.xAxisHeight
+  //   });
 
   obj.dimensions.computedHeight = function() { return this.xAxisHeight; };
 
