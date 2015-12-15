@@ -92,7 +92,7 @@ function ColumnChart(node, obj) {
 
   }
 
-  axisModule.addZeroLine(obj, node, yAxisObj);
+  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
 
   return {
     xScaleObj: xScaleObj,

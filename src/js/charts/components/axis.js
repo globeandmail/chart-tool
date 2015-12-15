@@ -701,26 +701,51 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
 
 }
 
-function addZeroLine(obj, node, Axis) {
+function addZeroLine(obj, node, Axis, axisType) {
 
   var minVal = Axis.axis.scale().domain()[0];
 
   if (minVal <= 0) {
 
-    var refGroup = Axis.node.selectAll(".tick:not(." + obj.prefix + "minor)");
+    var refGroup = Axis.node.selectAll(".tick:not(." + obj.prefix + "minor)"),
         refLine = refGroup.select("line");
 
     // zero line
-    node.append("line")
+    var zeroLine = node.append("line")
+      .style("shape-rendering", "crispEdges")
       .attr({
-        "class": obj.prefix + "zero-line",
-        "transform": refGroup.attr("transform"),
+        "class": obj.prefix + "zero-line"
+        // "transform": refGroup.attr("transform")
+      });
+
+    var transform = [0, 0];
+
+    transform[0] += d3.transform(node.select("." + obj.prefix + axisType).attr("transform")).translate[0];
+    transform[1] += d3.transform(node.select("." + obj.prefix + axisType).attr("transform")).translate[1];
+    transform[0] += d3.transform(refGroup.attr("transform")).translate[0];
+    transform[1] += d3.transform(refGroup.attr("transform")).translate[1];
+
+    if (axisType === "xAxis") {
+
+      zeroLine.attr({
+        "y1": refLine.attr("y1"),
+        "y2": refLine.attr("y2"),
+        "x1": 0,
+        "x2": 0,
+        "transform": "translate(" + transform[0] + "," + transform[1] + ")"
+      });
+
+    } else if (axisType === "yAxis") {
+
+      zeroLine.attr({
         "x1": refLine.attr("x1"),
         "x2": refLine.attr("x2"),
         "y1": 0,
-        "y2": 0
-      })
-      .style("shape-rendering", "crispEdges");
+        "y2": 0,
+        "transform": "translate(" + transform[0] + "," + transform[1] + ")"
+      });
+
+    }
 
     refLine.style("display", "none");
 

@@ -195,6 +195,10 @@ function DynamicBarChart(node, obj) {
     }
 
   }
+  
+  xAxisNode.selectAll("g")
+    .filter(function(d) { return d; })
+    .classed(obj.prefix + "minor", true);  
 
   xAxisNode.selectAll("line")
     .attr({
@@ -205,9 +209,11 @@ function DynamicBarChart(node, obj) {
   xAxisGroup
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
-  return {
+  return {    
     xScaleObj: xScaleObj,
     yScaleObj: yScaleObj,
+    xAxisObj: { node: xAxisGroup, axis: xAxis },
+    yAxisObj: { node: yAxisGroup, axis: yAxis },
     seriesGroup: seriesGroup,
     series: series,
     singleBar: singleBar,
@@ -419,6 +425,10 @@ function FixedBarChart(node, obj) {
     }
 
   }
+  
+  xAxisNode.selectAll("g")
+    .filter(function(d) { return d; })
+    .classed(obj.prefix + "minor", true);
 
   xAxisNode.selectAll("line")
     .attr({
@@ -445,6 +455,8 @@ function FixedBarChart(node, obj) {
   return {
     xScaleObj: xScaleObj,
     yScaleObj: yScaleObj,
+    xAxisObj: { node: xAxisGroup, axis: xAxis },
+    yAxisObj: { node: yAxisGroup, axis: yAxis },    
     seriesGroup: seriesGroup,
     series: series,
     singleBar: singleBar,
@@ -460,6 +472,10 @@ function BarChart(node, obj) {
   } else {
     var barChart = FixedBarChart(node, obj);
   }
+  
+  var axisModule = require("../components/axis");
+  
+  axisModule.addZeroLine(obj, node, barChart.xAxisObj, "xAxis");
 
   return barChart;
 

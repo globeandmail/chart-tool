@@ -93,7 +93,7 @@ function StackedAreaChart(node, obj) {
     .attr("class", function(d, i) { return obj.prefix + "line " + obj.prefix + "line-" + (i); })
     .attr("d", line);
 
-  axisModule.addZeroLine(obj, node, yAxisObj);
+  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
 
   return {
     xScaleObj: xScaleObj,

@@ -29,7 +29,6 @@
   fill: $alternate-color;
 }
 
-
 @for $counter from 1 through $series-count-max {
 
   .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}bar-#{$counter} rect,
