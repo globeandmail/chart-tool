@@ -439,18 +439,17 @@ function FixedBarChart(node, obj) {
   xAxisGroup
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (totalBarHeight) + ")");
 
-  // obj.dimensions.xAxisHeight = xAxisNode.node().getBBox().height;
-
   d3.select(node.node().parentNode)
     .attr("height", totalBarHeight + obj.dimensions.xAxisHeight);
 
-  // d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
-  //   .attr({
-  //     "y": -(xAxisOffset / 2),
-  //     "height": obj.dimensions.xAxisHeight
-  //   });
+  d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
+    .attr({
+      "height": node.node().getBoundingClientRect().height
+    });
 
-  obj.dimensions.computedHeight = function() { return this.xAxisHeight; };
+  obj.dimensions.totalXAxisHeight = xAxisGroup.node().getBoundingClientRect().height;
+
+  obj.dimensions.computedHeight = function() { return this.totalXAxisHeight; };
 
   return {
     xScaleObj: xScaleObj,
