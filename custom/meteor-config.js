@@ -64,7 +64,8 @@ app_settings = {
       annotations: false,
       range: false,
       series: false,
-      indexed: false
+      indexed: false,
+      qualifier: true
     },
     x_axis: {
       display: config.xAxis.display,

@@ -183,7 +183,7 @@ select {
   text-align: center;
 }
 
-.y-axisval-edit {
+.x-axisval-edit, .y-axisval-edit {
   .input-field {
     width: 3.9em;
     text-align: center;
@@ -193,21 +193,21 @@ select {
   }
 }
 
-.y-prefix-edit, .y-suffix-edit, .y-formatval-edit {
+.x-prefix-edit, .x-suffix-edit, .x-formatval-edit, .y-prefix-edit, .y-suffix-edit, .y-formatval-edit {
   display: inline-block;
 }
 
-.input-prefix-y, .input-suffix-y {
+.input-prefix-x, .input-suffix-x, .input-prefix-y, .input-suffix-y {
   width: 2.4em;
   text-align: center;
 }
 
-.input-ticks-y {
+.input-ticks-x, .input-ticks-y {
   width: 3.9em;
   text-align: center;
 }
 
-.y-formatval-edit {
+.x-formatval-edit, .y-formatval-edit {
   padding: 0 0.4em;
 }
 
@@ -335,6 +335,10 @@ select {
     content: "Please include a chart qualifier";
     color: $verylightgray;
   }
+}
+
+.#{$prefix}type_bar .#{$prefix}chart_qualifier {
+  display: none;
 }
 
 .#{$prefix}chart_credit {

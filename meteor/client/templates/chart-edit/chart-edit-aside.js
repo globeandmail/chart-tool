@@ -7,6 +7,16 @@ Template.chartEditAside.helpers({
       }
     }
   },
+  isBarChart: function(value) {
+    if (this.options) {
+      var type = this.options["type"];
+      if (value === true) {
+        if (type === "bar") { return true; };
+      } else {
+        if (type !== "bar") { return true; };
+      }
+    }
+  },
   isStackableExpandable: function() {
     if (this.options) {
       var type = this.options["type"];
@@ -15,11 +25,23 @@ Template.chartEditAside.helpers({
       }
     }
   },
-  isNotStackableExpandable: function() {
+  displayMin: function() {
     if (this.options) {
       var type = this.options["type"];
       if (type === "area" || type === "bar" || type === "column") {
-        return false;
+        var ChartToolParser = ChartTool.utils.dataParse.parse,
+            cleanCSV = dataParse(this.data);
+        var dataObj = ChartToolParser(cleanCSV, app_settings.chart.date_format, this.index);
+
+        var mArr = [];
+
+        d3.map(dataObj.data, function(d) {
+          for (var j = 0; j < d.series.length; j++) {
+            mArr.push(Number(d.series[j].val));
+          }
+        });
+
+        return d3.min(mArr) > 0 ? false : true;
       } else {
         return true;
       }
