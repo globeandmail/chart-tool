@@ -117,7 +117,8 @@ downloadImg = function(_obj, _options) {
       descriptor = _options.descriptor,
       className = "chart-export",
       container = "." + className,
-      filename = _obj.slug + "-" + descriptor + "-" + _obj.exportable.width + ".png",
+      // filename = _obj.slug + "-" + descriptor + "-" + _obj.exportable.width + ".png",
+      filename = _obj.slug + "-" + descriptor + "-" + _obj.exportable.width,
       div = document.createElement("div");
 
   div.style.position = "absolute";
@@ -136,14 +137,75 @@ downloadImg = function(_obj, _options) {
 
   //add required attributes to svg tag
   var svg = d3.select(div).select('svg')
-    .attr("version", 1.1)
-    .attr("xmlns", "http://www.w3.org/2000/svg")
-    .attr("width", _obj.exportable.width)
-    .attr("height", _obj.exportable.height);
+    .attr({
+      "version": 1.1,
+      "xmlns": "http://www.w3.org/2000/svg",
+      "width": _obj.exportable.width
+    });
 
-  saveSvgAsPng(svg.node(), filename, {
+  if (_obj.options.type === "bar") {
+    var fixedBarHeight = d3.select(div).select('svg').node().getBoundingClientRect().height;
+    div.style.height = fixedBarHeight + "px";
+    svg.attr("height", fixedBarHeight);
+  } else {
+    svg.attr("height", _obj.exportable.height);
+  }
+
+  var svgContainer = document.createElement("div");
+  svgContainer.className = "svg-container";
+  document.body.appendChild(svgContainer);
+
+  var outputCanvas = document.createElement("div");
+  outputCanvas.className = "output-canvas";
+  document.body.appendChild(outputCanvas);
+
+  var drawnChartContainer = d3.select(".chart-export");
+
+  drawnChartContainer.select("." + app_settings.chart.prefix + "chart_title")
+    .classed("target", true);
+
+  drawnChartContainer.select("." + app_settings.chart.prefix + "chart_svg")
+    .classed("target", true);
+
+  drawnChartContainer.select("." + app_settings.chart.prefix + "chart_source")
+    .classed("target", true);
+
+  // Convert any html children with a class of 'target_child'
+  // within '#target_content' to svg and add them all to
+  // a new div with the id of 'output'
+
+  multiSVGtoPNG.convertToSVG({
+    input: '.chart-export',
+    selector: '.target',
+    output: '.svg-container'
+  });
+
+  // Write the now svg only contents of 'output' to a canvas element
+
+  var imgData = multiSVGtoPNG.encode({
+    input: '.svg-container',
+    output: '.output-canvas',
     scale: scale
   });
+
+  // Download the rendered images as an .png
+
+  multiSVGtoPNG.downloadPNG({
+    data: imgData,
+    filename: filename
+  });
+
+
+
+  // saveSvgAsPng(svg.node(), filename, {
+  //   scale: scale
+  // });
+
+  svgContainer.parentNode.removeChild(svgContainer);
+  svgContainer = null;
+
+  outputCanvas.parentNode.removeChild(outputCanvas);
+  outputCanvas = null;
 
   div.parentNode.removeChild(div);
   div = null;

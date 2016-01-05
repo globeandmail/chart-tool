@@ -69,50 +69,46 @@
         </div>
       {{ /if }}
 
+      {{ #if isBarChart true }}
+        <div class="unit-edit">
+          <h4>Formatting</h4>
+          <div class="x-prefix-edit">
+            <input type="text" name="prefix" placeholder="$" class="input-prefix-x input-field" value="{{ x_axis.prefix }}">
+          </div>
 
+          <div class="x-formatval-edit">
+            <div class="select-wrapper">
+              <select class="select-formatval-x">
+                <option value="comma" selected="{{ xAxisFormatSelected 'comma' }}">1,234</option>
+                <option value="general" selected="{{ xAxisFormatSelected 'general' }}">1234</option>
+                <option value="round1" selected="{{ xAxisFormatSelected 'round1' }}">12.3</option>
+                <option value="round2" selected="{{ xAxisFormatSelected 'round2' }}">12.34</option>
+                <option value="round3" selected="{{ xAxisFormatSelected 'round3' }}">12.345</option>
+              </select>
+            </div>
+          </div>
 
-
-    {{ #if isBarChart true }}
-      <div class="unit-edit">
-        <h4>Formatting</h4>
-        <div class="x-prefix-edit">
-          <input type="text" name="prefix" placeholder="$" class="input-prefix-x input-field" value="{{ x_axis.prefix }}">
-        </div>
-
-        <div class="x-formatval-edit">
-          <div class="select-wrapper">
-            <select class="select-formatval-x">
-              <option value="comma" selected="{{ xAxisFormatSelected 'comma' }}">1,234</option>
-              <option value="general" selected="{{ xAxisFormatSelected 'general' }}">1234</option>
-              <option value="round1" selected="{{ xAxisFormatSelected 'round1' }}">12.3</option>
-              <option value="round2" selected="{{ xAxisFormatSelected 'round2' }}">12.34</option>
-              <option value="round3" selected="{{ xAxisFormatSelected 'round3' }}">12.345</option>
-            </select>
+          <div class="x-suffix-edit">
+            <input type="text" name="suffix" placeholder="%" class="input-suffix-x input-field" value="{{ x_axis.suffix }}">
           </div>
         </div>
 
-        <div class="x-suffix-edit">
-          <input type="text" name="suffix" placeholder="%" class="input-suffix-x input-field" value="{{ x_axis.suffix }}">
+        <div class="unit-edit x-axisval-edit">
+          <h4>Custom range</h4>
+          <span>
+          {{ #if displayMin }}
+            <input type="number" name="min" placeholder="Min" class="input-min-x input-field" value="{{ x_axis.min }}">
+            <span class="axisval-to"> to </span>
+          {{ /if }}
+            <input type="number" name="max" placeholder="Max" class="input-max-x input-field" value="{{ x_axis.max }}">
+          </span>
         </div>
-      </div>
 
-      <div class="unit-edit x-axisval-edit">
-        <h4>Custom range</h4>
-        <span>
-        {{ #if displayMin }}
-          <input type="number" name="min" placeholder="Min" class="input-min-x input-field" value="{{ x_axis.min }}">
-          <span class="axisval-to"> to </span>
-        {{ /if }}
-          <input type="number" name="max" placeholder="Max" class="input-max-x input-field" value="{{ x_axis.max }}">
-        </span>
-      </div>
-
-      <div class="unit-edit x-ticks-edit">
-        <h4>Ticks <a href="#" class="help-toggle help-x-ticks-edit">?</a></h4>
-        <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-x input-field" value="{{ x_axis.ticks }}">
-      </div>
-    {{ /if }}
-
+        <div class="unit-edit x-ticks-edit">
+          <h4>Ticks <a href="#" class="help-toggle help-x-ticks-edit">?</a></h4>
+          <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-x input-field" value="{{ x_axis.ticks }}">
+        </div>
+      {{ /if }}
 
       <div class="unit-edit unit-edit-half x-nice-edit">
         <h4>Niceify <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
@@ -143,7 +139,6 @@
             <select class="select-formatval-y">
               <option value="comma" selected="{{ yAxisFormatSelected 'comma' }}">1,234</option>
               <option value="general" selected="{{ yAxisFormatSelected 'general' }}">1234</option>
-              <!-- <option value="si" selected="{{ yAxisFormatSelected 'si' }}">1.2m</option> -->
               <option value="round1" selected="{{ yAxisFormatSelected 'round1' }}">12.3</option>
               <option value="round2" selected="{{ yAxisFormatSelected 'round2' }}">12.34</option>
               <option value="round3" selected="{{ yAxisFormatSelected 'round3' }}">12.345</option>

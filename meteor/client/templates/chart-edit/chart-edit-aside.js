@@ -218,9 +218,105 @@ Template.chartEditAside.events({
     updateAndSave("updateIndex", this, input);
   },
 
-  "change .select-format-x": function(event, template) {
+  "blur .input-prefix-x": function(event) {
+    var input = event.target.value;
+    updateAndSave("updateXPrefix", this, input);
+  },
+  "change .select-formatval-x": function(event) {
     var format = event.target.value;
     updateAndSave("updateXFormat", this, format);
+  },
+  "blur .input-suffix-x": function(event) {
+    var input = event.target.value;
+    updateAndSave("updateXSuffix", this, input);
+  },
+  "change .input-ticks-x": function(event) {
+    var input = event.target.value;
+    if (!input) { input = "auto"; }
+    updateAndSave("updateXTicks", this, input);
+  },
+  "change .input-min-x": function(event) {
+    var input = event.target.value,
+        inputInt = parseInt(parseInt(event.target.value)),
+        max_x = parseInt(this.max_x);
+
+    if (isNumber(input)) {
+      // if input is a number
+      if (max_x) {
+        // and if max_y exists
+        if (inputInt < max_x) {
+          // if input is less than max_y, update DB
+          updateAndSave("updateXMin", this, input);
+        } else {
+          // if input is greater than max_y, alert and reset
+          sweetAlert({
+            title: "Check your inputs",
+            text: "Min value should be less than max value.",
+            type: "error",
+            confirmButtonColor: "#fff"
+          });
+          event.target.value = this.min_x;
+        }
+      } else {
+        // if max_y doesnt exist, update DB
+        updateAndSave("updateXMin", this, input);
+      }
+    } else if (input === "") {
+      // if input's being deleted, update DB
+      updateAndSave("updateXMin", this, input);
+    } else if ( !(input === "") && !isNumber(input) ) {
+      // if input isnt a number or empty, reset
+      event.target.value = this.min_x;
+      sweetAlert({
+        title: "Check your inputs",
+        text: "Value should be a number.",
+        type: "error",
+        confirmButtonColor: "#fff"
+      });
+    }
+
+  },
+
+  "change .input-max-x": function(event) {
+    var input = event.target.value,
+        inputInt = parseInt(parseInt(event.target.value)),
+        min_x = parseInt(this.min_x);
+
+    if (isNumber(input)) {
+      // if input is a number
+      if (min_x) {
+        // and if min_y exists
+        if (inputInt > min_x) {
+          // if input is greater than min_y, update DB
+          updateAndSave("updateXMax", this, input);
+        } else {
+          // if input is less than min_y, alert and reset
+          sweetAlert({
+            title: "Check your inputs",
+            text: "Max value should be greater than min value.",
+            type: "error",
+            confirmButtonColor: "#fff"
+          });
+          event.target.value = this.max_x;
+        }
+      } else {
+        // if min_y doesnt exist, update DB
+        updateAndSave("updateXMax", this, input);
+      }
+    } else if (input === "") {
+      // if input's being deleted, update DB
+      updateAndSave("updateXMax", this, input);
+    } else if ( !(input === "") && !isNumber(input) ) {
+      // if input isnt a number or empty, reset
+      event.target.value = this.max_x;
+      sweetAlert({
+        title: "Check your inputs",
+        text: "Value should be a number.",
+        type: "error",
+        confirmButtonColor: "#fff"
+      });
+    }
+
   },
   "change .input-checkbox-x-nice": function(event) {
     var val = !this.x_axis.nice;
@@ -230,6 +326,7 @@ Template.chartEditAside.events({
     var val = !this.x_axis.rescale;
     updateAndSave("updateXRescale", this, val);
   },
+
 
   "blur .input-custom-x": function(event) {
     var format = event.target.value,

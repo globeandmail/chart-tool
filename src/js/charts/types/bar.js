@@ -43,7 +43,7 @@ function BarChart(node, obj) {
       yScale = yScaleObj.scale;
 
   // need this for fixed-height bars
-  if (!obj.exportable) {
+  if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
     var totalBarHeight = (obj.dimensions.barHeight * obj.data.data.length * obj.data.seriesAmount);
     yScale.rangeRoundBands([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding());
     obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding() * 2);
@@ -116,14 +116,14 @@ function BarChart(node, obj) {
   xAxisNode.selectAll(".tick text")
     .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
-  if (!obj.exportable) {
-    // working with a fixed bar height
-    xAxisGroup
-      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + totalBarHeight + ")");
-  } else {
+  if (obj.exportable && obj.exportable.dynamicHeight) {
     // working with a dynamic bar height
     xAxisGroup
       .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + obj.dimensions.computedHeight() + ")");
+  } else {
+    // working with a fixed bar height
+    xAxisGroup
+      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + totalBarHeight + ")");
   }
 
   var xAxisWidth = d3.transform(xAxisGroup.attr("transform")).translate[0] + xAxisGroup.node().getBBox().width;
@@ -216,18 +216,25 @@ function BarChart(node, obj) {
   xAxisNode.selectAll("line")
     .attr({
       "y1": function() {
-        if (!obj.exportable) {
-          // fixed height, so use that
-          return -(totalBarHeight);
-        } else {
+        if (obj.exportable && obj.exportable.dynamicHeight) {
           // dynamic height, so calculate where the y1 should go
           return -(obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight);
+        } else {
+          // fixed height, so use that
+          return -(totalBarHeight);
         }
       },
       "y2": 0
   });
 
-  if (!obj.exportable) {
+  if (obj.exportable && obj.exportable.dynamicHeight) {
+
+    // dynamic height, only need to transform x-axis group
+    //
+    xAxisGroup
+      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
+
+  } else {
 
     // fixed height, so transform accordingly and modify the dimension function and parent rects
 
@@ -245,13 +252,6 @@ function BarChart(node, obj) {
     obj.dimensions.totalXAxisHeight = xAxisGroup.node().getBoundingClientRect().height;
 
     obj.dimensions.computedHeight = function() { return this.totalXAxisHeight; };
-
-  } else {
-
-    // dynamic height, only need to transform x-axis group
-
-    xAxisGroup
-      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
   }
 
