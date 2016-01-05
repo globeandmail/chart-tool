@@ -41,12 +41,12 @@
           <div class="date-calculation">{{ dateCalc }}</div>
         </div>
 
-      {{ /if }}
+        <div class="unit-edit index-edit">
+          <h4>Index <a href="#" class="help-toggle help-index-edit">?</a></h4>
+          <input type="number" name="index" placeholder="100" class="input-index input-field" value="{{ index }}">
+        </div>
 
-      <div class="unit-edit index-edit">
-        <h4>Index <a href="#" class="help-toggle help-index-edit">?</a></h4>
-        <input type="number" name="index" placeholder="100" class="input-index input-field" value="{{ index }}">
-      </div>
+      {{ /if }}
 
     </div>
 
