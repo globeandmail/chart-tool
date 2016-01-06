@@ -9,7 +9,6 @@ jparker:crypto-md5
 jparker:crypto-core
 iron:router
 fourseven:scss@=1.0.0
-jquery
 
 
 jparker:crypto-base64

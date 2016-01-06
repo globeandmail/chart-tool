@@ -1,12 +1,12 @@
 <template name="chartShow">
   <div class="chart-entry">
     <div class="top-line">
-      <div class="slug">{{ slug }}</div>
+      <h3 class="slug">{{ slug }}</h3>
       <div class="chart-links">
         {{ #if isList }}
-        <div class="show"><a href="/chart/{{ _id }}">Show</a></div>
+        <h3 class="show"><a href="/chart/{{ _id }}">Show</a></h3>
         {{ /if }}
-        <div class="edit"><a href="/chart/edit/{{ _id }}">Edit</a></div>
+        <h3 class="edit"><a href="/chart/edit/{{ _id }}">Edit</a></h3>
       </div>
     </div>
     <img src="{{ img }}">

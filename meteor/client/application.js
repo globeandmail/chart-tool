@@ -1,43 +1,32 @@
-$.extend($.fn.pulse = function() {
-  var minOpacity = 0.2;
-  var fadeOutDuration = 600;
-  var fadeInDuration = 600;
-  $(this).attr('pulsing', 'y');
-
-  $(this).animate({
-    opacity: minOpacity
-  }, fadeOutDuration, function() {
-    $(this).animate({
-      opacity: 1
-    }, fadeInDuration, function() {
-      if ($(this).attr('pulsing') == 'y') $(this).pulse();
-    })
-  });
-  return $(this);
-});
-
-$.extend($.fn.stopPulse = function() {
-  $(this).attr('pulsing', '').stop(true, true).animate({
-    opacity: 1
-  });
-});
+savePulse = function() {
+  var time = 600;
+  function pulse() {
+    d3.select(".save-icon").transition()
+      .duration(time)
+      .style("opacity", 1)
+      .transition()
+      .duration(time)
+      .style('opacity', 0.1)
+      .ease('sine')
+      .each("end", pulse);
+  }
+  function stop() {
+    d3.select(".save-icon").transition()
+      .style("opacity", "");
+  }
+  return {
+    pulse: pulse,
+    stop: stop
+  }
+}
 
 updateAndSave = function(method, obj, data) {
-  $(".save-state").show();
-  $(".save-state").pulse();
+  savePulse().pulse();
   Meteor.call(method, obj._id, data, function(err, result) {
     if (!err) {
       var newObj = Charts.findOne(Session.get("chartId"));
       generateImg(newObj);
-      $(".save-state").stopPulse();
-      $(".save-state").html("Saved!");
-      setTimeout(function() {
-        $(".save-state").animate({
-          opacity: 0
-        }, 800, function() {
-          $(".save-state").html("Saving...");
-        });
-      }, 3 * 1000);
+      savePulse().stop();
     } else {
       console.log(err);
     }

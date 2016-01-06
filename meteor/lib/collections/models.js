@@ -2,12 +2,28 @@
 
 Charts = new Mongo.Collection("charts");
 
+DBStatus = new Meteor.Collection("database-status");
+
 Charts.initEasySearch(['slug', 'data', 'heading', 'qualifier', 'source'], {
   'limit' : 10,
   'use' : 'mongo-db'
 });
 
 Meteor.methods({
+
+  // status check methods
+  clearDBStatus: function() {
+    return DBStatus.remove({});
+  },
+
+  checkDBStatus: function() {
+    var test = {};
+    test.createdAt = new Date();
+    test.lastEdited = new Date();
+    test.connected = true;
+    return DBStatus.insert(test);
+  },
+
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
   addChart: function (text, data) {

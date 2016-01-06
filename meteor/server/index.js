@@ -4,3 +4,9 @@ Meteor.methods({
     return Meteor.http.get(app_settings.animal_api);
   }
 });
+
+
+Meteor.startup(function() {
+  // clears status database
+  DBStatus.remove({});
+});
