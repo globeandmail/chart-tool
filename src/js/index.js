@@ -41,7 +41,6 @@
 
         dispatcher.start(obj);
 
-        // clearing variables
         drawn = utils.clearDrawn(drawn, obj);
         obj = utils.clearObj(obj);
         container = utils.clearChart(container);
@@ -158,10 +157,6 @@
           return destroyChart(id);
         },
 
-        listen: function listen(id, type) {
-          return;
-        },
-
         dispatch: function dispatch() {
           return d3.keys(dispatcher);
         },
@@ -182,7 +177,8 @@
         stackedArea: require("./charts/types/stacked-area"),
         column: require("./charts/types/column"),
         stackedColumn: require("./charts/types/stacked-column"),
-        streamgraph: require("./charts/types/streamgraph")
+        streamgraph: require("./charts/types/streamgraph"),
+        bar: require("./charts/types/bar"),
 
       }
 

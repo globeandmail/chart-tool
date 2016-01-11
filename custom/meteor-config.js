@@ -3,6 +3,7 @@ var config = require("json!./chart-tool-config.json"),
 
 app_version = p.version;
 app_build = p.buildVer;
+app_name = p.name;
 prefix = config.prefix;
 
 app_settings = {

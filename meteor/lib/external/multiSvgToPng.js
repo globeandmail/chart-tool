@@ -50,29 +50,23 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
           .style('font-family', 'Helvetica')
           .style('width', elWidth)
           .html(item);
-
         newSVG.insert('style', ':first-child').html(css);
 
       } else {
 
+        var css = styles(d3.select(targetContainer).node(), options.selectorRemap);
         var item = d3.select(fos[i]).node().innerHTML;
         var elRef = d3.select(fos[i]);
         var elHeight = d3.select(fos[i]).node().getBoundingClientRect().height;
         var elWidth = d3.select(fos[i]).node().getBoundingClientRect().width;
-
-        var css = styles(d3.select(fos[i]).node(), options.selectorRemap);
-
-        var newSVG = temp_obj
-          .append('svg')
-            .attr('xmlns', 'http://www.w3.org/2000/svg')
-            .attr('width', elWidth)
-            .attr('height', elHeight)
-            .html(item)
-
-        newSVG.insert('defs', ':first-child')
-          .append('style')
-          .attr("type", "text/css")
-          .html("<![CDATA[\n" + css + "\n]]>");
+        var elClass = elRef.attr('class');
+        var newSVG = temp_obj.append('svg')
+          .attr('class', elClass)
+          .attr('xmlns', 'http://www.w3.org/2000/svg')
+          .attr('width', elWidth)
+          .attr('height', elHeight)
+          .html(item);
+        newSVG.insert('style', ':first-child').html(css);
 
       }
 
@@ -80,72 +74,89 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
 
   }
 
-  obj.encode = function(options) {
+  obj.encode = function(options, cb) {
     var outputTarget = options.input,
-        canvasTarget = options.output;
-        // scale = options.scale || 1;
-    //remove existing  canvas
+        canvasTarget = options.output,
+        scale = options.scale || 1;
+
     d3.selectAll('#theCanvas').remove();
     var svgs = d3.select(outputTarget).select('div').selectAll("svg")[0];
     var canvasHeight = 0;
     var currentHeight = 0;
 
     for (var i = 0; i < svgs.length; i++) {
-      //add the height of the current object to the currentHeight variable - which is used to position the elements
       canvasHeight += d3.select(svgs[i]).node().getBoundingClientRect().height;
     }
 
-    //set the width and height of the canas element to the required dimensions
     var theCanvas = d3.select(canvasTarget).append('canvas')
       .attr('id', 'theCanvas')
-      .attr('width', canvasWidth)
-      .attr('height', canvasHeight);
+      .attr('width', canvasWidth * scale)
+      .attr('height', canvasHeight * scale);
 
-    //create a canvas/context to write to
-    var canvas = document.querySelector("canvas"),
+    var canvas = theCanvas.node(),
+        context = canvas.getContext("2d");
 
-      context = canvas.getContext("2d");
+    context.scale(scale, scale);
 
-    //loop through each and draw it to the target context
+    context.fillStyle = d3.select(canvasTarget).style("background-color");
+
+    var imageCounter = 0;
+
     for (var i = 0; i < svgs.length; i++) {
-      //grab a reference to the target elements outerHTML
-      var item = d3.select(svgs[i]).attr("version", 1.1).node().outerHTML;
-      //encode it as base64
-      var imgsrc = 'data:image/svg+xml;base64,' + btoa(item);
-      //create an image
-      var image = new Image;
-      //assign the base64 encoded data as its src attribute
-      image.src = imgsrc;
-      //draw the image to the context at the right position
-      context.drawImage(image, 0, currentHeight);
-      //add the height of the current object to the currentHeight variable - which is used to position the elements
-      currentHeight += d3.select(svgs[i]).node().getBoundingClientRect().height;
+      (function(arr, k) {
+        var currSvg = d3.select(arr[k]),
+            currSvgHeight = currSvg.node().getBoundingClientRect().height;
+
+        var item = currSvg.attr("version", 1.1).node().outerHTML;
+        var imgsrc = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(item)));
+        var image = new Image;
+        image.src = imgsrc;
+        image.onload = function() {
+          if (!imageCounter) {
+            context.fillRect(0, 0, canvasWidth, canvasHeight);
+            context.fill();
+          }
+          context.drawImage(image, 0, currentHeight);
+          currentHeight += currSvgHeight;
+          if ((arr.length - 1) === imageCounter) {
+            var canvasData = canvas.toDataURL("image/png");
+            if (cb) {
+              cb(canvasData);
+            } else {
+              return canvasData;
+            }
+          } else {
+            imageCounter++;
+          }
+        }
+      })(svgs, i);
     }
-
-    //create a reference to the canvas's data URL
-    var canvasdata = canvas.toDataURL("image/png");
-
-    return canvasdata;
 
   }
 
   obj.downloadPNG = function(options) {
-    var data = options.data,
-        filename = options.filename;
 
-    //create a link to kick off the download from and trigger it.
-    var a = document.createElement("a");
-    a.download = filename + ".png";
-    a.href = data;
-    a.click();
+    options = options || {},
+    options.scale = options.scale || 1;
+
+    obj.encode(options, function(data) {
+      var a = document.createElement('a');
+      a.download = options.filename + ".png";
+      a.href = data;
+      document.body.appendChild(a);
+      a.addEventListener("click", function(e) {
+        a.parentNode.removeChild(a);
+      });
+      a.click();
+      d3.selectAll('#theCanvas').remove();
+    })
+
   }
 
-  /*Borrowed from https://github.com/exupero/saveSvgAsPng/blob/gh-pages/saveSvgAsPng.js*/
   function isExternal(url) {
     return url && url.lastIndexOf('http', 0) == 0 && url.lastIndexOf(window.location.host) == -1;
   }
 
-  /*Borrowed from https://github.com/exupero/saveSvgAsPng/blob/gh-pages/saveSvgAsPng.js*/
   function styles(el, selectorRemap) {
     var css = "";
     var sheets = document.styleSheets;

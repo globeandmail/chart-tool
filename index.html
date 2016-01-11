@@ -35,6 +35,7 @@
             "source": "THE GLOBE AND MAIL » SOURCE: Statistics Canada",
             "chart": {
               "exportable": {
+                "dynamicHeight": true,
                 "width": 460,
                 "height": 300
               },
@@ -748,8 +749,24 @@
 
     </script>
 
+    <script>
+    var loadJS = function( src, cb ){
+        "use strict";
+        var ref = w.document.getElementsByTagName( "script" )[ 0 ];
+        var script = w.document.createElement( "script" );
+        script.src = src;
+        script.async = true;
+        ref.parentNode.insertBefore( script, ref );
+        if (cb && typeof(cb) === "function") {
+          script.onload = cb;
+        }
+        return script;
+      };
+    </script>
+
+
     <script src="lib/d3/d3.js"></script>
-    <script src="dist/bundle.js"></script>
+    <script src="dist/bundle.js" async></script>
 
   </div>
 

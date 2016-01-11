@@ -197,5 +197,6 @@ module.exports = {
   timeDiff: timeDiff,
   timeInterval: timeInterval,
   getTranslateXY: getTranslateXY,
-  dataParse: require("./dataparse")
+  dataParse: require("./dataparse"),
+  factory: require("./factory")
 };

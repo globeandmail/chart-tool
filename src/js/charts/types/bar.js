@@ -116,6 +116,7 @@ function BarChart(node, obj) {
   xAxisNode.selectAll(".tick text")
     .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
+
   if (obj.exportable && obj.exportable.dynamicHeight) {
     // working with a dynamic bar height
     xAxisGroup

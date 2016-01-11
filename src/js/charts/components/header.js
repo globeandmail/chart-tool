@@ -7,6 +7,8 @@ function headerComponent(container, obj) {
     .classed(obj.prefix + "chart_title " + obj.prefix + obj.customClass, true);
 
   headerGroup
+    .append("div")
+    .attr("class", obj.prefix + "chart_title-text")
     .text(obj.heading);
 
   if (obj.editable) {
