@@ -37,10 +37,7 @@ function clearChart(container) {
  * @return {Object}     The new version of the object.
  */
 function clearObj(obj) {
-  if (obj.chartObj) {
-    obj.chartObj = undefined;
-  }
-
+  if (obj.chartObj) { obj.chartObj = undefined; }
   return obj;
 }
 
