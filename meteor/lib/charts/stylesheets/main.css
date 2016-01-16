@@ -553,3 +553,6 @@
   font-style: normal;
   font-size: 12px;
   line-height: 16px; }
+
+.ct-thumbnail {
+  width: 100%; }

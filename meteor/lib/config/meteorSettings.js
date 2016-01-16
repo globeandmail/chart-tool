@@ -311,9 +311,8 @@
 			"offset": 0.12
 		},
 		"image": {
-			"use": false,
-			"path": "http://s3-us-west-2.amazonaws.com",
-			"folder": "chart-tool-dev",
+			"use": true,
+			"path": "http://s3-us-west-2.amazonaws.com/chart-tool-dev",
 			"filename": "thumbnail",
 			"extension": "png"
 		}

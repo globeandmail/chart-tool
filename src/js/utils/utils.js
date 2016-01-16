@@ -225,8 +225,8 @@ function generateThumb(container, obj, settings) {
     var cont = document.querySelector(container),
         img = document.createElement('img');
 
-    img.setAttribute('src', imgSettings.path + "/" + imgSettings.folder + "/" + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
-    img.setAttribute('alt', obj.heading);
+    img.setAttribute('src', imgSettings.path + "/" + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
+    img.setAttribute('alt', obj.data.heading);
     img.setAttribute('class', settings.prefix + "thumbnail");
 
     cont.appendChild(img);

@@ -31,4 +31,8 @@
   @include utility-font;
 }
 
+.#{$prefix}thumbnail {
+  width: 100%;
+}
+
 @import "../../custom/custom.scss";
