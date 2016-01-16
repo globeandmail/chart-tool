@@ -309,6 +309,13 @@
 		"bands": {
 			"padding": 0.08,
 			"offset": 0.12
+		},
+		"image": {
+			"use": false,
+			"path": "http://s3-us-west-2.amazonaws.com",
+			"folder": "chart-tool-dev",
+			"filename": "thumbnail",
+			"extension": "png"
 		}
 	};
 

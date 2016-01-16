@@ -10,6 +10,7 @@ module.exports = {
   data: "",
   dateFormat: settings.dateFormat,
   timeFormat: settings.timeFormat,
+  image: settings.image,
   heading: "",
   qualifier: "",
   source: "",

@@ -49,6 +49,7 @@ cleanEmbed = function(data) {
 embed = function(obj) {
   var data = {
     "version": obj.version,
+    "id": obj._id,
     "heading": escapeStr(obj.heading),
     "qualifier": escapeStr(obj.qualifier),
     "source": escapeStr(obj.source)
