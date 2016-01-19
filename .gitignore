@@ -1,49 +1,4 @@
-# Created by https://www.gitignore.io/api/osx,sublimetext,node,bower,grunt
-
-### OSX ###
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-
-### SublimeText ###
-# cache files for sublime text
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-
-# workspace files are user-specific
-*.sublime-workspace
-
-# project files should be checked into the repository, unless a significant
-# proportion of contributors will probably not be using SublimeText
-# *.sublime-project
-
-# sftp configuration file
-sftp-config.json
-
+# Created by https://www.gitignore.io/api/node,osx,meteorjs,sublimetext,sass
 
 ### Node ###
 # Logs
@@ -75,35 +30,87 @@ build/Release
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
 
+# Optional npm cache directory
+.npm
 
-### Bower ###
-bower_components
-.bower-cache
-.bower-registry
-.bower-tmp
+# Optional REPL history
+.node_repl_history
 
 
-### grunt ###
-# Grunt usually compiles files inside this directory
-dist/
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# Grunt usually preprocesses files such as coffeescript, compass... inside the .tmp directory
-.tmp/
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+### MeteorJS ###
+# default meteor build and local packages
+.meteor/local
+
+# meteor settings file
+settings.json
+
+# meteor build output files
+*.tar.gz
+
+# general swp files from vim
+*.swp
+
+
+### SublimeText ###
+# cache files for sublime text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+
+# workspace files are user-specific
+*.sublime-workspace
+
+# project files should be checked into the repository, unless a significant
+# proportion of contributors will probably not be using SublimeText
+# *.sublime-project
+
+# sftp configuration file
+sftp-config.json
+
+
+### Sass ###
+.sass-cache/
+*.css.map
+
 
 ### Custom NPM repository ###
 .npmrc
 
-### Chart Tool ###
-bundle.js
-bundle.js.map
-dist/meteorSettings.js
-dist/meteorSettings.js.map
-dist/bundle.js
-dist/bundle.js.map
+
+dist/
+
 meteor/lib/charts/scripts/bundle.js
 meteor/lib/charts/scripts/bundle.js.map
-meteor/lib/charts/stylesheets/main.css
 meteor/lib/config/meteorSettings.js
-meteor/lib/charts/meteorSettings.js.map
-.meteor/meteorite
-.meteor/local
+meteor/lib/config/meteorSettings.js.map
+
+bundle.js.map
+meteorSettings.js.map

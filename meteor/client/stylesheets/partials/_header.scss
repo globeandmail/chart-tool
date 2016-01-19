@@ -23,40 +23,8 @@ header {
       top: 12px;
     }
   }
-  h1 {
-    @include interface-font-light;
-    color: $text;
-    font-size: 1.7em;
-    letter-spacing: -0.01em;
-    line-height: 1em;
-    padding: 0;
-    margin: 0;
-    @media screen and (max-width: 1340px) {
-      display: none;
-    }
-    a {
-      color: $text;
-      text-decoration: none;
-    }
-  }
   .header-edit {
     border-bottom: 1px solid lighten($verylightgray, 10%);
-    h1 {
-      position: absolute;
-      top: 0.9em;
-      left: 0.5em;
-    }
-  }
-}
-
-.help {
-  color: $text;
-  @include transition (all 0.1s ease-out);
-  cursor: pointer;
-  font-size: 1em;
-  &:hover {
-    color: $primary-color;
-    @include transition (all 0.1s ease-in);
   }
 }
 
@@ -65,9 +33,8 @@ header {
   @include clearfix;
 }
 
-.edit-indicator {
+.edit-indicator, .header-help {
   padding-left: 0.3em;
-  font-size: 1.7em;
   color: $text;
   @include interface-font-light;
   opacity: 0.2;
@@ -75,43 +42,24 @@ header {
   cursor: pointer;
 }
 
-.saved-indicator {
-  position: absolute;
-  top: 0.9em;
-  right: 0.5em;
-  font-size: 1.7em;
-  @include interface-font-light;
-  @media screen and (max-width: 1340px) {
-    display: none;
-  }
-  img, span {
-    display: inline-block;
-    vertical-align: top;
-  }
-  img {
-    margin-top: 0.1em;
-    height: 0.8em;
-    width: auto;
-  }
-}
-
 .chart-slug {
   margin-top: 0.6em;
   display: inline-block;
-  &:hover {
-    .edit-indicator {
-      opacity: 1;
-      @include transition (all 0.1s ease-in);
-    }
+  .header-help {
+    opacity: 0.2;
+  }
+  .edit-indicator:hover, .header-help:hover {
+    opacity: 1;
+    @include transition (all 0.1s ease-in);
   }
 }
 
-.input-slug-edit, .edit-indicator {
+.input-slug-edit, .edit-indicator, .header-help {
   display: inline-block;
 }
 
 .input-slug-edit {
-  font-size: 1.7em;
+  font-size: 1.5em;
   @include interface-font-bold;
   border: none;
   color: $text;
@@ -144,13 +92,19 @@ header {
   margin-top: 1.1em;
 }
 
+.save-icon {
+  display: inline-block;
+  height: 1.4em;
+  width: auto;
+}
+
 .header-new, .header-list, .header-help {
   @extend .edit-indicator;
   opacity: 1;
   text-align: right;
   padding-right: 0.6em;
   a {
-    @include interface-font-regular;
+    @include interface-font-light;
     display: inline;
     color: $text;
     text-decoration: none;
@@ -163,7 +117,12 @@ header {
 }
 
 .header-help {
-  float: left;
+  color: $text;
+  @include transition (all 0.1s ease-out);
+  &:hover {
+    color: $primary-color;
+    @include transition (all 0.1s ease-in);
+  }
 }
 
 .header-edit-nav {

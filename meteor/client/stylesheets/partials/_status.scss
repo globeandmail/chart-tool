@@ -1,0 +1,68 @@
+.status-header {
+  @include interface-font-bold;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 3rem;
+  padding-bottom: 0;
+}
+
+.status-rule {
+  margin: 0 auto;
+  margin-bottom: 2em;
+  width: 30%;
+  border-bottom: 1px solid $text;
+}
+
+.status-number {
+  @include span-columns(8 of 24);
+  text-align: center;
+  h3 {
+    text-transform: uppercase;
+    font-size: 1em;
+  }
+}
+
+.big-number {
+  font-size: 4em;
+  text-align: center;
+  display: block;
+}
+
+.status-description {
+  text-align: center;
+  p {
+    font-size: 1.3em;
+    color: $lightgray;
+  }
+}
+
+.status-indicators {
+  text-align: center;
+  margin-bottom: 3em;
+}
+
+.status-dot-group {
+  display: inline-block;
+  margin-right: 1.5em;
+  &:last-of-type {
+    margin-right: 0;
+  }
+  h4 {
+    display: inline-block;
+    text-transform: uppercase;
+  }
+  .status-dot {
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    margin-right: 0.4em;
+    background-color: $verylightgray;
+  }
+  .status-inactive {
+    background-color: #D0021B;
+  }
+  .status-active {
+    background-color: #50D321;
+  }
+}

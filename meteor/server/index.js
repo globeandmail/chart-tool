@@ -13,3 +13,8 @@ if (app_settings.s3.enable) {
     region: app_settings.s3.region
   };
 }
+
+Meteor.startup(function() {
+  // clears status database
+  DBStatus.remove({});
+});

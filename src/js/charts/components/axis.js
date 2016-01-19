@@ -21,7 +21,7 @@ function axisManager(node, obj, scale, axisType) {
   if (axisType === "xAxis") {
     appendXAxis(axisGroup, obj, scale, axis, axisType);
   } else if (axisType === "yAxis") {
-    appendYAxis(axisGroup, obj, scale, axis, axisType, axisObj);
+    appendYAxis(axisGroup, obj, scale, axis, axisType);
   }
 
   return {
@@ -83,7 +83,7 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
     case "linear":
     case "numerical":
       // function doesn't exist yet:
-      // numericalAxis(axisNode, scale, axis, axisSettings, obj.prefix);
+      // numericalAxis(axisNode, scale, axis, axisSettings, obj);
       break;
     case "ordinal":
     case "discrete":
@@ -199,7 +199,7 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
   axisNode.selectAll("text")
     .style("text-anchor", "middle")
     .attr("dy", axisSettings.dy + "em")
-    .call(wrapText, bandStep, dimensions.bands.padding);
+    .call(wrapText, bandStep);
 
   var xPos = (- (bandStep / 2) - (bandStep * dimensions.bands.outerPadding()));
 
@@ -223,6 +223,42 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
       "y2": axisSettings.upper.tickHeight,
       "x1": xPos,
       "x2": xPos
+    });
+
+}
+
+function numericalAxis(axisNode, scale, axis, axisSettings, obj) {
+
+  // var axisObj = obj[axisName],
+  //     axisSettings;
+
+  // if (obj.exportable && obj.exportable.y_axis) {
+  //   axisSettings = obj.exportable.y_axis;
+  // } else {
+  //   axisSettings = axisObj;
+  // }
+
+  // obj.dimensions.yAxisPaddingRight = axisSettings.paddingRight;
+
+  // axis.tickValues(tickFinderY(scale, axisObj.ticks, axisSettings));
+
+  axisNode.call(axis);
+
+  // axisNode.selectAll("g")
+  //   .filter(function(d) { return d; })
+  //   .classed(obj.prefix + "minor", true);
+
+  // axisNode.selectAll(".tick text")
+  //   .attr("transform", "translate(0,0)")
+  //   .call(updateTextY, axisNode, obj, axis, axisObj)
+  //   .attr({
+  //     "transform": "translate(" + ( -(obj.dimensions.computedWidth() - obj.dimensions.labelWidth)) + ",0)"
+  //   });
+
+  axisNode.selectAll(".tick line")
+    .attr({
+      "y1": -(obj.dimensions.computedHeight()),
+      "y2": 0
     });
 
 }
@@ -345,6 +381,7 @@ function setTickFormatY(format, d, lastTick) {
   var isFloat = require("../../helpers/helpers").isFloat;
 
   var currentFormat;
+
   switch (format) {
     case "general":
       currentFormat = d3.format("g")(d);
@@ -382,19 +419,32 @@ function setTickFormatY(format, d, lastTick) {
 
 }
 
-function updateTextY(textNode, axisNode, obj, axis, axisObj) {
+function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
+
+  var lastTick = axis.tickValues()[axis.tickValues().length - 1];
+
+  textNodes
+    .text(function(d, i) {
+      var val = setTickFormatY(axisObj.format, d, lastTick);
+      if (i === axis.tickValues().length - 1) {
+        val = (axisObj.prefix || "") + val + (axisObj.suffix || "");
+      }
+      return val;
+    });
+
+}
+
+function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
   var arr = [],
       lastTick = axis.tickValues()[axis.tickValues().length - 1];
 
-  textNode
+  textNodes
     .attr("transform", "translate(0,0)")
     .text(function(d, i) {
       var val = setTickFormatY(axisObj.format, d, lastTick);
-      if (!axisObj.prefix) { axisObj.prefix = ""; }
-      if (!axisObj.suffix) { axisObj.suffix = ""; }
       if (i === axis.tickValues().length - 1) {
-        val = axisObj.prefix + val + axisObj.suffix;
+        val = (axisObj.prefix || "") + val + (axisObj.suffix || "");
       }
       return val;
     })
@@ -406,22 +456,22 @@ function updateTextY(textNode, axisNode, obj, axis, axisObj) {
     })
     .attr({
       "dy": function() {
-        if (obj.yAxis.dy !== "") {
-          return obj.yAxis.dy + "em";
+        if (axisObj.dy !== "") {
+          return axisObj.dy + "em";
         } else {
           return d3.select(this).attr("dy");
         }
       },
       "x": function() {
-        if (obj.yAxis.textX !== "") {
-          return obj.yAxis.textX;
+        if (axisObj.textX !== "") {
+          return axisObj.textX;
         } else {
           return d3.select(this).attr("x");
         }
       },
       "y": function() {
-        if (obj.yAxis.textY !== "") {
-          return obj.yAxis.textY;
+        if (axisObj.textY !== "") {
+          return axisObj.textY;
         } else {
           return d3.select(this).attr("y");
         }
@@ -651,26 +701,51 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
 
 }
 
-function addZeroLine(obj, node, Axis) {
+function addZeroLine(obj, node, Axis, axisType) {
 
   var minVal = Axis.axis.scale().domain()[0];
 
   if (minVal <= 0) {
 
-    var refGroup = Axis.node.selectAll(".tick:not(." + obj.prefix + "minor)");
+    var refGroup = Axis.node.selectAll(".tick:not(." + obj.prefix + "minor)"),
         refLine = refGroup.select("line");
 
     // zero line
-    node.append("line")
+    var zeroLine = node.append("line")
+      .style("shape-rendering", "crispEdges")
       .attr({
-        "class": obj.prefix + "zero-line",
-        "transform": refGroup.attr("transform"),
+        "class": obj.prefix + "zero-line"
+        // "transform": refGroup.attr("transform")
+      });
+
+    var transform = [0, 0];
+
+    transform[0] += d3.transform(node.select("." + obj.prefix + axisType).attr("transform")).translate[0];
+    transform[1] += d3.transform(node.select("." + obj.prefix + axisType).attr("transform")).translate[1];
+    transform[0] += d3.transform(refGroup.attr("transform")).translate[0];
+    transform[1] += d3.transform(refGroup.attr("transform")).translate[1];
+
+    if (axisType === "xAxis") {
+
+      zeroLine.attr({
+        "y1": refLine.attr("y1"),
+        "y2": refLine.attr("y2"),
+        "x1": 0,
+        "x2": 0,
+        "transform": "translate(" + transform[0] + "," + transform[1] + ")"
+      });
+
+    } else if (axisType === "yAxis") {
+
+      zeroLine.attr({
         "x1": refLine.attr("x1"),
         "x2": refLine.attr("x2"),
         "y1": 0,
-        "y2": 0
-      })
-      .style("shape-rendering", "crispEdges");
+        "y2": 0,
+        "transform": "translate(" + transform[0] + "," + transform[1] + ")"
+      });
+
+    }
 
     refLine.style("display", "none");
 
@@ -688,6 +763,7 @@ module.exports = {
   discreteAxis: discreteAxis,
   formatText: formatText,
   setTickFormatY: setTickFormatY,
+  updateTextX: updateTextX,
   updateTextY: updateTextY,
   repositionTextY: repositionTextY,
   newTextNode: newTextNode,

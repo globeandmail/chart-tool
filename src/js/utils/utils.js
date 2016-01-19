@@ -26,8 +26,19 @@ function debounce(fn, obj, timeout, root) {
  * @param  {String} container
  */
 function clearChart(container) {
-  d3.selectAll(container).selectAll("svg").remove();
-  d3.selectAll(container).selectAll("div").remove();
+
+  var cont = document.querySelector(container);
+
+  while (cont.querySelectorAll("svg").length) {
+    var svg = cont.querySelectorAll("svg");
+    svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
+  }
+
+  while (cont.querySelectorAll("div").length) {
+    var div = cont.querySelectorAll("div");
+    div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+  }
+
   return container;
 }
 
@@ -37,10 +48,7 @@ function clearChart(container) {
  * @return {Object}     The new version of the object.
  */
 function clearObj(obj) {
-  if (obj.chartObj) {
-    obj.chartObj = undefined;
-  }
-
+  if (obj.chartObj) { obj.chartObj = undefined; }
   return obj;
 }
 
@@ -68,7 +76,7 @@ function clearDrawn(drawn, obj) {
  * @return {Object}           The boundingClientRect object.
  */
 function getBounding(selector, dimension) {
-  return d3.select(selector).node().getBoundingClientRect()[dimension];
+  return document.querySelector(selector).getBoundingClientRect()[dimension];
 }
 
 /**
@@ -186,6 +194,47 @@ function getTranslateXY(node) {
   return d3.transform(d3.select(node).attr("transform")).translate;
 }
 
+/**
+ * Returns a translate statement because it's annoying to type out
+ * @return {String}
+ */
+function translate(x, y) {
+    return "translate(" + x + ", " + y + ")";
+}
+
+/**
+ * Tests for SVG support, taken from https://github.com/viljamis/feature.js/
+ * @param  {Object} root A reference to the browser window object.
+ * @return {Boolean}
+ */
+function svgTest(root) {
+  return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGRect;
+}
+
+/**
+ * Given a chart object and container, generate and append a thumbnail
+ * @param  {[type]} obj [description]
+ * @return {[type]}     [description]
+ */
+function generateThumb(container, obj, settings) {
+
+  var imgSettings = settings.image;
+
+  if (imgSettings && imgSettings.use) {
+
+    var cont = document.querySelector(container),
+        img = document.createElement('img');
+
+    img.setAttribute('src', imgSettings.path + "/" + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
+    img.setAttribute('alt', obj.data.heading);
+    img.setAttribute('class', settings.prefix + "thumbnail");
+
+    cont.appendChild(img);
+
+  }
+
+}
+
 module.exports = {
   debounce: debounce,
   clearChart: clearChart,
@@ -197,5 +246,9 @@ module.exports = {
   timeDiff: timeDiff,
   timeInterval: timeInterval,
   getTranslateXY: getTranslateXY,
-  dataParse: require("./dataparse")
+  translate: translate,
+  svgTest: svgTest,
+  generateThumb: generateThumb,
+  dataParse: require("./dataparse"),
+  factory: require("./factory")
 };

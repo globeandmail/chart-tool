@@ -60,9 +60,9 @@ function StackedAreaChart(node, obj) {
     .attr({
       "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
       "class": function(d, i) {
-        var output = obj.prefix + "series " + obj.prefix + "series_" + (i + 1);
+        var output = obj.prefix + "series " + obj.prefix + "series_" + (i);
         if (i === obj.seriesHighlight()) {
-          output = obj.prefix + "series " + obj.prefix + "series_" + (i + 1) + " " + obj.prefix + "highlight";
+          output = obj.prefix + "series " + obj.prefix + "series_" + (i) + " " + obj.prefix + "highlight";
         }
         return output;
       }
@@ -81,19 +81,19 @@ function StackedAreaChart(node, obj) {
 
   series.append("path")
     .attr("class", function(d, i) {
-      var output = obj.prefix + "fill " + obj.prefix + "fill-" + (i + 1);
+      var output = obj.prefix + "fill " + obj.prefix + "fill-" + (i);
       if (i === obj.seriesHighlight()) {
-        output = obj.prefix + "fill " + obj.prefix + "fill-" + (i + 1) + " " + obj.prefix + "highlight";
+        output = obj.prefix + "fill " + obj.prefix + "fill-" + (i) + " " + obj.prefix + "highlight";
       }
       return output;
     })
     .attr("d", area);
 
   series.append("path")
-    .attr("class", function(d, i) { return obj.prefix + "line " + obj.prefix + "line-" + (i + 1); })
+    .attr("class", function(d, i) { return obj.prefix + "line " + obj.prefix + "line-" + (i); })
     .attr("d", line);
 
-  axisModule.addZeroLine(obj, node, yAxisObj);
+  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
 
   return {
     xScaleObj: xScaleObj,

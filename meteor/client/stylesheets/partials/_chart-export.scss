@@ -10,7 +10,7 @@
   z-index: 1000;
 }
 
-.chart-export, .chart-thumbnail {
+.chart-export, .chart-thumbnail, .canvas-container {
   background-color: white;
 }
 
@@ -21,6 +21,9 @@
   position: absolute;
   top: 0;
   z-index: 1000;
+  h3 {
+    border-bottom: 1px solid $text;
+  }
 }
 
 .overlay-header {
@@ -35,6 +38,7 @@
     float: left;
     border-bottom: none;
     margin-bottom: 0;
+    font-size: 2em;
   }
   .overlay-close {
     float: right;
@@ -42,6 +46,7 @@
     color: $text;
     cursor: pointer;
     opacity: 0.3;
+    @include interface-font-light;
     @include transition (all 0.1s ease-out);
     @include user-select(none);
     &:hover {
@@ -58,8 +63,15 @@
 
 .web-export {
   @include span-columns(8 of 24);
+}
+
+.web-export, .print-export {
+  h3 {
+    font-size: 1.4em;
+    @include interface-font-bold;
+  }
   p, select {
-    font-size: 1.6em;
+    font-size: 1.2em;
   }
   select {
     border-radius: 0.4em;
@@ -74,7 +86,7 @@
   border: 1px solid $text;
   color: $text;
   margin-bottom: 0.6em;
-  font-size: 1.6em;
+  font-size: 1.2em;
   &:hover {
     border: 1px solid $primary-color;
   }
@@ -103,7 +115,7 @@
 
 .print-export-preview, .print-export-options {
   p {
-    font-size: 1.3em;
+    font-size: 1.2em;
   }
 }
 
@@ -136,7 +148,7 @@
     background-color: none;
   }
   label {
-    font-size: 1.2em;
+    font-size: 1em;
   }
   .input-radio:checked {
     background-color: $primary-color;
@@ -148,7 +160,21 @@
   h4 {
     text-transform: none;
     @include interface-font-bold;
-    font-size: 1.2em;
+    font-size: 1em;
     margin: 0.7em 0 0.5em 0;
+  }
+}
+
+.web-export-custom-field {
+  @include span-columns(8 of 24);
+  h4 {
+    @include interface-font-bold;
+    // font-size: 0.9em;
+    text-transform: uppercase;
+    padding-bottom: 0.2em;
+    margin: 0;
+  }
+  input {
+    margin-right: 0.2em;
   }
 }

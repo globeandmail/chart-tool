@@ -1,62 +1,32 @@
-.#{$prefix}series_group .#{$prefix}line {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.#{$prefix}primary.#{$prefix}type_line,
+.#{$prefix}alternate.#{$prefix}type_line {
+
+  .#{$prefix}series_group .#{$prefix}line,
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: $line-stroke-width;
+  }
+
 }
 
-.#{$prefix}series_group .#{$prefix}line:only-of-type {
-  stroke-width: 2px;
-}
-
-.#{$prefix}series_group.#{$prefix}multiple {
-  .#{$prefix}line {
-    stroke-width: 2px;
-  }
-  .#{$prefix}line.#{$prefix}highlight {
-    stroke-width: 3px;
-  }
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
-    stroke-width: 2px;
-  }
-}
-
-.#{$prefix}primary .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
-.#{$prefix}primary .#{$prefix}line:only-child {
+.#{$prefix}primary.#{$prefix}type_line .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-0 {
   stroke: $primary-color;
 }
 
-.#{$prefix}alternate .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}highlight,
-.#{$prefix}alternate .#{$prefix}line:only-child {
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}primary.#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+    stroke: nth($primaryShades, $counter);
+  }
+}
+
+.#{$prefix}alternate.#{$prefix}type_line .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-0 {
   stroke: $alternate-color;
 }
 
-.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
-  stroke: $shade1;
-}
-
-.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
-  stroke: $shade2;
-}
-
-.#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
-  stroke: $shade3;
-}
-
-.#{$prefix}series-5 {
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
-    stroke: $black;
-  }
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-2 {
-    stroke: $shade1;
-  }
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-3 {
-    stroke: $shade2;
-  }
-
-  .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-4 {
-    stroke: $shade3;
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}alternate.#{$prefix}type_line .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line.#{$prefix}line-#{$counter} {
+    stroke: nth($alternateShades, $counter);
   }
 }

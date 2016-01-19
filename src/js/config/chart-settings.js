@@ -10,6 +10,7 @@ module.exports = {
   data: "",
   dateFormat: settings.dateFormat,
   timeFormat: settings.timeFormat,
+  image: settings.image,
   heading: "",
   qualifier: "",
   source: "",
@@ -61,18 +62,18 @@ module.exports = {
   dimensions: {
     width: 0,
     computedWidth: function() {
-      return this.width - this.padding.right - this.padding.left;
+      return this.width - this.margin.left - this.margin.right;
     },
     height: function() {
       var ratioScale = d3.scale.linear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
       return Math.round(ratioScale(this.width));
     },
     computedHeight: function() {
-      return (this.height() - this.headerHeight - this.footerHeight - this.padding.top - this.padding.bottom);
+      return (this.height() - this.headerHeight - this.footerHeight - this.margin.top - this.margin.bottom);
     },
     ratioMobile: settings.ratioMobile,
     ratioDesktop: settings.ratioDesktop,
-    padding: settings.padding,
+    margin: settings.margin,
     tipPadding: settings.tipPadding,
     tipOffset: settings.tipOffset,
     headerHeight: 0,
@@ -87,6 +88,7 @@ module.exports = {
     tickWidth: function() {
       return (this.computedWidth() - (this.labelWidth + this.yAxisPaddingRight));
     },
+    barHeight: settings.barHeight,
     bands: {
       padding: settings.bands.padding,
       offset: settings.bands.offset,

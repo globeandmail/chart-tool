@@ -1,24 +1,24 @@
-$interface-font-light: Georgia, serif;
-$interface-font-regular: Georgia, serif;
-$interface-font-bold: Georgia, serif;
-$interface-font-black: Georgia, serif;
+$interface-font-light: "Helvetica Neue", Helvetica, sans-serif;
+$interface-font-regular: "Helvetica Neue", Helvetica, sans-serif;
+$interface-font-bold: "Helvetica Neue", Helvetica, sans-serif;
+$interface-font-black: "Helvetica Neue", Helvetica, sans-serif;
 
 @mixin interface-font-light {
   font-family: $interface-font-light;
-  font-weight: normal;
+  font-weight: 200;
 }
 
 @mixin interface-font-regular {
   font-family: $interface-font-regular;
-  font-weight: normal;
+  font-weight: 400;
 }
 
 @mixin interface-font-bold {
   font-family: $interface-font-bold;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 @mixin interface-font-black {
   font-family: $interface-font-black;
-  font-weight: bold;
+  font-weight: 800;
 }

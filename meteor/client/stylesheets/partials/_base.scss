@@ -32,22 +32,45 @@ body {
 h1, h2, h3, h4, h5, h6, strong, b {
   @include interface-font-regular;
   font-weight: normal;
+  margin: 0;
+  padding-bottom: 0;
 }
 
 ul {
+  font-size: 1em;
   list-style-type: none;
   padding: 0;
 }
 
 li {
+  font-size: 1em;
   padding-bottom: 1em;
 }
 
-h3 {
+h1 {
   font-size: 2em;
-  border-bottom: 1px solid $text;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.6em;
   padding-bottom: 0;
   margin: 0 0 0.3em 0;
+}
+
+h4 {
+  font-size: 1em;
+}
+
+h5 {
+  font-size: 0.9em;
+}
+
+select {
+  font-size: 1.2em;
 }
 
 section {

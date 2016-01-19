@@ -8,7 +8,6 @@ jparker:crypto-md5
 jparker:crypto-core
 iron:router
 fourseven:scss@=1.0.0
-jquery
 
 
 jparker:crypto-base64
@@ -16,7 +15,6 @@ percolate:momentum
 classcraft:meteor-wkhtmltopdf
 kevohagan:sweetalert
 matteodem:easy-search
-meteorhacks:kadira
 meteorhacks:zones
 tmeasday:presence
 http

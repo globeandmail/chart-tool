@@ -34,6 +34,22 @@ Router.route('/404', {
   }
 });
 
+Router.route('/status', {
+  name: 'chart.status',
+  layoutTemplate: 'statusLayout',
+  template: 'status',
+  onAfterAction: function () {
+    return document.title = "Status – Chart Tool";
+  },
+  waitOn: function() {
+    return [
+      Meteor.subscribe('chartCount'),
+      Meteor.subscribe('chartUserCount')
+    ];
+  },
+});
+
+
 Router.route('/chart/edit/:_id', {
   name: 'chart.edit',
   layoutTemplate: 'applicationLayout',
@@ -253,5 +269,30 @@ Router.route('GET', {
     this.response.setHeader("Access-Control-Allow-Origin", "*");
     this.response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     this.response.end(JSON.stringify(chartJSON));
+  }
+});
+
+Router.route('GET', {
+  where: 'server',
+  name: 'chart.api.status',
+  path: '/api/status',
+  action: function() {
+
+    DBStatus.remove({});
+
+    var statusResponse = {};
+
+    try {
+      Meteor.call("checkDBStatus")
+      statusResponse.databaseConnected = true;
+    } catch (e) {
+      statusResponse.databaseConnected = false;
+    }
+
+    this.response.statusCode = 200;
+    this.response.setHeader("Content-Type", "application/json");
+    this.response.setHeader("Access-Control-Allow-Origin", "*");
+    this.response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    this.response.end(JSON.stringify(statusResponse));
   }
 });

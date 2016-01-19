@@ -4,10 +4,11 @@ function headerComponent(container, obj) {
 
   var headerGroup = d3.select(container)
     .append("div")
-    .classed(obj.prefix + "chart_title-group", true);
+    .classed(obj.prefix + "chart_title " + obj.prefix + obj.customClass, true);
 
-  headerGroup.append("div")
-    .classed(obj.prefix + "chart_title", true)
+  headerGroup
+    .append("div")
+    .attr("class", obj.prefix + "chart_title-text")
     .text(obj.heading);
 
   if (obj.editable) {
@@ -26,12 +27,17 @@ function headerComponent(container, obj) {
     // get rid of the first item as it doesnt represent a series
     keys.shift();
 
+    if (obj.options.type === "multiline") {
+      keys = [keys[0], keys[1]];
+      legend.classed(obj.prefix + "chart_legend-" + obj.options.type, true);
+    }
+
     var legendItem = legend.selectAll("div." + obj.prefix + "legend_item")
       .data(keys)
       .enter()
       .append("div")
       .attr("class", function(d, i) {
-        return obj.prefix + "legend_item " + obj.prefix + "legend_item_" + (i + 1);
+        return obj.prefix + "legend_item " + obj.prefix + "legend_item_" + (i);
       });
 
     legendItem.append("span")

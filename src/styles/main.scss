@@ -8,6 +8,7 @@
 @import "./components/tips";
 
 @import "./types/series-line";
+@import "./types/series-multiline";
 @import "./types/series-area";
 @import "./types/series-bar";
 @import "./types/series-stream";
@@ -16,7 +17,7 @@
 // @import "debug";
 
 .#{$prefix}bg {
-	fill: white;
+	fill: $white;
 }
 
 .#{$prefix}chart_svg {
@@ -26,9 +27,13 @@
 .#{$prefix}chart {
   width: $width;
   height: auto;
-  background-color: white;
+  background-color: $white;
   margin: $margin;
-  @extend %utility-font;
+  @include utility-font;
+}
+
+.#{$prefix}thumbnail {
+  width: 100%;
 }
 
 @import "../../custom/custom.scss";

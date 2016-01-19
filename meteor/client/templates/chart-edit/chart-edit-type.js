@@ -6,46 +6,82 @@ Template.chartEditType.events({
     // sets type and updates interpolation and stacking settings accordingly
     switch (type) {
       case "line":
+        updateObject(this, {
+          Type: type,
+          Interpolation: defaults.interpolation,
+          Stacked: defaults.stacked,
+          XScale: "time",
+          YScale: "linear",
+          XNice: false,
+          YNice: true,
+          QualifierOption: true
+        });
+        break;
+      case "multiline":
         updateAndSave("updateType", this, type );
         updateAndSave("updateInterpolation", this, defaults.interpolation );
         updateAndSave("updateStacked", this, defaults.stacked );
         updateAndSave("updateXScale", this, "time");
         break;
       case "area":
-        updateAndSave("updateType", this, type );
-        updateAndSave("updateInterpolation", this, defaults.interpolation );
-        updateAndSave("updateYMin", this, "");
-        updateAndSave("updateXScale", this, "time");
+        updateObject(this, {
+          Type: type,
+          Interpolation: defaults.interpolation,
+          YMin: "",
+          XScale: "time",
+          YScale: "linear",
+          XNice: false,
+          YNice: true,
+          QualifierOption: true
+        });
         break;
       case "column":
-        updateAndSave("updateType", this, type );
-        updateAndSave("updateInterpolation", this, false );
-        updateAndSave("updateYMin", this, "");
-        updateAndSave("updateXScale", this, "ordinal");
-        break;
-      case "bar":
-        updateAndSave("updateType", this, type );
-        updateAndSave("updateInterpolation", this, false );
-        updateAndSave("updateYMin", this, "");
-        updateAndSave("updateXScale", this, "ordinal");
-        break;
-      case "pie":
-        updateAndSave("updateType", this, type );
-        updateAndSave("updateInterpolation", this, false );
-        updateAndSave("updateStacked", this, defaults.stacked );
-        updateAndSave("updateYMin", this, "");
-        updateAndSave("updateXScale", this, false);
+        updateObject(this, {
+          Type: type,
+          Interpolation: false,
+          YMin: "",
+          XScale: "ordinal",
+          YScale: "linear",
+          XNice: false,
+          YNice: true,
+          QualifierOption: true
+        });
         break;
       case "stream":
-        updateAndSave("updateType", this, type );
-        updateAndSave("updateInterpolation", this, false );
-        updateAndSave("updateStacked", this, defaults.stacked );
-        updateAndSave("updateXScale", this, "time");
+        updateObject(this, {
+          Type: type,
+          Interpolation: false,
+          stacked: defaults.stacked,
+          XScale: "time",
+          YScale: "linear",
+          XNice: false,
+          YNice: true,
+          QualifierOption: true
+        });
+        break;
+      case "bar":
+        updateObject(this, {
+          Type: type,
+          Interpolation: false,
+          YMin: "",
+          XScale: "linear",
+          YScale: "ordinal",
+          XNice: true,
+          YNice: false,
+          QualifierOption: true
+        });
         break;
       default:
-        updateAndSave("updateType", this, "line");
-        updateAndSave("updateInterpolation", this, false );
-        updateAndSave("updateStacked", this, defaults.stacked );
+        updateObject(this, {
+          Type: "line",
+          Interpolation: defaults.interpolation,
+          Stacked: defaults.stacked,
+          XScale: "time",
+          YScale: "linear",
+          XNice: false,
+          YNice: true,
+          QualifierOption: true
+        });
         updateAndSave("resetXAxis", this);
         updateAndSave("resetYAxis", this);
         break;

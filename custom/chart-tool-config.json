@@ -14,7 +14,7 @@
   "dateFormat": "%Y-%m-%d",
   "timeFormat": "%H:%M",
 
-  "padding": {
+  "margin": {
     "top": 10,
     "right": 2,
     "bottom": 0,
@@ -50,6 +50,7 @@
     "tickLowerBound": 3,
     "tickUpperBound": 8,
     "tickGoal": 5,
+    "widthThreshold": 420,
     "dy": "",
     "textX": 0,
     "textY": ""
@@ -84,8 +85,17 @@
     }
   },
 
+  "barHeight": 30,
+
   "bands": {
     "padding": 0.08,
     "offset": 0.12
+  },
+
+  "image": {
+    "use": true,
+    "path": "http://s3-us-west-2.amazonaws.com/chart-tool-dev",
+    "filename": "thumbnail",
+    "extension": "png"
   }
 }
