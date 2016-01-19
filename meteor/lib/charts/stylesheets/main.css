@@ -271,6 +271,111 @@
 .ct-alternate.ct-type_line .ct-series_group.ct-multiple .ct-line.ct-line-5 {
   stroke: #fee5d9; }
 
+.ct-primary.ct-type_multiline .ct-series_group .ct-multiline,
+.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline,
+.ct-alternate.ct-type_multiline .ct-series_group .ct-multiline,
+.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2px; }
+
+.ct-primary.ct-type_multiline .ct-series_group .ct-multiline.ct-multiline-0 {
+  stroke: #08519c; }
+
+.ct-alternate.ct-type_multiline .ct-series_group .ct-multiline.ct-multiline-0 {
+  stroke: #a50f15; }
+
+.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-1 {
+  stroke: #c6dbef; }
+
+.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-1 {
+  stroke: #fcbba1; }
+
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_1 .ct-legend_item_icon {
+  background: #c6dbef; }
+
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-1 {
+  fill: #c6dbef; }
+
+.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_1 .ct-legend_item_icon {
+  background: #fcbba1; }
+
+.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-1 {
+  fill: #fcbba1; }
+
+.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-2 {
+  stroke: #c6dbef; }
+
+.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-2 {
+  stroke: #fcbba1; }
+
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_2 .ct-legend_item_icon {
+  background: #c6dbef; }
+
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-2 {
+  fill: #c6dbef; }
+
+.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_2 .ct-legend_item_icon {
+  background: #fcbba1; }
+
+.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-2 {
+  fill: #fcbba1; }
+
+.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-3 {
+  stroke: #c6dbef; }
+
+.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-3 {
+  stroke: #fcbba1; }
+
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_3 .ct-legend_item_icon {
+  background: #c6dbef; }
+
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-3 {
+  fill: #c6dbef; }
+
+.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_3 .ct-legend_item_icon {
+  background: #fcbba1; }
+
+.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-3 {
+  fill: #fcbba1; }
+
+.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-4 {
+  stroke: #c6dbef; }
+
+.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-4 {
+  stroke: #fcbba1; }
+
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_4 .ct-legend_item_icon {
+  background: #c6dbef; }
+
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-4 {
+  fill: #c6dbef; }
+
+.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_4 .ct-legend_item_icon {
+  background: #fcbba1; }
+
+.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-4 {
+  fill: #fcbba1; }
+
+.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-5 {
+  stroke: #c6dbef; }
+
+.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-5 {
+  stroke: #fcbba1; }
+
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_5 .ct-legend_item_icon {
+  background: #c6dbef; }
+
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-5 {
+  fill: #c6dbef; }
+
+.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_5 .ct-legend_item_icon {
+  background: #fcbba1; }
+
+.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-5 {
+  fill: #fcbba1; }
+
 .ct-primary.ct-type_area .ct-series_group .ct-line,
 .ct-primary.ct-type_area .ct-series_group.ct-multiple .ct-line,
 .ct-alternate.ct-type_area .ct-series_group .ct-line,

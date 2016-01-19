@@ -27,6 +27,11 @@ function headerComponent(container, obj) {
     // get rid of the first item as it doesnt represent a series
     keys.shift();
 
+    if (obj.options.type === "multiline") {
+      keys = [keys[0], keys[1]];
+      legend.classed(obj.prefix + "chart_legend-" + obj.options.type, true);
+    }
+
     var legendItem = legend.selectAll("div." + obj.prefix + "legend_item")
       .data(keys)
       .enter()
