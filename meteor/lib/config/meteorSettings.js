@@ -55,6 +55,14 @@
 	
 	app_settings = {
 	
+	  s3: {
+	    enable: true,
+	    base_path: "images/",
+	    expiration: 30000,
+	    bucket: "chart-tool-dev",
+	    region: "us-west-2"
+	  },
+	
 	  animal_api: "http://www.whimsicalwordimal.com/api/name",
 	  names: [
 	    "Sardonic Salamander",
@@ -73,10 +81,7 @@
 	    "Booked Baboon"
 	  ],
 	
-	  defaults: {
-	    source_prefix: "CHART TOOL",
-	    source_suffix: " » SOURCE:"
-	  },
+	  source_suffix: " » SOURCE:",
 	
 	  primary: "NEWS & ROB",
 	  alternate: "Globe Investor",

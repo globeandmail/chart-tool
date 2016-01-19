@@ -87,29 +87,11 @@ deleteProp = function(obj, del) {
 
 
 jsonToCSV = function(objArray, config) {
-  var defaults = {
-    delimiter: ',',
-    newline: '\n'
-  };
-  var opt = config || defaults;
-  var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-  var str = '';
-
-  for (var i = 0; i < array.length; i++) {
-    var line = '';
-    for (var index in array[i]) {
-      if (line != '') { line += opt.delimiter };
-      line += array[i][index];
-    }
-
-    if (i === array.length - 1) {
-      str += line;
-    } else {
-      str += line + opt.newline;
-    }
-  }
-
-  return str;
+  return Papa.unparse(objArray, {
+    quotes: false,
+    delimiter: config.delimiter,
+    newline: config.newline
+  });
 }
 
 csvFormat = function(obj) {

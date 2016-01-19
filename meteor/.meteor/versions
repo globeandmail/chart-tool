@@ -49,6 +49,7 @@ kevohagan:sweetalert@0.5.0
 launch-screen@1.0.4
 lepozepo:s3@5.1.2
 livedata@1.0.15
+localstorage@1.0.5
 logging@1.0.8
 matteodem:easy-search@1.6.4
 meteor@1.1.9
