@@ -124,22 +124,7 @@ downloadImg = function(_obj, _options) {
   div.className = className;
   document.body.appendChild(div);
 
-  console.log(_obj.exportable.width);
-  console.log(_obj.exportable.height);
-
-  // if (_obj.options.type === "bar") { _obj.exportable.dynamicHeight = true; }
-
   drawChart(container, _obj);
-
-  // var svgHeight = _obj.exportable.height - d3.select(div).select("." + prefix + "chart_title").node().getBoundingClientRect().height - d3.select(div).select("." + prefix + "chart_source").node().getBoundingClientRect().height;
-
-  // if (_obj.options.type === "bar") {
-    // var fixedBarHeight = d3.select(div).select('svg').node().getBoundingClientRect().height;
-    // div.style.height = fixedBarHeight + "px";
-    // svg.attr("height", fixedBarHeight);
-  // } else {
-    // svg.attr("height", _obj.exportable.height);
-  // }
 
   var svgContainer = document.createElement("div");
   svgContainer.className = "svg-container";
@@ -172,7 +157,7 @@ downloadImg = function(_obj, _options) {
     filename: filename,
     input: '.svg-container',
     output: '.canvas-container',
-    scale: 2
+    scale: scale || 2
   });
 
   svgContainer.parentNode.removeChild(svgContainer);

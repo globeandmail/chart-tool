@@ -241,7 +241,7 @@
 		"scaleMultiplier": 1.25,
 		"dateFormat": "%Y-%m-%d",
 		"timeFormat": "%H:%M",
-		"padding": {
+		"margin": {
 			"top": 10,
 			"right": 2,
 			"bottom": 0,
