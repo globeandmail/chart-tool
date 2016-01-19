@@ -1,6 +1,5 @@
 Template.header.rendered = function() {
-  $(".input-slug-edit").autosizeInput({ space: 0 });
-
+  StretchyInit();
 };
 
 Template.header.events({
@@ -17,7 +16,7 @@ Template.header.events({
   "click .edit-indicator": function(event) {
     d3.select(".input-slug-edit").node().focus();
   },
-  "click .help": function(event) {
+  "click .header-help": function(event) {
     window.open(app_settings.help || "http://www.github.com/globeandmail/chart-tool", '_blank');
   }
 });

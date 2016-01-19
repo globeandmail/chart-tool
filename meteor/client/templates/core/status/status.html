@@ -1,0 +1,37 @@
+<template name="status">
+  <h1 class="status-header">Chart Tool status dashboard</h1>
+  <div class="status-rule"></div>
+  <div class="status-description">
+    <p>This page tracks statistics on chart usage and server and database availability.</p>
+  </div>
+
+  <div class="status-indicators">
+
+    <div class="status-dot-group">
+      <span class="status-dot status-server-connection {{ statusServer }}">&nbsp;</span><h4>server connection</h4>
+    </div>
+
+    <div class="status-dot-group">
+      <span class="status-dot status-database-connection {{ statusDatabase }}"></span><h4>database connection</h4>
+    </div>
+
+  </div>
+
+  <div class="status-numbers">
+
+    <div class="status-number">
+      <div class="big-number">{{ totalCharts }}</div>
+      <h3>charts in database</h3>
+    </div>
+    <div class="status-number">
+      <div class="big-number">{{ totalActiveUsers }}</div>
+      <h3>active users</h3>
+    </div>
+    <div class="status-number">
+      <div class="big-number">{{ totalChartsThisMonth }}</div>
+      <h3>charts this month</h3>
+    </div>
+
+  </div>
+
+</template>

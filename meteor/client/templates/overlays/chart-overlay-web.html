@@ -10,7 +10,7 @@
     <div class="web-export web-export-web">
       <h3>Web</h3>
 
-      <p>Web images are sized at 460px, 620px, and 940px wide, and can be 3&times;2, 16&times;9, or 1&times;1.</p>
+      <p>Web images are sized at 460px, 620px, and 940px wide, and can have several different aspect ratios. All images download at 2&times; scale for retina screen support.</p>
 
       <form class="web-export-picker">
 
@@ -50,13 +50,34 @@
     </div>
 
     <div class="web-export web-export-video">
-      <h3>Video</h3>
+      <h3>Custom sizes</h3>
 
-      <p>Video images are sized at either 1080p (regular HD) or 2160p (4K HD), with an aspect ratio of 16&times;9.</p>
+      <p>Need a custom sized-image for your chart? Just pick a width, aspect ratio, and scale factor.</p>
 
-      <div class="web-export-button" data-width="1920" data-scale="1" data-ratio="56.25%" data-descriptor="video">1080p</div>
+      <form class="web-export-custom-picker">
 
-      <div class="web-export-button" data-width="1920" data-scale="2" data-ratio="56.25%" data-descriptor="video">2160p</div>
+        <div class="web-export-custom-field">
+          <h4>Width</h4>
+            <span><input type="number" name="width" placeholder="400" class="input-index input-field">px</span>
+        </div>
+
+        <div class="web-export-custom-field">
+          <h4>Height</h4>
+            <span><input type="number" name="height" placeholder="600" class="input-index input-field">px</span>
+        </div>
+
+        <div class="select-wrapper">
+          <select type="choice" name="width" class="select-web-export-custom-scale">
+            <option value="1">1x</option>
+            <option value="2">2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+          </select>
+        </div>
+
+        <input class="web-export-custom-submit" value="Download" type="submit">
+
+      </form>
 
     </div>
 
