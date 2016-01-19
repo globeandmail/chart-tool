@@ -193,7 +193,7 @@
 
   } else {
 
-    if (!root.Meteor) {
+    if (!(Meteor && Meteor.isServer)) {
       console.error("Chart Tool: no D3 library detected.");
     }
 
