@@ -18,10 +18,16 @@ Template.chartEditType.events({
         });
         break;
       case "multiline":
-        updateAndSave("updateType", this, type );
-        updateAndSave("updateInterpolation", this, defaults.interpolation );
-        updateAndSave("updateStacked", this, defaults.stacked );
-        updateAndSave("updateXScale", this, "time");
+        updateObject(this, {
+          Type: type,
+          Interpolation: defaults.interpolation,
+          Stacked: defaults.stacked,
+          XScale: "time",
+          YScale: "linear",
+          XNice: false,
+          YNice: true,
+          QualifierOption: true
+        });
         break;
       case "area":
         updateObject(this, {

@@ -90,7 +90,7 @@ function MultiLineChart(node, obj) {
     .on("mouseout", function(d) { obj.dispatch.hoverOut(this, obj, d); })
     .on("click", function(d) { obj.dispatch.click(this, obj, d); });
 
-  axisModule.addZeroLine(obj, node, yAxisObj);
+  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
 
   return {
     xScaleObj: xScaleObj,
