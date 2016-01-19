@@ -22,7 +22,6 @@ diff-sequence@1.0.1
 ecmascript@0.1.5
 ecmascript-collections@0.1.6
 ejson@1.0.7
-email@1.0.7
 fastclick@1.0.7
 fourseven:scss@1.0.0
 geojson-utils@1.0.4
@@ -46,7 +45,6 @@ jquery@1.11.4
 kevohagan:sweetalert@0.5.0
 launch-screen@1.0.4
 livedata@1.0.15
-localstorage@1.0.5
 logging@1.0.8
 matteodem:easy-search@1.6.4
 meteor@1.1.9
@@ -55,8 +53,6 @@ meteor-platform@1.2.3
 meteorhacks:aggregate@1.2.1
 meteorhacks:collection-utils@1.2.0
 meteorhacks:inject-initial@1.0.2
-meteorhacks:kadira@2.24.0
-meteorhacks:meteorx@1.4.1
 meteorhacks:zones@1.6.0
 minifiers@1.1.7
 minimongo@1.0.10

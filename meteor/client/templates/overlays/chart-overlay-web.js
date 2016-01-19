@@ -20,6 +20,8 @@ Template.chartOverlayWeb.events({
         };
 
     this.exportable = {};
+    this.exportable.type = "web";
+    this.exportable.dynamicHeight = false;
     this.exportable.width = width;
     this.exportable.height = width * (ratio / 100);
 
@@ -39,6 +41,8 @@ Template.chartOverlayWeb.events({
     if (!ratio) { ratio = 67; }
 
     this.exportable = {};
+    this.exportable.type = "web";
+    this.exportable.dynamicHeight = true;
     this.exportable.width = width;
     this.exportable.height = width * (ratio / 100);
 

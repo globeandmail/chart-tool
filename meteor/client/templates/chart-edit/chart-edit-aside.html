@@ -41,12 +41,12 @@
           <div class="date-calculation">{{ dateCalc }}</div>
         </div>
 
-      {{ /if }}
+        <div class="unit-edit index-edit">
+          <h4>Index <a href="#" class="help-toggle help-index-edit">?</a></h4>
+          <input type="number" name="index" placeholder="100" class="input-index input-field" value="{{ index }}">
+        </div>
 
-      <div class="unit-edit index-edit">
-        <h4>Index <a href="#" class="help-toggle help-index-edit">?</a></h4>
-        <input type="number" name="index" placeholder="100" class="input-index input-field" value="{{ index }}">
-      </div>
+      {{ /if }}
 
     </div>
 
@@ -69,12 +69,53 @@
         </div>
       {{ /if }}
 
+      {{ #if isBarChart true }}
+        <div class="unit-edit">
+          <h4>Formatting</h4>
+          <div class="x-prefix-edit">
+            <input type="text" name="prefix" placeholder="$" class="input-prefix-x input-field" value="{{ x_axis.prefix }}">
+          </div>
+
+          <div class="x-formatval-edit">
+            <div class="select-wrapper">
+              <select class="select-formatval-x">
+                <option value="comma" selected="{{ xAxisFormatSelected 'comma' }}">1,234</option>
+                <option value="general" selected="{{ xAxisFormatSelected 'general' }}">1234</option>
+                <option value="round1" selected="{{ xAxisFormatSelected 'round1' }}">12.3</option>
+                <option value="round2" selected="{{ xAxisFormatSelected 'round2' }}">12.34</option>
+                <option value="round3" selected="{{ xAxisFormatSelected 'round3' }}">12.345</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="x-suffix-edit">
+            <input type="text" name="suffix" placeholder="%" class="input-suffix-x input-field" value="{{ x_axis.suffix }}">
+          </div>
+        </div>
+
+        <div class="unit-edit x-axisval-edit">
+          <h4>Custom range</h4>
+          <span>
+          {{ #if displayMin }}
+            <input type="number" name="min" placeholder="Min" class="input-min-x input-field" value="{{ x_axis.min }}">
+            <span class="axisval-to"> to </span>
+          {{ /if }}
+            <input type="number" name="max" placeholder="Max" class="input-max-x input-field" value="{{ x_axis.max }}">
+          </span>
+        </div>
+
+        <div class="unit-edit x-ticks-edit">
+          <h4>Ticks <a href="#" class="help-toggle help-x-ticks-edit">?</a></h4>
+          <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-x input-field" value="{{ x_axis.ticks }}">
+        </div>
+      {{ /if }}
+
       <div class="unit-edit unit-edit-half x-nice-edit">
         <h4>Niceify <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
         <input class="input-checkbox-x-nice" type="checkbox" name="xNice" checked="{{ xNice }}">
       </div>
 
-      <div class="unit-edit unit-edit-half unit-edit-hide x-rescale-edit">
+      <div class="unit-edit unit-edit-half x-rescale-edit">
         <h4>Rescale <a href="#" class="help-toggle help-x-rescale-edit">?</a></h4>
         <input class="input-checkbox-x-rescale" type="checkbox" name="xRescale" checked="{{ xRescale }}">
       </div>
@@ -86,6 +127,7 @@
     <h3>Y-axis</h3>
     <div class="edit-box_toggle" data-state="hidden">
 
+    {{ #if isBarChart false }}
       <div class="unit-edit">
         <h4>Formatting</h4>
         <div class="y-prefix-edit">
@@ -97,7 +139,6 @@
             <select class="select-formatval-y">
               <option value="comma" selected="{{ yAxisFormatSelected 'comma' }}">1,234</option>
               <option value="general" selected="{{ yAxisFormatSelected 'general' }}">1234</option>
-              <!-- <option value="si" selected="{{ yAxisFormatSelected 'si' }}">1.2m</option> -->
               <option value="round1" selected="{{ yAxisFormatSelected 'round1' }}">12.3</option>
               <option value="round2" selected="{{ yAxisFormatSelected 'round2' }}">12.34</option>
               <option value="round3" selected="{{ yAxisFormatSelected 'round3' }}">12.345</option>
@@ -113,7 +154,7 @@
       <div class="unit-edit y-axisval-edit">
         <h4>Custom range</h4>
         <span>
-        {{ #if isNotStackableExpandable }}
+        {{ #if displayMin }}
           <input type="number" name="min" placeholder="Min" class="input-min-y input-field" value="{{ y_axis.min }}">
           <span class="axisval-to"> to </span>
         {{ /if }}
@@ -125,6 +166,8 @@
         <h4>Ticks <a href="#" class="help-toggle help-y-ticks-edit">?</a></h4>
         <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-y input-field" value="{{ y_axis.ticks }}">
       </div>
+
+    {{ /if }}
 
       <div class="unit-edit unit-edit-half y-nice-edit">
         <h4>Niceify <a href="#" class="help-toggle help-y-nice-edit">?</a></h4>

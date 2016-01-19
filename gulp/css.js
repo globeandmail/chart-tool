@@ -12,9 +12,7 @@ var buildCss = gulpConfig.buildCssPath + "/css";
 
 gulp.task('_scss', function() {
   gulp.src(sourceCss)
-    .pipe(sourcemaps.init())
     .pipe(sass())
-    .pipe(sourcemaps.write())
     .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/charts/stylesheets'))
     .pipe(gulp.dest(gulpConfig.libStylesheets + "/build"));
 

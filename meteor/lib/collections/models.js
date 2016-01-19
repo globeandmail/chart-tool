@@ -196,6 +196,14 @@ Meteor.methods({
       }
     });
   },
+  updateQualifierOption: function(chartId, qualifier) {
+    return Charts.update(chartId, {
+      $set: {
+        "options.qualifier": qualifier,
+        lastEdited: new Date()
+      }
+    });
+  },
 
   // X Axis methods
 

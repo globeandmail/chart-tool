@@ -8,6 +8,12 @@
   shape-rendering: crispEdges;
 }
 
+.#{$prefix}type_bar .#{$prefix}xAxis .#{$prefix}minor line {
+  stroke: $axis-stroke-color;
+  stroke-dasharray: $axis-stroke-dasharray;
+  shape-rendering: crispEdges;
+}
+
 .#{$prefix}axis-group g.tick line {
   stroke: $axis-stroke-color;
   stroke-width: $axis-stroke-width;

@@ -41,7 +41,6 @@
 
         dispatcher.start(obj);
 
-        // clearing variables
         drawn = utils.clearDrawn(drawn, obj);
         obj = utils.clearObj(obj);
         container = utils.clearChart(container);
@@ -51,7 +50,13 @@
         obj.data.width = utils.getBounding(container, "width");
         obj.dispatch = dispatcher;
 
-        var chartObj = ChartManager(container, obj);
+        var chartObj;
+
+        if (utils.svgTest(root)) {
+          chartObj = ChartManager(container, obj);
+        } else {
+          utils.generateThumb(container, obj, settings);
+        }
 
         drawn.push({ id: obj.id, chartObj: chartObj });
         obj.chartObj = chartObj;
@@ -125,7 +130,6 @@
       function initializer(charts) {
         createLoop(charts);
         var debounce = utils.debounce(createLoop, charts, settings.debounce, root);
-
         d3.select(root)
           .on('resize.debounce', debounce)
           .on('resize.redraw', dispatcher.redraw(charts));
@@ -158,10 +162,6 @@
           return destroyChart(id);
         },
 
-        listen: function listen(id, type) {
-          return;
-        },
-
         dispatch: function dispatch() {
           return d3.keys(dispatcher);
         },
@@ -182,7 +182,8 @@
         stackedArea: require("./charts/types/stacked-area"),
         column: require("./charts/types/column"),
         stackedColumn: require("./charts/types/stacked-column"),
-        streamgraph: require("./charts/types/streamgraph")
+        streamgraph: require("./charts/types/streamgraph"),
+        bar: require("./charts/types/bar"),
 
       }
 
@@ -192,7 +193,7 @@
 
   } else {
 
-    if (!root.Meteor) {
+    if (!(Meteor && Meteor.isServer)) {
       console.error("Chart Tool: no D3 library detected.");
     }
 

@@ -17,10 +17,8 @@ isEmpty = function(obj) {
 }
 
 escapeStr = function(str) {
-  if (str) {
-    return str.replace(/\"/g, '\\\"');
-  } else {
-    return str;
+  if (typeof str === "string") {
+    return str ? str.replace(/\"/g, '\\\"') : str;
   }
 }
 
@@ -51,6 +49,7 @@ cleanEmbed = function(data) {
 embed = function(obj) {
   var data = {
     "version": obj.version,
+    "id": obj._id,
     "heading": escapeStr(obj.heading),
     "qualifier": escapeStr(obj.qualifier),
     "source": escapeStr(obj.source)
@@ -302,4 +301,10 @@ standardizeDates = function(data, oldFormat, newFormat) {
 
   return op;
 
+}
+
+updateObject = function(chartObj, obj) {
+  for (var prop in obj) {
+    updateAndSave("update" + prop, chartObj, obj[prop]);
+  }
 }

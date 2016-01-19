@@ -54,6 +54,7 @@ Template.chartOverlayPrint.rendered = function() {
         height = determineHeight(data.print.lines, width) * magicH;
 
     data.exportable = {};
+    data.exportable.dynamicHeight = true;
     data.exportable.width = width;
     data.exportable.height = height;
     data.exportable.x_axis = app_settings.print.x_axis;

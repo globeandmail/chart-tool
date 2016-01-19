@@ -45,11 +45,12 @@
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(4),
-	    p = __webpack_require__(24);
+	var config = __webpack_require__(2),
+	    p = __webpack_require__(25);
 	
 	app_version = p.version;
 	app_build = p.buildVer;
+	app_name = p.name;
 	prefix = config.prefix;
 	
 	app_settings = {
@@ -111,7 +112,8 @@
 	      annotations: false,
 	      range: false,
 	      series: false,
-	      indexed: false
+	      indexed: false,
+	      qualifier: true
 	    },
 	    x_axis: {
 	      display: config.xAxis.display,
@@ -211,7 +213,7 @@
 
 /***/ },
 
-/***/ 4:
+/***/ 2:
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -239,7 +241,7 @@
 		"scaleMultiplier": 1.25,
 		"dateFormat": "%Y-%m-%d",
 		"timeFormat": "%H:%M",
-		"padding": {
+		"margin": {
 			"top": 10,
 			"right": 2,
 			"bottom": 0,
@@ -271,6 +273,7 @@
 			"tickLowerBound": 3,
 			"tickUpperBound": 8,
 			"tickGoal": 5,
+			"widthThreshold": 420,
 			"dy": "",
 			"textX": 0,
 			"textY": ""
@@ -302,15 +305,22 @@
 				"textY": 2
 			}
 		},
+		"barHeight": 30,
 		"bands": {
 			"padding": 0.08,
 			"offset": 0.12
+		},
+		"image": {
+			"use": true,
+			"path": "http://s3-us-west-2.amazonaws.com/chart-tool-dev",
+			"filename": "thumbnail",
+			"extension": "png"
 		}
 	};
 
 /***/ },
 
-/***/ 24:
+/***/ 25:
 /***/ function(module, exports) {
 
 	module.exports = {

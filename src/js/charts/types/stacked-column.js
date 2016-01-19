@@ -72,7 +72,7 @@ function StackedColumnChart(node, obj) {
       "width": xScale.rangeBand()
     });
 
-  axisModule.addZeroLine(obj, node, yAxisObj);
+  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
 
   return {
     xScaleObj: xScaleObj,

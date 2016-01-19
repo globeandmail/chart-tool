@@ -77,7 +77,7 @@ function StreamgraphChart(node, obj) {
     .attr("class", function() { return obj.prefix + "stream-series " + obj.prefix + "line"; })
     .attr("d", line);
 
-  axisModule.addZeroLine(obj, node, yAxisObj);
+  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
 
   return {
     xScaleObj: xScaleObj,

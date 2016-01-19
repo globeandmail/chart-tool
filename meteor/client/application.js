@@ -114,86 +114,59 @@ generateImg = function(obj) {
 downloadImg = function(_obj, _options) {
 
   var scale = _options.scale,
-      descriptor = _options.descriptor,
       className = "chart-export",
       container = "." + className,
-      filename = _obj.slug + "-" + descriptor + "-" + _obj.exportable.width + ".png",
+      filename = _obj.slug + "-" + _options.descriptor + "-" + _obj.exportable.width,
       div = document.createElement("div");
 
-  div.style.position = "absolute";
-  div.style.left = "400px";
-  div.style.top = "400px";
   div.style.width = _obj.exportable.width + "px";
   div.style.height = _obj.exportable.height + "px";
   div.className = className;
   document.body.appendChild(div);
 
-  //set chart source to the target width
-  d3.select(div).style('width', _obj.exportable.width + 'px');
-
-  //call drawChart function to refresh - this function is going to differ slightly from the loader
   drawChart(container, _obj);
 
-  //add required attributes to svg tag
-  var svg = d3.select(div).select('svg')
-    .attr("version", 1.1)
-    .attr("xmlns", "http://www.w3.org/2000/svg")
-    .attr("width", _obj.exportable.width)
-    .attr("height", _obj.exportable.height);
+  var svgContainer = document.createElement("div");
+  svgContainer.className = "svg-container";
+  document.body.appendChild(svgContainer);
 
-  saveSvgAsPng(svg.node(), filename, {
-    scale: scale
+  var outputCanvas = document.createElement("div");
+  outputCanvas.className = "canvas-container";
+  document.body.appendChild(outputCanvas);
+
+  var drawnChartContainer = d3.select("." + className);
+
+  var prefix = app_settings.chart.prefix;
+
+  drawnChartContainer.select("." + prefix + "chart_title")
+    .classed("target", true);
+
+  drawnChartContainer.select("." + prefix + "chart_svg")
+    .classed("target", true);
+
+  drawnChartContainer.select("." + prefix + "chart_source")
+    .classed("target", true);
+
+  multiSVGtoPNG.convertToSVG({
+    input: '.chart-export',
+    selector: "." + prefix + "chart_title.target, ." + prefix + "chart_svg.target, ." + prefix + "chart_source.target",
+    output: '.svg-container'
   });
+
+  multiSVGtoPNG.downloadPNG({
+    filename: filename,
+    input: '.svg-container',
+    output: '.canvas-container',
+    scale: scale || 2
+  });
+
+  svgContainer.parentNode.removeChild(svgContainer);
+  svgContainer = null;
+
+  outputCanvas.parentNode.removeChild(outputCanvas);
+  outputCanvas = null;
 
   div.parentNode.removeChild(div);
   div = null;
 
-}
-
-// downloads a print-ready JPG
-downloadJpg = function(_obj) {
-
-  var magicW = app_settings.print.magic.width,
-      magicH = app_settings.print.magic.height,
-      width = determineWidth(_obj.print.columns) * magicW,
-      height = determineHeight(_obj.print.lines, width) * magicH,
-      scale = app_settings.print.default_scale,
-      className = "chart-print-export",
-      container = "." + className,
-      filename = _obj.slug + "-print-" + _obj.print.columns + ".jpg",
-      div = document.createElement("div");
-
-  div.style.position = "absolute";
-  div.style.left = "9999px";
-  div.style.top = "0px";
-  div.style.width = width + "px";
-  div.style.height = height + "px";
-  div.className = className;
-  document.body.appendChild(div);
-
-  _obj.exportable = {};
-  _obj.exportable.width = width;
-  _obj.exportable.height = height;
-  _obj.exportable.type = "pdf";
-
-  drawChart(container, _obj);
-
-  //add required attributes to svg tag
-  var svg = d3.select(div).select('svg')
-    .attr("version", 1.1)
-    .attr("xmlns", "http://www.w3.org/2000/svg")
-    .attr("width", width)
-    .attr("height", height);
-
-  saveSvgAsJpg(svg.node(), filename, {
-    scale: scale,
-    quality: 1.0,
-    selectorRemap: function(s) {
-      return s.replace(".chart-print-export", "");
-    }
-  });
-
-  div.parentNode.removeChild(div);
-  div = null;
-
-}
+};

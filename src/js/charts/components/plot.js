@@ -5,6 +5,7 @@ function plot(node, obj) {
     area: require("../types/area"),
     stackedArea: require("../types/stacked-area"),
     column: require("../types/column"),
+    bar: require("../types/bar"),
     stackedColumn: require("../types/stacked-column"),
     streamgraph: require("../types/streamgraph")
   };
@@ -23,6 +24,10 @@ function plot(node, obj) {
       } else {
         chartRef = draw.area(node, obj);
       }
+      break;
+
+    case "bar":
+      chartRef = draw.bar(node, obj);
       break;
 
     case "column":
