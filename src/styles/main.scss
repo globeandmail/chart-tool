@@ -6,6 +6,7 @@
 @import "./components/axis";
 @import "./components/credit";
 @import "./components/tips";
+@import "./components/share_data";
 
 @import "./types/series-line";
 @import "./types/series-multiline";
@@ -13,7 +14,6 @@
 @import "./types/series-bar";
 @import "./types/series-stream";
 @import "./types/series-column";
-
 // @import "debug";
 
 .#{$prefix}bg {

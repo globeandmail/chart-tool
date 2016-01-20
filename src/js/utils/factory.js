@@ -42,6 +42,7 @@ function RecipeFactory(settings, obj) {
   //  "options" area of embed code
   o.type             = chart.options.type                     || o.type;
   o.interpolation    = chart.options.interpolation            || o.interpolation;
+  o.share_data       = chart.options.share_data               || o.share_data;
 
   o.stacked     = !helpers.isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
   o.expanded    = !helpers.isUndefined(co.expanded) === true ? co.expanded       : o.expanded;

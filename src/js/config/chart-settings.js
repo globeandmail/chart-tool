@@ -42,7 +42,8 @@ module.exports = {
     tips: false,
     annotations: false,
     range: false,
-    series: false
+    series: false,
+    share_data: true
   },
 
   range: {},

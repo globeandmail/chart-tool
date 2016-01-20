@@ -46,7 +46,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var config = __webpack_require__(2),
-	    p = __webpack_require__(26);
+	    p = __webpack_require__(27);
 	
 	app_version = p.version;
 	app_build = p.buildVer;
@@ -113,7 +113,8 @@
 	      range: false,
 	      series: false,
 	      indexed: false,
-	      qualifier: true
+	      qualifier: true,
+	      share_data:true
 	    },
 	    x_axis: {
 	      display: config.xAxis.display,
@@ -320,7 +321,7 @@
 
 /***/ },
 
-/***/ 26:
+/***/ 27:
 /***/ function(module, exports) {
 
 	module.exports = {

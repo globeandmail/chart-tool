@@ -6,7 +6,8 @@ var components = {
   qualifier: require("./qualifier"),
   axis: require("./axis"),
   scale: require("./scale"),
-  tips: require("./tips")
+  tips: require("./tips"),
+  share_data: require("./share_data")
 };
 
 module.exports = components;
