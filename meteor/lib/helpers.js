@@ -36,6 +36,7 @@ cleanEmbed = function(data) {
     "source",
     "md5",
     "date_format",
+    "time_format",
     "print",
     "img",
     "prefix"
@@ -54,29 +55,24 @@ embed = function(obj) {
     "qualifier": escapeStr(obj.qualifier),
     "source": escapeStr(obj.source)
   };
-
   data["chart"] = cleanEmbed(obj);
-
   return data;
 }
 
-deleteNullProps = function(obj, recurse) {
+deleteNullProps = function(obj) {
   for (var i in obj) {
-    if (Object.getPrototypeOf(obj[i]) === Object.prototype) {
-      if (Object.keys(obj[i]).length === 0) {
+    if ((obj[i] === null) || (obj[i] === undefined)) {
+      delete obj[i];
+    } else if (obj[i] === "") {
+      delete obj[i];
+    } else if (typeof obj[i] === 'object') {
+      if (Object.keys(obj[i]).length) {
+        deleteNullProps(obj[i]);
+      } else {
         delete obj[i];
       }
-    } else if (Array.isArray(obj[i]) && obj[i].length === 0) {
-      delete obj[i];
-    } else if (typeof obj[i] === "string" && obj[i] === "") {
-      delete obj[i];
-    } else if (obj[i] === null) {
-      delete obj[i];
-    } else if (recurse && typeof obj[i] === 'object') {
-      deleteNullProps(obj[i], recurse);
     }
   }
-
   return obj;
 }
 
@@ -91,29 +87,11 @@ deleteProp = function(obj, del) {
 
 
 jsonToCSV = function(objArray, config) {
-  var defaults = {
-    delimiter: ',',
-    newline: '\n'
-  };
-  var opt = config || defaults;
-  var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-  var str = '';
-
-  for (var i = 0; i < array.length; i++) {
-    var line = '';
-    for (var index in array[i]) {
-      if (line != '') { line += opt.delimiter };
-      line += array[i][index];
-    }
-
-    if (i === array.length - 1) {
-      str += line;
-    } else {
-      str += line + opt.newline;
-    }
-  }
-
-  return str;
+  return Papa.unparse(objArray, {
+    quotes: false,
+    delimiter: config.delimiter,
+    newline: config.newline
+  });
 }
 
 csvFormat = function(obj) {
@@ -307,4 +285,16 @@ updateObject = function(chartObj, obj) {
   for (var prop in obj) {
     updateAndSave("update" + prop, chartObj, obj[prop]);
   }
+}
+
+dataURLtoBlob = function(dataURL) {
+  var arr = dataURL.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
 }

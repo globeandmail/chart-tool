@@ -10,14 +10,15 @@ Template.chartEditPreview.events({
     updateAndSave("updateQual", this, text);
   },
   "click .editable-chart_source": function(event) {
-    var currText = event.target.textContent.trim;
-    if (currText == app_settings.chart.source || currText == "") {
-      event.target.textContent = app_settings.defaults.source_prefix + app_settings.chart.source + app_settings.defaults.source_suffix;
+    var currText = event.target.textContent.trim();
+    if (currText === app_settings.chart.source || currText === "") {
+      event.target.textContent = app_settings.chart.source + app_settings.source_suffix;
     }
+    cursorManager.setEndOfContenteditable(document.getElementsByClassName('editable-chart_source')[0]);
   },
   "blur .editable-chart_source": function(event) {
     var currText = event.target.textContent;
-    if (currText == app_settings.defaults.source_prefix + app_settings.chart.source + app_settings.defaults.source_suffix || currText == "") {
+    if (currText === app_settings.chart.source + app_settings.source_suffix || currText === "") {
       event.target.textContent = app_settings.chart.source;
       updateAndSave("updateSource", this, app_settings.chart.source);
     } else {

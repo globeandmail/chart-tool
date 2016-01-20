@@ -332,7 +332,7 @@ Template.chartEditAside.events({
     var format = event.target.value,
         obj = {};
 
-    obj["custom"] = format;
+    obj.custom = format;
     updateAndSave("updateXFormat", this, obj);
   },
   "blur .input-data-edit": function(event) {

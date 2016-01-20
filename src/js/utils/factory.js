@@ -60,6 +60,7 @@ function RecipeFactory(settings, obj) {
 
   //  these are specific to the t object and don't exist in the embed
   t.baseClass        = embed.baseClass                        || t.baseClass;
+
   t.dimensions.width = embed.width                            || t.dimensions.width;
 
   t.prefix           = chart.prefix                           || t.prefix;
