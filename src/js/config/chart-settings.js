@@ -43,7 +43,7 @@ module.exports = {
     annotations: false,
     range: false,
     series: false,
-    share_data: true
+    shareData: true
   },
 
   range: {},

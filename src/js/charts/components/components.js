@@ -7,7 +7,7 @@ var components = {
   axis: require("./axis"),
   scale: require("./scale"),
   tips: require("./tips"),
-  share_data: require("./share_data")
+  shareData: require("./shareData")
 };
 
 module.exports = components;

@@ -220,6 +220,14 @@ Meteor.methods({
       }
     });
   },
+  updateShareData: function(chartId, shareData) {
+    return Charts.update(chartId, {
+      $set: {
+        "options.shareData": shareData,
+        lastEdited: new Date()
+      }
+    });
+  },
 
   // X Axis methods
 

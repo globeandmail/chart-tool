@@ -41,8 +41,8 @@ function ChartManager(container, obj) {
     rendered.tips = components.tips(node, chartRecipe);
   }
 
-  if (chartRecipe.options.share_data) {
-    rendered.share_data = components.share_data(container, chartRecipe);
+  if (chartRecipe.options.shareData) {
+    rendered.shareData = components.shareData(container, chartRecipe);
   }
 
   if (chartRecipe.CUSTOM) {
