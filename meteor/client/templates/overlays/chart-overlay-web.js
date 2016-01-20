@@ -46,38 +46,6 @@ Template.chartOverlayWeb.events({
     this.exportable.width = width;
     this.exportable.height = width * (ratio / 100);
 
-    function dataURLtoBlob(dataURL) {
-      var arr = dataURL.split(','),
-          mime = arr[0].match(/:(.*?);/)[1],
-          bstr = atob(arr[1]),
-          n = bstr.length,
-          u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      return new Blob([u8arr], { type: mime });
-    }
-
-    var filedata = dataURLtoBlob(this.img);
-
-    filedata.name = this.slug + "-" + this._id + ".png";
-
-    var now = new Date();
-
-    S3.upload({
-      files: [filedata],
-      path: app_settings.s3.base_path + this._id,
-      expiration: app_settings.s3.expiration || 30000,
-      unique_name: false
-    }, function(err, result) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(result);
-        console.log(((new Date()) - now) + "ms");
-      }
-    });
-
-    // downloadImg(this, options);
+    downloadImg(this, options);
   }
 });
