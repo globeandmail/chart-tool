@@ -8,13 +8,7 @@ prefix = config.prefix;
 
 app_settings = {
 
-  s3: {
-    enable: true,
-    base_path: "images/",
-    expiration: 30000,
-    bucket: "chart-tool-dev",
-    region: "us-west-2"
-  },
+  s3: config.image,
 
   animal_api: "http://www.whimsicalwordimal.com/api/name",
   names: [
@@ -99,6 +93,8 @@ app_settings = {
       rescale: config.yAxis.rescale,
       nice: config.yAxis.nice
     },
+
+    tags: [],
 
     series: [],
     mobile: {},

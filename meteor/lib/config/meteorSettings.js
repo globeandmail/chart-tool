@@ -55,13 +55,7 @@
 	
 	app_settings = {
 	
-	  s3: {
-	    enable: true,
-	    base_path: "images/",
-	    expiration: 30000,
-	    bucket: "chart-tool-dev",
-	    region: "us-west-2"
-	  },
+	  s3: config.image,
 	
 	  animal_api: "http://www.whimsicalwordimal.com/api/name",
 	  names: [
@@ -147,6 +141,8 @@
 	      nice: config.yAxis.nice
 	    },
 	
+	    tags: [],
+	
 	    series: [],
 	    mobile: {},
 	    annotations: {},
@@ -225,19 +221,19 @@
 		"CUSTOM": true,
 		"prefix": "ct-",
 		"monthsAbr": [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
+			"Jan.",
+			"Feb.",
+			"Mar.",
+			"Apr.",
 			"May",
 			"June",
 			"July",
-			"Aug",
-			"Sept",
-			"Oct",
-			"Nov",
-			"Dec",
-			"Jan"
+			"Aug.",
+			"Sept.",
+			"Oct.",
+			"Nov.",
+			"Dec.",
+			"Jan."
 		],
 		"debounce": 500,
 		"tipTimeout": 5000,
@@ -316,8 +312,11 @@
 			"offset": 0.12
 		},
 		"image": {
-			"use": true,
-			"path": "http://s3-us-west-2.amazonaws.com/chart-tool-dev",
+			"enable": true,
+			"base_path": "images/",
+			"expiration": 30000,
+			"bucket": "chart-tool-dev",
+			"region": "us-west-2",
 			"filename": "thumbnail",
 			"extension": "png"
 		}

@@ -156,33 +156,39 @@ function timeDiff(d1, d2, tolerance) {
 }
 
 /**
- * Given a time context, return a d3 time interval.
- * @param  {String} context
- * @return {Object}
+ * Given a dataset, figure out what the time context is and
+ * what the number of time units elapsed is
+ * @param  {Array} data
+ * @return {Integer}
  */
-function timeInterval(context) {
-  var timeInterval;
-  switch (context) {
-    case "years":
-      timeInterval = d3.time.year;
+function timeInterval(data) {
+
+  var dataLength = data.length,
+      d1 = data[0].key,
+      d2 = data[dataLength - 1].key,
+      diff = d2 - d1;
+
+  var ret;
+
+  var intervals = [
+    { type: "years", step: 1 },
+    { type: "months", step: 3 }, // quarters
+    { type: "months", step: 1 },
+    { type: "days", step: 1 },
+    { type: "hours", step: 1 },
+    { type: "minutes", step: 1 }
+  ];
+
+  for (var i = 0; i < intervals.length; i++) {
+    var intervalCandidate = d3.time[intervals[i].type](d1, d2, intervals[i].step);
+    if (intervalCandidate.length >= dataLength) {
+      var ret = intervalCandidate.length;
       break;
-    case "months":
-      timeInterval = d3.time.month;
-      break;
-    case "weeks":
-      timeInterval = d3.time.week;
-      break;
-    case "days":
-      timeInterval = d3.time.day;
-      break;
-    case "hours":
-      timeInterval = d3.time.hour;
-      break;
-    case "minutes":
-      timeInterval = d3.time.minute;
-      break;
-  }
-  return timeInterval;
+    }
+  };
+
+  return ret;
+
 }
 
 /**
@@ -220,12 +226,12 @@ function generateThumb(container, obj, settings) {
 
   var imgSettings = settings.image;
 
-  if (imgSettings && imgSettings.use) {
+  if (imgSettings && imgSettings.enable) {
 
     var cont = document.querySelector(container),
         img = document.createElement('img');
 
-    img.setAttribute('src', imgSettings.path + "/" + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
+    img.setAttribute('src', "https://s3-" + imgSettings.region + ".amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + "/" + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
     img.setAttribute('alt', obj.data.heading);
     img.setAttribute('class', settings.prefix + "thumbnail");
 

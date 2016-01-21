@@ -9,7 +9,7 @@ function BarChart(node, obj) {
   // bar chart operating on the y-axis, need to reverse the dataset.
   obj.data.data.reverse();
 
-  var xAxisOffset = 10;
+  var xAxisOffset = 9;
 
   var xScaleObj = new Scale(obj, "xAxis"),
       xScale = xScaleObj.scale;

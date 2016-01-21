@@ -33,12 +33,9 @@ function ColumnChart(node, obj) {
 
   // hack to get time-series columns to work. should maybe be rewritten?
   if (xScaleObj.obj.rangeType === "range") {
-    var getTimeDiff = require("../../utils/utils").timeDiff;
-    var getTimeInterval = require("../../utils/utils").timeInterval;
-
-    var interval = getTimeInterval(getTimeDiff(xScale.domain()[0], xScale.domain()[1],1));
-
-    var singleColumn = (obj.dimensions.tickWidth() / obj.data.data.length);
+    var timeInterval = require("../../utils/utils").timeInterval;
+    var timeElapsed = timeInterval(obj.data.data);
+    var singleColumn = obj.dimensions.tickWidth() / timeElapsed;
   } else {
     var singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
   }
@@ -75,8 +72,7 @@ function ColumnChart(node, obj) {
         "height": function(d) {
           return Math.abs(yScale(d.series[i].val) - yScale(0));
         },
-        // temporary hack for time-series columns
-        "width": function(d) { return ((obj.dimensions.tickWidth() / 67) - 1); }
+        "width": function() { return singleColumn; }
       });
 
     if (obj.data.seriesAmount > 1) {

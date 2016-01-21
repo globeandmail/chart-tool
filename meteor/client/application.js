@@ -98,21 +98,27 @@ generateThumb = function(obj) {
     output: '.canvas-container',
     scale: scale || 2
   }, function(data) {
-    var file = dataURLtoBlob(data);
-    file.name = "thumbnail.png";
 
-    S3.upload({
-      files: [file],
-      path: app_settings.s3.base_path + obj._id,
-      expiration: app_settings.s3.expiration || 30000,
-      unique_name: false
-    }, function(err, result) {
-      if (err) {
-        console.error("S3 thumbnail upload error!");
-      } else {
-        Meteor.call("updateImg", obj._id, result.secure_url);
-      }
-    });
+    if (app_settings.s3 && app_settings.s3.enable) {
+
+      var file = dataURLtoBlob(data);
+      file.name = app_settings.s3.filename + "." + app_settings.s3.extension;
+
+      S3.upload({
+        files: [file],
+        path: app_settings.s3.base_path + obj._id,
+        expiration: app_settings.s3.expiration || 30000,
+        unique_name: false
+      }, function(err, result) {
+        if (err) {
+          console.error("S3 thumbnail upload error!");
+        } else {
+          Meteor.call("updateImg", obj._id, result.secure_url);
+        }
+      });
+    } else {
+      Meteor.call("updateImg", obj._id, data);
+    }
 
   });
 
