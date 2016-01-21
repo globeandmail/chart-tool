@@ -31,7 +31,6 @@ function ColumnChart(node, obj) {
     })
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
 
-  // hack to get time-series columns to work. should maybe be rewritten?
   if (xScaleObj.obj.rangeType === "range") {
     var timeInterval = require("../../utils/utils").timeInterval;
     var timeElapsed = timeInterval(obj.data.data);

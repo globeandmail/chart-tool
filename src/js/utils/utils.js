@@ -226,16 +226,22 @@ function generateThumb(container, obj, settings) {
 
   var imgSettings = settings.image;
 
+  var cont = document.querySelector(container);
+
   if (imgSettings && imgSettings.enable) {
 
-    var cont = document.querySelector(container),
-        img = document.createElement('img');
+    var img = document.createElement('img');
 
     img.setAttribute('src', "https://s3-" + imgSettings.region + ".amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + "/" + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
     img.setAttribute('alt', obj.data.heading);
     img.setAttribute('class', settings.prefix + "thumbnail");
 
     cont.appendChild(img);
+
+  } else {
+
+    var img = cont.querySelector(obj.prefix + "base64img");
+    img.style.setAttribute('display', 'block');
 
   }
 

@@ -11,9 +11,7 @@
     })(this);
   </script>
   {{ #if useBase64Images }}
-  {{{ angleBracket }}}!--[if IE]>
-    <img src="{{ img }}">
-  {{{ angleBracket }}}![endif]-->
+    <img src="{{ img }}" class="{{ prefix }}base64img {{ prefix }}thumbnail">
   {{ /if }}
 </div>
 
