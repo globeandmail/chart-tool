@@ -661,3 +661,6 @@
 
 .ct-thumbnail {
   width: 100%; }
+
+.ct-base64img {
+  display: none; }

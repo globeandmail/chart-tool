@@ -226,22 +226,22 @@ function generateThumb(container, obj, settings) {
 
   var imgSettings = settings.image;
 
-  var cont = document.querySelector(container);
+  var cont = document.querySelector(container),
+      fallback = cont.querySelector("." + settings.prefix + "base64img");
 
-  if (imgSettings && imgSettings.enable) {
+  if (imgSettings && imgSettings.enable && obj.data.id) {
 
     var img = document.createElement('img');
 
-    img.setAttribute('src', "https://s3-" + imgSettings.region + ".amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + "/" + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
+    img.setAttribute('src', "https://s3-" + imgSettings.region + ".amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
     img.setAttribute('alt', obj.data.heading);
     img.setAttribute('class', settings.prefix + "thumbnail");
 
     cont.appendChild(img);
 
-  } else {
+  } else if (fallback) {
 
-    var img = cont.querySelector(obj.prefix + "base64img");
-    img.style.setAttribute('display', 'block');
+    fallback.style.display = 'block';
 
   }
 
