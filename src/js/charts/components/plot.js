@@ -6,6 +6,7 @@ function plot(node, obj) {
     area: require("../types/area"),
     stackedArea: require("../types/stacked-area"),
     column: require("../types/column"),
+    timeColumn: require("../types/time-column"),
     bar: require("../types/bar"),
     stackedColumn: require("../types/stacked-column"),
     streamgraph: require("../types/streamgraph")
@@ -32,7 +33,11 @@ function plot(node, obj) {
       break;
 
     case "column":
-      chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);
+      if (obj.xAxis.scale === "time") {
+        chartRef = draw.timeColumn(node, obj);
+      } else {
+        chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);
+      }
       break;
 
     case "stream":

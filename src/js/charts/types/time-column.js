@@ -1,4 +1,4 @@
-function ColumnChart(node, obj) {
+function TimeColumnChart(node, obj) {
 
   var axisModule = require("../components/axis"),
     scaleModule = require("../components/scale"),
@@ -20,13 +20,15 @@ function ColumnChart(node, obj) {
 
   axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
 
-  var singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
+  var timeInterval = require("../../utils/utils").timeInterval,
+      timeElapsed = timeInterval(obj.data.data);
+
+  var singleColumn = obj.dimensions.tickWidth() / timeElapsed;
 
   var seriesGroup = node.append("g")
     .attr("class", function() {
       var output = obj.prefix + "series_group";
       if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'multiple' class so we can target
         output += " " + obj.prefix + "multiple";
       }
       return output;
@@ -57,7 +59,7 @@ function ColumnChart(node, obj) {
           return d.series[i].val < 0 ? "negative" : "positive";
         },
         "x": function(d) {
-          return i * singleColumn;
+          return i * singleColumn - (singleColumn / 2);
         },
         "y": function(d) {
           return yScale(Math.max(0, d.series[i].val));
@@ -96,6 +98,7 @@ function ColumnChart(node, obj) {
     columnItem: columnItem
   };
 
-};
 
-module.exports = ColumnChart;
+}
+
+module.exports = TimeColumnChart;
