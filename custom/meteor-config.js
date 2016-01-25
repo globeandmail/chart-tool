@@ -103,9 +103,6 @@ app_settings = {
     series: [],
     mobile: {},
     annotations: {},
-
-    // for when series are indexed to a value
-    index: "",
     range: [],
 
     img: "",

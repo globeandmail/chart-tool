@@ -220,6 +220,14 @@ Meteor.methods({
       }
     });
   },
+  updateIndex: function(chartId, index) {
+    return Charts.update(chartId, {
+      $set: {
+        "options.indexed": index,
+        lastEdited: new Date()
+      }
+    });
+  },
 
   // X Axis methods
 
@@ -389,14 +397,6 @@ Meteor.methods({
 
   // Other methods
 
-  updateIndex: function(chartId, index) {
-    return Charts.update(chartId, {
-      $set: {
-        "index": index,
-        lastEdited: new Date()
-      }
-    });
-  },
   resetXAxis: function (chartId) {
     return Charts.update(chartId, {
       $set: {

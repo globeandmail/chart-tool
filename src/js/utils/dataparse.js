@@ -63,7 +63,7 @@ function parse(csv, inputDateFormat, index) {
         }
 
         if (index === "0") {
-          val = (d[key] / firstVal) - 1;
+          val = ((d[key] / firstVal) - 1) * 100;
         } else {
           val = (d[key] / firstVal) * index;
         }

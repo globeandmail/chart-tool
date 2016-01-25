@@ -215,7 +215,8 @@ Template.chartEditAside.events({
 
   "change .input-index": function(event) {
     var input = event.target.value;
-    updateAndSave("updateIndex", this, input);
+    var inputVal = (input === "") ? false : input;
+    updateAndSave("updateIndex", this, inputVal);
   },
 
   "blur .input-prefix-x": function(event) {
