@@ -105,6 +105,9 @@ app_settings = {
     annotations: {},
     range: [],
 
+    user: [],
+    tags: [],
+
     img: "",
     print: {
       columns: "2col",
