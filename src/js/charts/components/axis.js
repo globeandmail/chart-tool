@@ -189,7 +189,7 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
   scale.rangeExtent([0, dimensions.tickWidth()]);
 
-  scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding());
+  scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding);
 
   var bandStep = scale.rangeBand();
 
@@ -200,12 +200,25 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
     .attr("dy", axisSettings.dy + "em")
     .call(wrapText, bandStep);
 
-  var xPos = (- (bandStep / 2) - (bandStep * dimensions.bands.outerPadding()));
+  var firstXPos = d3.transform(axisNode.select(".tick").attr("transform")).translate[0] * -1;
+
+  var xPos = (- (bandStep / 2) - (bandStep * dimensions.bands.outerPadding));
+
+  // // console.log(xPos.toPrecision(3))
+  // xPos = xPos.toPrecision(3);
+
+  // var derp = axisNode.select("tick");
 
   axisNode.selectAll("line")
     .attr({
       "x1": xPos,
       "x2": xPos
+    });
+
+  axisNode.select("line")
+    .attr({
+      "x1": firstXPos,
+      "x2": firstXPos
     });
 
   axisNode.selectAll("line")
@@ -214,7 +227,7 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
   var lastTick = axisNode.append("g")
     .attr({
       "class": "tick",
-      "transform": "translate(" + (dimensions.tickWidth() - 1) + ",0)"
+      "transform": "translate(" + (dimensions.tickWidth() + (bandStep / 2) + bandStep * dimensions.bands.outerPadding) + ",0)"
     });
 
   lastTick.append("line")
@@ -660,6 +673,7 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
 
   // once the axis is fully drawn, check that we don"t have any ticks
   // extending beyond the width of the SVG. if so, drop it like its hot
+
   dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
 
 }

@@ -11,7 +11,7 @@ function scaleManager(obj, axisType) {
     scale[scaleObj.rangeType](scaleObj.range);
   } else if (scaleObj.rangeType === "rangeRoundBands") {
     var bands = obj.dimensions.bands;
-    scale[scaleObj.rangeType](scaleObj.range, bands.padding, bands.outerPadding());
+    scale[scaleObj.rangeType](scaleObj.range, bands.padding, bands.outerPadding);
   }
 
   if (axis.nice) { niceify(scale, axisType, scaleObj); }
