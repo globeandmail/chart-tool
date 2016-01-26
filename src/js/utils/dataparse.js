@@ -13,10 +13,10 @@
  */
 function inputDate(scaleType, defaultFormat, declaredFormat) {
 
-  if (scaleType !== "time") {
-    return undefined;
-  } else {
+  if ((scaleType === "time") || (scaleType === "ordinal-time")) {
     return declaredFormat || defaultFormat;
+  } else {
+    return undefined;
   }
 
 }
@@ -28,17 +28,17 @@ function inputDate(scaleType, defaultFormat, declaredFormat) {
  * @param  {String} index           Value to index the data to, if there is one
  * @return { {csv: String, data: Array, seriesAmount: Integer, keys: Array} }                 An object with the original CSV string, the newly-formatted data, the number of series in the data and an array of keys used.
  */
-function parse(csv, inputDateFormat, index) {
+function parse(csv, inputDateFormat, index, stacked, type) {
 
   var keys,
       val,
       firstVal;
 
   var data = d3.csv.parse(csv, function(d, i) {
+
     var obj = {};
-    if (i === 0) {
-      keys = d3.keys(d);
-    }
+
+    if (i === 0) { keys = d3.keys(d); }
 
     if (inputDateFormat) {
       var dateFormat = d3.time.format(inputDateFormat);
@@ -48,6 +48,7 @@ function parse(csv, inputDateFormat, index) {
     }
 
     obj.series = [];
+
     for (var j = 1; j < d3.keys(d).length; j++) {
 
       var key = d3.keys(d)[j];
@@ -85,11 +86,30 @@ function parse(csv, inputDateFormat, index) {
 
   var seriesAmount = data[0].series.length;
 
+  if (stacked) {
+    if (type === "stream") {
+      var stack = d3.layout.stack().offset("silhouette");
+    } else {
+      var stack = d3.layout.stack();
+    }
+    var stackedData = stack(d3.range(seriesAmount).map(function(key) {
+      return data.map(function(d) {
+        return {
+          legend: keys[key + 1],
+          x: d.key,
+          y: Number(d.series[key].val),
+          raw: d
+        };
+      });
+    }));
+  }
+
   return {
     csv: csv,
     data: data,
     seriesAmount: seriesAmount,
-    keys: keys
+    keys: keys,
+    stackedData: stackedData || undefined
   }
 }
 

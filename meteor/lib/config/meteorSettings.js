@@ -46,7 +46,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var config = __webpack_require__(2),
-	    p = __webpack_require__(26);
+	    p = __webpack_require__(28);
 	
 	app_version = p.version;
 	app_build = p.buildVer;
@@ -245,7 +245,7 @@
 		"timeFormat": "%H:%M",
 		"margin": {
 			"top": 10,
-			"right": 2,
+			"right": 3,
 			"bottom": 0,
 			"left": 0
 		},
@@ -322,7 +322,7 @@
 
 /***/ },
 
-/***/ 26:
+/***/ 28:
 /***/ function(module, exports) {
 
 	module.exports = {

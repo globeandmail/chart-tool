@@ -73,8 +73,6 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
   var axisNode = axisGroup.append("g")
     .attr("class", obj.prefix + "x-axis");
 
-  axisNode.call(axis);
-
   switch(axisObj.scale) {
     case "time":
     case "date":
@@ -88,6 +86,9 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
     case "ordinal":
     case "discrete":
       discreteAxis(axisNode, scale, axis, axisSettings, obj.dimensions);
+      break;
+    case "ordinal-time":
+      ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
   }
 
@@ -172,7 +173,7 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
       "dy": axisSettings.dy + "em"
     })
     .style("text-anchor", "start")
-    .call(formatText, ctx, axisSettings.ems, obj.monthsAbr);
+    .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
 
   axisNode.selectAll(".tick")
     .call(dropTicks);
@@ -265,7 +266,7 @@ function numericalAxis(axisNode, scale, axis, axisSettings, obj) {
 
 // text formatting functions
 
-function formatText(selection, ctx, ems, monthsAbr) {
+function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
   var prevYear,
       prevMonth,
@@ -332,25 +333,21 @@ function formatText(selection, ctx, ems, monthsAbr) {
             dMinuteStr;
 
         // Convert from 24h time
-        var suffix = (dHour >= 12)? 'p.m.' : 'a.m.';
-        if (dHour === 0){
+        var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
+        if (dHour === 0) {
           dHourStr = 12;
-        }
-        else if(dHour > 12){
+        } else if (dHour > 12) {
           dHourStr = dHour - 12;
-        }
-        else{
+        } else {
           dHourStr = dHour;
         }
 
         // Make minutes follow Globe style
-        if(dMinute === 0){
+        if (dMinute === 0) {
           dMinuteStr = '';
-        }
-        else if(dMinute < 10){
+        } else if (dMinute < 10) {
           dMinuteStr = ':0' + dMinute;
-        }
-        else{
+        } else {
           dMinuteStr = ':' + dMinute;
         }
 
@@ -392,7 +389,7 @@ function setTickFormatY(format, d, lastTick) {
       currentFormat = format(prefix.scale(d)) + prefix.symbol;
       break;
     case "comma":
-      if (isFloat(d)) {
+      if (isFloat(parseFloat(d))) {
         currentFormat = d3.format(",.2f")(d);
       } else {
         currentFormat = d3.format(",g")(d);
@@ -597,6 +594,10 @@ function tickFinderX(domain, period, tickGoal) {
 
 }
 
+function ordinalTimeTickFinderX(domain, period, tickGoal) {
+
+}
+
 function tickFinderY(scale, tickCount, tickSettings) {
 
   // In a nutshell:
@@ -761,7 +762,7 @@ module.exports = {
   appendYAxis: appendYAxis,
   timeAxis: timeAxis,
   discreteAxis: discreteAxis,
-  formatText: formatText,
+  setTickFormatX: setTickFormatX,
   setTickFormatY: setTickFormatY,
   updateTextX: updateTextX,
   updateTextY: updateTextY,

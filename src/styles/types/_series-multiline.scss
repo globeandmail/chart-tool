@@ -32,7 +32,7 @@
     background: $primary-shade-4;
   }
 
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+  .#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
     fill: $primary-shade-4;
   }
 

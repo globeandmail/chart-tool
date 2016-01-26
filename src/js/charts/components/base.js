@@ -12,7 +12,7 @@ function append(container, obj) {
       "xmlns": "http://www.w3.org/2000/svg"
     });
 
-  // background
+  // background rect
   chartBase
     .append("rect")
     .attr({

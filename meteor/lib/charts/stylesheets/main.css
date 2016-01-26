@@ -40,12 +40,6 @@
 .ct-alternate .ct-chart_legend .ct-legend_item_0 .ct-legend_item_icon {
   background: #a50f15; }
 
-.ct-primary .ct-tip .ct-tip_circle-0 {
-  fill: #08519c; }
-
-.ct-alternate .ct-tip .ct-tip_circle-0 {
-  fill: #a50f15; }
-
 .ct-chart_qualifier {
   margin: 0;
   background: #fff;
@@ -70,62 +64,32 @@
 .ct-primary .ct-chart_legend .ct-legend_item_1 .ct-legend_item_icon {
   background: #3182bd; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-1 {
-  fill: #3182bd; }
-
 .ct-alternate .ct-chart_legend .ct-legend_item_1 .ct-legend_item_icon {
   background: #de2d26; }
-
-.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-1 {
-  fill: #de2d26; }
 
 .ct-primary .ct-chart_legend .ct-legend_item_2 .ct-legend_item_icon {
   background: #6baed6; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-2 {
-  fill: #6baed6; }
-
 .ct-alternate .ct-chart_legend .ct-legend_item_2 .ct-legend_item_icon {
   background: #fb6a4a; }
-
-.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-2 {
-  fill: #fb6a4a; }
 
 .ct-primary .ct-chart_legend .ct-legend_item_3 .ct-legend_item_icon {
   background: #9ecae1; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-3 {
-  fill: #9ecae1; }
-
 .ct-alternate .ct-chart_legend .ct-legend_item_3 .ct-legend_item_icon {
   background: #fc9272; }
-
-.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-3 {
-  fill: #fc9272; }
 
 .ct-primary .ct-chart_legend .ct-legend_item_4 .ct-legend_item_icon {
   background: #c6dbef; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-4 {
-  fill: #c6dbef; }
-
 .ct-alternate .ct-chart_legend .ct-legend_item_4 .ct-legend_item_icon {
   background: #fcbba1; }
-
-.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-4 {
-  fill: #fcbba1; }
 
 .ct-primary .ct-chart_legend .ct-legend_item_5 .ct-legend_item_icon {
   background: #eff3ff; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-5 {
-  fill: #eff3ff; }
-
 .ct-alternate .ct-chart_legend .ct-legend_item_5 .ct-legend_item_icon {
   background: #fee5d9; }
-
-.ct-alternate .ct-tip .ct-tip_circle.ct-tip_circle-5 {
-  fill: #fee5d9; }
 
 .ct-axis path {
   display: none; }
@@ -214,6 +178,9 @@
   font-size: 12px;
   line-height: 16px; }
 
+.ct-tip_text-date {
+  font-weight: bold; }
+
 .ct-tip_line-x {
   opacity: 0;
   transition: opacity 0.3s;
@@ -225,6 +192,89 @@
     stroke-dasharray: 1, 3px;
     stroke-width: 1px;
     shape-rendering: crispEdges; }
+
+.ct-primary .ct-tip .ct-tip_circle-0, .ct-primary .ct-tip .ct-tip_path-circle-0 {
+  fill: #08519c; }
+
+.ct-alternate .ct-tip .ct-tip_circle-0, .ct-alternate .ct-tip .ct-tip_path-circle-0 {
+  fill: #a50f15; }
+
+.ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle-0,
+.ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle-0 {
+  fill: #fff; }
+
+.ct-tip .ct-tip_text-group.ct-active,
+.ct-tip .ct-tip_path-circle-group.ct-active,
+.ct-tip .ct-tip_path-circle.ct-active {
+  display: block;
+  opacity: 1; }
+
+.ct-tip .ct-tip_path-circle-group,
+.ct-tip .ct-tip_path-circle {
+  display: none; }
+
+.ct-tip .ct-tip_text-group {
+  opacity: 0.3; }
+
+.ct-primary .ct-tip .ct-tip_path-circle-1,
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-1 {
+  fill: #3182bd; }
+
+.ct-alternate .ct-tip .ct-tip_circle-1,
+.ct-alternate .ct-tip .ct-tip_path-circle-1 {
+  fill: #de2d26; }
+
+.ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-1,
+.ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-1 {
+  fill: #fff; }
+
+.ct-primary .ct-tip .ct-tip_path-circle-2,
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-2 {
+  fill: #6baed6; }
+
+.ct-alternate .ct-tip .ct-tip_circle-2,
+.ct-alternate .ct-tip .ct-tip_path-circle-2 {
+  fill: #fb6a4a; }
+
+.ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-2,
+.ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-2 {
+  fill: #fff; }
+
+.ct-primary .ct-tip .ct-tip_path-circle-3,
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-3 {
+  fill: #9ecae1; }
+
+.ct-alternate .ct-tip .ct-tip_circle-3,
+.ct-alternate .ct-tip .ct-tip_path-circle-3 {
+  fill: #fc9272; }
+
+.ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-3,
+.ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-3 {
+  fill: #fff; }
+
+.ct-primary .ct-tip .ct-tip_path-circle-4,
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-4 {
+  fill: #c6dbef; }
+
+.ct-alternate .ct-tip .ct-tip_circle-4,
+.ct-alternate .ct-tip .ct-tip_path-circle-4 {
+  fill: #fcbba1; }
+
+.ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-4,
+.ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-4 {
+  fill: #fff; }
+
+.ct-primary .ct-tip .ct-tip_path-circle-5,
+.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-5 {
+  fill: #eff3ff; }
+
+.ct-alternate .ct-tip .ct-tip_circle-5,
+.ct-alternate .ct-tip .ct-tip_path-circle-5 {
+  fill: #fee5d9; }
+
+.ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-5,
+.ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-5 {
+  fill: #fff; }
 
 .ct-primary.ct-type_line .ct-series_group .ct-line,
 .ct-primary.ct-type_line .ct-series_group.ct-multiple .ct-line,
@@ -295,7 +345,7 @@
 .ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_1 .ct-legend_item_icon {
   background: #c6dbef; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-1 {
+.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-1 {
   fill: #c6dbef; }
 
 .ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_1 .ct-legend_item_icon {
@@ -313,7 +363,7 @@
 .ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_2 .ct-legend_item_icon {
   background: #c6dbef; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-2 {
+.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-2 {
   fill: #c6dbef; }
 
 .ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_2 .ct-legend_item_icon {
@@ -331,7 +381,7 @@
 .ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_3 .ct-legend_item_icon {
   background: #c6dbef; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-3 {
+.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-3 {
   fill: #c6dbef; }
 
 .ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_3 .ct-legend_item_icon {
@@ -349,7 +399,7 @@
 .ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_4 .ct-legend_item_icon {
   background: #c6dbef; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-4 {
+.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-4 {
   fill: #c6dbef; }
 
 .ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_4 .ct-legend_item_icon {
@@ -367,7 +417,7 @@
 .ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_5 .ct-legend_item_icon {
   background: #c6dbef; }
 
-.ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-5 {
+.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-5 {
   fill: #c6dbef; }
 
 .ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_5 .ct-legend_item_icon {
