@@ -33,7 +33,7 @@ function plot(node, obj) {
       break;
 
     case "column":
-      if (obj.xAxis.scale === "time") {
+      if (obj.xAxis.scale === "ordinal-time") {
         chartRef = draw.timeColumn(node, obj);
       } else {
         chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);

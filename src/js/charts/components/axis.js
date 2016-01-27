@@ -15,6 +15,10 @@ function axisManager(node, obj, scale, axisType) {
   var axisObj = obj[axisType];
   var axis = new AxisFactory(axisObj, scale);
 
+  var prevAxis = node.select("." + obj.prefix + "axis-group" + "." + obj.prefix + axisType).node();
+
+  if (prevAxis !== null) { prevAxis.remove(); }
+
   var axisGroup = node.append("g")
     .attr("class", obj.prefix + "axis-group" + " " + obj.prefix + axisType);
 
@@ -77,17 +81,15 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
 
   switch(axisObj.scale) {
     case "time":
-    case "date":
       timeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
-    // case "linear":
-    // case "numerical":
-      // numericalAxis(axisNode, scale, axis, axisSettings, obj);
-      // break;
     case "ordinal":
-    case "discrete":
       discreteAxis(axisNode, scale, axis, axisSettings, obj.dimensions);
       break;
+    case "ordinal-time":
+      ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings);
+      break;
+
   }
 
   obj.dimensions.xAxisHeight = axisNode.node().getBBox().height;
@@ -239,6 +241,34 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
 }
 
+function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
+
+  var timeDiff = require("../../utils/utils").timeDiff,
+      domain = scale.domain(),
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 3),
+      currentFormat = determineFormat(ctx);
+
+  axis.tickFormat(currentFormat);
+
+  axisNode.call(axis);
+
+  axisNode.selectAll("text")
+    .attr({
+      "x": axisSettings.upper.textX,
+      "y": axisSettings.upper.textY,
+      "dy": axisSettings.dy + "em"
+    })
+    .style("text-anchor", "start")
+    .call(formatText, ctx, axisSettings.ems, obj.monthsAbr);
+
+  axisNode.selectAll(".tick")
+    .call(dropTicks);
+
+  axisNode.selectAll("line")
+    .attr("y2", axisSettings.upper.tickHeight);
+
+}
+
 // text formatting functions
 
 function formatText(selection, ctx, ems, monthsAbr) {
@@ -344,6 +374,8 @@ function formatText(selection, ctx, ems, monthsAbr) {
         dStr = d;
         break;
     }
+
+    console.log(dStr);
 
     return dStr;
 
@@ -484,7 +516,7 @@ function newTextNode(selection, text, ems) {
 }
 
 // tick dropping functions
-//
+
 function dropTicks(ticks) {
 
   for (var j = 0; j < ticks[0].length; j++) {
@@ -660,21 +692,28 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
     });
 
   if (obj.xAxis.scale === "ordinal") {
-    // xAxisObj.axis.scale().rangeExtent([0, obj.dimensions.tickWidth()]);
-    // xAxisObj.axis.scale().rangeRoundBands([0, obj.dimensions.tickWidth()], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding());
-    // xAxisObj.node.call(xAxisObj.axis);
+
+    xAxisObj.axis.scale().rangeRoundBands([0, obj.dimensions.tickWidth()], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding);
+    xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
+
+  } else if (obj.xAxis.scale === "ordinal-time") {
+
+    xAxisObj.axis.scale().rangePoints([0, obj.dimensions.tickWidth()], 1.0);
+    xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
+
+    // once the axis is fully drawn, check that we don"t have any ticks
+    // extending beyond the width of the SVG. if so, drop it
+    dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
 
   } else {
     xAxisObj.axis.scale().range([0, obj.dimensions.tickWidth()]);
+    xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
+
+    dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
   }
 
   xAxisObj.node
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
-
-  // once the axis is fully drawn, check that we don"t have any ticks
-  // extending beyond the width of the SVG. if so, drop it like its hot
-
-  dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
 
 }
 

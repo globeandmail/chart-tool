@@ -17,10 +17,6 @@ function LineChart(node, obj) {
 
   axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
 
-  if (xScaleObj.obj.type === "ordinal") {
-    xScale.rangeRoundPoints([0, obj.dimensions.tickWidth()], 1.0);
-  }
-
   if (obj.data.seriesAmount === 1) { obj.seriesHighlight = function() { return 0; } }
 
   var seriesGroup = node.append("g")

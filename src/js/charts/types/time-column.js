@@ -7,23 +7,21 @@ function TimeColumnChart(node, obj) {
     Tips = require("../components/tips");
 
   //  scales
-  var yScaleObj = new Scale(obj, "yAxis"),
-    xScaleObj = new Scale(obj, "xAxis"),
-    yScale = yScaleObj.scale,
-    xScale = xScaleObj.scale;
+  var xScaleObj = new Scale(obj, "xAxis"),
+      yScaleObj = new Scale(obj, "yAxis"),
+      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
   // axes
-  var yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
-    xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-    yAxis = yAxisObj.axis,
-    xAxis = xAxisObj.axis;
+  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
+      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
+      xAxis = xAxisObj.axis, yAxis = yAxisObj.axis;
 
   axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
 
-  var timeInterval = require("../../utils/utils").timeInterval,
-      timeElapsed = timeInterval(obj.data.data);
+  var singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
 
-  var singleColumn = obj.dimensions.tickWidth() / timeElapsed;
+  node.select("." + obj.prefix + "axis-group." + obj.prefix + "xAxis")
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
   var seriesGroup = node.append("g")
     .attr("class", function() {
@@ -33,7 +31,7 @@ function TimeColumnChart(node, obj) {
       }
       return output;
     })
-    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + ",0)");
 
   for (var i = 0; i < obj.data.seriesAmount; i++) {
 
@@ -47,10 +45,7 @@ function TimeColumnChart(node, obj) {
         "class": obj.prefix + "column " + obj.prefix + "column-" + (i),
         "data-series": i,
         "data-key": function(d) { return d.key; },
-        "data-legend": function() { return obj.data.keys[i + 1]; },
-        "transform": function(d) {
-          return "translate(" + (xScale(d.key)) + ",0)";
-        }
+        "data-legend": function() { return obj.data.keys[i + 1]; }
       });
 
     columnItem.append("rect")
@@ -59,15 +54,21 @@ function TimeColumnChart(node, obj) {
           return d.series[i].val < 0 ? "negative" : "positive";
         },
         "x": function(d) {
-          return i * singleColumn - (singleColumn / 2);
+          return xScale(d.key);
         },
         "y": function(d) {
-          return yScale(Math.max(0, d.series[i].val));
+          if (d.series[i].val !== "__undefined__") {
+            return yScale(Math.max(0, d.series[i].val));
+          }
         },
         "height": function(d) {
-          return Math.abs(yScale(d.series[i].val) - yScale(0));
+          if (d.series[i].val !== "__undefined__") {
+            return Math.abs(yScale(d.series[i].val) - yScale(0));
+          }
         },
-        "width": function() { return singleColumn; }
+        "width": function() {
+          return (singleColumn / obj.data.seriesAmount) - ((singleColumn / obj.data.seriesAmount) * obj.dimensions.bands.padding);
+        }
       });
 
     if (obj.data.seriesAmount > 1) {
@@ -76,10 +77,9 @@ function TimeColumnChart(node, obj) {
 
       columnItem.selectAll("rect")
         .attr({
-          "x": function() {
-            return ((i * singleColumn) + (singleColumn * (columnOffset / 2)));
-          },
-          "width": singleColumn - (singleColumn * columnOffset)
+          "x": function(d) {
+            return xScale(d.key) + (i * (singleColumn / obj.data.seriesAmount));
+          }
         });
     }
 

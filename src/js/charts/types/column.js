@@ -22,6 +22,8 @@ function ColumnChart(node, obj) {
 
   var singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
 
+  // console.log(xScale.range());
+
   var seriesGroup = node.append("g")
     .attr("class", function() {
       var output = obj.prefix + "series_group";

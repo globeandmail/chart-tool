@@ -13,10 +13,10 @@
  */
 function inputDate(scaleType, defaultFormat, declaredFormat) {
 
-  if (scaleType !== "time") {
-    return undefined;
-  } else {
+  if (scaleType === "time" || scaleType === "ordinal-time") {
     return declaredFormat || defaultFormat;
+  } else {
+    return undefined;
   }
 
 }
