@@ -29,6 +29,10 @@
   fill: $alternate-color;
 }
 
+.#{$prefix}column rect.muted {
+  opacity: .5;
+}
+
 @for $counter from 1 through $series-count-max {
 
   .#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter} .#{$prefix}column-#{$counter} rect,

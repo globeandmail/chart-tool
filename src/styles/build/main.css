@@ -642,6 +642,9 @@
 .ct-alternate.ct-type_column .ct-series_group .ct-column-0 rect {
   fill: #a50f15; }
 
+.ct-column rect.muted {
+  opacity: .5; }
+
 .ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_1 .ct-column-1 rect,
 .ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_1 rect.ct-column,
 .ct-primary.ct-type_column .ct-series_group .ct-column-1 rect {
