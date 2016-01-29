@@ -259,6 +259,8 @@ standardizeDates = function(data, oldFormat, newFormat) {
 
   var jsonData = Papa.parse(data, { delimiter: "," });
 
+  // debugger;
+
   for (var i = 1; i < jsonData.data.length; i++ ) {
     var date = currFormat.parse(jsonData.data[i][0]);
     if (date !== null) {

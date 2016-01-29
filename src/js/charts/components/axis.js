@@ -268,7 +268,7 @@ function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
   }
 
   axisNode.selectAll(".tick")
-    .call(ordinalTimeTicks, ctx, scale, axis, ordinalTickPadding);
+    .call(ordinalTimeTicks, axisNode, ctx, scale, ordinalTickPadding);
 
   axisNode.selectAll("line")
     .attr("y2", axisSettings.upper.tickHeight);
@@ -310,7 +310,7 @@ function formatText(selection, ctx, ems, monthsAbr) {
 
         dStr = dMonth;
 
-        prevYear = d.getFullYear();
+        prevYear = dYear;
 
         break;
       case "weeks":
@@ -329,8 +329,8 @@ function formatText(selection, ctx, ems, monthsAbr) {
           newTextNode(node, dYear, ems);
         }
 
-        prevMonth = monthsAbr[d.getMonth()];
-        prevYear = d.getFullYear();
+        prevMonth = dMonth;
+        prevYear = dYear;
 
         break;
 
@@ -548,6 +548,57 @@ function dropTicks(selection, opts) {
 
 }
 
+function dropRedundantTicks(selection, ctx) {
+
+  var ticks = selection.selectAll(".tick");
+
+  var prevYear, prevMonth, prevDate, prevHour, prevMinute, dYear, dMonth, dDate, dHour, dMinute;
+
+  ticks.each(function(d) {
+    switch (ctx) {
+      case "years":
+        break;
+      case "months":
+        dYear = d.getFullYear();
+        dMonth = d.getMonth();
+        if ((dMonth === prevMonth) && (dYear === prevYear)) {
+          d3.select(this).remove();
+        }
+        prevMonth = dMonth;
+        prevYear = dYear;
+        break;
+      case "weeks":
+      case "days":
+        dYear = d.getFullYear();
+        dMonth = d.getMonth();
+        dDate = d.getDate();
+
+        if ((dDate === prevDate) && (dMonth === prevMonth) && (dYear === prevYear)) {
+          d3.select(this).remove();
+        }
+
+        prevDate = dDate;
+        prevMonth = dMonth;
+        prevYear = dYear;
+        break;
+      case "hours":
+        dDate = d.getDate();
+        dHour = d.getHours();
+        dMinute = d.getMinutes();
+
+        if ((dDate === prevDate) && (dHour === prevHour) && (dMinute === prevMinute)) {
+          d3.select(this).remove();
+        }
+
+        prevDate = dDate;
+        prevHour = dHour;
+        prevMinute = dMinute;
+        break;
+    }
+  });
+
+}
+
 function dropOversetTicks(axisNode, tickWidth) {
 
   var axisGroupWidth = axisNode.node().getBBox().width,
@@ -680,7 +731,7 @@ function tickFinderY(scale, tickCount, tickSettings) {
 }
 
 
-function ordinalTimeTicks(selection, ctx, scale, axis, tolerance) {
+function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
 
   var ticks = scale.domain();
 
@@ -744,6 +795,8 @@ function ordinalTimeTicks(selection, ctx, scale, axis, tolerance) {
     }
 
   }
+
+  dropRedundantTicks(axisNode, ctx);
 
 }
 
@@ -860,6 +913,7 @@ module.exports = {
   newTextNode: newTextNode,
   dropTicks: dropTicks,
   dropOversetTicks: dropOversetTicks,
+  dropRedundantTicks: dropRedundantTicks,
   tickFinderX: tickFinderX,
   tickFinderY: tickFinderY,
   axisCleanup: axisCleanup,

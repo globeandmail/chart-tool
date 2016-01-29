@@ -185,8 +185,10 @@ Template.chartEditAside.events({
     var format = event.target.value;
       dateFormat = this.date_format,
       hasHours = this.hasHours,
-      str = " " + app_settings.standard_time,
+      str = " " + app_settings.chart.time_format,
       re = /\s\%H\:\%M/g;
+
+      debugger;
 
     if (re.test(dateFormat)) { format += str; }
     updateAndSave("updateDateFormat", this, format );
@@ -194,7 +196,7 @@ Template.chartEditAside.events({
   "change .input-checkbox-hours": function(event) {
     var dateFormat = this.date_format,
       val = !this.hasHours,
-      str = " " + app_settings.standard_time,
+      str = " " + app_settings.chart.time_format,
       re = /\s\%H\:\%M/g;
 
     updateAndSave("updateHasHours", this, val);
