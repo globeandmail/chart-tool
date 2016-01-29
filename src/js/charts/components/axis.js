@@ -771,22 +771,19 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
       "x2": obj.dimensions.computedWidth()
     });
 
-  if (obj.xAxis.scale === "ordinal") {
+  var setRangeArgs = require("./scale").setRangeArgs;
 
-    xAxisObj.axis.scale().rangeRoundBands([0, obj.dimensions.tickWidth()], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding);
-    xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
+  var scaleObj = {
+    rangeType: obj.xAxis.scale,
+    range: [0, obj.dimensions.tickWidth()],
+    bands: obj.dimensions.bands,
+    rangePoints: 1.0
+  };
 
-  } else if (obj.xAxis.scale === "ordinal-time") {
+  setRangeArgs(xAxisObj.axis.scale, scaleObj);
+  xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
 
-    xAxisObj.axis.scale().rangePoints([0, obj.dimensions.tickWidth()], 1.0);
-    xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
-
-    dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
-
-  } else {
-    xAxisObj.axis.scale().range([0, obj.dimensions.tickWidth()]);
-    xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
-
+  if (scaleObj.rangeType !== "ordinal") {
     dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
   }
 
@@ -855,6 +852,7 @@ module.exports = {
   appendYAxis: appendYAxis,
   timeAxis: timeAxis,
   discreteAxis: discreteAxis,
+  ordinalTimeAxis: ordinalTimeAxis,
   formatText: formatText,
   setTickFormatY: setTickFormatY,
   updateTextX: updateTextX,

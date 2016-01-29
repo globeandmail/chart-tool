@@ -20,7 +20,15 @@ function ColumnChart(node, obj) {
 
   axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
 
-  var singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
+  var timeScale = (obj.xAxis.scale === "time") ? true : false;
+
+  if (timeScale) {
+    var timeInterval = require("../../utils/utils").timeInterval,
+        timeElapsed = timeInterval(obj.data.data);
+    var singleColumn = obj.dimensions.tickWidth() / timeElapsed;
+  } else {
+    var singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
+  }
 
   var seriesGroup = node.append("g")
     .attr("class", function() {
@@ -65,7 +73,9 @@ function ColumnChart(node, obj) {
         "height": function(d) {
           return Math.abs(yScale(d.series[i].val) - yScale(0));
         },
-        "width": function() { return singleColumn; }
+        "width": function() {
+          return singleColumn;
+        }
       });
 
     if (obj.data.seriesAmount > 1) {

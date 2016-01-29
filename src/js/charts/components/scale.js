@@ -7,18 +7,7 @@ function scaleManager(obj, axisType) {
 
   scale.domain(scaleObj.domain);
 
-  switch (scaleObj.rangeType) {
-    case "range":
-      scale[scaleObj.rangeType](scaleObj.range);
-      break;
-    case "rangeRoundBands":
-      var bands = obj.dimensions.bands;
-      scale[scaleObj.rangeType](scaleObj.range, bands.padding, bands.outerPadding);
-      break;
-    case "rangePoints":
-      scale[scaleObj.rangeType](scaleObj.range, 1.0);
-      break;
-  }
+  setRangeArgs(scale, scaleObj);
 
   if (axis.nice) { niceify(scale, axisType, scaleObj); }
   if (axis.rescale) { rescale(scale, axisType, axis); }
@@ -35,6 +24,8 @@ function ScaleObj(obj, axis, axisType) {
   this.domain = setDomain(obj, axis);
   this.rangeType = setRangeType(axis);
   this.range = setRange(obj, axisType);
+  this.bands = obj.dimensions.bands;
+  this.rangePoints = 1.0;
 }
 
 function setScaleType(type) {
@@ -118,6 +109,22 @@ function setRange(obj, axisType) {
   }
 
   return range;
+
+}
+
+function setRangeArgs(scale, scaleObj) {
+
+  switch (scaleObj.rangeType) {
+    case "range":
+      return scale[scaleObj.rangeType](scaleObj.range);
+      break;
+    case "rangeRoundBands":
+      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.bands.padding, scaleObj.bands.outerPadding);
+      break;
+    case "rangePoints":
+      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.rangePoints);
+      break;
+  }
 
 }
 
@@ -257,6 +264,7 @@ module.exports = {
   ScaleObj: ScaleObj,
   setScaleType: setScaleType,
   setRangeType: setRangeType,
+  setRangeArgs: setRangeArgs,
   setRange: setRange,
   setDomain: setDomain,
   setDateDomain: setDateDomain,
