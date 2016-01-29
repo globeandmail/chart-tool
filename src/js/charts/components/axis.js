@@ -548,7 +548,7 @@ function dropTicks(selection, opts) {
 
 }
 
-function dropLastTick(axisNode, tickWidth) {
+function dropOversetTicks(axisNode, tickWidth) {
 
   var axisGroupWidth = axisNode.node().getBBox().width,
       tickArr = axisNode.selectAll(".tick")[0];
@@ -771,24 +771,26 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
       "x2": obj.dimensions.computedWidth()
     });
 
-  var setRangeArgs = require("./scale").setRangeArgs;
+  var setRangeType = require("./scale").setRangeType,
+      setRangeArgs = require("./scale").setRangeArgs;
 
   var scaleObj = {
-    rangeType: obj.xAxis.scale,
+    rangeType: setRangeType(obj.xAxis),
     range: [0, obj.dimensions.tickWidth()],
     bands: obj.dimensions.bands,
-    rangePoints: 1.0
+    rangePoints: obj.xAxis.rangePoints
   };
 
-  setRangeArgs(xAxisObj.axis.scale, scaleObj);
-  xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
+  setRangeArgs(xAxisObj.axis.scale(), scaleObj);
 
-  if (scaleObj.rangeType !== "ordinal") {
-    dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
-  }
+  xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
 
   xAxisObj.node
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
+
+  if (scaleObj.rangeType !== "ordinal") {
+    dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
+  }
 
 }
 
@@ -804,10 +806,7 @@ function addZeroLine(obj, node, Axis, axisType) {
     // zero line
     var zeroLine = node.append("line")
       .style("shape-rendering", "crispEdges")
-      .attr({
-        "class": obj.prefix + "zero-line"
-        // "transform": refGroup.attr("transform")
-      });
+      .attr("class", obj.prefix + "zero-line");
 
     var transform = [0, 0];
 
@@ -860,7 +859,7 @@ module.exports = {
   repositionTextY: repositionTextY,
   newTextNode: newTextNode,
   dropTicks: dropTicks,
-  dropLastTick: dropLastTick,
+  dropOversetTicks: dropOversetTicks,
   tickFinderX: tickFinderX,
   tickFinderY: tickFinderY,
   axisCleanup: axisCleanup,

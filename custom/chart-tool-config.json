@@ -69,6 +69,7 @@
     "rescale": false,
     "nice": false,
 
+    "rangePoints": 1.0,
     "tickTarget": 6,
     "ticksSmall": 4,
     "widthThreshold": 420,

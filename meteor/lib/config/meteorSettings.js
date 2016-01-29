@@ -291,6 +291,7 @@
 			"max": "",
 			"rescale": false,
 			"nice": false,
+			"rangePoints": 1,
 			"tickTarget": 6,
 			"ticksSmall": 4,
 			"widthThreshold": 420,

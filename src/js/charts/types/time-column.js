@@ -1,10 +1,10 @@
 function TimeColumnChart(node, obj) {
 
   var axisModule = require("../components/axis"),
-    scaleModule = require("../components/scale"),
-    Axis = axisModule.axisManager,
-    Scale = scaleModule.scaleManager,
-    Tips = require("../components/tips");
+      scaleModule = require("../components/scale"),
+      Axis = axisModule.axisManager,
+      Scale = scaleModule.scaleManager,
+      Tips = require("../components/tips");
 
   //  scales
   var xScaleObj = new Scale(obj, "xAxis"),
@@ -67,7 +67,7 @@ function TimeColumnChart(node, obj) {
           }
         },
         "width": function() {
-          return (singleColumn / obj.data.seriesAmount) - ((singleColumn / obj.data.seriesAmount) * obj.dimensions.bands.padding);
+          return (singleColumn / obj.data.seriesAmount);
         }
       });
 

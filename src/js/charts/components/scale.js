@@ -25,7 +25,7 @@ function ScaleObj(obj, axis, axisType) {
   this.rangeType = setRangeType(axis);
   this.range = setRange(obj, axisType);
   this.bands = obj.dimensions.bands;
-  this.rangePoints = 1.0;
+  this.rangePoints = axis.rangePoints || 1.0;
 }
 
 function setScaleType(type) {
