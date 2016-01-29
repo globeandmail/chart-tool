@@ -261,8 +261,14 @@ function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
     .style("text-anchor", "start")
     .call(formatText, ctx, axisSettings.ems, obj.monthsAbr);
 
+  if (obj.dimensions.computedWidth() > obj.xAxis.widthThreshold) {
+    var ordinalTickPadding = 3;
+  } else {
+    var ordinalTickPadding = 4;
+  }
+
   axisNode.selectAll(".tick")
-    .call(dropTicks);
+    .call(ordinalTimeTicks, ctx, scale, axis, ordinalTickPadding);
 
   axisNode.selectAll("line")
     .attr("y2", axisSettings.upper.tickHeight);
@@ -338,25 +344,21 @@ function formatText(selection, ctx, ems, monthsAbr) {
             dMinuteStr;
 
         // Convert from 24h time
-        var suffix = (dHour >= 12)? 'p.m.' : 'a.m.';
-        if (dHour === 0){
+        var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
+        if (dHour === 0) {
           dHourStr = 12;
-        }
-        else if(dHour > 12){
+        } else if (dHour > 12) {
           dHourStr = dHour - 12;
-        }
-        else{
+        } else {
           dHourStr = dHour;
         }
 
         // Make minutes follow Globe style
-        if(dMinute === 0){
+        if (dMinute === 0) {
           dMinuteStr = '';
-        }
-        else if(dMinute < 10){
+        } else if (dMinute < 10) {
           dMinuteStr = ':0' + dMinute;
-        }
-        else{
+        } else {
           dMinuteStr = ':' + dMinute;
         }
 
@@ -374,8 +376,6 @@ function formatText(selection, ctx, ems, monthsAbr) {
         dStr = d;
         break;
     }
-
-    console.log(dStr);
 
     return dStr;
 
@@ -517,17 +517,30 @@ function newTextNode(selection, text, ems) {
 
 // tick dropping functions
 
-function dropTicks(ticks) {
+function dropTicks(selection, opts) {
 
-  for (var j = 0; j < ticks[0].length; j++) {
-    var c = ticks[0][j],
-        n = ticks[0][j+1];
+  var opts = opts || {};
+
+  var tolerance = opts.tolerance || 0,
+      from = opts.from || 0,
+      to = opts.to || selection[0].length;
+
+  for (var j = from; j < to; j++) {
+    var c = selection[0][j],
+        n = selection[0][j+1];
+
     if (!c || !n || !c.getBoundingClientRect || !n.getBoundingClientRect)
       continue;
-    while (c.getBoundingClientRect().right > n.getBoundingClientRect().left) {
-      d3.select(n).remove();
+
+    while ((c.getBoundingClientRect().right + tolerance) > n.getBoundingClientRect().left) {
+
+      if ((d3.select(n).data()[0] === selection.data()[to] )) {
+        d3.select(c).remove();
+      } else {
+        d3.select(n).remove();
+      }
       j++;
-      n = ticks[0][j+1];
+      n = selection[0][j+1];
       if (!n)
         break;
     }
@@ -666,11 +679,78 @@ function tickFinderY(scale, tickCount, tickSettings) {
   }
 }
 
+
+function ordinalTimeTicks(selection, ctx, scale, axis, tolerance) {
+
+  var ticks = scale.domain();
+
+  var majorTicks = [];
+
+  var prevYear, prevMonth, prevDate, dYear, dMonth, dDate;
+
+  selection.each(function(d) {
+    switch (ctx) {
+      case "years":
+        break;
+      case "months":
+        dYear = d.getFullYear();
+        if (dYear !== prevYear) { majorTicks.push(d); }
+        prevYear = d.getFullYear();
+        break;
+      case "weeks":
+      case "days":
+        dYear = d.getFullYear();
+        dMonth = d.getMonth();
+        if ((dMonth !== prevMonth) && (dYear !== prevYear)) {
+          majorTicks.push(d);
+        } else if (dMonth !== prevMonth) {
+          majorTicks.push(d);
+        } else if (dYear !== prevYear) {
+          majorTicks.push(d);
+        }
+        prevMonth = d.getMonth();
+        prevYear = d.getFullYear();
+        break;
+      case "hours":
+        dDate = d.getDate();
+        if (dDate !== prevDate) { majorTicks.push(d); }
+        prevDate = dDate;
+        break;
+    }
+  });
+
+  for (var i = 0; i < majorTicks.length + 1; i++) {
+
+    if (i === 0) { // from t0 to m0
+      var t0 = 0,
+          tn = ticks.indexOf(majorTicks[0]);
+    } else if (i === (majorTicks.length)) { // from mn to tn
+      var t0 = ticks.indexOf(majorTicks[i - 1]),
+          tn = ticks.length - 1;
+    } else { // from m0 to mn
+      var t0 = ticks.indexOf(majorTicks[i - 1]),
+          tn = ticks.indexOf(majorTicks[i]);
+    }
+
+    if (!!(tn - t0)) {
+
+      dropTicks(selection, {
+        ticks: ticks,
+        from: t0,
+        to: tn,
+        tolerance: tolerance
+      });
+
+    }
+
+  }
+
+}
+
 function axisCleanup(xAxisObj, yAxisObj, obj, node) {
 
   // this section is kinda gross, sorry:
-  // resets ranges and dimensions, redraws yAxis, adds
-  // the zero line and repositions the xAxis. phew.
+  // resets ranges and dimensions, redraws yAxis, redraws xAxis
 
   yAxisObj.axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
 
@@ -701,8 +781,6 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
     xAxisObj.axis.scale().rangePoints([0, obj.dimensions.tickWidth()], 1.0);
     xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
 
-    // once the axis is fully drawn, check that we don"t have any ticks
-    // extending beyond the width of the SVG. if so, drop it
     dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
 
   } else {
