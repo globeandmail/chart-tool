@@ -557,6 +557,11 @@ function dropRedundantTicks(selection, ctx) {
   ticks.each(function(d) {
     switch (ctx) {
       case "years":
+        dYear = d.getFullYear();
+        if (dYear === prevYear) {
+          d3.select(this).remove();
+        }
+        prevYear = dYear;
         break;
       case "months":
         dYear = d.getFullYear();
@@ -742,7 +747,6 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
   selection.each(function(d) {
     switch (ctx) {
       case "years":
-        break;
       case "months":
         dYear = d.getFullYear();
         if (dYear !== prevYear) { majorTicks.push(d); }
@@ -800,7 +804,7 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
 
 }
 
-function axisCleanup(xAxisObj, yAxisObj, obj, node) {
+function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
   // this section is kinda gross, sorry:
   // resets ranges and dimensions, redraws yAxis, redraws xAxis
@@ -829,7 +833,7 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
 
   var scaleObj = {
     rangeType: setRangeType(obj.xAxis),
-    range: [0, obj.dimensions.tickWidth()],
+    range: xAxisObj.range || [0, obj.dimensions.tickWidth()],
     bands: obj.dimensions.bands,
     rangePoints: obj.xAxis.rangePoints
   };
@@ -841,7 +845,7 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
   xAxisObj.node
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
-  if (scaleObj.rangeType !== "ordinal") {
+  if (obj.xAxis.scale !== "ordinal") {
     dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
   }
 

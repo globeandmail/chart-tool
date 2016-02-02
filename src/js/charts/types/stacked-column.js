@@ -35,7 +35,7 @@ function StackedColumnChart(node, obj) {
       xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxis = yAxisObj.axis, xAxis = xAxisObj.axis;
 
-  axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
+  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 
   var seriesGroup = node.append("g")
     .attr("class", function() {

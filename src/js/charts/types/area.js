@@ -16,7 +16,7 @@ function AreaChart(node, obj) {
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
       xAxis = xAxisObj.axis, yAxis = yAxisObj.axis;
 
-  axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
+  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 
   if (xScaleObj.obj.type === "ordinal") {
     xScale.rangeRoundPoints([0, obj.dimensions.tickWidth()], 1.0);

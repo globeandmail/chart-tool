@@ -1,4 +1,4 @@
-function TimeColumnChart(node, obj) {
+function OrdinalTimeColumnChart(node, obj) {
 
   var axisModule = require("../components/axis"),
       scaleModule = require("../components/scale"),
@@ -16,7 +16,7 @@ function TimeColumnChart(node, obj) {
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
       xAxis = xAxisObj.axis, yAxis = yAxisObj.axis;
 
-  axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
+  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 
   var singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
 
@@ -98,7 +98,6 @@ function TimeColumnChart(node, obj) {
     columnItem: columnItem
   };
 
-
 }
 
-module.exports = TimeColumnChart;
+module.exports = OrdinalTimeColumnChart;

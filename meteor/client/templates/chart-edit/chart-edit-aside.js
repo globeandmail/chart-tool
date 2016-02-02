@@ -74,17 +74,8 @@ Template.chartEditAside.helpers({
       }
     }
   },
-  isOrdinal: function(val) {
-    if (this.options) {
-      var type = this.options["type"];
-      if (type === "area" || type === "line" || type === "stream") {
-        if (this.x_axis.scale === "ordinal") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
+  xScaleChecked: function(val) {
+    if (this.x_axis && this.x_axis.scale === val) { return "checked"; }
   },
   xNice: function() {
     if (this.x_axis) {
@@ -187,8 +178,6 @@ Template.chartEditAside.events({
       hasHours = this.hasHours,
       str = " " + app_settings.chart.time_format,
       re = /\s\%H\:\%M/g;
-
-      debugger;
 
     if (re.test(dateFormat)) { format += str; }
     updateAndSave("updateDateFormat", this, format );
@@ -320,6 +309,12 @@ Template.chartEditAside.events({
     }
 
   },
+
+  "change .input-radio-x-scale": function(event) {
+    var xScale = event.target.value;
+    updateAndSave("updateXScale", this, xScale);
+  },
+
   "change .input-checkbox-x-nice": function(event) {
     var val = !this.x_axis.nice;
     updateAndSave("updateXNice", this, val);
@@ -343,7 +338,7 @@ Template.chartEditAside.events({
     event.target.value = data;
   },
 
-  "change .input-radio": function(event) {
+  "change .input-radio-class": function(event) {
     var customClass = event.target.value;
     updateAndSave("updateClass", this, customClass);
   },

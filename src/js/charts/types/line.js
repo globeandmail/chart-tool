@@ -15,7 +15,7 @@ function LineChart(node, obj) {
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
 
-  axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
+  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 
   if (obj.data.seriesAmount === 1) { obj.seriesHighlight = function() { return 0; } }
 

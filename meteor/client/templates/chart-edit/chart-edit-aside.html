@@ -63,11 +63,27 @@
             <a href="#" class="help-toggle help-x-axis-custom">?</a>
           </div>
         {{ /if }}
-        <div class="unit-edit ordinal-edit">
-          <h4>Use ordinal scale <a href="#" class="help-toggle help-ordinal">?</a></h4>
-          <input class="input-checkbox-ordinal" type="checkbox" name="isOrdinal" checked="{{ isOrdinal 'true' }}">
-        </div>
       {{ /if }}
+
+      <div class="unit-edit x-axis-scale-edit">
+        <h4>Scale</h4>
+        <form action="" class="radio-buttons">
+          <ul>
+            <li>
+              <input id="scaleTime" type="radio" name="x-axis-scale" value="time" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'time' }}">
+              <label for="scaleTime">Time</label>
+            </li>
+            <li>
+              <input id="scaleOrdinal" type="radio" name="x-axis-scale" value="ordinal" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'ordinal' }}">
+              <label for="scaleOrdinal">Ordinal</label>
+            </li>
+            <li>
+              <input id="scaleOrdinalTime" type="radio" name="x-axis-scale" value="ordinal-time" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'ordinal-time' }}">
+              <label for="scaleOrdinalTime">Ordinal-time</label>
+            </li>
+          </ul>
+        </form>
+      </div>
 
       {{ #if isBarChart true }}
         <div class="unit-edit">
@@ -188,14 +204,14 @@
 
       <div class="unit-edit color-edit">
         <h4>Pick a colour palette</h4>
-        <form action="" class="color-radios">
+        <form action="" class="radio-buttons">
           <ul>
             <li>
-              <input id="colorPrimary" type="radio" name="color" value="primary" class="input-radio input-radio-primary" checked="{{ classChecked 'primary' }}">
+              <input id="colorPrimary" type="radio" name="color" value="primary" class="input-radio input-radio-class input-radio-primary" checked="{{ classChecked 'primary' }}">
               <label for="colorPrimary">{{ primaryOrAlternate "primary" }}</label>
             </li>
             <li>
-              <input id="colorAlternate" type="radio" name="color" value="alternate" class="input-radio input-radio-alternate" checked="{{ classChecked 'alternate' }}">
+              <input id="colorAlternate" type="radio" name="color" value="alternate" class="input-radio input-radio-class input-radio-alternate" checked="{{ classChecked 'alternate' }}">
               <label for="colorAlternate">{{ primaryOrAlternate "alternate" }}</label>
             </li>
           </ul>

@@ -139,7 +139,7 @@ select {
   display: none;
 }
 
-.color-radios {
+.radio-buttons {
   input {
     margin-right: 0.4em;
     outline: none;
@@ -169,6 +169,9 @@ select {
     height: 1em;
     margin-bottom: -2px;
     @include appearance(none);
+  }
+  .input-radio:checked {
+    background-color: $primary-color;
   }
   .input-radio-primary:checked {
     background-color: $primary-color;
