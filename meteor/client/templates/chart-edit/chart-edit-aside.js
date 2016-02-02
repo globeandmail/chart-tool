@@ -1,8 +1,24 @@
 Template.chartEditAside.helpers({
   isTimeSeries: function() {
     if (this.options) {
+      var scale = this.x_axis.scale;
+      if (scale === "time" || scale === "ordinal-time") {
+        return true;
+      }
+    }
+  },
+  isLineChartType: function() {
+    if (this.options) {
       var type = this.options["type"];
       if (type === "area" || type === "line" || type === "stream") {
+        return true;
+      }
+    }
+  },
+  isBarChartType: function() {
+    if (this.options) {
+      var type = this.options["type"];
+      if (type === "column" || type === "bar") {
         return true;
       }
     }

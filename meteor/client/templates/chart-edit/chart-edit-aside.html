@@ -56,34 +56,29 @@
     <h3>X-axis</h3>
     <div class="unit-edit edit-box_toggle" data-state="hidden">
 
-      {{ #if isTimeSeries }}
-        {{ #if xAxFormatCustom }}
-          <div class="x-axis-format-custom">
-            <input type="text" name="custom-date" class="input-custom-x input-field" value="{{ xAxCustom }}" placeholder="Custom format">
-            <a href="#" class="help-toggle help-x-axis-custom">?</a>
-          </div>
-        {{ /if }}
-      {{ /if }}
+      {{ #if isBarChart false }}
 
-      <div class="unit-edit x-axis-scale-edit">
-        <h4>Scale</h4>
-        <form action="" class="radio-buttons">
-          <ul>
-            <li>
-              <input id="scaleTime" type="radio" name="x-axis-scale" value="time" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'time' }}">
-              <label for="scaleTime">Time</label>
-            </li>
-            <li>
-              <input id="scaleOrdinal" type="radio" name="x-axis-scale" value="ordinal" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'ordinal' }}">
-              <label for="scaleOrdinal">Ordinal</label>
-            </li>
-            <li>
-              <input id="scaleOrdinalTime" type="radio" name="x-axis-scale" value="ordinal-time" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'ordinal-time' }}">
-              <label for="scaleOrdinalTime">Ordinal-time</label>
-            </li>
-          </ul>
-        </form>
-      </div>
+        <div class="unit-edit x-axis-scale-edit">
+          <h4>Scale</h4>
+          <form action="" class="radio-buttons">
+            <ul>
+              <li>
+                <input id="scaleTime" type="radio" name="x-axis-scale" value="time" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'time' }}">
+                <label for="scaleTime">Time</label>
+              </li>
+              <li>
+                <input id="scaleOrdinal" type="radio" name="x-axis-scale" value="ordinal" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'ordinal' }}">
+                <label for="scaleOrdinal">Ordinal</label>
+              </li>
+              <li>
+                <input id="scaleOrdinalTime" type="radio" name="x-axis-scale" value="ordinal-time" class="input-radio input-radio-x-scale" checked="{{ xScaleChecked 'ordinal-time' }}">
+                <label for="scaleOrdinalTime">Ordinal-time</label>
+              </li>
+            </ul>
+          </form>
+        </div>
+
+      {{ /if }}
 
       {{ #if isBarChart true }}
         <div class="unit-edit">
@@ -225,7 +220,7 @@
         </div>
       {{ /if }}
 
-      {{ #if isTimeSeries }}
+      {{ #if isLineChartType }}
         <div class="unit-edit interpolation-edit">
           <h4>Interpolation <a href="#" class="help-toggle help-interpolation">?</a></h4>
           <div class="select-wrapper">

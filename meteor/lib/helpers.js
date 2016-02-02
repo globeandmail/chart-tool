@@ -259,14 +259,14 @@ standardizeDates = function(data, oldFormat, newFormat) {
 
   var jsonData = Papa.parse(data, { delimiter: "," });
 
-  // debugger;
-
   for (var i = 1; i < jsonData.data.length; i++ ) {
     var date = currFormat.parse(jsonData.data[i][0]);
     if (date !== null) {
       jsonData.data[i][0] = stdFormat(date);
     } else {
+      // showChartError();
       throw new Meteor.Error("Incompatible date formatting", "Make sure your data date formatting matches the formatting dropdown.");
+      // break;
     }
   }
 

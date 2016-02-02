@@ -315,7 +315,7 @@
 		},
 		"image": {
 			"enable": true,
-			"base_path": "images/",
+			"base_path": "",
 			"expiration": 30000,
 			"bucket": "chart-tool-dev",
 			"region": "us-west-2",
