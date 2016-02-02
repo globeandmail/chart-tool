@@ -1208,16 +1208,29 @@ function ColumnChartTips(tipNodes, obj) {
 
       }
 
-
   })
 
-
 }
+
 
 function StackedColumnChartTips(tipNodes, obj) {
 
+  console.log("\n####");
+  console.log("tipNodes: %o", tipNodes);
+  console.log("obj: %o", obj);
+
+  var columns = obj.rendered.plot.rect,
+      // columnRects = columns.selectAll('rect'),
+      isUndefined = 0,
+      dataRef = obj.data.data[0].series;
+
+
+
 
 }
+
+
+
 
 function BarChartTips(tipNodes, obj) {
 
