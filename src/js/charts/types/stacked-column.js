@@ -7,16 +7,18 @@ function StackedColumnChart(node, obj) {
       Tips = require("../components/tips");
 
   //  scales
-  var xScaleObj = new Scale(obj, "xAxis"),
-      yScaleObj = new Scale(obj, "yAxis"),
-      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
+  var yScaleObj = new Scale(obj, "yAxis"),
+      xScaleObj = new Scale(obj, "xAxis"),
+      yScale = yScaleObj.scale,
+      xScale = xScaleObj.scale;
 
   if (obj.yAxis.nice) { yScale.nice(); }
 
   //  axes
   var yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
       xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxis = yAxisObj.axis, xAxis = xAxisObj.axis;
+      yAxis = yAxisObj.axis,
+      xAxis = xAxisObj.axis;
 
   axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
 
@@ -29,26 +31,25 @@ function StackedColumnChart(node, obj) {
       }
       return output;
     })
-    .attr("transform", function() {
-      return "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)";
-    })
+    .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
 
   // Add a group for each cause.
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
     .data(obj.data.stackedData)
-    .enter().append("svg:g")
-    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
+    .enter().append("g")
+    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + i; });
 
 
-  // xScale.rangeRoundBands(xScale, obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding())
 
   // Add a rect for each data point.
-  var rect = series.selectAll("rect")
-    .data(Object)
-    .enter().append("svg:rect")
+  var columnItem = series.selectAll("rect")
+    .data(function(d) { return d; })
+    .enter()
+    .append("rect")
     .attr({
       "class": obj.prefix + "column",
       "data-key": function(d) { return d.x; },
+      "data-legend": function(d) { return d.legend; },
       "x": function(d) { return xScale(d.x); },
       "y": function(d) { return yScale(Math.max(0, d.y0 + d.y)); },
       "height": function(d) { return Math.abs(yScale(d.y) - yScale(0)); },
@@ -64,7 +65,7 @@ function StackedColumnChart(node, obj) {
     yAxisObj: yAxisObj,
     seriesGroup: seriesGroup,
     series: series,
-    rect: rect
+    columnItem: columnItem
   };
 
 };
