@@ -56,6 +56,9 @@
   font-size: 12px;
   line-height: 16px; }
 
+.ct-chart_qualifier-bar {
+  margin-top: 2px; }
+
 .ct-fo.ct-qualifier, .ct-fo.ct-qualifier > div {
   display: inline-block;
   margin-right: 10px;

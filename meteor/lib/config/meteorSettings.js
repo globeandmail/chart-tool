@@ -317,8 +317,8 @@
 			"enable": true,
 			"base_path": "",
 			"expiration": 30000,
-			"bucket": "chart-tool-dev",
-			"region": "us-west-2",
+			"bucket": "chartstg",
+			"region": "us-east-1",
 			"filename": "thumbnail",
 			"extension": "png"
 		}

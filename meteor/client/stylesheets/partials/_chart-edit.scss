@@ -332,7 +332,7 @@ select {
 
 // Title, qualifier and source contentEditable fields
 
-.#{$prefix}chart_title, .#{$prefix}chart_qualifier, .#{$prefix}chart_source {
+.#{$prefix}chart_title-text, .#{$prefix}chart_qualifier, .#{$prefix}chart_source {
   &:hover {
     cursor: text;
   }
@@ -342,7 +342,7 @@ select {
   }
 }
 
-.#{$prefix}chart_title {
+.#{$prefix}chart_title-text {
   &:empty:before {
     content: "Please include a chart title";
     color: $verylightgray;

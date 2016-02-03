@@ -12,9 +12,27 @@ function headerComponent(container, obj) {
     .text(obj.heading);
 
   if (obj.editable) {
-    headerGroup.select("." + obj.prefix + "chart_title")
+    headerGroup.select("." + obj.prefix + "chart_title-text")
       .attr("contentEditable", true)
       .classed("editable-chart_title", true);
+  }
+
+  if (obj.options.type === "bar") {
+    headerGroup
+      .append("div")
+      .attr({
+        "class": function() {
+          var str = obj.prefix + "chart_qualifier " + obj.prefix + "chart_qualifier-bar";
+          if (obj.editable) {
+            str += " editable-chart_qualifier";
+          }
+          return str;
+        },
+        "contentEditable": function() {
+          return obj.editable ? true : false;
+        }
+      })
+      .text(obj.qualifier);
   }
 
   if (obj.data.keys.length > 2) {
