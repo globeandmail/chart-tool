@@ -92,9 +92,7 @@ module.exports = {
     bands: {
       padding: settings.bands.padding,
       offset: settings.bands.offset,
-      outerPadding: function() {
-        return (this.padding / 2);
-      }
+      outerPadding: settings.bands.outerPadding
     }
   }
 

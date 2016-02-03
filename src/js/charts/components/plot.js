@@ -5,7 +5,8 @@ function plot(node, obj) {
     multiline: require("../types/multiline"),
     area: require("../types/area"),
     stackedArea: require("../types/stacked-area"),
-    column: require("../types/column"),
+    column: require("../types/column").ColumnChart,
+    ordinalTimeColumn: require("../types/column").OrdinalTimeColumnChart,
     bar: require("../types/bar"),
     stackedColumn: require("../types/stacked-column"),
     streamgraph: require("../types/streamgraph")
@@ -32,7 +33,11 @@ function plot(node, obj) {
       break;
 
     case "column":
-      chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);
+      if (obj.xAxis.scale === "ordinal-time") {
+        chartRef = draw.ordinalTimeColumn(node, obj);
+      } else {
+        chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);
+      }
       break;
 
     case "stream":

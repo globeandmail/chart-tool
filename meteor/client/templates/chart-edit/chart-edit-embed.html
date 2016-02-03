@@ -10,9 +10,9 @@
       root.__charttool.push({id: '{{ prefix }}{{ _id }}', data: data});
     })(this);
   </script>
-  {{{ angleBracket }}}!--[if IE]>
-    <img src="{{ img }}">
-  {{{ angleBracket }}}![endif]-->
+  {{ #if useBase64Images }}
+    <img src="{{ img }}" class="{{ prefix }}base64img {{ prefix }}thumbnail">
+  {{ /if }}
 </div>
 
 </template>

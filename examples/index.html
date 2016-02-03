@@ -13,7 +13,7 @@
     }
   </style>
 
-  <link rel="stylesheet" type="text/css" href="src/styles/build/main.css">
+  <link rel="stylesheet" type="text/css" href="../src/styles/build/main.css">
 </head>
 
 <body>
@@ -192,64 +192,12 @@
     <!-- edited: Fri May 15 2015 18:29:33 GMT-0400 (EDT) -->
     <!-- slug: rb-gi-sub-chartofweek-0515 -->
     <!-- md5: 1a11c832946293c9b7ee05313d57afbd -->
-    <div class="ct-chart" data-chartid="ct-kfbRDcFsdsdmrvszyrRtMa">
+    <div class="ct-chart" data-chartid="ct-kfbRDcFsdsdmrvszyrRtM">
       <script>
         (function(root) {
           var data = {
             "version": "1.0.2",
-            "heading": "Time-series column chart",
-            "qualifier": "Daily",
-            "source": "THE GLOBE AND MAIL » SOURCE: bloomberg",
-            "chart": {
-              "class": "primary",
-              "data": "Month,Number\n2014-07-01,21300\n2014-08-01,19900\n2014-09-01,44200\n2014-10-01,62200\n2014-11-01,16300\n2014-12-01,11300\n2015-01-01,35400\n2015-02-01,1000\n2015-03-01,28700\n2015-04-01,19700\n2015-05-01,58900\n2015-06-01,6400",
-              "x_axis": {
-                "scale": "time",
-                "ticks": "auto",
-                "orient": "bottom",
-                "format": "auto"
-              },
-              "y_axis": {
-                "scale": "linear",
-                "ticks": "auto",
-                "orient": "right",
-                "format": "comma"
-              },
-              "options": {
-                "type": "column",
-                "interpolation": false,
-                "stacked": false,
-                "expanded": false,
-                "head": true,
-                "deck": false,
-                "legend": true,
-                "footer": true,
-                "x_axis": true,
-                "y_axis": true,
-                "tips": false,
-                "annotations": false,
-                "range": false,
-                "series": false,
-                "indexed": false
-              }
-            }
-          };
-          root.__charttool = root.__charttool || [];
-          root.__charttool.push({id: 'ct-kfbRDcFsdsdmrvszyrRtMa', data: data});
-        })(this);
-      </script>
-    </div>
-
-    <!-- GLOBE CHART v1.0.2-16 -->
-    <!-- edited: Fri May 15 2015 18:29:33 GMT-0400 (EDT) -->
-    <!-- slug: rb-gi-sub-chartofweek-0515 -->
-    <!-- md5: 1a11c832946293c9b7ee05313d57afbd -->
-    <!-- <div class="ct-chart" data-chartid="ct-kfbRDcFsdsdmrvszyrRtM">
-      <script>
-        (function(root) {
-          var data = {
-            "version": "1.0.2",
-            "heading": "Non-continuous time-series column chart",
+            "heading": "Time-series bar charts FTW",
             "qualifier": "Daily",
             "source": "THE GLOBE AND MAIL » SOURCE: bloomberg",
             "chart": {
@@ -283,16 +231,15 @@
                 "annotations": false,
                 "range": false,
                 "series": false,
-                "indexed": false,
-
+                "indexed": false
               }
             }
           };
           root.__charttool = root.__charttool || [];
-          root.__charttool.push({id: 'ct-kfbRDcFsdsdmrvszyrRtM', data: data});
+          root.__charttool.push({id: 'ct-kfbRDcFsdsdmrvszyrRtMa', data: data});
         })(this);
       </script>
-    </div> -->
+    </div>
 
     <!-- GLOBE CHART v1.0.2-16 -->
     <!-- edited: Fri May 15 2015 18:29:33 GMT-0400 (EDT) -->
@@ -320,6 +267,60 @@
                 "ticks": "auto",
                 "orient": "right",
                 "format": "round1",
+              },
+              "options": {
+                "type": "column",
+                "interpolation": "linear",
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": true,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": "100"
+              }
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-WpZyQexXv8YZ6HBkTsaDs', data: data});
+        })(this);
+      </script>
+    </div>
+
+    <!-- GLOBE CHART v1.0.2-16 -->
+    <!-- edited: Fri May 15 2015 18:29:33 GMT-0400 (EDT) -->
+    <!-- slug: rb-gi-sub-chartofweek-0515 -->
+    <!-- md5: 1a11c832946293c9b7ee05313d57afbd -->
+    <div class="ct-chart" data-chartid="ct-WpZyQexXv8YZ6HBkTsaDs">
+      <script>
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "heading": "Apple revenue by product segment",
+            "qualifier": "In billions of U.S. dollars",
+            "source": "THE GLOBE AND MAIL » SOURCE: apple",
+            "chart": {
+              "class": "primary",
+              "data": "Date,Principal outstanding\n2010-08-31,688.58\n2010-11-30,656.14\n2011-02-28,614.30\n2011-05-31,603.65\n2011-08-31,602.36\n2011-11-30,536.83\n2012-02-28,510.73\n2012-05-31,525.37\n2012-08-31,514.79\n2012-11-30,493.73\n2013-02-28,503.88\n2013-05-31,496.48\n2013-08-31,500.83\n2013-11-30,497.00\n2014-02-28,509.20\n2014-05-31,496.71\n2014-08-31,497.55\n2014-11-30,506.53\n2015-02-28,535.08\n2015-05-31,662.88\n2015-08-31,682.22\n2015-11-30,671.23",
+              "x_axis": {
+                "scale": "time",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto"
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "min": 0,
+                "max": 120
               },
               "options": {
                 "type": "column",
@@ -478,9 +479,6 @@
                 "orient": "right",
                 "format": "round1",
                 "prefix": "€"
-                // "min": "-15000",
-                // "rescale": false,
-                // "nice": false
               },
               "options": {
                 "type": "column",
@@ -616,9 +614,6 @@
         })(this);
       </script>
     </div>
-
-
-
 
 
     <!-- GLOBE CHART v1.0.2-16 -->
@@ -997,9 +992,9 @@
     <script type="text/javascript">
 
       (function(root) {
-        root.ChartDispatcher = root.ChartDispatcher || {};
+        root.__charttooldispatcher = root.__charttooldispatcher || {};
 
-        var dispatcher = root.ChartDispatcher;
+        var dispatcher = root.__charttooldispatcher;
 
         dispatcher.start = function(d) {
 
@@ -1013,8 +1008,8 @@
 
     </script>
 
-    <script src="lib/d3/d3.js"></script>
-    <script src="dist/bundle.js" async></script>
+    <script src="../lib/d3/d3.js"></script>
+    <script src="../dist/bundle.js" async></script>
 
   </div>
 

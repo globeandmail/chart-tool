@@ -7,12 +7,7 @@ function scaleManager(obj, axisType) {
 
   scale.domain(scaleObj.domain);
 
-  if (scaleObj.rangeType === "range") {
-    scale[scaleObj.rangeType](scaleObj.range);
-  } else if (scaleObj.rangeType === "rangeRoundBands") {
-    var bands = obj.dimensions.bands;
-    scale[scaleObj.rangeType](scaleObj.range, bands.padding, bands.outerPadding());
-  }
+  setRangeArgs(scale, scaleObj);
 
   if (axis.nice) { niceify(scale, axisType, scaleObj); }
   if (axis.rescale) { rescale(scale, axisType, axis); }
@@ -29,32 +24,51 @@ function ScaleObj(obj, axis, axisType) {
   this.domain = setDomain(obj, axis);
   this.rangeType = setRangeType(axis);
   this.range = setRange(obj, axisType);
+  this.bands = obj.dimensions.bands;
+  this.rangePoints = axis.rangePoints || 1.0;
 }
 
 function setScaleType(type) {
 
   var scaleType;
 
-  if (type === "time") {
-    scaleType = d3.time.scale();
-  } else if (type === "ordinal") {
-    scaleType = d3.scale.ordinal();
-  } else {
-    // quantitative scale
-    switch(type) {
-      case "linear":
-        scaleType = d3.scale.linear();
-        break;
-      case "identity": scaleType = d3.scale.identity(); break;
-      case "pow": scaleType = d3.scale.pow(); break;
-      case "sqrt": scaleType = d3.scale.sqrt(); break;
-      case "log": scaleType = d3.scale.log(); break;
-      case "quantize": scaleType = d3.scale.quantize(); break;
-      case "quantile": scaleType = d3.scale.quantile(); break;
-      case "threshold": scaleType = d3.scale.threshold(); break;
-      default: scaleType = d3.scale.linear(); break;
-    }
+  switch (type) {
+    case "time":
+      scaleType = d3.time.scale();
+      break;
+    case "ordinal":
+    case "ordinal-time":
+      scaleType = d3.scale.ordinal();
+      break;
+    case "linear":
+      scaleType = d3.scale.linear();
+      break;
+    case "identity":
+      scaleType = d3.scale.identity();
+      break;
+    case "pow":
+      scaleType = d3.scale.pow();
+      break;
+    case "sqrt":
+      scaleType = d3.scale.sqrt();
+      break;
+    case "log":
+      scaleType = d3.scale.log();
+      break;
+    case "quantize":
+      scaleType = d3.scale.quantize();
+      break;
+    case "quantile":
+      scaleType = d3.scale.quantile();
+      break;
+    case "threshold":
+      scaleType = d3.scale.threshold();
+      break;
+    default:
+      scaleType = d3.scale.linear();
+      break;
   }
+
   return scaleType;
 
 }
@@ -65,15 +79,15 @@ function setRangeType(axis) {
 
   switch(axis.scale) {
     case "time":
-    case "date":
     case "linear":
-    case "numerical":
-    case "ordinal-time":
       type = "range";
       break;
     case "ordinal":
     case "discrete":
       type = "rangeRoundBands";
+      break;
+    case "ordinal-time":
+      type = "rangePoints";
       break;
     default:
       type = "range";
@@ -98,6 +112,22 @@ function setRange(obj, axisType) {
 
 }
 
+function setRangeArgs(scale, scaleObj) {
+
+  switch (scaleObj.rangeType) {
+    case "range":
+      return scale[scaleObj.rangeType](scaleObj.range);
+      break;
+    case "rangeRoundBands":
+      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.bands.padding, scaleObj.bands.outerPadding);
+      break;
+    case "rangePoints":
+      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.rangePoints);
+      break;
+  }
+
+}
+
 function setDomain(obj, axis) {
 
   var data = obj.data;
@@ -106,16 +136,13 @@ function setDomain(obj, axis) {
   // included fallbacks just in case
   switch(axis.scale) {
     case "time":
-    case "date":
-    case "ordinal-time":
       domain = setDateDomain(data, axis.min, axis.max);
       break;
     case "linear":
-    case "numerical":
       domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked);
       break;
     case "ordinal":
-    case "discrete":
+    case "ordinal-time":
       domain = setDiscreteDomain(data);
       break;
   }
@@ -176,7 +203,6 @@ function rescale(scale, axisType, axisObj) {
 
   switch(axisObj.scale) {
     case "linear":
-    case "numerical":
       if (!axisObj.max) { rescaleNumerical(scale, axisObj); }
       break;
   }
@@ -185,7 +211,6 @@ function rescale(scale, axisType, axisObj) {
 function rescaleNumerical(scale, axisObj) {
 
   // rescales the "top" end of the domain
-
   var ticks = scale.ticks(10).slice(),
       tickIncr = Math.abs(ticks[ticks.length - 1]) - Math.abs(ticks[ticks.length - 2]);
 
@@ -199,13 +224,11 @@ function niceify(scale, axisType, scaleObj) {
 
   switch(scaleObj.type) {
     case "time":
-    case "date":
       var timeDiff = require("../../utils/utils").timeDiff;
       var context = timeDiff(scale.domain()[0], scale.domain()[1], 3);
       niceifyTime(scale, context);
       break;
     case "linear":
-    case "numerical":
       niceifyNumerical(scale);
       break;
   }
@@ -227,6 +250,7 @@ module.exports = {
   ScaleObj: ScaleObj,
   setScaleType: setScaleType,
   setRangeType: setRangeType,
+  setRangeArgs: setRangeArgs,
   setRange: setRange,
   setDomain: setDomain,
   setDateDomain: setDateDomain,

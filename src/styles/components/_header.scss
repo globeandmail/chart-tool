@@ -50,6 +50,10 @@
   @include utility-font;
 }
 
+.#{$prefix}chart_qualifier-bar {
+  margin-top: 2px;
+}
+
 .#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {
   display: inline-block;
   margin-right: 10px;

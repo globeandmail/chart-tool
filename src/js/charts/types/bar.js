@@ -9,7 +9,7 @@ function BarChart(node, obj) {
   // bar chart operating on the y-axis, need to reverse the dataset.
   obj.data.data.reverse();
 
-  var xAxisOffset = 10;
+  var xAxisOffset = 9;
 
   var xScaleObj = new Scale(obj, "xAxis"),
       xScale = xScaleObj.scale;
@@ -45,8 +45,8 @@ function BarChart(node, obj) {
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
     var totalBarHeight = (obj.dimensions.barHeight * obj.data.data.length * obj.data.seriesAmount);
-    yScale.rangeRoundBands([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding());
-    obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding() * 2);
+    yScale.rangeRoundBands([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding);
+    obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding * 2);
   }
 
   var yAxis = d3.svg.axis()

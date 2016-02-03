@@ -264,7 +264,9 @@ standardizeDates = function(data, oldFormat, newFormat) {
     if (date !== null) {
       jsonData.data[i][0] = stdFormat(date);
     } else {
+      // showChartError();
       throw new Meteor.Error("Incompatible date formatting", "Make sure your data date formatting matches the formatting dropdown.");
+      // break;
     }
   }
 

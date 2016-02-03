@@ -139,7 +139,7 @@ select {
   display: none;
 }
 
-.color-radios {
+.radio-buttons {
   input {
     margin-right: 0.4em;
     outline: none;
@@ -169,6 +169,9 @@ select {
     height: 1em;
     margin-bottom: -2px;
     @include appearance(none);
+  }
+  .input-radio:checked {
+    background-color: $primary-color;
   }
   .input-radio-primary:checked {
     background-color: $primary-color;
@@ -329,7 +332,7 @@ select {
 
 // Title, qualifier and source contentEditable fields
 
-.#{$prefix}chart_title, .#{$prefix}chart_qualifier, .#{$prefix}chart_source {
+.#{$prefix}chart_title-text, .#{$prefix}chart_qualifier, .#{$prefix}chart_source {
   &:hover {
     cursor: text;
   }
@@ -339,7 +342,7 @@ select {
   }
 }
 
-.#{$prefix}chart_title {
+.#{$prefix}chart_title-text {
   &:empty:before {
     content: "Please include a chart title";
     color: $verylightgray;

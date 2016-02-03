@@ -15,6 +15,10 @@ function axisManager(node, obj, scale, axisType) {
   var axisObj = obj[axisType];
   var axis = new AxisFactory(axisObj, scale);
 
+  var prevAxis = node.select("." + obj.prefix + "axis-group" + "." + obj.prefix + axisType).node();
+
+  if (prevAxis !== null) { prevAxis.remove(); }
+
   var axisGroup = node.append("g")
     .attr("class", obj.prefix + "axis-group" + " " + obj.prefix + axisType);
 
@@ -75,16 +79,9 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
 
   switch(axisObj.scale) {
     case "time":
-    case "date":
       timeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
-    case "linear":
-    case "numerical":
-      // function doesn't exist yet:
-      // numericalAxis(axisNode, scale, axis, axisSettings, obj);
-      break;
     case "ordinal":
-    case "discrete":
       discreteAxis(axisNode, scale, axis, axisSettings, obj.dimensions);
       break;
     case "ordinal-time":
@@ -191,7 +188,7 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
   scale.rangeExtent([0, dimensions.tickWidth()]);
 
-  scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding());
+  scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding);
 
   var bandStep = scale.rangeBand();
 
@@ -202,12 +199,20 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
     .attr("dy", axisSettings.dy + "em")
     .call(wrapText, bandStep);
 
-  var xPos = (- (bandStep / 2) - (bandStep * dimensions.bands.outerPadding()));
+  var firstXPos = d3.transform(axisNode.select(".tick").attr("transform")).translate[0] * -1;
+
+  var xPos = (- (bandStep / 2) - (bandStep * dimensions.bands.outerPadding));
 
   axisNode.selectAll("line")
     .attr({
       "x1": xPos,
       "x2": xPos
+    });
+
+  axisNode.select("line")
+    .attr({
+      "x1": firstXPos,
+      "x2": firstXPos
     });
 
   axisNode.selectAll("line")
@@ -216,7 +221,7 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
   var lastTick = axisNode.append("g")
     .attr({
       "class": "tick",
-      "transform": "translate(" + (dimensions.tickWidth() - 1) + ",0)"
+      "transform": "translate(" + (dimensions.tickWidth() + (bandStep / 2) + bandStep * dimensions.bands.outerPadding) + ",0)"
     });
 
   lastTick.append("line")
@@ -228,39 +233,37 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
 }
 
-function numericalAxis(axisNode, scale, axis, axisSettings, obj) {
+function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
 
-  // var axisObj = obj[axisName],
-  //     axisSettings;
+  var timeDiff = require("../../utils/utils").timeDiff,
+      domain = scale.domain(),
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 3),
+      currentFormat = determineFormat(ctx);
 
-  // if (obj.exportable && obj.exportable.y_axis) {
-  //   axisSettings = obj.exportable.y_axis;
-  // } else {
-  //   axisSettings = axisObj;
-  // }
-
-  // obj.dimensions.yAxisPaddingRight = axisSettings.paddingRight;
-
-  // axis.tickValues(tickFinderY(scale, axisObj.ticks, axisSettings));
+  axis.tickFormat(currentFormat);
 
   axisNode.call(axis);
 
-  // axisNode.selectAll("g")
-  //   .filter(function(d) { return d; })
-  //   .classed(obj.prefix + "minor", true);
-
-  // axisNode.selectAll(".tick text")
-  //   .attr("transform", "translate(0,0)")
-  //   .call(updateTextY, axisNode, obj, axis, axisObj)
-  //   .attr({
-  //     "transform": "translate(" + ( -(obj.dimensions.computedWidth() - obj.dimensions.labelWidth)) + ",0)"
-  //   });
-
-  axisNode.selectAll(".tick line")
+  axisNode.selectAll("text")
     .attr({
-      "y1": -(obj.dimensions.computedHeight()),
-      "y2": 0
-    });
+      "x": axisSettings.upper.textX,
+      "y": axisSettings.upper.textY,
+      "dy": axisSettings.dy + "em"
+    })
+    .style("text-anchor", "start")
+    .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+
+  if (obj.dimensions.computedWidth() > obj.xAxis.widthThreshold) {
+    var ordinalTickPadding = 3;
+  } else {
+    var ordinalTickPadding = 4;
+  }
+
+  axisNode.selectAll(".tick")
+    .call(ordinalTimeTicks, axisNode, ctx, scale, ordinalTickPadding);
+
+  axisNode.selectAll("line")
+    .attr("y2", axisSettings.upper.tickHeight);
 
 }
 
@@ -299,7 +302,7 @@ function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
         dStr = dMonth;
 
-        prevYear = d.getFullYear();
+        prevYear = dYear;
 
         break;
       case "weeks":
@@ -318,8 +321,8 @@ function setTickFormatX(selection, ctx, ems, monthsAbr) {
           newTextNode(node, dYear, ems);
         }
 
-        prevMonth = monthsAbr[d.getMonth()];
-        prevYear = d.getFullYear();
+        prevMonth = dMonth;
+        prevYear = dYear;
 
         break;
 
@@ -505,18 +508,31 @@ function newTextNode(selection, text, ems) {
 }
 
 // tick dropping functions
-//
-function dropTicks(ticks) {
 
-  for (var j = 0; j < ticks[0].length; j++) {
-    var c = ticks[0][j],
-        n = ticks[0][j+1];
+function dropTicks(selection, opts) {
+
+  var opts = opts || {};
+
+  var tolerance = opts.tolerance || 0,
+      from = opts.from || 0,
+      to = opts.to || selection[0].length;
+
+  for (var j = from; j < to; j++) {
+    var c = selection[0][j],
+        n = selection[0][j+1];
+
     if (!c || !n || !c.getBoundingClientRect || !n.getBoundingClientRect)
       continue;
-    while (c.getBoundingClientRect().right > n.getBoundingClientRect().left) {
-      d3.select(n).remove();
+
+    while ((c.getBoundingClientRect().right + tolerance) > n.getBoundingClientRect().left) {
+
+      if ((d3.select(n).data()[0] === selection.data()[to] )) {
+        d3.select(c).remove();
+      } else {
+        d3.select(n).remove();
+      }
       j++;
-      n = ticks[0][j+1];
+      n = selection[0][j+1];
       if (!n)
         break;
     }
@@ -524,7 +540,63 @@ function dropTicks(ticks) {
 
 }
 
-function dropLastTick(axisNode, tickWidth) {
+function dropRedundantTicks(selection, ctx) {
+
+  var ticks = selection.selectAll(".tick");
+
+  var prevYear, prevMonth, prevDate, prevHour, prevMinute, dYear, dMonth, dDate, dHour, dMinute;
+
+  ticks.each(function(d) {
+    switch (ctx) {
+      case "years":
+        dYear = d.getFullYear();
+        if (dYear === prevYear) {
+          d3.select(this).remove();
+        }
+        prevYear = dYear;
+        break;
+      case "months":
+        dYear = d.getFullYear();
+        dMonth = d.getMonth();
+        if ((dMonth === prevMonth) && (dYear === prevYear)) {
+          d3.select(this).remove();
+        }
+        prevMonth = dMonth;
+        prevYear = dYear;
+        break;
+      case "weeks":
+      case "days":
+        dYear = d.getFullYear();
+        dMonth = d.getMonth();
+        dDate = d.getDate();
+
+        if ((dDate === prevDate) && (dMonth === prevMonth) && (dYear === prevYear)) {
+          d3.select(this).remove();
+        }
+
+        prevDate = dDate;
+        prevMonth = dMonth;
+        prevYear = dYear;
+        break;
+      case "hours":
+        dDate = d.getDate();
+        dHour = d.getHours();
+        dMinute = d.getMinutes();
+
+        if ((dDate === prevDate) && (dHour === prevHour) && (dMinute === prevMinute)) {
+          d3.select(this).remove();
+        }
+
+        prevDate = dDate;
+        prevHour = dHour;
+        prevMinute = dMinute;
+        break;
+    }
+  });
+
+}
+
+function dropOversetTicks(axisNode, tickWidth) {
 
   var axisGroupWidth = axisNode.node().getBBox().width,
       tickArr = axisNode.selectAll(".tick")[0];
@@ -659,11 +731,79 @@ function tickFinderY(scale, tickCount, tickSettings) {
   }
 }
 
-function axisCleanup(xAxisObj, yAxisObj, obj, node) {
+
+function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
+
+  var ticks = scale.domain();
+
+  var majorTicks = [];
+
+  var prevYear, prevMonth, prevDate, dYear, dMonth, dDate;
+
+  selection.each(function(d) {
+    switch (ctx) {
+      case "years":
+      case "months":
+        dYear = d.getFullYear();
+        if (dYear !== prevYear) { majorTicks.push(d); }
+        prevYear = d.getFullYear();
+        break;
+      case "weeks":
+      case "days":
+        dYear = d.getFullYear();
+        dMonth = d.getMonth();
+        if ((dMonth !== prevMonth) && (dYear !== prevYear)) {
+          majorTicks.push(d);
+        } else if (dMonth !== prevMonth) {
+          majorTicks.push(d);
+        } else if (dYear !== prevYear) {
+          majorTicks.push(d);
+        }
+        prevMonth = d.getMonth();
+        prevYear = d.getFullYear();
+        break;
+      case "hours":
+        dDate = d.getDate();
+        if (dDate !== prevDate) { majorTicks.push(d); }
+        prevDate = dDate;
+        break;
+    }
+  });
+
+  for (var i = 0; i < majorTicks.length + 1; i++) {
+
+    if (i === 0) { // from t0 to m0
+      var t0 = 0,
+          tn = ticks.indexOf(majorTicks[0]);
+    } else if (i === (majorTicks.length)) { // from mn to tn
+      var t0 = ticks.indexOf(majorTicks[i - 1]),
+          tn = ticks.length - 1;
+    } else { // from m0 to mn
+      var t0 = ticks.indexOf(majorTicks[i - 1]),
+          tn = ticks.indexOf(majorTicks[i]);
+    }
+
+    if (!!(tn - t0)) {
+
+      dropTicks(selection, {
+        ticks: ticks,
+        from: t0,
+        to: tn,
+        tolerance: tolerance
+      });
+
+    }
+
+  }
+
+  dropRedundantTicks(axisNode, ctx);
+
+}
+
+function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
   // this section is kinda gross, sorry:
-  // resets ranges and dimensions, redraws yAxis, adds
-  // the zero line and repositions the xAxis. phew.
+  // resets ranges and dimensions, redraws yAxis, redraws xAxis
 
   yAxisObj.axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
 
@@ -684,21 +824,26 @@ function axisCleanup(xAxisObj, yAxisObj, obj, node) {
       "x2": obj.dimensions.computedWidth()
     });
 
-  if (obj.xAxis.scale === "ordinal") {
-    // xAxisObj.axis.scale().rangeExtent([0, obj.dimensions.tickWidth()]);
-    // xAxisObj.axis.scale().rangeRoundBands([0, obj.dimensions.tickWidth()], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding());
-    // xAxisObj.node.call(xAxisObj.axis);
+  var setRangeType = require("./scale").setRangeType,
+      setRangeArgs = require("./scale").setRangeArgs;
 
-  } else {
-    xAxisObj.axis.scale().range([0, obj.dimensions.tickWidth()]);
-  }
+  var scaleObj = {
+    rangeType: setRangeType(obj.xAxis),
+    range: xAxisObj.range || [0, obj.dimensions.tickWidth()],
+    bands: obj.dimensions.bands,
+    rangePoints: obj.xAxis.rangePoints
+  };
+
+  setRangeArgs(xAxisObj.axis.scale(), scaleObj);
+
+  xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
 
   xAxisObj.node
     .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
-  // once the axis is fully drawn, check that we don"t have any ticks
-  // extending beyond the width of the SVG. if so, drop it like its hot
-  dropLastTick(xAxisObj.node, obj.dimensions.tickWidth());
+  if (obj.xAxis.scale !== "ordinal") {
+    dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
+  }
 
 }
 
@@ -714,10 +859,7 @@ function addZeroLine(obj, node, Axis, axisType) {
     // zero line
     var zeroLine = node.append("line")
       .style("shape-rendering", "crispEdges")
-      .attr({
-        "class": obj.prefix + "zero-line"
-        // "transform": refGroup.attr("transform")
-      });
+      .attr("class", obj.prefix + "zero-line");
 
     var transform = [0, 0];
 
@@ -762,6 +904,7 @@ module.exports = {
   appendYAxis: appendYAxis,
   timeAxis: timeAxis,
   discreteAxis: discreteAxis,
+  ordinalTimeAxis: ordinalTimeAxis,
   setTickFormatX: setTickFormatX,
   setTickFormatY: setTickFormatY,
   updateTextX: updateTextX,
@@ -769,7 +912,8 @@ module.exports = {
   repositionTextY: repositionTextY,
   newTextNode: newTextNode,
   dropTicks: dropTicks,
-  dropLastTick: dropLastTick,
+  dropOversetTicks: dropOversetTicks,
+  dropRedundantTicks: dropRedundantTicks,
   tickFinderX: tickFinderX,
   tickFinderY: tickFinderY,
   axisCleanup: axisCleanup,

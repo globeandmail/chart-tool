@@ -36,4 +36,8 @@
   width: 100%;
 }
 
+.#{$prefix}base64img {
+  display: none;
+}
+
 @import "../../custom/custom.scss";

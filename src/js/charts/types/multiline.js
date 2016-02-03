@@ -15,7 +15,7 @@ function MultiLineChart(node, obj) {
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
 
-  axisModule.axisCleanup(xAxisObj, yAxisObj, obj, node);
+  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 
   if (xScaleObj.obj.type === "ordinal") {
     xScale.rangeRoundPoints([0, obj.dimensions.tickWidth()], 1.0);

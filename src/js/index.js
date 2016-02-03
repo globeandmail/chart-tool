@@ -16,7 +16,7 @@
     var ChartTool = (function ChartTool() {
 
       var charts = root.__charttool,
-          dispatchFunctions = root.__chartDispatcher,
+          dispatchFunctions = root.__charttooldispatcher,
           drawn = [];
 
       var settings = require("./config/chart-settings"),

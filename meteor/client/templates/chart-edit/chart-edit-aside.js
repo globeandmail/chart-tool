@@ -1,8 +1,24 @@
 Template.chartEditAside.helpers({
   isTimeSeries: function() {
     if (this.options) {
+      var scale = this.x_axis.scale;
+      if (scale === "time" || scale === "ordinal-time") {
+        return true;
+      }
+    }
+  },
+  isLineChartType: function() {
+    if (this.options) {
       var type = this.options["type"];
       if (type === "area" || type === "line" || type === "stream") {
+        return true;
+      }
+    }
+  },
+  isBarChartType: function() {
+    if (this.options) {
+      var type = this.options["type"];
+      if (type === "column" || type === "bar") {
         return true;
       }
     }
@@ -74,17 +90,8 @@ Template.chartEditAside.helpers({
       }
     }
   },
-  isOrdinal: function(val) {
-    if (this.options) {
-      var type = this.options["type"];
-      if (type === "area" || type === "line" || type === "stream") {
-        if (this.x_axis.scale === "ordinal") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
+  xScaleChecked: function(val) {
+    if (this.x_axis && this.x_axis.scale === val) { return "checked"; }
   },
   xNice: function() {
     if (this.x_axis) {
@@ -185,7 +192,7 @@ Template.chartEditAside.events({
     var format = event.target.value;
       dateFormat = this.date_format,
       hasHours = this.hasHours,
-      str = " " + app_settings.standard_time,
+      str = " " + app_settings.chart.time_format,
       re = /\s\%H\:\%M/g;
 
     if (re.test(dateFormat)) { format += str; }
@@ -194,7 +201,7 @@ Template.chartEditAside.events({
   "change .input-checkbox-hours": function(event) {
     var dateFormat = this.date_format,
       val = !this.hasHours,
-      str = " " + app_settings.standard_time,
+      str = " " + app_settings.chart.time_format,
       re = /\s\%H\:\%M/g;
 
     updateAndSave("updateHasHours", this, val);
@@ -319,6 +326,12 @@ Template.chartEditAside.events({
     }
 
   },
+
+  "change .input-radio-x-scale": function(event) {
+    var xScale = event.target.value;
+    updateAndSave("updateXScale", this, xScale);
+  },
+
   "change .input-checkbox-x-nice": function(event) {
     var val = !this.x_axis.nice;
     updateAndSave("updateXNice", this, val);
@@ -342,7 +355,7 @@ Template.chartEditAside.events({
     event.target.value = data;
   },
 
-  "change .input-radio": function(event) {
+  "change .input-radio-class": function(event) {
     var customClass = event.target.value;
     updateAndSave("updateClass", this, customClass);
   },
