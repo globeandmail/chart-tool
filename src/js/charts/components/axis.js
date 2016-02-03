@@ -38,24 +38,12 @@ function axisManager(node, obj, scale, axisType) {
 function determineFormat(context) {
 
   switch (context) {
-    case "years":
-      return d3.time.format("%Y");
-      break;
-    case "months":
-      return d3.time.format("%b");
-      break;
-    case "weeks":
-      return d3.time.format("%W");
-      break;
-    case "days":
-      return d3.time.format("%j");
-      break;
-    case "hours":
-      return d3.time.format("%H");
-      break;
-    case "minutes":
-      return d3.time.format("%M");
-      break;
+    case "years": return d3.time.format("%Y");
+    case "months": return d3.time.format("%b");
+    case "weeks": return d3.time.format("%W");
+    case "days": return d3.time.format("%j");
+    case "hours": return d3.time.format("%H");
+    case "minutes": return d3.time.format("%M");
   }
 
 }
@@ -663,10 +651,6 @@ function tickFinderX(domain, period, tickGoal) {
   if ( startDiff > (tickDiff / 2) ) { tickArr.unshift(startDate); }
 
   return tickArr;
-
-}
-
-function ordinalTimeTickFinderX(domain, period, tickGoal) {
 
 }
 

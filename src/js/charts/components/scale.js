@@ -117,13 +117,10 @@ function setRangeArgs(scale, scaleObj) {
   switch (scaleObj.rangeType) {
     case "range":
       return scale[scaleObj.rangeType](scaleObj.range);
-      break;
     case "rangeRoundBands":
       return scale[scaleObj.rangeType](scaleObj.range, scaleObj.bands.padding, scaleObj.bands.outerPadding);
-      break;
     case "rangePoints":
       return scale[scaleObj.rangeType](scaleObj.range, scaleObj.rangePoints);
-      break;
   }
 
 }
