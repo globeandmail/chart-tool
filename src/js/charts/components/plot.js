@@ -8,7 +8,8 @@ function plot(node, obj) {
     column: require("../types/column").ColumnChart,
     ordinalTimeColumn: require("../types/column").OrdinalTimeColumnChart,
     bar: require("../types/bar"),
-    stackedColumn: require("../types/stacked-column"),
+    stackedColumn: require("../types/stacked-column").StackedColumnChart,
+    ordinalTimeStackedColumn: require("../types/stacked-column").OrdinalTimeStackedColumnChart,
     streamgraph: require("../types/streamgraph")
   };
 
@@ -34,7 +35,7 @@ function plot(node, obj) {
 
     case "column":
       if (obj.xAxis.scale === "ordinal-time") {
-        chartRef = draw.ordinalTimeColumn(node, obj);
+        chartRef = obj.options.stacked ? draw.ordinalTimeStackedColumn(node, obj) : draw.ordinalTimeColumn(node, obj);
       } else {
         chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);
       }

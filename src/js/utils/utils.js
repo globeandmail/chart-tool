@@ -29,12 +29,12 @@ function clearChart(container) {
 
   var cont = document.querySelector(container);
 
-  while (cont.querySelectorAll("svg").length) {
+  while (cont && cont.querySelectorAll("svg").length) {
     var svg = cont.querySelectorAll("svg");
     svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
   }
 
-  while (cont.querySelectorAll("div").length) {
+  while (cont && cont.querySelectorAll("div").length) {
     var div = cont.querySelectorAll("div");
     div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
   }

@@ -3,8 +3,7 @@ function LineChart(node, obj) {
   var axisModule = require("../components/axis"),
       scaleModule = require("../components/scale"),
       Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager,
-      Tips = require("../components/tips");
+      Scale = scaleModule.scaleManager;
 
   //  scales
   var xScaleObj = new Scale(obj, "xAxis"),

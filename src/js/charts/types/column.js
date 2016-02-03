@@ -3,8 +3,7 @@ function ColumnChart(node, obj) {
   var axisModule = require("../components/axis"),
     scaleModule = require("../components/scale"),
     Axis = axisModule.axisManager,
-    Scale = scaleModule.scaleManager,
-    Tips = require("../components/tips");
+    Scale = scaleModule.scaleManager;
 
   //  scales
   var yScaleObj = new Scale(obj, "yAxis"),
@@ -26,9 +25,9 @@ function ColumnChart(node, obj) {
 
     var timeInterval = require("../../utils/utils").timeInterval,
         timeElapsed = timeInterval(obj.data.data);
-    var singleColumn = obj.dimensions.tickWidth() / timeElapsed;
+    var singleColumn = obj.dimensions.tickWidth() / timeElapsed / obj.data.seriesAmount;
 
-    xAxisObj.range = [0, (obj.dimensions.tickWidth() - singleColumn)];
+    xAxisObj.range = [0, (obj.dimensions.tickWidth() - (singleColumn * obj.data.seriesAmount))];
 
     axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 

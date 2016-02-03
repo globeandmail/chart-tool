@@ -2,8 +2,7 @@ function BarChart(node, obj) {
 
   var axisModule = require("../components/axis"),
     scaleModule = require("../components/scale"),
-    Scale = scaleModule.scaleManager,
-    Tips = require("../components/tips");
+    Scale = scaleModule.scaleManager;
 
   // because the elements will be appended in reverse due to the
   // bar chart operating on the y-axis, need to reverse the dataset.

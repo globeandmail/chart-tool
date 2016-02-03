@@ -3,8 +3,7 @@ function StreamgraphChart(node, obj) {
   var axisModule = require("../components/axis"),
       scaleModule = require("../components/scale"),
       Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager,
-      Tips = require("../components/tips");
+      Scale = scaleModule.scaleManager;
 
   //  scales
   var xScaleObj = new Scale(obj, "xAxis"),
@@ -36,13 +35,11 @@ function StreamgraphChart(node, obj) {
     .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
 
   var area = d3.svg.area().interpolate(obj.options.interpolation)
-    // .defined(function(d) {return !isNaN(d.y); })
     .x(function(d) { return xScale(d.x); })
     .y0(function(d) { return yScale(d.y0); })
     .y1(function(d) { return yScale(d.y0 + d.y); });
 
   var line = d3.svg.line().interpolate(obj.options.interpolation)
-    // .defined(function(d) { return !isNaN(d.y); })
     .x(function(d) { return xScale(d.x); })
     .y(function(d) { return yScale(d.y0 + d.y); });
 
