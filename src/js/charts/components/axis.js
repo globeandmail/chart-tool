@@ -833,9 +833,11 @@ function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
 function addZeroLine(obj, node, Axis, axisType) {
 
-  var minVal = Axis.axis.scale().domain()[0];
+  var ticks = Axis.axis.tickValues(),
+      tickMin = ticks[0],
+      tickMax = ticks[ticks.length - 1];
 
-  if (minVal <= 0) {
+  if ((tickMin <= 0) && (0 <= tickMax)) {
 
     var refGroup = Axis.node.selectAll(".tick:not(." + obj.prefix + "minor)"),
         refLine = refGroup.select("line");

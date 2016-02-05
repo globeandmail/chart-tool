@@ -97,7 +97,7 @@ jsonToCSV = function(objArray, config) {
 csvFormat = function(obj) {
   if (!isEmpty(obj)) {
     var data = obj.data;
-    if (obj.x_axis.scale === "time") {
+    if (obj.x_axis.scale === "time" || obj.x_axis.scale === "ordinal-time") {
       var stdFormat = app_settings.chart.date_format;
       if (obj.hasHours) { stdFormat += " " + app_settings.chart.time_format; }
       var currFormat = obj.date_format;

@@ -136,7 +136,7 @@ function setDomain(obj, axis) {
       domain = setDateDomain(data, axis.min, axis.max);
       break;
     case "linear":
-      domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked);
+      domain = setNumericalDomain(obj, data, axis.min, axis.max);
       break;
     case "ordinal":
     case "ordinal-time":
@@ -159,7 +159,7 @@ function setDateDomain(data, min, max) {
   return [startDate, endDate];
 }
 
-function setNumericalDomain(data, min, max, stacked) {
+function setNumericalDomain(obj, data, min, max) {
 
   var minVal, maxVal;
   var mArr = [];
@@ -170,7 +170,7 @@ function setNumericalDomain(data, min, max, stacked) {
     }
   });
 
-  if (stacked) {
+  if (obj.options.stacked) {
     maxVal = d3.max(data.stackedData[data.stackedData.length - 1], function(d) {
       return (d.y0 + d.y);
     });
@@ -186,7 +186,14 @@ function setNumericalDomain(data, min, max, stacked) {
     minVal = 0;
   }
 
-  if (max) { maxVal = max; }
+  if (max) {
+    maxVal = max;
+  } else if (maxVal < 0) {
+    var chartType = obj.options.type;
+    if (chartType === "area" || chartType === "column" || chartType === "bar") {
+      maxVal = 0;
+    }
+  }
 
   return [minVal, maxVal];
 

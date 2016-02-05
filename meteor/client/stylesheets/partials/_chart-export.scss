@@ -165,6 +165,10 @@
   }
 }
 
+.web-export-custom-row {
+  @include row();
+}
+
 .web-export-custom-field {
   @include span-columns(8 of 24);
   h4 {
@@ -175,6 +179,6 @@
     margin: 0;
   }
   input {
-    margin-right: 0.2em;
+    // margin-right: 0.2em;
   }
 }
