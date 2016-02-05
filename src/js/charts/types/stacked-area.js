@@ -3,15 +3,14 @@ function StackedAreaChart(node, obj) {
   var axisModule = require("../components/axis"),
       scaleModule = require("../components/scale"),
       Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager,
-      Tips = require("../components/tips");
+      Scale = scaleModule.scaleManager;
 
   //  scales
   var xScaleObj = new Scale(obj, "xAxis"),
       yScaleObj = new Scale(obj, "yAxis"),
       xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  //  axes
+  // axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
       xAxis = xAxisObj.axis, yAxis = yAxisObj.axis;

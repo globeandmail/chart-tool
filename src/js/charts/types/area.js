@@ -10,7 +10,7 @@ function AreaChart(node, obj) {
       yScaleObj = new Scale(obj, "yAxis"),
       xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  //  axes
+  // axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
       xAxis = xAxisObj.axis, yAxis = yAxisObj.axis;
