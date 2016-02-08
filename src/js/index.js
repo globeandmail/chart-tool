@@ -25,10 +25,12 @@
       var dispatcher = d3.dispatch("start", "finish", "redraw", "hoverIn", "hoverOut", "click");
 
       for (var prop in dispatchFunctions) {
-        if (d3.keys(dispatcher).indexOf(prop) > -1) {
-          dispatcher.on(prop, dispatchFunctions[prop]);
-        } else {
-          throw "Chart Tool does not offer a dispatcher of type '" + prop + "'. For available dispatcher types, please see the ChartTool.dispatch() method." ;
+        if (dispatchFunctions.hasOwnProperty(prop)) {
+          if (d3.keys(dispatcher).indexOf(prop) > -1) {
+            dispatcher.on(prop, dispatchFunctions[prop]);
+          } else {
+            throw "Chart Tool does not offer a dispatcher of type '" + prop + "'. For available dispatcher types, please see the ChartTool.dispatch() method." ;
+          }
         }
       }
 

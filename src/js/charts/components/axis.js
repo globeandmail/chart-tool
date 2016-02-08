@@ -1,5 +1,3 @@
-// Here be dragons
-
 function AxisFactory(axisObj, scale) {
 
   var axis = d3.svg.axis()
@@ -760,33 +758,33 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
     }
   });
 
+  dropRedundantTicks(axisNode, ctx);
+
+  var t0, tn;
+
   for (var i = 0; i < majorTicks.length + 1; i++) {
 
     if (i === 0) { // from t0 to m0
-      var t0 = 0,
-          tn = ticks.indexOf(majorTicks[0]);
+      t0 = 0;
+      tn = ticks.indexOf(majorTicks[0]);
     } else if (i === (majorTicks.length)) { // from mn to tn
-      var t0 = ticks.indexOf(majorTicks[i - 1]),
-          tn = ticks.length - 1;
+      t0 = ticks.indexOf(majorTicks[i - 1]);
+      tn = ticks.length - 1;
     } else { // from m0 to mn
-      var t0 = ticks.indexOf(majorTicks[i - 1]),
-          tn = ticks.indexOf(majorTicks[i]);
+      t0 = ticks.indexOf(majorTicks[i - 1]);
+      tn = ticks.indexOf(majorTicks[i]);
     }
 
     if (!!(tn - t0)) {
-
       dropTicks(selection, {
         ticks: ticks,
         from: t0,
         to: tn,
         tolerance: tolerance
       });
-
     }
 
   }
-
-  dropRedundantTicks(axisNode, ctx);
 
 }
 
