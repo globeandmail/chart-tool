@@ -27,7 +27,11 @@ function BarChart(node, obj) {
 
   var textLengths = [];
 
-  xAxisNode.selectAll("text").each(function() { textLengths.push(d3.select(this).node().getBoundingClientRect().height); })
+  xAxisNode.selectAll("text")
+    .attr("y", xAxisOffset)
+    .each(function() {
+      textLengths.push(d3.select(this).node().getBoundingClientRect().height);
+    });
 
   var tallestText = textLengths.reduce(function(a, b) { return (a > b ? a : b) });
 
@@ -113,8 +117,8 @@ function BarChart(node, obj) {
   xAxisNode.call(xAxis);
 
   xAxisNode.selectAll(".tick text")
+    .attr("y", xAxisOffset)
     .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
-
 
   if (obj.exportable && obj.exportable.dynamicHeight) {
     // working with a dynamic bar height
@@ -130,22 +134,13 @@ function BarChart(node, obj) {
 
   if (xAxisWidth > obj.dimensions.computedWidth()) {
 
-    var allTicks = xAxisNode.selectAll(".tick")[0];
-    var lastTickPos = d3.transform(d3.select(allTicks[allTicks.length - 1]).attr("transform")).translate[0];
-
     xScale.range([0, obj.dimensions.tickWidth() - (xAxisWidth - obj.dimensions.computedWidth())]);
 
     xAxisNode.call(xAxis);
 
     xAxisNode.selectAll(".tick text")
-      .text(function(d, i) {
-        var lastTick = xAxis.tickValues()[xAxis.tickValues().length - 1];
-        var val = axisModule.setTickFormatY(obj.xAxis.format, d, lastTick);
-        if (i === xAxis.tickValues().length - 1) {
-          val = (obj.xAxis.prefix || "") + val + (obj.xAxis.suffix || "");
-        }
-        return val;
-      });
+      .attr("y", xAxisOffset)
+      .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
   }
 
@@ -230,7 +225,6 @@ function BarChart(node, obj) {
   if (obj.exportable && obj.exportable.dynamicHeight) {
 
     // dynamic height, only need to transform x-axis group
-    //
     xAxisGroup
       .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
 
@@ -239,19 +233,22 @@ function BarChart(node, obj) {
     // fixed height, so transform accordingly and modify the dimension function and parent rects
 
     xAxisGroup
-      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + (totalBarHeight) + ")");
-
-    d3.select(node.node().parentNode)
-      .attr("height", totalBarHeight + obj.dimensions.xAxisHeight);
-
-    d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
-      .attr({
-        "height": node.node().getBoundingClientRect().height
-      });
+      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + totalBarHeight + ")");
 
     obj.dimensions.totalXAxisHeight = xAxisGroup.node().getBoundingClientRect().height;
 
     obj.dimensions.computedHeight = function() { return this.totalXAxisHeight; };
+
+    d3.select(node.node().parentNode)
+      .attr("height", function() {
+        var margin = obj.dimensions.margin;
+        return obj.dimensions.computedHeight() + margin.top + margin.bottom;
+      });
+
+    d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
+      .attr({
+        "height": obj.dimensions.computedHeight()
+      });
 
   }
 
