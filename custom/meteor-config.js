@@ -98,10 +98,10 @@ app_settings = {
 
     series: [],
     mobile: {},
-    annotations: {},
+    annotations: [],
     range: [],
 
-    user: [],
+    users: [],
     tags: [],
 
     img: "",

@@ -145,10 +145,10 @@
 	
 	    series: [],
 	    mobile: {},
-	    annotations: {},
+	    annotations: [],
 	    range: [],
 	
-	    user: [],
+	    users: [],
 	    tags: [],
 	
 	    img: "",
@@ -320,7 +320,8 @@
 			"bucket": "chartstg",
 			"region": "us-east-1",
 			"filename": "thumbnail",
-			"extension": "png"
+			"extension": "png",
+			"thumbnailWidth": 460
 		}
 	};
 

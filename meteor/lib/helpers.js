@@ -48,6 +48,7 @@ cleanEmbed = function(data) {
 }
 
 embed = function(obj) {
+
   var data = {
     "version": obj.version,
     "id": obj._id,

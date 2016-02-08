@@ -15,7 +15,13 @@ Template.chartPdf.rendered = function() {
     data.exportable.type = "pdf";
     data.prefix = prefix;
 
-    drawChart(".chart-pdf", data);
+    try {
+      drawChart(".chart-pdf", data);
+    } catch (e) {
+      console.log(e);
+    }
+
+
 
   }
 }
