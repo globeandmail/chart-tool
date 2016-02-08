@@ -313,65 +313,7 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData.key;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -476,65 +418,7 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData.key;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -665,65 +549,7 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData[0].x;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].x);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -882,65 +708,7 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData[0].x;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].x);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -1041,11 +809,318 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
 
 function ColumnChartTips(tipNodes, obj) {
 
+  var columns = obj.rendered.plot.columnItem,
+      columnRects = columns.selectAll('rect'),
+      isUndefined = 0,
+      dataRef = obj.data.data[0].series;
+
+  var tipTextGroups = tipNodes.tipGroup
+    .selectAll("." + obj.prefix + "tip_text-group")
+    .data(dataRef)
+    .enter()
+    .append("g")
+    .attr("class", function(d, i) {
+      return obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i);
+    });
+
+  tipTextGroups.append("text")
+    .text(function(d) { return d.val; })
+    .attr({
+      "class": function(d, i) {
+        return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i));
+      },
+      "data-series": function(d, i) { return d.key; },
+      "x": function() {
+        return (tipNodes.radius * 2) + (tipNodes.radius / 1.5);
+      },
+      "y": function(d, i) {
+        return ( (i + 1) * ( parseInt(d3.select(this).style("font-size")) + 2) );
+      },
+      "dy": "1em"
+    });
+
+
+  columnRects.on("mouseover", function(d){
+
+      var thisColumn = this,
+          tipData = d;
+
+      for (var i = 0; i < tipData.series.length; i++) {
+        if (tipData.series[i].val === "__undefined__") {
+          isUndefined++;
+          break;
+        }
+      }
+
+      if (!isUndefined) {
+
+        var yFormatter = require("./axis").setTickFormatY,
+          timeDiff = require("../../utils/utils").timeDiff;
+          getTranslateXY = require("../../utils/utils").getTranslateXY;
+          domain = obj.rendered.plot.xScaleObj.scale.domain(),
+          ctx = timeDiff(domain[0], domain[1], 8);
+
+        var cursorX = getTranslateXY(this.parentNode)[0];
+
+        columnRects
+          .classed('muted',function () {
+            return (this === thisColumn) ? false : true;
+          });
+
+        tipNodes.tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
+          .data(tipData.series)
+          .text(function(d, i) {
+
+            if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
+            if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
+
+            if (d.val) {
+              return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+            } else {
+              return "n/a";
+            }
+
+        });
+
+        tipNodes.tipTextDate
+          .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+
+        tipNodes.tipGroup
+          .selectAll("." + obj.prefix + "tip_text-group")
+          .data(tipData.series)
+          .classed(obj.prefix + "active", function(d, i) {
+            return d.val ? true : false;
+          });
+
+        tipNodes.tipRect
+          .attr({
+            "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+            "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+          });
+
+        tipNodes.tipBox
+          .attr({
+            "transform": function() {
+              if (cursorX > obj.dimensions.tickWidth() / 2) {
+                // tipbox pointing left
+                var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+              } else {
+                // tipbox pointing right
+                var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+              }
+              return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
+            }
+          });
+
+        showTips(tipNodes, obj);
+
+      }
+
+  })
+
 }
+
 
 function StackedColumnChartTips(tipNodes, obj) {
 
+  var columns = obj.rendered.plot.series,
+      columnRects = columns.selectAll('rect'),
+      isUndefined = 0,
+      dataRef = obj.data.data[0].series;
+
+  var tipTextGroups = tipNodes.tipGroup
+    .selectAll("." + obj.prefix + "tip_text-group")
+    .data(dataRef)
+    .enter()
+    .append("g")
+    .attr("class", function(d, i) {
+      return obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i);
+    });
+
+  tipTextGroups.append("text")
+    .text(function(d) { return d.val; })
+    .attr({
+      "class": function(d, i) {
+        return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i));
+      },
+      "data-series": function(d, i) { return d.key; },
+      "x": function() {
+        return (tipNodes.radius * 2) + (tipNodes.radius / 1.5);
+      },
+      "y": function(d, i) {
+        return ( (i + 1) * ( parseInt(d3.select(this).style("font-size")) + 2) );
+      },
+      "dy": "1em"
+    });
+
+  columnRects.on("mouseover", function(d){
+
+    var thisColumn = this,
+        tipData = d;
+
+    for (var i = 0; i < tipData.raw.series.length; i++) {
+      if (tipData.raw.series[i].val === "__undefined__") {
+        isUndefined++;
+        break;
+      }
+    }
+
+    if (!isUndefined) {
+
+      var yFormatter = require("./axis").setTickFormatY,
+        timeDiff = require("../../utils/utils").timeDiff;
+        domain = obj.rendered.plot.xScaleObj.scale.domain(),
+        ctx = timeDiff(domain[0], domain[1], 8);
+
+      var parentEl = d3.select(this.parentNode.parentNode);
+          barPos = parseFloat(parentEl.attr('transform').split("(")[1]);
+
+      columnRects
+        .classed('muted',function () {
+          return (this === thisColumn) ? false : true;
+        });
+
+      tipNodes.tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
+        .data(tipData.raw.series)
+        .text(function(d, i) {
+
+          if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
+          if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
+
+          if (d.val) {
+            return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+          } else {
+            return "n/a";
+          }
+
+      });
+
+      tipNodes.tipTextDate
+        .text(function() {
+          var d = tipData.raw.key;
+          return d;
+        });
+
+      tipTextGroups
+        .append("circle")
+        .attr({
+          "class": function(d, i) {
+            return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
+          },
+          "r": function(d, i) { return tipNodes.radius; },
+          "cx": function() { return tipNodes.radius; },
+          "cy": function(d, i) {
+            return ( (i + 1) * parseInt(d3.select(this).style("font-size")) * 1.13 + 9);
+          }
+        });
+
+      tipNodes.tipGroup
+        .selectAll("." + obj.prefix + "tip_text-group")
+        .data(tipData.raw.series)
+        .classed(obj.prefix + "active", function(d, i) {
+          return d.val ? true : false;
+        });
+
+      tipNodes.tipRect
+        .attr({
+          "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+          "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+        });
+
+      tipNodes.tipBox
+        .attr({
+          "transform": function() {
+
+            if (barPos > obj.dimensions.tickWidth() / 2) {
+              // tipbox pointing left
+              var x = obj.rendered.plot.xScaleObj.scale(tipData.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+            } else {
+              // tipbox pointing right
+              var x = obj.rendered.plot.xScaleObj.scale(tipData.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+            }
+
+            return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
+
+          }
+
+        });
+
+      showTips(tipNodes, obj);
+
+    }
+
+  })
+
+
 }
+
+function tipDateFormatter(selection, ctx, months, data) {
+
+  var dMonth, dDate, dYear, dHour, dMinute, dHourStr, dMinuteStr;
+
+  selection.text(function() {
+    var d = data;
+    var dStr;
+    switch (ctx) {
+      case "years":
+        dStr = d.getFullYear();
+        break;
+      case "months":
+        dMonth = months[d.getMonth()];
+        dDate = d.getDate();
+        dYear = d.getFullYear();
+        dStr = dMonth + " " + dDate + ", " + dYear;
+        break;
+      case "weeks":
+      case "days":
+        dMonth = months[d.getMonth()];
+        dDate = d.getDate();
+        dYear = d.getFullYear();
+        dStr = dMonth + " " + dDate;
+        break;
+      case "hours":
+
+        dDate = d.getDate();
+        dHour = d.getHours();
+        dMinute = d.getMinutes();
+
+        var dHourStr,
+          dMinuteStr;
+
+        // Convert from 24h time
+        var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
+
+        if (dHour === 0) {
+          dHourStr = 12;
+        } else if (dHour > 12) {
+          dHourStr = dHour - 12;
+        } else {
+          dHourStr = dHour;
+        }
+
+        // Make minutes follow Globe style
+        if (dMinute === 0) {
+          dMinuteStr = '';
+        } else if (dMinute < 10) {
+          dMinuteStr = ':0' + dMinute;
+        } else {
+          dMinuteStr = ':' + dMinute;
+        }
+
+        dStr = dHourStr + dMinuteStr + ' ' + suffix;
+
+        break;
+      default:
+        dStr = d;
+        break;
+    }
+
+    return dStr;
+
+  });
+
+}
+
 
 function BarChartTips(tipNodes, obj) {
 

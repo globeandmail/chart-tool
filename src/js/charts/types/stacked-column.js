@@ -6,9 +6,10 @@ function StackedColumnChart(node, obj) {
       Scale = scaleModule.scaleManager;
 
   //  scales
-  var xScaleObj = new Scale(obj, "xAxis"),
-      yScaleObj = new Scale(obj, "yAxis"),
-      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
+  var yScaleObj = new Scale(obj, "yAxis"),
+      xScaleObj = new Scale(obj, "xAxis"),
+      yScale = yScaleObj.scale,
+      xScale = xScaleObj.scale;
 
   // axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
@@ -74,6 +75,7 @@ function StackedColumnChart(node, obj) {
     .attr({
       "class": obj.prefix + "column",
       "data-key": function(d) { return d.x; },
+      "data-legend": function(d) { return d.legend; },
       "x": function(d) { return xScale(d.x); },
       "y": function(d) { return yScale(Math.max(0, d.y0 + d.y)); },
       "height": function(d) { return Math.abs(yScale(d.y) - yScale(0)); },
@@ -89,7 +91,7 @@ function StackedColumnChart(node, obj) {
     yAxisObj: yAxisObj,
     seriesGroup: seriesGroup,
     series: series,
-    rect: rect
+    columnItem: columnItem
   };
 
 }
