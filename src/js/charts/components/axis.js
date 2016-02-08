@@ -147,7 +147,11 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
     ticks = tickFinderX(domain, ctx, axisSettings.ticksSmall);
   }
 
-  axis.tickValues(ticks);
+  if (obj.options.type !== "column") {
+    axis.tickValues(ticks);
+  } else {
+    axis.ticks();
+  }
 
   axisNode.call(axis);
 
@@ -159,6 +163,8 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
     })
     .style("text-anchor", "start")
     .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+
+  if (obj.options.type === "column") { dropRedundantTicks(axisNode, ctx); }
 
   axisNode.selectAll(".tick")
     .call(dropTicks);
@@ -833,9 +839,11 @@ function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
 function addZeroLine(obj, node, Axis, axisType) {
 
-  var minVal = Axis.axis.scale().domain()[0];
+  var ticks = Axis.axis.tickValues(),
+      tickMin = ticks[0],
+      tickMax = ticks[ticks.length - 1];
 
-  if (minVal <= 0) {
+  if ((tickMin <= 0) && (0 <= tickMax)) {
 
     var refGroup = Axis.node.selectAll(".tick:not(." + obj.prefix + "minor)"),
         refLine = refGroup.select("line");

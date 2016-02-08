@@ -47,5 +47,50 @@ Template.chartOverlayWeb.events({
     this.exportable.height = width * (ratio / 100);
 
     downloadImg(this, options);
-  }
+  },
+  'submit .web-export-custom-picker': function(event) {
+    event.preventDefault();
+
+    var width = parseInt(event.target.width.value),
+        height = parseFloat(event.target.height.value),
+        options = {
+          scale: parseFloat(event.target.scale.value),
+          descriptor: "web"
+        };
+
+    if (isNaN(width) || isNaN(height)) {
+
+      var title, text;
+
+      if (isNaN(width) && isNaN(height)) {
+        title = "Missing width and height sizes";
+        text = "Looks like you're missing width and height attributes for your custom size. Make sure to set those before downloading your image."
+      } else {
+        var missing = isNaN(width) ? "width" : "height";
+        title = "Missing " + missing + " size"
+        text = "Looks like you're missing a " + missing + " attribute for your custom size. Make sure to set it before downloading your image."
+      }
+
+      sweetAlert({
+        title: title,
+        text: text,
+        type: "info",
+        confirmButtonColor: "#fff"
+      });
+
+    } else {
+
+      this.exportable = {};
+      this.exportable.type = "web";
+      this.exportable.dynamicHeight = false;
+      this.exportable.width = width;
+      this.exportable.height = height;
+
+      downloadImg(this, options);
+
+      return false;
+
+    }
+
+  },
 });

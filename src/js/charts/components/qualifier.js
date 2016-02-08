@@ -1,64 +1,68 @@
 function qualifierComponent(node, obj) {
 
-  var yAxisNode = node.select("." + obj.prefix + "yAxis");
+  if (obj.options.type !== "bar") {
 
-  if (obj.editable) {
+    var yAxisNode = node.select("." + obj.prefix + "yAxis");
 
-    var foreignObject = yAxisNode.append("foreignObject")
-      .attr({
-        "class": obj.prefix + "fo " + obj.prefix + "qualifier",
-        "width": "100%"
-      });
+    if (obj.editable) {
 
-    var foreignObjectGroup = foreignObject.append("xhtml:div")
-      .attr("xmlns", "http://www.w3.org/1999/xhtml");
+      var foreignObject = yAxisNode.append("foreignObject")
+        .attr({
+          "class": obj.prefix + "fo " + obj.prefix + "qualifier",
+          "width": "100%"
+        });
 
-    var qualifierField = foreignObjectGroup.append("div")
-      .attr({
-        "class": obj.prefix + "chart_qualifier editable-chart_qualifier",
-        "contentEditable": true,
-        "xmlns": "http://www.w3.org/1999/xhtml"
-      })
-      .text(obj.qualifier);
+      var foreignObjectGroup = foreignObject.append("xhtml:div")
+        .attr("xmlns", "http://www.w3.org/1999/xhtml");
 
-    foreignObject
-      .attr("width", qualifierField.node().getBoundingClientRect().width + 15);
+      var qualifierField = foreignObjectGroup.append("div")
+        .attr({
+          "class": obj.prefix + "chart_qualifier editable-chart_qualifier",
+          "contentEditable": true,
+          "xmlns": "http://www.w3.org/1999/xhtml"
+        })
+        .text(obj.qualifier);
 
-    foreignObject
-      .attr("height", qualifierField.node().getBoundingClientRect().height);
+      foreignObject
+        .attr("width", qualifierField.node().getBoundingClientRect().width + 15);
 
-    foreignObject
-      .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (qualifierField.node().getBoundingClientRect().height) / 2 ) + ")");
+      foreignObject
+        .attr("height", qualifierField.node().getBoundingClientRect().height);
 
-  } else {
+      foreignObject
+        .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (qualifierField.node().getBoundingClientRect().height) / 2 ) + ")");
 
-    var qualifierBg = yAxisNode.append("rect")
-      .attr("class", obj.prefix + "qualifier_text_bg");
+    } else {
 
-    var qualifierText = yAxisNode.append("text")
-      .attr("class", obj.prefix + "qualifier_text")
-      .text(obj.qualifier);
+      var qualifierBg = yAxisNode.append("rect")
+        .attr("class", obj.prefix + "qualifier_text_bg");
 
-    var textBox = qualifierText.node().getBoundingClientRect();
-    var textWidth = qualifierText.node().getComputedTextLength();
+      var qualifierText = yAxisNode.append("text")
+        .attr("class", obj.prefix + "qualifier_text")
+        .text(obj.qualifier);
 
-    qualifierText
-      .attr({
-        "dy": "0.32em",
-        "y": "0",
-        "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)"
-      });
+      var textBox = qualifierText.node().getBoundingClientRect();
+      var textWidth = qualifierText.node().getComputedTextLength();
 
-    qualifierBg
-      .style("fill", "white")
-      .attr({
-        "dy": "0.32em",
-        "y": "0",
-        "x": "-1",
-        "width": (textWidth * 0.865) + 1,
-        "height": textBox.height,
-        "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (textBox.height / 2) ) + ")"
-      });
+      qualifierText
+        .attr({
+          "dy": "0.32em",
+          "y": "0",
+          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)"
+        });
+
+      qualifierBg
+        .style("fill", "white")
+        .attr({
+          "dy": "0.32em",
+          "y": "0",
+          "x": "-1",
+          "width": (textWidth * 0.865) + 1,
+          "height": textBox.height,
+          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (textBox.height / 2) ) + ")"
+        });
+
+    }
 
   }
 
