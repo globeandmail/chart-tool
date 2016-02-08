@@ -1213,10 +1213,6 @@ function ColumnChartTips(tipNodes, obj) {
 
 function StackedColumnChartTips(tipNodes, obj) {
 
-  console.log("\n####");
-  console.log("tipNodes: %o", tipNodes);
-  console.log("obj: %o", obj);
-
   var columns = obj.rendered.plot.series,
       columnRects = columns.selectAll('rect'),
       isUndefined = 0,
@@ -1247,16 +1243,10 @@ function StackedColumnChartTips(tipNodes, obj) {
       "dy": "1em"
     });
 
-
-
   columnRects.on("mouseover", function(d){
 
     var thisColumn = this,
         tipData = d;
-
-    console.log("thisColumn %o", thisColumn);
-    console.log("tipData %o", tipData);
-    console.log("tipData %o", tipData);
 
     for (var i = 0; i < tipData.raw.series.length; i++) {
       if (tipData.raw.series[i].val === "__undefined__") {
@@ -1274,9 +1264,6 @@ function StackedColumnChartTips(tipNodes, obj) {
 
       var parentEl = d3.select(this.parentNode.parentNode);
           barPos = parseFloat(parentEl.attr('transform').split("(")[1]);
-
-      console.log("parentEl %o", parentEl);
-      console.log("barPos %o", barPos);
 
       columnRects
         .classed('muted',function () {
@@ -1298,98 +1285,24 @@ function StackedColumnChartTips(tipNodes, obj) {
 
       });
 
-      // tipNodes.tipTextDate
-      //   .text(function() {
-      //     var d = tipData.x;
-      //     var dStr;
-      //     switch (ctx) {
-      //       case "years":
-      //         dStr = d.getFullYear();
-      //         break;
-      //       case "months":
-      //         dMonth = obj.monthsAbr[d.getMonth()];
-      //         dDate = d.getDate();
-      //         dYear = d.getFullYear();
-      //         dStr = dMonth + ". " + dDate + ", " + dYear;
-      //         break;
-      //       case "weeks":
-      //       case "days":
-      //         dMonth = obj.monthsAbr[d.getMonth()];
-      //         dDate = d.getDate();
-      //         dYear = d.getFullYear();
-      //         dStr = dMonth + ". " + dDate;
-      //         break;
-      //       case "hours":
-
-      //         dDate = d.getDate();
-      //         dHour = d.getHours();
-      //         dMinute = d.getMinutes();
-
-      //         var dHourStr,
-      //             dMinuteStr;
-
-      //         // Convert from 24h time
-      //         var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-      //         if (dHour === 0){
-      //           dHourStr = 12;
-      //         } else if (dHour > 12) {
-      //           dHourStr = dHour - 12;
-      //         } else {
-      //           dHourStr = dHour;
-      //         }
-
-      //         // Make minutes follow Globe style
-      //         if (dMinute === 0) {
-      //           dMinuteStr = '';
-      //         } else if(dMinute < 10) {
-      //           dMinuteStr = ':0' + dMinute;
-      //         } else {
-      //           dMinuteStr = ':' + dMinute;
-      //         }
-
-      //         dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-      //         break;
-      //       default:
-      //         dStr = d;
-      //         break;
-      //     }
-
-      //     return dStr;
-      //   });
-
-
-
-    tipNodes.tipPathCircles
-      .selectAll("." + obj.prefix + "tip_path-circle")
-        .data(tipData.raw.series)
-        .classed(obj.prefix + "active", function(d, i) {
-          var hasUndefined = 0;
-          for (var j = 0; j < i; j++) {
-            if (d.raw.series[j].val === "__undefined__") {
-              hasUndefined++;
-              break;
-            }
-          }
-          if (d.raw.series[i].val !== "__undefined__" && !hasUndefined) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .attr({
-          "cx": function(d) {
-            return obj.rendered.plot.xScaleObj.scale(d.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight
-          },
-          "cy": function(d) {
-            var y = d.y || 0,
-                y0 = d.y0 || 0;
-            return obj.rendered.plot.yScaleObj.scale(y + y0);
-          }
+      tipNodes.tipTextDate
+        .text(function() {
+          var d = tipData.raw.key;
+          return d;
         });
 
-
+      tipTextGroups
+        .append("circle")
+        .attr({
+          "class": function(d, i) {
+            return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
+          },
+          "r": function(d, i) { return tipNodes.radius; },
+          "cx": function() { return tipNodes.radius; },
+          "cy": function(d, i) {
+            return ( (i + 1) * parseInt(d3.select(this).style("font-size")) * 1.13 + 9);
+          }
+        });
 
       tipNodes.tipGroup
         .selectAll("." + obj.prefix + "tip_text-group")
@@ -1397,8 +1310,6 @@ function StackedColumnChartTips(tipNodes, obj) {
         .classed(obj.prefix + "active", function(d, i) {
           return d.val ? true : false;
         });
-
-
 
       tipNodes.tipRect
         .attr({
@@ -1418,15 +1329,13 @@ function StackedColumnChartTips(tipNodes, obj) {
               var x = obj.rendered.plot.xScaleObj.scale(tipData.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
             }
 
-            console.log("x %o", x);
-
             return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
 
           }
+
         });
 
       showTips(tipNodes, obj);
-
 
     }
 
