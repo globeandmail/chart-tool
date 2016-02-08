@@ -254,8 +254,6 @@ Router.route('pdf', {
 
     var r = wkhtmltopdf(url, options).pipe(this.response);
 
-    console.log(this.response.body);
-
   }
 });
 

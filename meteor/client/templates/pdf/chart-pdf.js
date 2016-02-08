@@ -10,18 +10,16 @@ Template.chartPdf.rendered = function() {
     data.exportable = {};
     data.exportable.width = width;
     data.exportable.height = height;
+    data.exportable.dynamicHeight = true;
     data.exportable.x_axis = app_settings.print.x_axis;
     data.exportable.y_axis = app_settings.print.y_axis;
     data.exportable.type = "pdf";
     data.prefix = prefix;
 
-    try {
-      drawChart(".chart-pdf", data);
-    } catch (e) {
-      console.log(e);
-    }
-
-
+    var chartObj = {};
+    chartObj.id = data._id;
+    chartObj.data = embed(data);
+    ChartTool.create(".chart-pdf", chartObj);
 
   }
 }
