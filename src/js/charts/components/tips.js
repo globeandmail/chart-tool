@@ -313,65 +313,7 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData.key;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -476,65 +418,7 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData.key;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -665,65 +549,7 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData[0].x;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].x);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -882,65 +708,7 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .text(function() {
-        var d = tipData[0].x;
-        var dStr;
-        switch (ctx) {
-          case "years":
-            dStr = d.getFullYear();
-            break;
-          case "months":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate + ", " + dYear;
-            break;
-          case "weeks":
-          case "days":
-            dMonth = obj.monthsAbr[d.getMonth()];
-            dDate = d.getDate();
-            dYear = d.getFullYear();
-            dStr = dMonth + ". " + dDate;
-            break;
-          case "hours":
-
-            dDate = d.getDate();
-            dHour = d.getHours();
-            dMinute = d.getMinutes();
-
-            var dHourStr,
-                dMinuteStr;
-
-            // Convert from 24h time
-            var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-            if (dHour === 0){
-              dHourStr = 12;
-            } else if (dHour > 12) {
-              dHourStr = dHour - 12;
-            } else {
-              dHourStr = dHour;
-            }
-
-            // Make minutes follow Globe style
-            if (dMinute === 0) {
-              dMinuteStr = '';
-            } else if(dMinute < 10) {
-              dMinuteStr = ':0' + dMinute;
-            } else {
-              dMinuteStr = ':' + dMinute;
-            }
-
-            dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-            break;
-          default:
-            dStr = d;
-            break;
-        }
-
-        return dStr;
-      });
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].x);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -1115,65 +883,7 @@ function ColumnChartTips(tipNodes, obj) {
         });
 
         tipNodes.tipTextDate
-          .text(function() {
-            var d = tipData.key;
-            var dStr;
-            switch (ctx) {
-              case "years":
-                dStr = d.getFullYear();
-                break;
-              case "months":
-                dMonth = obj.monthsAbr[d.getMonth()];
-                dDate = d.getDate();
-                dYear = d.getFullYear();
-                dStr = dMonth + ". " + dDate + ", " + dYear;
-                break;
-              case "weeks":
-              case "days":
-                dMonth = obj.monthsAbr[d.getMonth()];
-                dDate = d.getDate();
-                dYear = d.getFullYear();
-                dStr = dMonth + ". " + dDate;
-                break;
-              case "hours":
-
-                dDate = d.getDate();
-                dHour = d.getHours();
-                dMinute = d.getMinutes();
-
-                var dHourStr,
-                    dMinuteStr;
-
-                // Convert from 24h time
-                var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-                if (dHour === 0){
-                  dHourStr = 12;
-                } else if (dHour > 12) {
-                  dHourStr = dHour - 12;
-                } else {
-                  dHourStr = dHour;
-                }
-
-                // Make minutes follow Globe style
-                if (dMinute === 0) {
-                  dMinuteStr = '';
-                } else if(dMinute < 10) {
-                  dMinuteStr = ':0' + dMinute;
-                } else {
-                  dMinuteStr = ':' + dMinute;
-                }
-
-                dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-                break;
-              default:
-                dStr = d;
-                break;
-            }
-
-            return dStr;
-          });
+          .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
 
         tipNodes.tipGroup
           .selectAll("." + obj.prefix + "tip_text-group")
@@ -1344,7 +1054,72 @@ function StackedColumnChartTips(tipNodes, obj) {
 
 }
 
+function tipDateFormatter(selection, ctx, months, data) {
 
+  var dMonth, dDate, dYear, dHour, dMinute, dHourStr, dMinuteStr;
+
+  selection.text(function() {
+    var d = data;
+    var dStr;
+    switch (ctx) {
+      case "years":
+        dStr = d.getFullYear();
+        break;
+      case "months":
+        dMonth = months[d.getMonth()];
+        dDate = d.getDate();
+        dYear = d.getFullYear();
+        dStr = dMonth + " " + dDate + ", " + dYear;
+        break;
+      case "weeks":
+      case "days":
+        dMonth = months[d.getMonth()];
+        dDate = d.getDate();
+        dYear = d.getFullYear();
+        dStr = dMonth + " " + dDate;
+        break;
+      case "hours":
+
+        dDate = d.getDate();
+        dHour = d.getHours();
+        dMinute = d.getMinutes();
+
+        var dHourStr,
+          dMinuteStr;
+
+        // Convert from 24h time
+        var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
+
+        if (dHour === 0) {
+          dHourStr = 12;
+        } else if (dHour > 12) {
+          dHourStr = dHour - 12;
+        } else {
+          dHourStr = dHour;
+        }
+
+        // Make minutes follow Globe style
+        if (dMinute === 0) {
+          dMinuteStr = '';
+        } else if (dMinute < 10) {
+          dMinuteStr = ':0' + dMinute;
+        } else {
+          dMinuteStr = ':' + dMinute;
+        }
+
+        dStr = dHourStr + dMinuteStr + ' ' + suffix;
+
+        break;
+      default:
+        dStr = d;
+        break;
+    }
+
+    return dStr;
+
+  });
+
+}
 
 
 function BarChartTips(tipNodes, obj) {
