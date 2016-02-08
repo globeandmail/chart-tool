@@ -147,7 +147,11 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
     ticks = tickFinderX(domain, ctx, axisSettings.ticksSmall);
   }
 
-  axis.tickValues(ticks);
+  if (obj.options.type !== "column") {
+    axis.tickValues(ticks);
+  } else {
+    axis.ticks();
+  }
 
   axisNode.call(axis);
 
@@ -159,6 +163,8 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
     })
     .style("text-anchor", "start")
     .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+
+  if (obj.options.type === "column") { dropRedundantTicks(axisNode, ctx); }
 
   axisNode.selectAll(".tick")
     .call(dropTicks);

@@ -21,7 +21,7 @@ function ColumnChart(node, obj) {
     case "time":
 
       var timeInterval = require("../../utils/utils").timeInterval,
-          timeElapsed = timeInterval(obj.data.data);
+          timeElapsed = timeInterval(obj.data.data) + 1;
       var singleColumn = obj.dimensions.tickWidth() / timeElapsed / obj.data.seriesAmount;
 
       xAxisObj.range = [0, (obj.dimensions.tickWidth() - (singleColumn * obj.data.seriesAmount))];
