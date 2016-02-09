@@ -101,6 +101,7 @@
     "bucket": "chartstg",
     "region": "us-east-1",
     "filename": "thumbnail",
-    "extension": "png"
+    "extension": "png",
+    "thumbnailWidth": 460
   }
 }

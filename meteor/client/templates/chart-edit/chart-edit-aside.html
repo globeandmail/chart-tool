@@ -119,17 +119,18 @@
           <h4>Ticks <a href="#" class="help-toggle help-x-ticks-edit">?</a></h4>
           <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-x input-field" value="{{ x_axis.ticks }}">
         </div>
+
+        <div class="unit-edit unit-edit-half x-nice-edit">
+          <h4>Niceify <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
+          <input class="input-checkbox-x-nice" type="checkbox" name="xNice" checked="{{ xNice }}">
+        </div>
+
+        <div class="unit-edit unit-edit-half x-rescale-edit">
+          <h4>Rescale <a href="#" class="help-toggle help-x-rescale-edit">?</a></h4>
+          <input class="input-checkbox-x-rescale" type="checkbox" name="xRescale" checked="{{ xRescale }}">
+        </div>
+
       {{ /if }}
-
-      <div class="unit-edit unit-edit-half x-nice-edit">
-        <h4>Niceify <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
-        <input class="input-checkbox-x-nice" type="checkbox" name="xNice" checked="{{ xNice }}">
-      </div>
-
-      <div class="unit-edit unit-edit-half x-rescale-edit">
-        <h4>Rescale <a href="#" class="help-toggle help-x-rescale-edit">?</a></h4>
-        <input class="input-checkbox-x-rescale" type="checkbox" name="xRescale" checked="{{ xRescale }}">
-      </div>
 
     </div>
   </div>

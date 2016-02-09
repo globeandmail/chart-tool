@@ -1,10 +1,10 @@
 // Debug style
 
-// .chart-pdf * {
-//     border:cyan 1px solid;
-//     stroke: orange;
-//     stroke-width: 1px;
-// }
+.chart-pdf * {
+    border:cyan 1px solid;
+    stroke: orange;
+    stroke-width: 1px;
+}
 
 @function ptToPx($pt) {
   $magic: 1.30522;
@@ -23,12 +23,8 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
 
 .chart-pdf, .print-export-preview-chart, .chart-print-export {
 
-  .#{$prefix}fo > div {
-    padding-bottom: 5px;
-  }
-
-  .#{$prefix}chart_title {
-    font-family: 'PrattHeavy';
+  .#{$prefix}chart_title-text {
+    // font-family: 'PrattHeavy';
     font-size: $nine-pt;
     margin: 0;
     padding: 0;
@@ -38,7 +34,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     color: $black;
   }
 
-  .#{$prefix}fo.qualifier, .#{$prefix}fo.qualifier div {
+  .#{$prefix}chart_qualifier {
     display: inline-block;
     padding-left: 20px;
     padding-right: 6px;
@@ -46,18 +42,14 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     font-size: $eight-pt;
     line-height: 1em;
     vertical-align: middle;
-  }
-
-  .#{$prefix}fo.qualifier .#{$prefix}chart_qualifier {
-    font-family: 'GMSanC';
     margin: 0;
     padding-bottom: 0;
-    font-size: $eight-pt;
     color: $black;
+    // font-family: 'GMSanC';
   }
 
-  .#{$prefix}chart_source ,.#{$prefix}chart_credit {
-    font-family: 'GMSanC';
+  .#{$prefix}chart_source {
+    // font-family: 'GMSanC';
     font-size: $six-five-pt;
     padding-top: 4px;
     display: block;
@@ -129,7 +121,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
 
   .#{$prefix}axis-group text {
     font-size: $eight-pt;
-    font-family: 'GMSanC';
+    // font-family: 'GMSanC';
     color: $black;
     fill: $black;
   }

@@ -354,7 +354,7 @@ select {
 
 // Title, qualifier and source contentEditable fields
 
-.#{$prefix}chart_title-text, .#{$prefix}chart_qualifier, .#{$prefix}chart_source {
+.#{$prefix}chart_title-text, .#{$prefix}chart_qualifier, .#{$prefix}chart_source-text {
   &:hover {
     cursor: text;
   }

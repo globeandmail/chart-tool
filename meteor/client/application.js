@@ -1,6 +1,6 @@
 savePulse = function() {
   var time = 600;
-  function pulse() {
+  function start() {
     d3.select(".save-icon").transition()
       .duration(time)
       .style("opacity", 1)
@@ -8,20 +8,20 @@ savePulse = function() {
       .duration(time)
       .style('opacity', 0.1)
       .ease('sine')
-      .each("end", pulse);
+      .each("end", start);
   }
   function stop() {
     d3.select(".save-icon").transition()
       .style("opacity", "");
   }
   return {
-    pulse: pulse,
+    start: start,
     stop: stop
   }
 }
 
 updateAndSave = function(method, obj, data) {
-  savePulse().pulse();
+  savePulse().start();
   Meteor.call(method, obj._id, data, function(err, result) {
     if (!err) {
       var newObj = Charts.findOne(Session.get("chartId"));
@@ -96,7 +96,7 @@ generateThumb = function(obj) {
   obj.exportable = {};
   obj.exportable.type = "web";
   obj.exportable.dynamicHeight = false;
-  obj.exportable.width = 460;
+  obj.exportable.width = app_settings.s3.thumbnailWidth;
   obj.exportable.height = obj.exportable.width * (ratio / 100);
 
   div.style.width = obj.exportable.width + "px";
@@ -104,9 +104,9 @@ generateThumb = function(obj) {
   div.className = className;
   document.body.appendChild(div);
 
-  var chart = drawChart(container, obj);
+  var chartError = drawChart(container, obj);
 
-  if (!chart) {
+  if (!chartError) {
 
     var svgContainer = document.createElement("div");
     svgContainer.className = "svg-container";
@@ -192,9 +192,9 @@ downloadImg = function(_obj, _options) {
   div.className = className;
   document.body.appendChild(div);
 
-  var chart = drawChart(container, _obj);
+  var chartError = drawChart(container, _obj);
 
-  if (!chart) {
+  if (!chartError) {
 
     var svgContainer = document.createElement("div");
     svgContainer.className = "svg-container";

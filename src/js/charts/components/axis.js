@@ -15,7 +15,7 @@ function axisManager(node, obj, scale, axisType) {
 
   var prevAxis = node.select("." + obj.prefix + "axis-group" + "." + obj.prefix + axisType).node();
 
-  if (prevAxis !== null) { prevAxis.remove(); }
+  if (prevAxis !== null) { d3.select(prevAxis).remove(); }
 
   var axisGroup = node.append("g")
     .attr("class", obj.prefix + "axis-group" + " " + obj.prefix + axisType);

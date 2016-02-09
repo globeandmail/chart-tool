@@ -98,10 +98,10 @@ app_settings = {
 
     series: [],
     mobile: {},
-    annotations: {},
+    annotations: [],
     range: [],
 
-    user: [],
+    users: [],
     tags: [],
 
     img: "",
@@ -139,7 +139,7 @@ app_settings = {
     magic: {
       // i don't understand why these are necessary for print, but they are
       width: 3.698,
-      height: 3.675
+      height: 4.0705
     },
     x_axis: {
       tickTarget: 8,
