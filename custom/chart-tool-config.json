@@ -95,7 +95,7 @@
   },
 
   "image": {
-    "enable": true,
+    "enable": false,
     "base_path": "",
     "expiration": 30000,
     "bucket": "bucketname",

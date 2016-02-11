@@ -9,6 +9,9 @@ Template.chartEditEmbed.helpers({
   angleBracket: function() {
     return '<';
   },
+  pfx: function() {
+    if (prefix) { return prefix; }
+  },
   embedJSON: function() {
     if (!isEmpty(this)) {
       return JSON.stringify(embed(this), null, 2);

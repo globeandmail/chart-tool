@@ -24,7 +24,6 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
 .chart-pdf, .print-export-preview-chart, .chart-print-export {
 
   .#{$prefix}chart_title-text {
-    // font-family: 'PrattHeavy';
     font-size: $nine-pt;
     margin: 0;
     padding: 0;
@@ -45,11 +44,9 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     margin: 0;
     padding-bottom: 0;
     color: $black;
-    // font-family: 'GMSanC';
   }
 
   .#{$prefix}chart_source {
-    // font-family: 'GMSanC';
     font-size: $six-five-pt;
     padding-top: 4px;
     display: block;
@@ -121,7 +118,6 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
 
   .#{$prefix}axis-group text {
     font-size: $eight-pt;
-    // font-family: 'GMSanC';
     color: $black;
     fill: $black;
   }

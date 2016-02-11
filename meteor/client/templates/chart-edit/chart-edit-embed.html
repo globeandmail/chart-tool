@@ -2,17 +2,16 @@
 {{{ angleBracket }}}!-- CHART TOOL v{{ version }}-{{ build }} -->
 {{{ angleBracket }}}!-- edited: {{ lastEdited }} -->
 {{{ angleBracket }}}!-- slug: {{ slug }} -->
-<div class="{{ prefix }}chart" data-chartid="{{ prefix }}{{ _id }}">
+<div class="{{ pfx }}chart" data-chartid="{{ pfx }}{{ _id }}">
   <script>
     (function(root) {
       var data = {{ embedJSON }};
       root.__charttool = root.__charttool || [];
-      root.__charttool.push({id: '{{ prefix }}{{ _id }}', data: data});
+      root.__charttool.push({id: '{{ pfx }}' + data.id, data: data});
     })(this);
   </script>
   {{ #if useBase64Images }}
-    <img src="{{ img }}" class="{{ prefix }}base64img {{ prefix }}thumbnail">
+    <img src="{{ img }}" class="{{ pfx }}base64img {{ pfx }}thumbnail">
   {{ /if }}
 </div>
-
 </template>
