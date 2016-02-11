@@ -17,8 +17,10 @@ function headerComponent(container, obj) {
       .classed("editable-chart_title", true);
   }
 
+  var qualifier;
+
   if (obj.options.type === "bar") {
-    headerGroup
+    qualifier = headerGroup
       .append("div")
       .attr({
         "class": function() {
@@ -70,7 +72,8 @@ function headerComponent(container, obj) {
 
   return {
     headerGroup: headerGroup,
-    legend: legend
+    legend: legend,
+    qualifier: qualifier
   };
 
 }
