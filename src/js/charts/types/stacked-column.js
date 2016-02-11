@@ -91,7 +91,7 @@ function StackedColumnChart(node, obj) {
     yAxisObj: yAxisObj,
     seriesGroup: seriesGroup,
     series: series,
-    columnItem: columnItem
+    rect: rect
   };
 
 }
