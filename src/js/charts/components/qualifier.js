@@ -24,42 +24,30 @@ function qualifierComponent(node, obj) {
         .text(obj.qualifier);
 
       foreignObject
-        .attr("width", qualifierField.node().getBoundingClientRect().width + 15);
-
-      foreignObject
-        .attr("height", qualifierField.node().getBoundingClientRect().height);
-
-      foreignObject
-        .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (qualifierField.node().getBoundingClientRect().height) / 2 ) + ")");
+        .attr({
+          "width": qualifierField.node().getBoundingClientRect().width + 15,
+          "height": qualifierField.node().getBoundingClientRect().height,
+          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (qualifierField.node().getBoundingClientRect().height) / 2 ) + ")"
+        });
 
     } else {
 
-      var qualifierBg = yAxisNode.append("rect")
-        .attr("class", obj.prefix + "qualifier_text_bg");
-
-      var qualifierText = yAxisNode.append("text")
-        .attr("class", obj.prefix + "qualifier_text")
-        .text(obj.qualifier);
-
-      var textBox = qualifierText.node().getBoundingClientRect();
-      var textWidth = qualifierText.node().getComputedTextLength();
-
-      qualifierText
+      var qualifierBg = yAxisNode.append("text")
+        .attr("class", obj.prefix + "chart_qualifier-text-bg")
+        .text(obj.qualifier)
         .attr({
           "dy": "0.32em",
           "y": "0",
           "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)"
         });
 
-      qualifierBg
-        .style("fill", "white")
+      var qualifierText = yAxisNode.append("text")
+        .attr("class", obj.prefix + "chart_qualifier-text")
+        .text(obj.qualifier)
         .attr({
           "dy": "0.32em",
           "y": "0",
-          "x": "-1",
-          "width": (textWidth * 0.865) + 1,
-          "height": textBox.height,
-          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (textBox.height / 2) ) + ")"
+          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)"
         });
 
     }
@@ -68,9 +56,7 @@ function qualifierComponent(node, obj) {
 
   return {
     qualifierBg: qualifierBg,
-    qualifierText: qualifierText,
-    textBox: textBox,
-    textWidth: textWidth
+    qualifierText: qualifierText
   };
 
 }

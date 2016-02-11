@@ -41,7 +41,6 @@
   background: $alternate-color;
 }
 
-
 // qualifier
 .#{$prefix}chart_qualifier {
   margin: 0;
@@ -52,6 +51,14 @@
 
 .#{$prefix}chart_qualifier-bar {
   margin-top: 2px;
+}
+
+.#{$prefix}chart_qualifier-text-bg {
+  stroke: $white;
+  stroke-width: 10px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: $white;
 }
 
 .#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {
