@@ -2,7 +2,6 @@ var gulp = require("gulp"),
     clean = require("gulp-clean"),
     args = require('yargs').argv,
     jeditor = require("gulp-json-editor"),
-    opn = require("opn"),
     shell = require("gulp-shell"),
     replace = require('gulp-replace'),
     gulpConfig = require("./gulp-config.js");
