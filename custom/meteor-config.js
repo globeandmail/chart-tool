@@ -94,8 +94,6 @@ app_settings = {
       nice: config.yAxis.nice
     },
 
-    tags: [],
-
     series: [],
     mobile: {},
     annotations: [],
