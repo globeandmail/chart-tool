@@ -14,7 +14,7 @@ gulp.task('_browsersync', ["_browserSyncWatch"], function() {
     ui: { port: gulpConfig.browserSyncUIPort },
     server: {
       baseDir: "./",
-      open: true
+      open: false
     }
   });
 

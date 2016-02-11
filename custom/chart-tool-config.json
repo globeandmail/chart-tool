@@ -98,7 +98,7 @@
     "enable": true,
     "base_path": "",
     "expiration": 30000,
-    "bucket": "chartstg",
+    "bucket": "bucketname",
     "region": "us-east-1",
     "filename": "thumbnail",
     "extension": "png",

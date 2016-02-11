@@ -33,7 +33,7 @@ app_settings = {
   primary: "NEWS & ROB",
   alternate: "Globe Investor",
 
-  help: "http://confluence.colo.theglobeandmail.com/display/ed/Chart+Tool",
+  help: "http://www.github.com/globeandmail/chart-tool",
 
   chart: {
     version: app_version,

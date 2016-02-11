@@ -95,7 +95,3 @@ Chart Tool is still under active development, so better, more comprehensive docu
 [Jeremy Agius](mailto:jagius@globeandmail.com)  
 [Michael Pereira](mailto:mpereira@globeandmail.com)  
 [Matt Frehner](mailto:mfrehner@globeandmail.com)  
-
-### License note
-
-While the main codebase is available under the MIT license, one element is not: the fonts used for this project. Fonts residing under `/src/styles/settings/_fonts.scss` and `/meteor/client/stylesheets/partials/base/_fonts.scss` are copyright of The Globe and Mail. These will be removed for the first release of the Chart Tool. Please do not copy them.

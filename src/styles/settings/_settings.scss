@@ -4,10 +4,6 @@ $prefix: "ct-";
 $width: 100%;
 $margin: 0 0 20px 0;
 
-$series-count-default: 4;
-$series-count-max: 5;
-
-
 // Fonts
 $heading-font-family: "Helvetica";
 $heading-font-weight: bold;
@@ -65,3 +61,5 @@ $axis-stroke-color: $black;
 $axis-stroke-width: 1px;
 $axis-stroke-dasharray: 1, 3px;
 $line-stroke-width: 2px;
+
+$series-count-max: 5;
