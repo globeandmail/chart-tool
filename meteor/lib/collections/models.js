@@ -17,17 +17,17 @@ Meteor.methods({
   },
 
   checkDBStatus: function() {
-    var test = {};
-    test.createdAt = new Date();
-    test.lastEdited = new Date();
-    test.connected = true;
-    return DBStatus.insert(test);
+    return DBStatus.insert({
+      createdAt: new Date(),
+      lastEdited: new Date(),
+      connected: true
+    });
   },
 
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
   addChart: function (text, data) {
-    var newChart = copyObj(app_settings.chart);
+    var newChart = extend(app_settings.chart);
 
     newChart.createdAt = new Date();
     newChart.lastEdited = new Date();

@@ -2,14 +2,20 @@ randomFromArr = function(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-copyObj = function (o) {
-  var copy = Object.create(Object.getPrototypeOf(o));
-  var propNames = Object.getOwnPropertyNames(o);
-  propNames.forEach(function(name) {
-    var desc = Object.getOwnPropertyDescriptor(o, name);
-    Object.defineProperty(copy, name, desc);
-  });
-  return copy;
+extend = function(from, to) {
+  if (from == null || typeof from != "object") return from;
+  if (from.constructor != Object && from.constructor != Array) return from;
+  if (from.constructor == Date || from.constructor == RegExp || from.constructor == Function ||
+    from.constructor == String || from.constructor == Number || from.constructor == Boolean)
+    return new from.constructor(from);
+
+  to = to || new from.constructor();
+
+  for (var name in from) {
+    to[name] = typeof to[name] == "undefined" ? extend(from[name], null) : to[name];
+  }
+
+  return to;
 }
 
 isEmpty = function(obj) {
