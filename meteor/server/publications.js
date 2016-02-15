@@ -7,6 +7,13 @@ Meteor.publish("chart", function (chartId) {
 
 Meteor.publish("chartArchive", function (params) {
   var parameters = queryConstructor(params);
+  parameters.fields = {
+    "_id": true,
+    "img": true,
+    "options.type": true,
+    "slug": true,
+    "tags": true
+  };
   var data = Charts.find(parameters.find, parameters.options);
   if (data) { return data; }
   return this.ready();

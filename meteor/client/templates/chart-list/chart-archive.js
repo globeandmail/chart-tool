@@ -23,8 +23,6 @@ Template.chartArchive.events({
       params.filters.types.push(typeValue);
     }
 
-    // send new filter to subscription
-    console.log(params.filters.types);
     Session.set("archiveFilters", params);
   },
   "click .edit-box h3": function(event) {

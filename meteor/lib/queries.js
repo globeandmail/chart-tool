@@ -9,13 +9,13 @@ queryConstructor = function(args) {
   var queryFunction = queries[queryName],
       parameters = queryFunction(args);
 
-  if (parameters.options.limit > 100) {
-    parameters.options.limit = 100;
-  }
+  // if (parameters.options.limit > 100) {
+  //   parameters.options.limit = 100;
+  // }
 
-  if (!parameters.options.limit || parameters.options.limit === "") {
-    parameters.options.limit = 25;
-  }
+  // if (!parameters.options.limit || parameters.options.limit === "") {
+  //   parameters.options.limit = 25;
+  // }
 
   return parameters;
 
@@ -27,8 +27,8 @@ queries.default = function () {
     options: {
       sort: {
         lastEdited: -1
-      },
-      limit: 25
+      }
+      // limit: 25
     }
   }
 };
@@ -62,8 +62,8 @@ queries.chartArchive = function (params) {
       options: {
         sort: {
           lastEdited: -1
-        },
-        limit: params.limit
+        }
+        // limit: params.limit
       }
     }
   }
