@@ -3,15 +3,6 @@ Router.configure({
   loadingTemplate: 'loading'
 });
 
-// Router.route('/', {
-//   name: 'chart.home',
-//   layoutTemplate: 'introLayout',
-//   template: 'chartHome',
-//   onAfterAction: function() {
-//     return document.title = "Chart Tool";
-//   }
-// });
-
 Router.route('/', function() {
   this.redirect('/new');
 });
@@ -41,6 +32,18 @@ Router.route('/status', {
   onAfterAction: function () {
     return document.title = "Status – Chart Tool";
   },
+  data: function() {
+    if (this.ready()) {
+      var chartCount = Charts.find().fetch().length,
+          chartUserCount = Presences.find().fetch().length;
+      return {
+        chartCount: chartCount,
+        chartUserCount: chartUserCount
+      };
+    } else {
+      this.render('loading');
+    }
+  },
   waitOn: function() {
     return [
       Meteor.subscribe('chartCount'),
@@ -54,27 +57,13 @@ Router.route('/chart/edit/:_id', {
   name: 'chart.edit',
   layoutTemplate: 'applicationLayout',
   yieldRegions: {
-    'chartEditType': {
-      to: 'type'
-    },
-    'chartEditPreview': {
-      to: 'preview'
-    },
-    'chartEditOutput': {
-      to: 'output'
-    },
-    'chartEditAside': {
-      to: 'aside'
-    },
-    'chartEditEmbed': {
-      to: 'embed'
-    },
-    'chartEditStatus': {
-      to: 'status'
-    },
-    'overlay': {
-      to: 'overlay'
-    }
+    'chartEditType': { to: 'type' },
+    'chartEditPreview': { to: 'preview' },
+    'chartEditOutput': { to: 'output' },
+    'chartEditAside': { to: 'aside' },
+    'chartEditEmbed': { to: 'embed' },
+    'chartEditStatus': { to: 'status' },
+    'overlay': { to: 'overlay' }
   },
   data: function() {
     var chart = Charts.findOne({ _id: this.params._id });
@@ -132,10 +121,16 @@ Router.route('/chart/:_id', {
   }
 });
 
-Router.route('/list', {
-  name: "chart.list",
-  layoutTemplate: "listLayout",
-  template: "chartList",
+Router.route('/list', function() {
+  this.redirect('/archive');
+});
+
+Router.route('/archive', {
+  name: "chart.archive",
+  layoutTemplate: "archiveLayout",
+  yieldRegions: {
+    'chartArchive': { to: 'archive' },
+  },
   data: function() {
     if (this.ready()) {
       return Charts.find({});
@@ -144,10 +139,21 @@ Router.route('/list', {
     }
   },
   waitOn: function() {
-    return Meteor.subscribe('chartList');
+    return [
+      // Meteor.subscribe('chartArchive'),
+      Meteor.subscribe('tags')
+    ];
   },
   onAfterAction: function() {
-    return document.title = "List charts – Chart Tool";
+    Session.setDefault('archiveFilters', {
+      queryName: 'chartArchive',
+      filters: {
+        types: [],
+        tags: [],
+      },
+      limit: 25
+    });
+    return document.title = "Archive – Chart Tool";
   }
 });
 
@@ -277,18 +283,14 @@ Router.route('GET', {
   name: 'chart.api.status',
   path: '/api/status',
   action: function() {
-
     DBStatus.remove({});
-
     var statusResponse = {};
-
     try {
       Meteor.call("checkDBStatus")
       statusResponse.databaseConnected = true;
     } catch (e) {
       statusResponse.databaseConnected = false;
     }
-
     this.response.statusCode = 200;
     this.response.setHeader("Content-Type", "application/json");
     this.response.setHeader("Access-Control-Allow-Origin", "*");

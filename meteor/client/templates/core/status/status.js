@@ -1,9 +1,9 @@
 Template.status.helpers({
   totalCharts: function() {
-    return Number(Charts.find().fetch().length).toLocaleString("en");
+    return Number(this.chartCount).toLocaleString("en");
   },
   totalActiveUsers: function() {
-    return Number(Presences.find().fetch().length).toLocaleString("en");
+    return Number(this.chartUserCount).toLocaleString("en");
   },
   totalChartsThisMonth: function() {
 

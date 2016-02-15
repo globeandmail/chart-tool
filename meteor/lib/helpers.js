@@ -84,7 +84,7 @@ deleteNullProps = function(obj) {
 }
 
 deleteProp = function(obj, del) {
-  var copy = copyObj(obj);
+  var copy = extend(obj);
   for (var i = 0; i < del.length; i++) {
     var elem = del[i];
     delete copy[elem];

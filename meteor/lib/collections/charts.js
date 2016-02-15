@@ -1,8 +1,16 @@
-// TODO: use Collection2 and SimpleSchema for db validation
-
 Charts = new Mongo.Collection("charts");
 
-DBStatus = new Meteor.Collection("database-status");
+Charts.allow({
+  insert: function() { return false; },
+  update: function() { return false; },
+  remove: function() { return false; }
+});
+
+Charts.deny({
+  insert: function() { return true; },
+  update: function() { return true; },
+  remove: function() { return true; }
+});
 
 Charts.initEasySearch(['slug', 'data', 'heading', 'qualifier', 'source'], {
   'limit' : 10,
@@ -10,27 +18,14 @@ Charts.initEasySearch(['slug', 'data', 'heading', 'qualifier', 'source'], {
 });
 
 Meteor.methods({
-
-  // status check methods
-  clearDBStatus: function() {
-    return DBStatus.remove({});
-  },
-
-  checkDBStatus: function() {
-    return DBStatus.insert({
-      createdAt: new Date(),
-      lastEdited: new Date(),
-      connected: true
-    });
-  },
-
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
   addChart: function (text, data) {
-    var newChart = extend(app_settings.chart);
+    var newChart = extend(app_settings.chart),
+        now = new Date();
 
-    newChart.createdAt = new Date();
-    newChart.lastEdited = new Date();
+    newChart.createdAt = now;
+    newChart.lastEdited = now;
     newChart.slug = text;
     newChart.data = data;
     newChart.md5 = CryptoJS.MD5(data).toString();
@@ -431,14 +426,5 @@ Meteor.methods({
         lastEdited: new Date()
       }
     });
-  },
-  postChart: function(data) {
-    // HTTP.call("POST", "http://localhost:3030",
-    // { data: data },
-    // function (error, result) {
-    //   if (error) {
-    //     console.log("error yo");
-    //   }
-    // });
   }
 });
