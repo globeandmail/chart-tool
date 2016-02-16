@@ -139,10 +139,7 @@ Router.route('/archive', {
     }
   },
   waitOn: function() {
-    return [
-      // Meteor.subscribe('chartArchive'),
-      Meteor.subscribe('tags')
-    ];
+    Meteor.subscribe('tags');
   },
   onAfterAction: function() {
     Session.setDefault('archiveFilters', {
@@ -151,7 +148,7 @@ Router.route('/archive', {
         types: [],
         tags: [],
       },
-      limit: 25
+      limit: 50
     });
     return document.title = "Archive – Chart Tool";
   }

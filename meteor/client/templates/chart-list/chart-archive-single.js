@@ -1,5 +1,5 @@
 Template.chartArchiveSingle.events({
-  "click .chart-archive_single": function() {
-    Router.go('chart.show', {_id: this._id});
+  "click .charts-archive_single": function() {
+    window.open(Router.url('chart.show', { _id: this._id } ), '_blank');
   }
 });

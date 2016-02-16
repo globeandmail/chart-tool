@@ -7,20 +7,21 @@ Meteor.publish("chart", function (chartId) {
 
 Meteor.publish("chartArchive", function (params) {
   var parameters = queryConstructor(params);
-  parameters.fields = {
-    "_id": true,
+  parameters.options.fields = {
     "img": true,
     "options.type": true,
     "slug": true,
-    "tags": true
+    "tags": true,
+    "lastEdited": true
   };
+  // parameters.options.limit = 20;
   var data = Charts.find(parameters.find, parameters.options);
   if (data) { return data; }
   return this.ready();
 });
 
 Meteor.publish("tags", function () {
-  return Tags.find();
+  // return Tags.find();
 });
 
 Meteor.publish('chartUsers', function (chartId) {

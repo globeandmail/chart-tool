@@ -1,6 +1,6 @@
 Template.chartArchive.helpers({
   chartEntries: function() {
-    return Charts.find();
+    return Charts.find({}, {sort: { lastEdited: -1 }});
   },
   typeChecked: function(type) {
     if (Session.get("archiveFilters")) {
@@ -50,7 +50,12 @@ Template.chartArchive.events({
 });
 
 Template.chartArchive.rendered = function() {
+
+  StickyfillInit();
+  Stickyfill.add(document.querySelector('.sticky'));
+
   Tracker.autorun(function(comp) {
+
     var routeName = Router.current().route.getName();
 
     if (routeName !== "chart.archive") {
@@ -58,7 +63,7 @@ Template.chartArchive.rendered = function() {
       return;
     }
 
-    console.log("hi");
+    // masonry grid tk
 
     Meteor.subscribe('chartArchive', Session.get("archiveFilters"));
 
