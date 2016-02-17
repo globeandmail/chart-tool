@@ -65,7 +65,9 @@ app_settings = {
       range: false,
       series: false,
       indexed: false,
-      qualifier: true
+      qualifier: true,
+      share_data:true,
+      social:true
     },
     x_axis: {
       display: config.xAxis.display,

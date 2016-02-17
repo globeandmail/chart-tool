@@ -42,7 +42,9 @@ function RecipeFactory(settings, obj) {
   //  "options" area of embed code
   o.type             = chart.options.type                     || o.type;
   o.interpolation    = chart.options.interpolation            || o.interpolation;
-
+  
+  o.social      = !helpers.isUndefined(co.social) === true ? co.social           : o.social;
+  o.shareData   = !helpers.isUndefined(co.shareData) === true ? co.shareData     : o.shareData;
   o.stacked     = !helpers.isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
   o.expanded    = !helpers.isUndefined(co.expanded) === true ? co.expanded       : o.expanded;
   o.head        = !helpers.isUndefined(co.head) === true ? co.head               : o.head;

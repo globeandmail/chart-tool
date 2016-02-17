@@ -506,6 +506,14 @@ Template.chartEditAside.events({
     var val = !this.options.tips;
     updateAndSave("updateTips", this, val);
   },
+  "change .input-checkbox-share-data": function(event) {
+    var val = !this.options.share_data;
+    updateAndSave("updateShareData", this, val);
+  },
+  "change .input-checkbox-social": function(event) {
+    var val = !this.options.social;
+    updateAndSave("updateSocial", this, val);
+  },
   "change .input-checkbox-ordinal": function(event) {
     var currScale = this.x_axis.scale;
 

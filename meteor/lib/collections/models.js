@@ -220,6 +220,22 @@ Meteor.methods({
       }
     });
   },
+  updateShareData: function(chartId, shareData) {
+    return Charts.update(chartId, {
+      $set: {
+        "options.shareData": shareData,
+        lastEdited: new Date()
+      }
+    });
+  },
+  updateSocial: function(chartId, social) {
+    return Charts.update(chartId, {
+      $set: {
+        "options.social": social,
+        lastEdited: new Date()
+      }
+    });
+  },
   updateIndex: function(chartId, index) {
     return Charts.update(chartId, {
       $set: {

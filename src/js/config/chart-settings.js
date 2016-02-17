@@ -17,6 +17,7 @@ module.exports = {
   deck: "",
   index: "",
   hasHours: false,
+  social: settings.social,
   seriesHighlight: function() {
     if (this.data.seriesAmount && this.data.seriesAmount <= 1) {
       return 1;
@@ -42,7 +43,9 @@ module.exports = {
     tips: false,
     annotations: false,
     range: false,
-    series: false
+    series: false,
+    shareData: true,
+    social: true
   },
 
   range: {},

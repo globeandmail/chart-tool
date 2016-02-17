@@ -4,11 +4,9 @@ var components = {
   footer: require("./footer"),
   plot: require("./plot"),
   qualifier: require("./qualifier"),
-  axis: require("./axis"),
-  scale: require("./scale"),
   tips: require("./tips"),
   social: require("./social"),
-  shareData: require("./shareData")
+  share_data: require("./share_data")
 };
 
 module.exports = components;
