@@ -11,23 +11,6 @@ function StackedAreaChart(node, obj) {
       yScaleObj = new Scale(obj, "yAxis"),
       xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  var stack = d3.layout.stack();
-
-  var seriesData = stack(d3.range(obj.data.seriesAmount).map(function(key) {
-    return obj.data.data.map(function(d) {
-      return {
-        legend: obj.data.keys[key],
-        x: d.key,
-        y: Number(d.series[key].val)
-      };
-    });
-  }));
-
-  yScaleObj.scale.domain([0, d3.max(seriesData[seriesData.length - 1], function(d) {
-    var scaleMultiplier = obj.scaleMultiplier;
-    return (d.y0 + d.y) * scaleMultiplier;
-  })]);
-
   //  axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
       yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
@@ -55,7 +38,7 @@ function StackedAreaChart(node, obj) {
     });
 
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
-    .data(seriesData)
+    .data(obj.data.stackedData)
     .enter().append("svg:g")
     .attr({
       "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
@@ -101,7 +84,6 @@ function StackedAreaChart(node, obj) {
     xAxisObj: xAxisObj,
     yAxisObj: yAxisObj,
     seriesGroup: seriesGroup,
-    seriesData: seriesData,
     series: series,
     line: line,
     area: area

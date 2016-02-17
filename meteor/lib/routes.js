@@ -238,9 +238,6 @@ Router.route('pdf', {
 
     this.response.writeHead(200, headers);
 
-    console.log(width, height);
-    console.log(width.toFixed(2), height.toFixed(2));
-
     var options = {
       pageWidth: width.toFixed(2) + "mm",
       pageHeight: height.toFixed(2) + "mm",

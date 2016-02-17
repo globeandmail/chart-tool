@@ -43,6 +43,7 @@ function RecipeFactory(settings, obj) {
   o.type             = chart.options.type                     || o.type;
   o.interpolation    = chart.options.interpolation            || o.interpolation;
   
+  o.social      = !helpers.isUndefined(co.social) === true ? co.social           : o.social;
   o.shareData   = !helpers.isUndefined(co.shareData) === true ? co.shareData     : o.shareData;
   o.stacked     = !helpers.isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
   o.expanded    = !helpers.isUndefined(co.expanded) === true ? co.expanded       : o.expanded;
@@ -61,6 +62,7 @@ function RecipeFactory(settings, obj) {
 
   //  these are specific to the t object and don't exist in the embed
   t.baseClass        = embed.baseClass                        || t.baseClass;
+
   t.dimensions.width = embed.width                            || t.dimensions.width;
 
   t.prefix           = chart.prefix                           || t.prefix;
@@ -77,7 +79,7 @@ function RecipeFactory(settings, obj) {
   t.dateFormat       = chart.dateFormat                       || t.dateFormat;
 
   t.dateFormat = dataParse.inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
-  t.data = dataParse.parse(chart.data, t.dateFormat, o.index) || t.data;
+  t.data = dataParse.parse(chart.data, t.dateFormat, o.index, o.stacked, o.type) || t.data;
 
   return t;
 

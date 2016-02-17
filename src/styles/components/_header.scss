@@ -41,13 +41,6 @@
   background: $alternate-color;
 }
 
-.#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle-0 {
-  fill: $primary-color;
-}
-
-.#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle-0 {
-  fill: $alternate-color;
-}
 
 // qualifier
 .#{$prefix}chart_qualifier {
@@ -71,16 +64,8 @@
     background: nth($primaryShades, $counter);
   }
 
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
-    fill: nth($primaryShades, $counter);
-  }
-
   .#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
     background: nth($alternateShades, $counter);
-  }
-
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
-    fill: nth($alternateShades, $counter);
   }
 
 }

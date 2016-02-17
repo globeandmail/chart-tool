@@ -7,7 +7,6 @@
 This component adds a "data" button to each chart which can be toggled to present the charts data in a tabular form along with buttons allowing the raw data to be downloaded
  */
 function shareDataComponent(node, d) {
-	
  	var chartContainer = d3.select(node);
 
  	var chartMeta = chartContainer
@@ -26,7 +25,7 @@ function shareDataComponent(node, d) {
 	var chartDataCloseBtn = chartData
 		.append('div')
 		.attr('class','ct-chart_data_close')
-		.html('x');
+		.html('&#xd7;');
 
 	var chartDataTable = chartData
 		.append('div')
@@ -44,11 +43,6 @@ function shareDataComponent(node, d) {
 		.append('a')
 		.attr('class','ct-chart_data_btn csv')
 		.html('download csv');
-
-	chartDataNav
-		.append('div')
-		.attr('class','ct-chart_data_btn')
-		.html('download json');
 
 	csvToTable(chartDataTable,d.data.csv);
 

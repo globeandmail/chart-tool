@@ -5,6 +5,7 @@ var components = {
   plot: require("./plot"),
   qualifier: require("./qualifier"),
   tips: require("./tips"),
+  social: require("./social"),
   share_data: require("./share_data")
 };
 

@@ -85,10 +85,7 @@ function LineChart(node, obj) {
         return output;
       },
       "d": hLine
-    })
-    .on("mouseover", function(d) { obj.dispatch.hoverIn(this, obj, d); })
-    .on("mouseout", function(d) { obj.dispatch.hoverOut(this, obj, d); })
-    .on("click", function(d) { obj.dispatch.click(this, obj, d); });
+    });
 
   axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
 

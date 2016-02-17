@@ -5,6 +5,14 @@ Meteor.methods({
   }
 });
 
+if (app_settings.s3.enable) {
+  S3.config = {
+    key: process.env.S3_CHARTTOOL_KEY,
+    secret: process.env.S3_CHARTTOOL_SECRET,
+    bucket: app_settings.s3.bucket,
+    region: app_settings.s3.region
+  };
+}
 
 Meteor.startup(function() {
   // clears status database

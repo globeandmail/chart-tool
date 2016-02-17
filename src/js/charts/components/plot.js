@@ -24,11 +24,7 @@ function plot(node, obj) {
       break;
 
     case "area":
-      if (obj.options.stacked) {
-        chartRef = draw.stackedArea(node, obj);
-      } else {
-        chartRef = draw.area(node, obj);
-      }
+      chartRef = obj.options.stacked ? draw.stackedArea(node, obj) : draw.area(node, obj);
       break;
 
     case "bar":
@@ -36,11 +32,7 @@ function plot(node, obj) {
       break;
 
     case "column":
-      if (obj.options.stacked) {
-        chartRef = draw.stackedColumn(node, obj);
-      } else {
-        chartRef = draw.column(node, obj);
-      }
+      chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);
       break;
 
     case "stream":

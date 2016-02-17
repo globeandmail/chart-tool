@@ -7,6 +7,7 @@ var components = {
   axis: require("./axis"),
   scale: require("./scale"),
   tips: require("./tips"),
+  social: require("./social"),
   shareData: require("./shareData")
 };
 

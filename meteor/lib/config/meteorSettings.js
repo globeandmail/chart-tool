@@ -46,7 +46,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var config = __webpack_require__(2),
-	    p = __webpack_require__(27);
+	    p = __webpack_require__(28);
 	
 	app_version = p.version;
 	app_build = p.buildVer;
@@ -54,6 +54,8 @@
 	prefix = config.prefix;
 	
 	app_settings = {
+	
+	  s3: config.image,
 	
 	  animal_api: "http://www.whimsicalwordimal.com/api/name",
 	  names: [
@@ -73,10 +75,7 @@
 	    "Booked Baboon"
 	  ],
 	
-	  defaults: {
-	    source_prefix: "CHART TOOL",
-	    source_suffix: " » SOURCE:"
-	  },
+	  source_suffix: " » SOURCE:",
 	
 	  primary: "NEWS & ROB",
 	  alternate: "Globe Investor",
@@ -114,7 +113,8 @@
 	      series: false,
 	      indexed: false,
 	      qualifier: true,
-	      share_data:true
+	      share_data:true,
+	      social:true
 	    },
 	    x_axis: {
 	      display: config.xAxis.display,
@@ -146,10 +146,10 @@
 	    series: [],
 	    mobile: {},
 	    annotations: {},
-	
-	    // for when series are indexed to a value
-	    index: "",
 	    range: [],
+	
+	    user: [],
+	    tags: [],
 	
 	    img: "",
 	    print: {
@@ -244,7 +244,7 @@
 		"timeFormat": "%H:%M",
 		"margin": {
 			"top": 10,
-			"right": 2,
+			"right": 3,
 			"bottom": 0,
 			"left": 0
 		},
@@ -311,9 +311,34 @@
 			"padding": 0.08,
 			"offset": 0.12
 		},
+		"social": {
+			"facebook": {
+				"label": "Facebook",
+				"icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg",
+				"redirect": "http%3A%2F%2Fbeta.images.theglobeandmail.com%2Fstatic%2Ftemplates%2Finteractives%2Fshare%2Fredirect.html",
+				"appID": "1502228616774106"
+			},
+			"twitter": {
+				"label": "Twitter",
+				"icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
+				"via": "globeandmail",
+				"hashtag": "#globeandmail"
+			},
+			"email": {
+				"label": "Email",
+				"icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
+			},
+			"sms": {
+				"label": "SMS",
+				"icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
+			}
+		},
 		"image": {
-			"use": true,
-			"path": "http://s3-us-west-2.amazonaws.com/chart-tool-dev",
+			"enable": true,
+			"base_path": "",
+			"expiration": 30000,
+			"bucket": "chartstg",
+			"region": "us-east-1",
 			"filename": "thumbnail",
 			"extension": "png"
 		}
@@ -321,7 +346,7 @@
 
 /***/ },
 
-/***/ 27:
+/***/ 28:
 /***/ function(module, exports) {
 
 	module.exports = {

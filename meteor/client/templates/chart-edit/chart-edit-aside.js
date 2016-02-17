@@ -215,7 +215,8 @@ Template.chartEditAside.events({
 
   "change .input-index": function(event) {
     var input = event.target.value;
-    updateAndSave("updateIndex", this, input);
+    var inputVal = (input === "") ? false : input;
+    updateAndSave("updateIndex", this, inputVal);
   },
 
   "blur .input-prefix-x": function(event) {
@@ -332,7 +333,7 @@ Template.chartEditAside.events({
     var format = event.target.value,
         obj = {};
 
-    obj["custom"] = format;
+    obj.custom = format;
     updateAndSave("updateXFormat", this, obj);
   },
   "blur .input-data-edit": function(event) {
@@ -495,6 +496,10 @@ Template.chartEditAside.events({
   "change .input-checkbox-share-data": function(event) {
     var val = !this.options.share_data;
     updateAndSave("updateShareData", this, val);
+  },
+  "change .input-checkbox-social": function(event) {
+    var val = !this.options.social;
+    updateAndSave("updateSocial", this, val);
   },
   "change .input-checkbox-ordinal": function(event) {
     var currScale = this.x_axis.scale;

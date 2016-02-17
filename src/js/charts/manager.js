@@ -45,6 +45,12 @@ function ChartManager(container, obj) {
     rendered.shareData = components.shareData(container, chartRecipe);
   }
 
+  if (chartRecipe.options.social) {
+    rendered.social = components.social(container, chartRecipe);
+  }
+
+
+
   if (chartRecipe.CUSTOM) {
     var custom = require("../../../custom/custom.js");
     rendered.custom = custom(node, chartRecipe, rendered);

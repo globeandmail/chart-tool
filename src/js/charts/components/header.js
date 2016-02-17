@@ -12,7 +12,7 @@ function headerComponent(container, obj) {
     .text(obj.heading);
 
   if (obj.editable) {
-    headerGroup
+    headerGroup.select("." + obj.prefix + "chart_title")
       .attr("contentEditable", true)
       .classed("editable-chart_title", true);
   }

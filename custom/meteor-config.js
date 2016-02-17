@@ -8,6 +8,8 @@ prefix = config.prefix;
 
 app_settings = {
 
+  s3: config.image,
+
   animal_api: "http://www.whimsicalwordimal.com/api/name",
   names: [
     "Sardonic Salamander",
@@ -26,10 +28,7 @@ app_settings = {
     "Booked Baboon"
   ],
 
-  defaults: {
-    source_prefix: "CHART TOOL",
-    source_suffix: " » SOURCE:"
-  },
+  source_suffix: " » SOURCE:",
 
   primary: "NEWS & ROB",
   alternate: "Globe Investor",
@@ -67,7 +66,8 @@ app_settings = {
       series: false,
       indexed: false,
       qualifier: true,
-      share_data:true
+      share_data:true,
+      social:true
     },
     x_axis: {
       display: config.xAxis.display,
@@ -99,10 +99,10 @@ app_settings = {
     series: [],
     mobile: {},
     annotations: {},
-
-    // for when series are indexed to a value
-    index: "",
     range: [],
+
+    user: [],
+    tags: [],
 
     img: "",
     print: {
