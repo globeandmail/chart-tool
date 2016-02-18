@@ -119,3 +119,7 @@ bundle.js.map
 meteorSettings.js.map
 
 meteor/lib/config/meteorSettings.js.map
+
+meteor/lib/config/meteorSettings.js
+
+meteor/lib/config/meteorSettings.js.map
