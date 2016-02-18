@@ -84,6 +84,10 @@ function showTips(tipNodes, obj) {
 
 function hideTips(tipNodes, obj) {
 
+  if (obj.options.type === "column") {
+    obj.rendered.plot.columnItem.selectAll("rect").classed("muted", false);
+  }
+
   if (tipNodes.xTipLine) {
     tipNodes.xTipLine.classed(obj.prefix + "active", false);
   }
@@ -118,21 +122,21 @@ function tipsManager(node, obj) {
     stream: StreamgraphTips
   };
 
+  var dataReference;
+
+  if (obj.options.type === "multiline") {
+    dataReference = [obj.data.data[0].series[0]];
+  } else {
+    dataReference = obj.data.data[0].series;
+  }
+
+  var innerTipElements = appendTipElements(node, obj, tipNodes, dataReference);
+
   switch (obj.options.type) {
     case "line":
     case "multiline":
     case "area":
     case "stream":
-
-      var dataReference;
-
-      if (obj.options.type === "multiline") {
-        dataReference = [obj.data.data[0].series[0]];
-      } else {
-        dataReference = obj.data.data[0].series;
-      }
-
-      var innerTipElements = appendTipElements(node, obj, tipNodes, dataReference);
 
       tipNodes.overlay = tipNodes.tipNode.append("rect")
         .attr({
@@ -156,7 +160,24 @@ function tipsManager(node, obj) {
 
     case "column":
 
-      fns.column(tipNodes, obj);
+      var columnRects;
+
+      if (obj.options.stacked) {
+        columnRects = obj.rendered.plot.series.selectAll('rect')
+      } else {
+        columnRects = obj.rendered.plot.columnItem.selectAll('rect');
+      }
+
+      columnRects
+        .on("mouseover", function(d) {
+          showTips(tipNodes, obj);
+          clearTimeout(timeout);
+          timeout = mouseIdle(tipNodes, obj, timeout);
+          fns.column(tipNodes, obj, d, this);
+        })
+        .on("mouseout", function(d) {
+          hideTips(tipNodes, obj);
+        });
 
       break;
   }
@@ -821,256 +842,184 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
 
 }
 
-function ColumnChartTips(tipNodes, obj) {
+function ColumnChartTips(tipNodes, obj, d, thisRef) {
 
-  var columns = obj.rendered.plot.columnItem,
-      columnRects = columns.selectAll('rect'),
-      isUndefined = 0,
-      dataRef = obj.data.data[0].series;
+  var columnRects = obj.rendered.plot.columnItem.selectAll('rect'),
+      isUndefined = 0;
 
-  var tipTextGroups = tipNodes.tipGroup
-    .selectAll("." + obj.prefix + "tip_text-group")
-    .data(dataRef)
-    .enter()
-    .append("g")
-    .attr("class", function(d, i) {
-      return obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i);
+  var thisColumn = thisRef,
+      tipData = d;
+
+  for (var i = 0; i < tipData.series.length; i++) {
+    if (tipData.series[i].val === "__undefined__") {
+      isUndefined++;
+      break;
+    }
+  }
+
+  if (!isUndefined) {
+
+    var yFormatter = require("./axis").setTickFormatY,
+      timeDiff = require("../../utils/utils").timeDiff;
+      getTranslateXY = require("../../utils/utils").getTranslateXY;
+      domain = obj.rendered.plot.xScaleObj.scale.domain(),
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+
+    var cursorX = getTranslateXY(thisColumn.parentNode)[0];
+
+    columnRects
+      .classed('muted', function () {
+        return (this === thisColumn) ? false : true;
+      });
+
+    tipNodes.tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
+      .data(tipData.series)
+      .text(function(d, i) {
+
+        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
+        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
+
+        if (d.val) {
+          return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+        } else {
+          return "n/a";
+        }
+
     });
 
-  tipTextGroups.append("text")
-    .text(function(d) { return d.val; })
-    .attr({
-      "class": function(d, i) {
-        return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i));
-      },
-      "data-series": function(d, i) { return d.key; },
-      "x": function() {
-        return (tipNodes.radius * 2) + (tipNodes.radius / 1.5);
-      },
-      "y": function(d, i) {
-        return ( (i + 1) * ( parseInt(d3.select(this).style("font-size")) + 2) );
-      },
-      "dy": "1em"
-    });
+    tipNodes.tipTextDate
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
 
-  columnRects
-    .on("mouseover", function(d){
+    tipNodes.tipGroup
+      .selectAll("." + obj.prefix + "tip_text-group")
+      .data(tipData.series)
+      .classed(obj.prefix + "active", function(d, i) {
+        return d.val ? true : false;
+      });
 
-        var thisColumn = this,
-            tipData = d;
+    tipNodes.tipRect
+      .attr({
+        "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+        "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+      });
 
-        for (var i = 0; i < tipData.series.length; i++) {
-          if (tipData.series[i].val === "__undefined__") {
-            isUndefined++;
-            break;
+    tipNodes.tipBox
+      .attr({
+        "transform": function() {
+          if (cursorX > obj.dimensions.tickWidth() / 2) {
+            // tipbox pointing left
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+          } else {
+            // tipbox pointing right
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
           }
+          return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
         }
+      });
 
-        if (!isUndefined) {
+    showTips(tipNodes, obj);
 
-          var yFormatter = require("./axis").setTickFormatY,
-            timeDiff = require("../../utils/utils").timeDiff;
-            getTranslateXY = require("../../utils/utils").getTranslateXY;
-            domain = obj.rendered.plot.xScaleObj.scale.domain(),
-            ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
-
-          var cursorX = getTranslateXY(this.parentNode)[0];
-
-          columnRects
-            .classed('muted',function () {
-              return (this === thisColumn) ? false : true;
-            });
-
-          tipNodes.tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
-            .data(tipData.series)
-            .text(function(d, i) {
-
-              if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
-              if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
-
-              if (d.val) {
-                return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-              } else {
-                return "n/a";
-              }
-
-          });
-
-          tipNodes.tipTextDate
-            .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
-
-          tipNodes.tipGroup
-            .selectAll("." + obj.prefix + "tip_text-group")
-            .data(tipData.series)
-            .classed(obj.prefix + "active", function(d, i) {
-              return d.val ? true : false;
-            });
-
-          tipNodes.tipRect
-            .attr({
-              "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-              "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-            });
-
-          tipNodes.tipBox
-            .attr({
-              "transform": function() {
-                if (cursorX > obj.dimensions.tickWidth() / 2) {
-                  // tipbox pointing left
-                  var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
-                } else {
-                  // tipbox pointing right
-                  var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
-                }
-                return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
-              }
-            });
-
-          showTips(tipNodes, obj);
-
-        }
-
-    })
-    .on("mouseout", function(d) {
-      hideTips(tipNodes, obj);
-    })
-    .on("mousemove", function() {
-
-    })
+  }
 
 }
 
 
-function StackedColumnChartTips(tipNodes, obj) {
+function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
 
-  var columns = obj.rendered.plot.series,
-      columnRects = columns.selectAll('rect'),
-      isUndefined = 0,
-      dataRef = obj.data.data[0].series;
+  var columnRects = obj.rendered.plot.series.selectAll('rect'),
+      isUndefined = 0;
 
-  var tipTextGroups = tipNodes.tipGroup
-    .selectAll("." + obj.prefix + "tip_text-group")
-    .data(dataRef)
-    .enter()
-    .append("g")
-    .attr("class", function(d, i) {
-      return obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i);
-    });
+  var thisColumn = thisRef,
+      tipData = d;
 
-  tipTextGroups.append("text")
-    .text(function(d) { return d.val; })
-    .attr({
-      "class": function(d, i) {
-        return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i));
-      },
-      "data-series": function(d, i) { return d.key; },
-      "x": function() {
-        return (tipNodes.radius * 2) + (tipNodes.radius / 1.5);
-      },
-      "y": function(d, i) {
-        return ( (i + 1) * ( parseInt(d3.select(this).style("font-size")) + 2) );
-      },
-      "dy": "1em"
-    });
-
-  columnRects.on("mouseover", function(d){
-
-    var thisColumn = this,
-        tipData = d;
-
-    for (var i = 0; i < tipData.raw.series.length; i++) {
-      if (tipData.raw.series[i].val === "__undefined__") {
-        isUndefined++;
-        break;
-      }
+  for (var i = 0; i < tipData.raw.series.length; i++) {
+    if (tipData.raw.series[i].val === "__undefined__") {
+      isUndefined++;
+      break;
     }
+  }
 
-    if (!isUndefined) {
+  if (!isUndefined) {
 
-      var yFormatter = require("./axis").setTickFormatY,
-        timeDiff = require("../../utils/utils").timeDiff;
-        domain = obj.rendered.plot.xScaleObj.scale.domain(),
-        ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+    var yFormatter = require("./axis").setTickFormatY,
+      timeDiff = require("../../utils/utils").timeDiff;
+      domain = obj.rendered.plot.xScaleObj.scale.domain(),
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
-      var parentEl = d3.select(this.parentNode.parentNode);
-          barPos = parseFloat(parentEl.attr('transform').split("(")[1]);
+    var parentEl = d3.select(thisRef.parentNode.parentNode);
+        barPos = parseFloat(parentEl.attr('transform').split("(")[1]);
 
-      columnRects
-        .classed('muted',function () {
-          return (this === thisColumn) ? false : true;
-        });
+    columnRects
+      .classed('muted',function () {
+        return (this === thisColumn) ? false : true;
+      });
 
-      tipNodes.tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
-        .data(tipData.raw.series)
-        .text(function(d, i) {
+    tipNodes.tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
+      .data(tipData.raw.series)
+      .text(function(d, i) {
 
-          if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
-          if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
+        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ""; }
+        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ""; }
 
-          if (d.val) {
-            return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+        if (d.val) {
+          return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+        } else {
+          return "n/a";
+        }
+
+    });
+
+    tipNodes.tipTextDate
+      .text(function() {
+        var d = tipData.raw.key;
+        return d;
+      });
+
+    tipTextGroups
+      .append("circle")
+      .attr({
+        "class": function(d, i) {
+          return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
+        },
+        "r": function(d, i) { return tipNodes.radius; },
+        "cx": function() { return tipNodes.radius; },
+        "cy": function(d, i) {
+          return ( (i + 1) * parseInt(d3.select(this).style("font-size")) * 1.13 + 9);
+        }
+      });
+
+    tipNodes.tipGroup
+      .selectAll("." + obj.prefix + "tip_text-group")
+      .data(tipData.raw.series)
+      .classed(obj.prefix + "active", function(d, i) {
+        return d.val ? true : false;
+      });
+
+    tipNodes.tipRect
+      .attr({
+        "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+        "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+      });
+
+    tipNodes.tipBox
+      .attr({
+        "transform": function() {
+
+          if (barPos > obj.dimensions.tickWidth() / 2) {
+            // tipbox pointing left
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
           } else {
-            return "n/a";
+            // tipbox pointing right
+            var x = obj.rendered.plot.xScaleObj.scale(tipData.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
           }
+
+          return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
+
+        }
 
       });
 
-      tipNodes.tipTextDate
-        .text(function() {
-          var d = tipData.raw.key;
-          return d;
-        });
-
-      tipTextGroups
-        .append("circle")
-        .attr({
-          "class": function(d, i) {
-            return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
-          },
-          "r": function(d, i) { return tipNodes.radius; },
-          "cx": function() { return tipNodes.radius; },
-          "cy": function(d, i) {
-            return ( (i + 1) * parseInt(d3.select(this).style("font-size")) * 1.13 + 9);
-          }
-        });
-
-      tipNodes.tipGroup
-        .selectAll("." + obj.prefix + "tip_text-group")
-        .data(tipData.raw.series)
-        .classed(obj.prefix + "active", function(d, i) {
-          return d.val ? true : false;
-        });
-
-      tipNodes.tipRect
-        .attr({
-          "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-          "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-        });
-
-      tipNodes.tipBox
-        .attr({
-          "transform": function() {
-
-            if (barPos > obj.dimensions.tickWidth() / 2) {
-              // tipbox pointing left
-              var x = obj.rendered.plot.xScaleObj.scale(tipData.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - d3.select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
-            } else {
-              // tipbox pointing right
-              var x = obj.rendered.plot.xScaleObj.scale(tipData.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
-            }
-
-            return "translate(" + x + "," + obj.dimensions.tipOffset.vertical + ")";
-
-          }
-
-        });
-
-      showTips(tipNodes, obj);
-
-    }
-
-  })
-
+  }
 
 }
 
