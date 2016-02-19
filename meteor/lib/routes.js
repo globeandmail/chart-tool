@@ -63,6 +63,7 @@ Router.route('/chart/edit/:_id', {
     'chartEditAside': { to: 'aside' },
     'chartEditEmbed': { to: 'embed' },
     'chartEditStatus': { to: 'status' },
+    'chartEditTags': { to: 'tags' },
     'overlay': { to: 'overlay' }
   },
   data: function() {
@@ -80,7 +81,8 @@ Router.route('/chart/edit/:_id', {
   waitOn: function() {
     return [
       Meteor.subscribe('chart', this.params._id),
-      Meteor.subscribe('chartUsers', this.params._id)
+      Meteor.subscribe('chartUsers', this.params._id),
+      Meteor.subscribe('tags')
     ];
   },
   onAfterAction: function () {

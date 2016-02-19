@@ -14,14 +14,20 @@ Meteor.publish("chartArchive", function (params) {
     "tags": true,
     "lastEdited": true
   };
-  // parameters.options.limit = 20;
   var data = Charts.find(parameters.find, parameters.options);
   if (data) { return data; }
   return this.ready();
 });
 
 Meteor.publish("tags", function () {
-  // return Tags.find();
+  var parameters = queryConstructor();
+  parameters.options.fields = {
+    "tagName": true,
+    "tagged": true
+  };
+  var data = Tags.find(parameters.find, parameters.options);
+  if (data) { return data; }
+  return this.ready();
 });
 
 Meteor.publish('chartUsers', function (chartId) {

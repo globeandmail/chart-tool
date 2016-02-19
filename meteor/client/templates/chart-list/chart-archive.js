@@ -63,8 +63,6 @@ Template.chartArchive.rendered = function() {
       return;
     }
 
-    // masonry grid tk
-
     Meteor.subscribe('chartArchive', Session.get("archiveFilters"));
 
   });
