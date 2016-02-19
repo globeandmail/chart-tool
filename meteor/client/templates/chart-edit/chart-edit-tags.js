@@ -1,22 +1,3 @@
-Template.chartEditTags.helpers({
-  tagEntries: function() {
-    return Tags.find();
-  },
-  isTagged: function() {
-    var chartId = Session.get("chartId");
-    if (this.tagged.indexOf(chartId) > -1) {
-      return "selected";
-    }
-  }
-})
-
-// Template.chartEditTags.events({
-//   'item_add #tags-select': function(event, template) {
-//     // console.log("init!");
-//     debugger;
-//   }
-// })
-
 Template.chartEditTags.rendered = function() {
 
   tagsSelect = $('#tags-select').reactiveSelectize({
@@ -28,16 +9,25 @@ Template.chartEditTags.rendered = function() {
     options: function() { return Tags.find(); },
     create: function(input, callback) {
       var tagName = input;
-      console.log(input);
-      Meteor.call('addTag', input, Session.get("chartId"), function(err, result) {
-        if (!err) {
-          callback(input);
-        } else {
-          callback()
-          console.log(err);
-        }
+      var self = this;
+      Meteor.call('createTag', input, Session.get("chartId"), function(err, result) {
+        if (err) { console.log(err); }
+        callback(result);
+      });
+      self.$control_input[0].value = "";
+    },
+    onItemAdd: function(value, item) {
+      Meteor.call('addTag', value, Session.get("chartId"), function(err, result) {
+        if (err) { console.log(err); }
+        callback(result);
       });
     },
+    onItemRemove: function(value) {
+      Meteor.call('removeTag', value, Session.get("chartId"), function(err, result) {
+        if (err) { console.log(err); }
+        console.log(result + " removed!");
+      });
+    }
   })[0].reactiveSelectize;
 
   Tracker.autorun(function(comp) {
@@ -47,42 +37,8 @@ Template.chartEditTags.rendered = function() {
       return;
     }
     if (Session.get("chartTags")) {
-      tagsSelect.selectize.addItems(Session.get("chartTags"))
+      tagsSelect.selectize.addItems(Session.get("chartTags"));
     }
   });
-
-  // $('.tags-select').selectize({
-  //   maxItems: null,
-  //   createOnBlur: true,
-  //   valueField: '_id',
-  //   labelField: 'tagName',
-  //   searchField: 'tagName',
-  //   options: Tags.find().fetch(),
-  //   items: matchedTags,
-  //   create: function(input, callback) {
-  //     var tagName = input;
-  //     console.log(input);
-  //     Meteor.call('addTag', input, chartId, function(err, result) {
-  //       if (!err) {
-  //         console.log("inserted " + result);
-  //         // callback({ _id: result, tagName: tagName });
-  //       } else {
-  //         console.log(err);
-  //       }
-  //     });
-  //   },
-  //   onItemCreate: function(value) {
-  //     debugger;
-  //   },
-  //   onItemRemove: function(value) {
-  //     // debugger;
-  //     Meteor.call('removeTag', value, chartId, function(err, result) {
-  //       if (!err) {
-  //       } else {
-  //         console.log(err);
-  //       }
-  //     });
-  //   }
-  // });
 
 }

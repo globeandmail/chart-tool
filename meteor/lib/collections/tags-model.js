@@ -17,19 +17,38 @@ chartTags = function(chartId) {
 };
 
 Meteor.methods({
-  addTag: function(tagName, chartId) {
+  createTag: function(tagName, chartId) {
     var tagExists = Tags.find({ tagName: tagName }).count();
+
     if (!tagExists) {
+
       var now = new Date();
+
       return Tags.insert({
         createdAt: now,
         lastEdited: now,
         tagName: tagName,
         tagged: [chartId]
       });
-    } else {
-      return "tag already exists";
+
     }
+  },
+  addTag: function(tagId, chartId) {
+
+    var arr = Tags.findOne(tagId).tagged.slice();
+
+    // if chart doesn't already exist within array
+    if (!(arr.indexOf(chartId) > -1)) {
+      arr.push(chartId);
+
+      return Tags.update(tagId, {
+        $set: {
+          tagged: arr,
+          lastEdited: new Date()
+        }
+      });
+    }
+
   },
   removeTag: function(tagId, chartId) {
 
@@ -41,7 +60,8 @@ Meteor.methods({
       if (taggedArr.length) {
         return Tags.update(tagId, {
           $set: {
-            tagged: taggedArr
+            tagged: taggedArr,
+            lastEdited: new Date()
           }
         })
       } else {
@@ -49,17 +69,5 @@ Meteor.methods({
       }
     }
 
-  },
-  editTag: function(tagId, tagName, chartId) {
-
-    // determine if we're adding or removing a tag from a chart
-    // if removing a tag, and it's not related to any more charts,
-    // remove tag entirely
-    return Tags.update(tagId, {
-      $set: {
-        slug: text,
-        lastEdited: new Date()
-      }
-    });
   }
 });

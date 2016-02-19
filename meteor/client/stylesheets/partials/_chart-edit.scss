@@ -400,6 +400,30 @@ select {
   color: $text;
 }
 
+// .selectize-input {
+//   &.input-active > input {
+//     width: auto !important;
+//     @include placeholder {
+//       opacity: 0;
+//       @include transition (all 0.1s ease-out);
+//     }
+//   }
+//   > input {
+//     width: 0 !important;
+//     @include placeholder {
+//       opacity: 0;
+//       @include transition (all 0.1s ease-out);
+//     }
+//   }
+//   &:not(.has-items) > input {
+//     width: 100% !important;
+//     @include placeholder {
+//       opacity: 1;
+//       @include transition (all 0.1s ease-in);
+//     }
+//   }
+// }
+
 // Title, qualifier and source contentEditable fields
 
 .#{$prefix}chart_title-text, .#{$prefix}chart_qualifier, .#{$prefix}chart_source-text {

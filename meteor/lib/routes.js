@@ -89,14 +89,15 @@ Router.route('/chart/edit/:_id', {
       })
     ];
   },
-  before: function() {
-    if (this.data()) {
-      var matchedTags = chartTags(this.params._id).fetch().map(function(p) { return p._id; });
-      Session.set("chartTags", matchedTags);
-      this.next();
-    }
-  },
+  // before: function() {
+  //   // if (this.data()) {
+  //     // matchedTags = chartTags(this.data()._id).fetch().map(function(p) { return p._id; });
+  //     // this.next();
+  //   // }
+  // },
   onAfterAction: function () {
+    var matchedTags = chartTags(this.params._id).fetch().map(function(p) { return p._id; });
+    Session.set("chartTags", matchedTags);
     Session.set("chartId", this.params._id);
     Session.set('overlay-visible', false);
     Meteor.call("getAnimalName", function(err, result) {
