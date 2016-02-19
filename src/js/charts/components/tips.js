@@ -85,7 +85,7 @@ function showTips(tipNodes, obj) {
 function hideTips(tipNodes, obj) {
 
   if (obj.options.type === "column") {
-    obj.rendered.plot.columnItem.selectAll("rect").classed("muted", false);
+    obj.rendered.plot.columnItem.selectAll("rect").classed(obj.prefix + "muted", false);
   }
 
   if (tipNodes.xTipLine) {
@@ -868,7 +868,7 @@ function ColumnChartTips(tipNodes, obj, d, thisRef) {
     var cursorX = getTranslateXY(thisColumn.parentNode)[0];
 
     columnRects
-      .classed('muted', function () {
+      .classed(obj.prefix + 'muted', function () {
         return (this === thisColumn) ? false : true;
       });
 
@@ -950,7 +950,7 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
         barPos = parseFloat(parentEl.attr('transform').split("(")[1]);
 
     columnRects
-      .classed('muted',function () {
+      .classed(obj.prefix + 'muted',function () {
         return (this === thisColumn) ? false : true;
       });
 
