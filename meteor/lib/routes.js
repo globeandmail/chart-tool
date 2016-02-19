@@ -82,8 +82,19 @@ Router.route('/chart/edit/:_id', {
     return [
       Meteor.subscribe('chart', this.params._id),
       Meteor.subscribe('chartUsers', this.params._id),
-      Meteor.subscribe('tags')
+      Meteor.subscribe('tags'),
+      Meteor.subscribe('chartTags', {
+        queryName: 'chartTags',
+        chartId: this.params._id
+      })
     ];
+  },
+  before: function() {
+    if (this.data()) {
+      var matchedTags = chartTags(this.params._id).fetch().map(function(p) { return p._id; });
+      Session.set("chartTags", matchedTags);
+      this.next();
+    }
   },
   onAfterAction: function () {
     Session.set("chartId", this.params._id);

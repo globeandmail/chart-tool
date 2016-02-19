@@ -9,6 +9,10 @@ queryConstructor = function(args) {
   var queryFunction = queries[queryName],
       parameters = queryFunction(args);
 
+  if (!parameters.options) {
+    parameters.options = {};
+  }
+
   if (parameters.options.limit > 100) {
     parameters.options.limit = 100;
   }
@@ -67,4 +71,14 @@ queries.chartArchive = function (params) {
       }
     }
   }
+};
+
+queries.chartTags = function (params) {
+
+  var chartId = params.chartId;
+
+  return {
+    find: { tagged: chartId }
+  };
+
 };
