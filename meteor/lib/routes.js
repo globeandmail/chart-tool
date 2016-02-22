@@ -150,11 +150,13 @@ Router.route('/archive', {
 
     var types = [],
         tags = [],
-        search = "";
+        search = "",
+        limit = "";
 
     if (query.types) { types = query.types.split(","); }
     if (query.tags) { tags = query.tags.split(","); }
     if (query.search) { search = query.search; }
+    if (query.limit) { limit = parseInt(query.limit); }
 
     var defaultFilters = {
       queryName: 'chartArchive',
@@ -163,7 +165,7 @@ Router.route('/archive', {
         tags: tags,
         search: search
       },
-      limit: 48
+      limit: limit || 24
     };
 
     Session.setDefault('archiveFilters', defaultFilters);

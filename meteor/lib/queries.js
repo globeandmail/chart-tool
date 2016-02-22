@@ -14,11 +14,11 @@ queryConstructor = function(args) {
   }
 
   if (parameters.options.limit > 100) {
-    parameters.options.limit = 100;
+    parameters.options.limit = 48;
   }
 
-  if (!parameters.options.limit || parameters.options.limit === "") {
-    parameters.options.limit = 48;
+  if (parameters.options.limit === undefined || parameters.options.limit === "") {
+    parameters.options.limit = 24;
   }
 
   return parameters;
@@ -32,7 +32,7 @@ queries.default = function () {
       sort: {
         lastEdited: -1
       },
-      limit: 48
+      limit: 24
     }
   }
 };
@@ -42,9 +42,10 @@ queries.chartArchive = function (params) {
 
   var types = params.filters.types,
       tags = params.filters.tags,
-      searchVal = params.filters.search;
+      searchVal = params.filters.search,
+      limit = params.limit;
 
-  if (!types.length && !tags.length && !searchVal) {
+  if (!types.length && !tags.length && !searchVal && !limit) {
     return queries.default();
   } else {
 

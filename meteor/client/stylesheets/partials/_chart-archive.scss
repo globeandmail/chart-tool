@@ -40,11 +40,30 @@
     font-size: 0.9em;
     margin: 0;
     padding: 0;
+    display: inline;
     @include interface-font-regular;
     span {
       @include interface-font-bold;
     }
   }
+  select {
+    border: none;
+    font-size: 0.9em;
+    padding: 0;
+    padding-bottom: 1px;
+    border-radius: 0;
+    border-bottom: 1px solid $text;
+    text-align-last: center;
+    @include interface-font-bold;
+  }
+}
+
+.charts-archive_count-left, .charts-archive_count-right {
+  display: inline-block;
+}
+
+.charts-archive_count-right {
+  float: right;
 }
 
 .charts-archive_empty-container {

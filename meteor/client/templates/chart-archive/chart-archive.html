@@ -50,7 +50,18 @@
 
   <section class="charts-archive_results">
     <div class="charts-archive_count">
-      <h3>Displaying <span>{{ chartsVisible }}</span> of <span>{{ chartCount }}</span> charts</h3>
+      <div class="charts-archive_count-left">
+        <h3>Displaying <span>{{ chartsVisible }}</span> of <span>{{ chartCount }}</span> charts</h3>
+      </div>
+      <div class="charts-archive_count-right">
+      <h3>Total charts to load:</h3>
+        <select class="charts-archive_count-limit">
+          <option value="12" selected="{{ limitSelected '24' }}">12</option>
+          <option value="24" selected="{{ limitSelected '24' }}">24</option>
+          <option value="48" selected="{{ limitSelected '48' }}">48</option>
+          <!-- <option value="96" selected="{{ limitSelected '48' }}">96</option> -->
+        </select>
+      </div>
     </div>
     {{ #each chartEntries }}
       {{ > chartArchiveSingle }}

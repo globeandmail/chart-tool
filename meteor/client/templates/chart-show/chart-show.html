@@ -13,9 +13,9 @@
         <ul>{{ #each tags }}<li>{{ this }}</li>{{ /each }}</ul>
       </div>
     {{ /if }}
-    <ul>
-      <li><span>Created:</span> {{ createdAt }}</li>
-      <li><span>Last edited:</span> {{ lastEdited }}</li>
-    </ul>
+    <div class="chart-show_dates">
+      <p>Created on {{ prettyCreatedAt }}</p>
+      <p>Last edited {{ relativeLastEdited }} ago</p>
+    </div>
   </div>
 </template>

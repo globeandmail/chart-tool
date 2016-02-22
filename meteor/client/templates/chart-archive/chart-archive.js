@@ -1,7 +1,11 @@
 function performSearch(e) {
   var archiveFilters = Session.get('archiveFilters'),
       input = e.target.value;
+
+  input.trim().replace(/^\s+/, "");
+
   if (input === "") { input = undefined; }
+
   archiveFilters.filters.search = input;
   Session.set("archiveFilters", archiveFilters);
 }
@@ -64,6 +68,14 @@ Template.chartArchive.helpers({
       });
       return Session.get("availableCharts");
     }
+  },
+  limitSelected: function(value) {
+    if (Session.get("archiveFilters")) {
+      var limit = Session.get("archiveFilters").limit;
+      if (limit === parseInt(value)) {
+        return "selected";
+      }
+    }
   }
 });
 
@@ -73,16 +85,17 @@ Template.chartArchive.events({
   },
   "blur .charts-archive_search-field": function(event) {
     performSearch(event);
-
     if (event.target.value !== "") {
-
       setQueryUrl("search", event.target.value);
-
     }
-  }
-});
-
-Template.chartArchive.events({
+  },
+  "change .charts-archive_count-limit": function(event) {
+    var params = Session.get("archiveFilters"),
+        limitVal = parseInt(event.target.value);
+    params.limit = limitVal;
+    Session.set("archiveFilters", params);
+    setQueryUrl("limit", limitVal);
+  },
   "click .input-checkbox": function() {
     var params = Session.get("archiveFilters"),
         typeValue = event.target.value;
