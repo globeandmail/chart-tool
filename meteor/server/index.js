@@ -14,6 +14,14 @@ if (app_settings.s3.enable) {
   };
 }
 
+Charts._ensureIndex({
+  "slug": "text",
+  "heading": "text",
+  "qualifier": "text",
+  "deck": "text",
+  "source": "text"
+});
+
 Meteor.startup(function() {
   // clears status database
   DBStatus.remove({});

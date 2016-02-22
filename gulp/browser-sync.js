@@ -15,9 +15,10 @@ gulp.task('_browsersync', ["_browserSyncWatch"], function() {
     server: {
       baseDir: "./",
       open: false
-    }
+    },
+    ghostMode: false
   });
 
-  gulp.watch([gulpConfig.libScripts + "/**/*", gulpConfig.libStylesheets + "/**/*"], ["_browserSyncWatch"]);
+  gulp.watch([gulpConfig.libScripts + "/**/*.js", gulpConfig.libStylesheets + "/**/*.scss"], ["_browserSyncWatch"]);
 
 });

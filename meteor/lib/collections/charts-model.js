@@ -1,36 +1,26 @@
-// TODO: use Collection2 and SimpleSchema for db validation
-
 Charts = new Mongo.Collection("charts");
 
-DBStatus = new Meteor.Collection("database-status");
+Charts.allow({
+  insert: function() { return false; },
+  update: function() { return false; },
+  remove: function() { return false; }
+});
 
-Charts.initEasySearch(['slug', 'data', 'heading', 'qualifier', 'source'], {
-  'limit' : 10,
-  'use' : 'mongo-db'
+Charts.deny({
+  insert: function() { return true; },
+  update: function() { return true; },
+  remove: function() { return true; }
 });
 
 Meteor.methods({
-
-  // status check methods
-  clearDBStatus: function() {
-    return DBStatus.remove({});
-  },
-
-  checkDBStatus: function() {
-    var test = {};
-    test.createdAt = new Date();
-    test.lastEdited = new Date();
-    test.connected = true;
-    return DBStatus.insert(test);
-  },
-
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
   addChart: function (text, data) {
-    var newChart = copyObj(app_settings.chart);
+    var newChart = extend(app_settings.chart),
+        now = new Date();
 
-    newChart.createdAt = new Date();
-    newChart.lastEdited = new Date();
+    newChart.createdAt = now;
+    newChart.lastEdited = now;
     newChart.slug = text;
     newChart.data = data;
     newChart.md5 = CryptoJS.MD5(data).toString();
@@ -109,6 +99,26 @@ Meteor.methods({
     return Charts.update(chartId, {
       $set: {
         img: src,
+        lastEdited: new Date()
+      }
+    });
+  },
+  updateTags: function(chartId, tagName) {
+
+    var taggedArr = Charts.findOne(chartId).tags,
+        index = taggedArr.indexOf(tagName);
+
+    if (index > -1) {
+      // tag is already in chart, remove it
+      taggedArr.splice(index, 1);
+    } else {
+      // add tag to chart
+      taggedArr.push(tagName);
+    }
+
+    return Charts.update(chartId, {
+      $set: {
+        tags: taggedArr,
         lastEdited: new Date()
       }
     });
@@ -448,13 +458,11 @@ Meteor.methods({
       }
     });
   },
-  postChart: function(data) {
-    // HTTP.call("POST", "http://localhost:3030",
-    // { data: data },
-    // function (error, result) {
-    //   if (error) {
-    //     console.log("error yo");
-    //   }
-    // });
+
+  // Stats methods
+
+  matchedCharts: function(params) {
+    var parameters = queryConstructor(params);
+    return Charts.find(parameters.find, parameters.options).count();
   }
 });

@@ -104,6 +104,7 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
 
     for (var i = 0; i < svgs.length; i++) {
       (function(arr, k) {
+
         var currSvg = d3.select(arr[k]),
             currSvgHeight = currSvg.node().getBoundingClientRect().height;
 
@@ -111,22 +112,26 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
         var imgsrc = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(item)));
         var image = new Image;
         image.src = imgsrc;
+
         image.onload = function() {
+
           if (!imageCounter) {
             context.fillRect(0, 0, canvasWidth, canvasHeight);
             context.fill();
           }
+
+          imageCounter++;
+
           context.drawImage(image, 0, currentHeight);
           currentHeight += currSvgHeight;
-          if ((arr.length - 1) === imageCounter) {
+
+          if (arr.length === imageCounter) {
             var canvasData = canvas.toDataURL("image/png");
             if (cb) {
               cb(canvasData);
             } else {
               return canvasData;
             }
-          } else {
-            imageCounter++;
           }
         }
       })(svgs, i);

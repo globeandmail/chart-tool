@@ -287,7 +287,6 @@ select {
   background-color: lighten($lightgray, 27%);
   width: 100%;
   height: 400px;
-  // position: relative;
   .chart-error {
     width: 80%;
     position: relative;
@@ -350,6 +349,61 @@ select {
   &:focus {
     outline: none;
   }
+}
+
+.selectize-input {
+  font-size: 0.8em;
+  font-family: "Monaco", "Lucida Console", monospace;
+  background-color: lighten($lightgray, 27%);
+  border: 2px solid lighten($lightgray, 27%);
+  box-sizing: border-box;
+  box-shadow: none;
+  border-radius: 0;
+  @include transition (all 0.1s ease-out);
+  &.focus {
+    box-shadow: none;
+    outline: none;
+    border: 2px solid $text;
+    border-radius: 0;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input [data-value].active {
+  font-family: "Monaco", "Lucida Console", monospace;
+  background: none;
+  text-shadow: none;
+  border: 1px solid $text;
+  border-radius: 4px;
+  box-shadow: none;
+  color: $text;
+}
+
+.selectize-control.multi .selectize-input > div {
+  margin: 0 5px 5px 0;
+}
+
+.selectize-control.multi .selectize-input [data-value].active {
+  background-color: $text;
+  color: lighten($lightgray, 27%);
+}
+
+.selectize-dropdown {
+  margin-top: -2px;
+}
+
+.selectize-dropdown .active {
+  background-color: lighten($primary-color, 60%);
+  color: $text;
+}
+
+.selectize-dropdown [data-selectable] .highlight {
+  background: lighten($primary-color, 50%);
+  color: $text;
+}
+
+.selectize-dropdown .active.create {
+  color: $text;
 }
 
 // Title, qualifier and source contentEditable fields

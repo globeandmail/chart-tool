@@ -1,0 +1,178 @@
+// chart-list and chart-entry
+
+.charts-archive {
+  @include outer-container;
+  margin-top: 3em;
+}
+
+.charts-archive_aside {
+  @include span-columns(2.5 of 12);
+  position: sticky;
+  top: 80px;
+  h2 {
+    @include interface-font-bold;
+    margin-bottom: 0.4em;
+  }
+}
+
+.charts-archive_search-field {
+  width: 100%;
+  @extend %input;
+}
+
+.charts-archive_results {
+  @include span-columns(9.5 of 12);
+  margin-top: 2.5em;
+  .charts-archive_empty-container {
+    display: none;
+    &:only-child {
+      display: block;
+    }
+  }
+}
+
+.charts-archive_count {
+  width: 100%;
+  background-color: lighten($lightgray, 27%);
+  padding: 0.4em;
+  margin-bottom: 0.8em;
+  h3 {
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    @include interface-font-regular;
+    span {
+      @include interface-font-bold;
+    }
+  }
+  select {
+    border: none;
+    font-size: 0.9em;
+    padding: 0;
+    padding-bottom: 1px;
+    border-radius: 0;
+    border-bottom: 1px solid $text;
+    text-align-last: center;
+    @include interface-font-bold;
+  }
+}
+
+.charts-archive_count-left, .charts-archive_count-right {
+  display: inline-block;
+}
+
+.charts-archive_count-right {
+  float: right;
+}
+
+.charts-archive_empty-container {
+  background-color: lighten($lightgray, 27%);
+  width: 100%;
+  height: 400px;
+}
+
+.charts-archive_empty {
+  width: 80%;
+  position: relative;
+  top: 50%;
+  margin: 0 auto;
+  transform: translateY(-50%);
+  text-align: center;
+  .chart-archive_empty-img {
+    width: 30px;
+    margin-bottom: 20px;
+  }
+  h2 {
+    @include interface-font-bold;
+  }
+}
+
+.charts-archive_single {
+  width: 32%;
+  vertical-align: top;
+  margin-right: 2%;
+  float: left;
+  height: 250px;
+  padding: 10px;
+  border: 1px solid $verylightgray;
+  display: inline;
+  margin-bottom: 1.2em;
+  position: relative;
+  cursor: pointer;
+  h4 {
+    @include interface-font-bold;
+    margin-bottom: 0.8em;
+  }
+  &:nth-of-type(3n + 1) {
+    margin-right: 0;
+  }
+  &:hover {
+    .hover-screen {
+      opacity: 0.7;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+}
+
+.image-background {
+  min-height: 200px;
+  max-height: 215px;
+  background-size: cover;
+}
+
+.hover-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $primary-color;
+  opacity: 0;
+  @include transition (all 0.1s ease-out);
+}
+
+.top-line {
+  display: block;
+  @include clearfix;
+  margin-bottom: 0.6em;
+  .slug, .show, .edit {
+    display: block;
+  }
+  .slug {
+    float: left;
+    @include interface-font-bold;
+  }
+  .chart-links {
+    float: right;
+  }
+  .show, .edit {
+    display: inline;
+    padding-left: 0.4em;
+    a {
+      text-decoration: none;
+      color: $verylightgray;
+      @include transition (all 0.1s ease-out);
+      &:hover {
+        color: $primary-color;
+        @include transition (all 0.1s ease-in);
+      }
+    }
+  }
+}
+
+.charts-list_new {
+  text-align: right;
+  padding: 0 0.1em 0.5em 0;
+  display: inline;
+  font-size: 1.4em;
+  a {
+    text-decoration: none;
+    color: $verylightgray;
+    @include transition (all 0.1s ease-out);
+    &:hover {
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+}

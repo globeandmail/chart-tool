@@ -101,6 +101,8 @@ app_settings = {
     annotations: [],
     range: [],
 
+    public: false,
+
     users: [],
     tags: [],
 

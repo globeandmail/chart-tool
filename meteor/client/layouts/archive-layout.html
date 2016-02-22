@@ -1,4 +1,4 @@
-<template name="listLayout">
+<template name="archiveLayout">
 
   <header>
     <div class="topbar"></div>
@@ -7,10 +7,9 @@
     </div>
   </header>
 
-  <section>
-    <!-- sort by month? -->
-    {{ > chartList }}
-  </section>
+  <div class="charts-archive">
+    {{ > yield "archive" }}
+  </div>
 
   <footer>
     {{ > footer }}
