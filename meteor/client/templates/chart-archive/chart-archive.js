@@ -1,11 +1,68 @@
+function performSearch(e) {
+  var archiveFilters = Session.get('archiveFilters'),
+      input = e.target.value;
+  if (input === "") { input = undefined; }
+  archiveFilters.filters.search = input;
+  Session.set("archiveFilters", archiveFilters);
+}
+
+function setQueryUrl(type, value) {
+  var query = Router.current().params.query;
+
+  var queryArr = [];
+
+  for (prop in query) {
+    if (prop !== type) {
+      queryArr.push(prop + "=" + query[prop])
+    }
+  }
+
+  if (value) { queryArr.push(type + "=" + value); }
+
+  return Router.current().route.path({},
+    { query: queryArr.join('&') },
+    { replaceState: true });
+
+}
+
 Template.chartArchive.helpers({
   chartEntries: function() {
-    return Charts.find({}, {sort: { lastEdited: -1 }});
+    var options = { sort: {} };
+
+    if (Session.get('archiveFilters').filters.search) {
+      options.sort.score = -1;
+      options.sort.lastEdited = -1;
+    } else {
+      options.sort.lastEdited = -1;
+    }
+
+    return Charts.find({}, options);
   },
   typeChecked: function(type) {
     if (Session.get("archiveFilters")) {
       var typeFilters = Session.get("archiveFilters").filters.types;
       return typeFilters.indexOf(type) > -1 ? true : false;
+    }
+  },
+  searchValue: function() {
+    if (Session.get("archiveFilters")) {
+      var search = Session.get("archiveFilters").filters.search;
+      return search === "" ? false : search;
+    }
+  }
+});
+
+Template.chartArchive.events({
+  "keyup .charts-archive_search-field": function(event) {
+    debounce(performSearch(event), 300);
+  },
+  "blur .charts-archive_search-field": function(event) {
+    performSearch(event);
+
+    if (event.target.value !== "") {
+
+      Router.go(setQueryUrl("search", event.target.value));
+
     }
   }
 });
@@ -24,6 +81,9 @@ Template.chartArchive.events({
     }
 
     Session.set("archiveFilters", params);
+
+    Router.go(setQueryUrl("types", params.filters.types.join(",")));
+
   },
   "click .edit-box h3": function(event) {
     var el = d3.select(event.target).node().nextElementSibling;
@@ -67,6 +127,8 @@ Template.chartArchive.rendered = function() {
         archiveFilters.filters.tags.push(item.text());
 
         Session.set("archiveFilters", archiveFilters);
+
+        Router.go(setQueryUrl("tags", archiveFilters.filters.tags.join(",")));
       },
       onItemRemove: function(value, item) {
 
@@ -76,6 +138,8 @@ Template.chartArchive.rendered = function() {
         archiveFilters.filters.tags.splice(index, 1);
 
         Session.set("archiveFilters", archiveFilters);
+
+        Router.go(setQueryUrl("tags", archiveFilters.filters.tags.join(",")));
       }
     })[0].reactiveSelectize;
 
@@ -86,6 +150,16 @@ Template.chartArchive.rendered = function() {
     if (routeName !== "chart.archive") {
       comp.stop();
       return;
+    }
+
+    if (Session.get("archiveFilters")) {
+      var currTags = Session.get("archiveFilters").filters.tags;
+      if (currTags.length) {
+        var matchedTags = Tags.find({ tagName: { $in: currTags } }).fetch().map(function(p) {
+          return p._id;
+        });
+        tagsSelect.selectize.addItem(matchedTags);
+      }
     }
 
     Meteor.subscribe('chartArchive', Session.get("archiveFilters"));

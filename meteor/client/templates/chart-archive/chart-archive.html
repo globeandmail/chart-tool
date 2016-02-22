@@ -1,11 +1,13 @@
 <template name="chartArchive">
 
-  <section class="charts-archive_search">
-    {{ > searchBox }}
-  </section>
-
   <aside class="charts-archive_aside sticky">
     <h2>Filters</h2>
+    <div class="edit-box">
+      <h3>Search</h3>
+      <div class="unit-edit charts-archive_search">
+        <input class="charts-archive_search-field input-search" type="text" placeholder="Search by keyword…" value="{{ searchValue }}">
+      </div>
+    </div>
     <div class="edit-box">
       <h3>Tags</h3>
       <div class="unit-edit charts-archive_tags">

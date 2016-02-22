@@ -12,11 +12,6 @@ Charts.deny({
   remove: function() { return true; }
 });
 
-Charts.initEasySearch(['slug', 'data', 'heading', 'qualifier', 'source'], {
-  'limit' : 10,
-  'use' : 'mongo-db'
-});
-
 Meteor.methods({
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib

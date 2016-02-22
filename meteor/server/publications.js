@@ -7,13 +7,15 @@ Meteor.publish("chart", function (chartId) {
 
 Meteor.publish("chartArchive", function (params) {
   var parameters = queryConstructor(params);
-  parameters.options.fields = {
-    "img": true,
-    "options.type": true,
-    "slug": true,
-    "tags": true,
-    "lastEdited": true
-  };
+
+  parameters.options.fields = parameters.options.fields || {};
+
+  var fields = parameters.options.fields;
+
+  fields["img"] = true;
+  fields["slug"] = true;
+  fields["lastEdited"] = true;
+
   var data = Charts.find(parameters.find, parameters.options);
   if (data) { return data; }
   return this.ready();

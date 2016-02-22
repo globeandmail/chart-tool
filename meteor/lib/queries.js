@@ -18,7 +18,7 @@ queryConstructor = function(args) {
   }
 
   if (!parameters.options.limit || parameters.options.limit === "") {
-    parameters.options.limit = 50;
+    parameters.options.limit = 48;
   }
 
   return parameters;
@@ -32,7 +32,7 @@ queries.default = function () {
       sort: {
         lastEdited: -1
       },
-      limit: 50
+      limit: 48
     }
   }
 };
@@ -41,44 +41,46 @@ queries.default = function () {
 queries.chartArchive = function (params) {
 
   var types = params.filters.types,
-      tags = params.filters.tags;
+      tags = params.filters.tags,
+      searchVal = params.filters.search;
 
-  if (!types.length && !tags.length) {
+  if (!types.length && !tags.length && !searchVal) {
     return queries.default();
   } else {
 
-    var find = {};
+    var find = {},
+        options = {
+          sort: { lastEdited: -1 },
+          limit: params.limit
+        };
 
     if (types.length) {
-      find["options.type"] = {
-        $in: types
-      };
+      find["options.type"] = { $in: types };
     }
 
     if (tags.length) {
-      find["tags"] = {
-        $in: tags
+      find["tags"] = { $in: tags };
+    }
+
+    if (searchVal) {
+      find.$text = { $search: searchVal };
+      options.fields = {
+        score: { $meta: "textScore" }
+      };
+      options.sort = {
+        score: { $meta: "textScore" }
       };
     }
 
     return {
       find: find,
-      options: {
-        sort: {
-          lastEdited: -1
-        },
-        limit: params.limit
-      }
+      options: options
     }
   }
 };
 
 queries.chartTags = function (params) {
-
-  var chartId = params.chartId;
-
   return {
-    find: { tagged: chartId }
+    find: { tagged: params.chartId }
   };
-
 };

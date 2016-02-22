@@ -150,14 +150,24 @@ Router.route('/archive', {
     Meteor.subscribe('tags');
   },
   onAfterAction: function() {
+    var query = this.params.query;
+
+    var types = [],
+        tags = [],
+        search = "";
+
+    if (query.types) { types = query.types.split(","); }
+    if (query.tags) { tags = query.tags.split(","); }
+    if (query.search) { search = query.search; }
+
     Session.setDefault('archiveFilters', {
       queryName: 'chartArchive',
       filters: {
-        types: [],
-        tags: [],
-        ids: []
+        types: types,
+        tags: tags,
+        search: search
       },
-      limit: 50
+      limit: 48
     });
     return document.title = "Archive – Chart Tool";
   }

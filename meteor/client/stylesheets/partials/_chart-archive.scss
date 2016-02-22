@@ -8,16 +8,21 @@
 .charts-archive_aside {
   @include span-columns(2.5 of 12);
   position: sticky;
-  top: 70px;
+  top: 80px;
   h2 {
     @include interface-font-bold;
     margin-bottom: 0.4em;
   }
 }
 
+.charts-archive_search-field {
+  width: 100%;
+  @extend %input;
+}
+
 .charts-archive_results {
   @include span-columns(9.5 of 12);
-  margin-top: 0;
+  margin-top: 2.5em;
   .charts-archive_empty-container {
     display: none;
     &:only-child {
@@ -53,6 +58,7 @@
   vertical-align: top;
   margin-right: 2%;
   float: left;
+  height: 250px;
   padding: 10px;
   border: 1px solid $verylightgray;
   display: inline;
@@ -75,7 +81,8 @@
 }
 
 .image-background {
-  height: 215px;
+  min-height: 200px;
+  max-height: 215px;
   background-size: cover;
 }
 
@@ -88,63 +95,6 @@
   background-color: $primary-color;
   opacity: 0;
   @include transition (all 0.1s ease-out);
-}
-
-
-.search, .charts-list, .chart-single, .charts-list_new {
-  // @include row();
-  // @include shift(5);
-  // @include span-columns(14);
-}
-
-
-
-.search {
-  margin-bottom: 4em;
-  position: relative;
-  input {
-    font-size: 2em;
-    width: 100%;
-    @extend %input;
-  }
-  ul {
-    position: absolute;
-    padding: 0.5em;
-    background-color: rgba(255,255,255,.95);
-    width: 100%;
-  }
-  a {
-    color: $text;
-    text-decoration: none;
-  }
-  li {
-    padding: 0;
-    margin-bottom: 0.4em;
-    border-bottom: 1px solid rgba(255,255,255,0);
-    color: $text;
-    @include transition (all 0.15s ease-out);
-    &:hover {
-      border-bottom: 1px solid $primary-color;
-      color: $primary-color;
-      @include transition (all 0.15s ease-in);
-    }
-  }
-}
-
-.chart-entry {
-  width: 460px;
-  margin: 0 auto 6em auto;
-  img {
-    width: 100%;
-  }
-  ul {
-    li {
-      padding-bottom: 0.3em;
-    }
-    span {
-      @include interface-font-bold;
-    }
-  }
 }
 
 .top-line {
