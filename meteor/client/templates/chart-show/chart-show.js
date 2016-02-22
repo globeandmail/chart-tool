@@ -13,8 +13,8 @@ function timeSince(timeStamp) {
   if (secondsPast > 86400) {
       var day = timeStamp.getDate();
       var month = timeStamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
-      var year = timeStamp.getFullYear() === now.getFullYear() ? "" :  " " + timeStamp.getFullYear();
-      return day + " " + month + year;
+      var year = timeStamp.getFullYear() === now.getFullYear() ? "" :  ", " + timeStamp.getFullYear();
+      return month + " " + day + year;
   }
 }
 
@@ -35,6 +35,21 @@ Template.chartShow.helpers({
     }
   }
 });
+
+Template.chartShow.events({
+  "click .chart-show_fork": function() {
+    if (this._id) {
+      var chartId = this._id;
+      Meteor.call("forkChart", chartId, function(err, result) {
+        if (err) {
+          console.log(err);
+        } else {
+          Router.go('chart.edit', { _id: result });
+        }
+      });
+    }
+  }
+})
 
 Template.chartShow.rendered = function() {
   Tracker.autorun(function(comp) {
