@@ -9,7 +9,7 @@
     <div class="edit-box">
       <h3>Tags</h3>
       <div class="unit-edit charts-archive_tags">
-        this is where the tagging system will go, incl. a typeahead
+        <select id="archive-tags-select"></select>
       </div>
     </div>
     <div class="edit-box">
@@ -45,10 +45,18 @@
     </div>
   </aside>
 
+
   <section class="charts-archive_results">
     {{ #each chartEntries }}
       {{ > chartArchiveSingle }}
     {{ /each }}
+    <div class="charts-archive_empty-container">
+      <div class="charts-archive_empty">
+        <img src="/images/error.svg" class="chart-archive_empty-img">
+        <h2>No charts found.</h2>
+        <p>We couldn't find any charts that matched your criteria. Maybe try a broader search?</p>
+      </div>
+    </div>
   </section>
 
 </template>

@@ -108,6 +108,26 @@ Meteor.methods({
       }
     });
   },
+  updateTags: function(chartId, tagName) {
+
+    var taggedArr = Charts.findOne(chartId).tags,
+        index = taggedArr.indexOf(tagName);
+
+    if (index > -1) {
+      // tag is already in chart, remove it
+      taggedArr.splice(index, 1);
+    } else {
+      // add tag to chart
+      taggedArr.push(tagName);
+    }
+
+    return Charts.update(chartId, {
+      $set: {
+        tags: taggedArr,
+        lastEdited: new Date()
+      }
+    });
+  },
 
   // "Options" methods
 

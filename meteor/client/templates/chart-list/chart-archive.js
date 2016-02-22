@@ -54,6 +54,31 @@ Template.chartArchive.rendered = function() {
   StickyfillInit();
   Stickyfill.add(document.querySelector('.sticky'));
 
+  var tagsSelect = $('#archive-tags-select').reactiveSelectize({
+      maxItems: null,
+      valueField: '_id',
+      labelField: 'tagName',
+      searchField: 'tagName',
+      options: function() { return Tags.find(); },
+      onItemAdd: function(value, item) {
+        var archiveFilters = Session.get("archiveFilters"),
+            index = archiveFilters.filters.tags.indexOf(item.text());
+
+        archiveFilters.filters.tags.push(item.text());
+
+        Session.set("archiveFilters", archiveFilters);
+      },
+      onItemRemove: function(value, item) {
+
+        var archiveFilters = Session.get("archiveFilters"),
+            index = archiveFilters.filters.tags.indexOf(item.text());
+
+        archiveFilters.filters.tags.splice(index, 1);
+
+        Session.set("archiveFilters", archiveFilters);
+      }
+    })[0].reactiveSelectize;
+
   Tracker.autorun(function(comp) {
 
     var routeName = Router.current().route.getName();

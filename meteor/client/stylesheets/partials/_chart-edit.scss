@@ -287,7 +287,6 @@ select {
   background-color: lighten($lightgray, 27%);
   width: 100%;
   height: 400px;
-  // position: relative;
   .chart-error {
     width: 80%;
     position: relative;
@@ -372,7 +371,6 @@ select {
 }
 
 .selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input [data-value].active {
-  // font-size: 0.8em;
   font-family: "Monaco", "Lucida Console", monospace;
   background: none;
   text-shadow: none;
@@ -392,37 +390,22 @@ select {
 }
 
 .selectize-dropdown {
-  margin-top: 0;
+  margin-top: -2px;
 }
 
 .selectize-dropdown .active {
-  background-color: lighten($lightgray, 27%);
+  background-color: lighten($primary-color, 60%);
   color: $text;
 }
 
-// .selectize-input {
-//   &.input-active > input {
-//     width: auto !important;
-//     @include placeholder {
-//       opacity: 0;
-//       @include transition (all 0.1s ease-out);
-//     }
-//   }
-//   > input {
-//     width: 0 !important;
-//     @include placeholder {
-//       opacity: 0;
-//       @include transition (all 0.1s ease-out);
-//     }
-//   }
-//   &:not(.has-items) > input {
-//     width: 100% !important;
-//     @include placeholder {
-//       opacity: 1;
-//       @include transition (all 0.1s ease-in);
-//     }
-//   }
-// }
+.selectize-dropdown [data-selectable] .highlight {
+  background: lighten($primary-color, 50%);
+  color: $text;
+}
+
+.selectize-dropdown .active.create {
+  color: $text;
+}
 
 // Title, qualifier and source contentEditable fields
 

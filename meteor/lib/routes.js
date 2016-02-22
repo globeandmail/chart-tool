@@ -89,12 +89,6 @@ Router.route('/chart/edit/:_id', {
       })
     ];
   },
-  // before: function() {
-  //   // if (this.data()) {
-  //     // matchedTags = chartTags(this.data()._id).fetch().map(function(p) { return p._id; });
-  //     // this.next();
-  //   // }
-  // },
   onAfterAction: function () {
     var matchedTags = chartTags(this.params._id).fetch().map(function(p) { return p._id; });
     Session.set("chartTags", matchedTags);
@@ -161,6 +155,7 @@ Router.route('/archive', {
       filters: {
         types: [],
         tags: [],
+        ids: []
       },
       limit: 50
     });

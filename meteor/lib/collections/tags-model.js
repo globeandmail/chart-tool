@@ -35,7 +35,9 @@ Meteor.methods({
   },
   addTag: function(tagId, chartId) {
 
-    var arr = Tags.findOne(tagId).tagged.slice();
+    var currTag = Tags.findOne(tagId);
+
+    var arr = currTag.tagged.slice();
 
     // if chart doesn't already exist within array
     if (!(arr.indexOf(chartId) > -1)) {
@@ -52,7 +54,9 @@ Meteor.methods({
   },
   removeTag: function(tagId, chartId) {
 
-    var taggedArr = Tags.findOne(tagId).tagged,
+    var currTag = Tags.findOne(tagId);
+
+    var taggedArr = currTag.tagged,
         index = taggedArr.indexOf(chartId);
 
     if (index > -1) {
