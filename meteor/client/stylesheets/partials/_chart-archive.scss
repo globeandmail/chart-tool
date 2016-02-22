@@ -31,6 +31,22 @@
   }
 }
 
+.charts-archive_count {
+  width: 100%;
+  background-color: lighten($lightgray, 27%);
+  padding: 0.4em;
+  margin-bottom: 0.8em;
+  h3 {
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
+    @include interface-font-regular;
+    span {
+      @include interface-font-bold;
+    }
+  }
+}
+
 .charts-archive_empty-container {
   background-color: lighten($lightgray, 27%);
   width: 100%;
@@ -69,7 +85,7 @@
     @include interface-font-bold;
     margin-bottom: 0.8em;
   }
-  &:nth-of-type(3n) {
+  &:nth-of-type(3n + 1) {
     margin-right: 0;
   }
   &:hover {

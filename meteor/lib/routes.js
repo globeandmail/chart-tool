@@ -82,11 +82,7 @@ Router.route('/chart/edit/:_id', {
     return [
       Meteor.subscribe('chart', this.params._id),
       Meteor.subscribe('chartUsers', this.params._id),
-      Meteor.subscribe('tags'),
-      Meteor.subscribe('chartTags', {
-        queryName: 'chartTags',
-        chartId: this.params._id
-      })
+      Meteor.subscribe('tags')
     ];
   },
   onAfterAction: function () {
@@ -160,7 +156,7 @@ Router.route('/archive', {
     if (query.tags) { tags = query.tags.split(","); }
     if (query.search) { search = query.search; }
 
-    Session.setDefault('archiveFilters', {
+    var defaultFilters = {
       queryName: 'chartArchive',
       filters: {
         types: types,
@@ -168,7 +164,10 @@ Router.route('/archive', {
         search: search
       },
       limit: 48
-    });
+    };
+
+    Session.setDefault('archiveFilters', defaultFilters);
+
     return document.title = "Archive – Chart Tool";
   }
 });

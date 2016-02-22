@@ -441,5 +441,12 @@ Meteor.methods({
         lastEdited: new Date()
       }
     });
+  },
+
+  // Stats methods
+
+  matchedCharts: function(params) {
+    var parameters = queryConstructor(params);
+    return Charts.find(parameters.find, parameters.options).count();
   }
 });

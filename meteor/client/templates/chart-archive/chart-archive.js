@@ -19,9 +19,11 @@ function setQueryUrl(type, value) {
 
   if (value) { queryArr.push(type + "=" + value); }
 
-  return Router.current().route.path({},
+  var newUrl = Router.current().route.path({},
     { query: queryArr.join('&') },
     { replaceState: true });
+
+  history.pushState({}, document.title, newUrl);
 
 }
 
@@ -49,6 +51,19 @@ Template.chartArchive.helpers({
       var search = Session.get("archiveFilters").filters.search;
       return search === "" ? false : search;
     }
+  },
+  chartsVisible: function() {
+    return Charts.find().count();
+  },
+  chartCount: function() {
+    if (Session.get("archiveFilters")) {
+      var filters = Session.get("archiveFilters");
+      filters.limit = false;
+      Meteor.call("matchedCharts", filters, function(err, res) {
+        if (!err) { Session.set("availableCharts", res); }
+      });
+      return Session.get("availableCharts");
+    }
   }
 });
 
@@ -61,7 +76,7 @@ Template.chartArchive.events({
 
     if (event.target.value !== "") {
 
-      Router.go(setQueryUrl("search", event.target.value));
+      setQueryUrl("search", event.target.value);
 
     }
   }
@@ -82,7 +97,7 @@ Template.chartArchive.events({
 
     Session.set("archiveFilters", params);
 
-    Router.go(setQueryUrl("types", params.filters.types.join(",")));
+    setQueryUrl("types", params.filters.types.join(","));
 
   },
   "click .edit-box h3": function(event) {
@@ -124,11 +139,13 @@ Template.chartArchive.rendered = function() {
         var archiveFilters = Session.get("archiveFilters"),
             index = archiveFilters.filters.tags.indexOf(item.text());
 
-        archiveFilters.filters.tags.push(item.text());
+        if (index === -1) {
+          archiveFilters.filters.tags.push(item.text());
+        }
 
         Session.set("archiveFilters", archiveFilters);
 
-        Router.go(setQueryUrl("tags", archiveFilters.filters.tags.join(",")));
+        setQueryUrl("tags", archiveFilters.filters.tags.join(","));
       },
       onItemRemove: function(value, item) {
 
@@ -139,7 +156,7 @@ Template.chartArchive.rendered = function() {
 
         Session.set("archiveFilters", archiveFilters);
 
-        Router.go(setQueryUrl("tags", archiveFilters.filters.tags.join(",")));
+        setQueryUrl("tags", archiveFilters.filters.tags.join(","));
       }
     })[0].reactiveSelectize;
 

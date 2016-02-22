@@ -49,6 +49,9 @@
 
 
   <section class="charts-archive_results">
+    <div class="charts-archive_count">
+      <h3>Displaying <span>{{ chartsVisible }}</span> of <span>{{ chartCount }}</span> charts</h3>
+    </div>
     {{ #each chartEntries }}
       {{ > chartArchiveSingle }}
     {{ /each }}

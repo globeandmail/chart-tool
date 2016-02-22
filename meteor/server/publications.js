@@ -21,12 +21,6 @@ Meteor.publish("chartArchive", function (params) {
   return this.ready();
 });
 
-Meteor.publish("chartTags", function (chartId) {
-  var data = chartTags(chartId); // needs to happen on client and server
-  if (data) { return data; }
-  return this.ready();
-});
-
 Meteor.publish("tags", function () {
   var parameters = queryConstructor();
   parameters.options.fields = {

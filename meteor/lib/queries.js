@@ -62,7 +62,9 @@ queries.chartArchive = function (params) {
       find["tags"] = { $in: tags };
     }
 
-    if (searchVal) {
+    // $text isnt supported in minimongo yet,
+    // hence the server check
+    if (searchVal && Meteor.isServer) {
       find.$text = { $search: searchVal };
       options.fields = {
         score: { $meta: "textScore" }
