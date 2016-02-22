@@ -28,6 +28,18 @@ Meteor.methods({
     return Charts.insert(newChart);
   },
 
+  forkChart: function(chartId) {
+    var newChart = Charts.findOne(chartId),
+        now = new Date();
+
+    newChart.createdAt = now;
+    newChart.lastEdited = now;
+
+    delete newChart._id;
+
+    return Charts.insert(newChart);
+  },
+
   // Update methods
 
   updateSlug: function (chartId, text) {
