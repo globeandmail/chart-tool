@@ -15,8 +15,8 @@
 
     var ChartTool = (function ChartTool() {
 
-      var charts = root.__charttool,
-          dispatchFunctions = root.__charttooldispatcher,
+      var charts = root.__charttool || [],
+          dispatchFunctions = root.__charttooldispatcher || [],
           drawn = [];
 
       var settings = require("./config/chart-settings"),
@@ -195,7 +195,7 @@
 
   } else {
 
-    if (!(Meteor && Meteor.isServer)) {
+    if (!(root.Meteor && root.Meteor.isServer)) {
       console.error("Chart Tool: no D3 library detected.");
     }
 
