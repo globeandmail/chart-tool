@@ -77,8 +77,8 @@
 	
 	  source_suffix: " » SOURCE:",
 	
-	  primary: "NEWS & ROB",
-	  alternate: "Globe Investor",
+	  primary: "Primary",
+	  alternate: "Alternate",
 	
 	  help: "http://www.github.com/globeandmail/chart-tool",
 	
@@ -107,14 +107,14 @@
 	      footer: true,
 	      x_axis: true,
 	      y_axis: true,
-	      tips: false,
+	      tips: true,
 	      annotations: false,
 	      range: false,
 	      series: false,
 	      indexed: false,
 	      qualifier: true,
-	      share_data:true,
-	      social:true
+	      share_data: true,
+	      social: true
 	    },
 	    x_axis: {
 	      display: config.xAxis.display,
