@@ -63,14 +63,16 @@
         </select>
       </div>
     </div>
-    {{ #each chartEntries }}
-      {{ > chartArchiveSingle }}
-    {{ /each }}
-    <div class="charts-archive_empty-container">
-      <div class="charts-archive_empty">
-        <img src="/images/error.svg" class="chart-archive_empty-img">
-        <h2>No charts found.</h2>
-        <p>We couldn't find any charts that matched your criteria. Maybe try a broader search?</p>
+    <div class="charts-archive_grid">
+      {{ #each chartEntries }}
+        {{ > chartArchiveSingle }}
+      {{ /each }}
+      <div class="charts-archive_empty-container">
+        <div class="charts-archive_empty">
+          <img src="/images/error.svg" class="chart-archive_empty-img">
+          <h2>No charts found.</h2>
+          <p>We couldn't find any charts that matched your criteria. Maybe try a broader search?</p>
+        </div>
       </div>
     </div>
   </section>

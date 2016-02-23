@@ -7,13 +7,11 @@
 jparker:crypto-md5
 jparker:crypto-core
 iron:router
-fourseven:scss@=1.0.0
 
 
 jparker:crypto-base64
 percolate:momentum
 classcraft:meteor-wkhtmltopdf
-kevohagan:sweetalert
 meteorhacks:zones
 tmeasday:presence
 http
@@ -35,3 +33,5 @@ lepozepo:s3
 jquery
 mologie:reactive-selectize
 jeremy:selectize
+fourseven:scss
+kevohagan:sweetalert

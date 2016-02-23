@@ -2,8 +2,6 @@
 
   {{ > yield "status" }}
 
-  {{ > yield "tags" }}
-
   <div class="edit-box">
     <h3>Data</h3>
 
@@ -196,6 +194,8 @@
     </div>
   </div>
 
+  {{ > yield "tags" }}
+
   <div class="edit-box">
     <h3>Styling</h3>
     <div class="edit-box_toggle" data-state="hidden">
@@ -238,11 +238,6 @@
         </div>
       {{ /if }}
 
-      <div class="unit-edit tips-edit">
-        <h4>Show tips <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
-        <input class="input-checkbox-tips" type="checkbox" name="Tips" checked="{{ options.tips }}">
-      </div>
-
     </div>
 
   </div>
@@ -257,6 +252,10 @@
       <div class="unit-edit social-edit">
         <h4>Social sharing <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
         <input class="input-checkbox-social" type="checkbox" name="Social" checked="{{ options.social }}">
+      </div>
+      <div class="unit-edit tips-edit">
+        <h4>Show tips <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
+        <input class="input-checkbox-tips" type="checkbox" name="Tips" checked="{{ options.tips }}">
       </div>
     </div>
   </div>
