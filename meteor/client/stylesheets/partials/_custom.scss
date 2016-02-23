@@ -1,10 +1,10 @@
 // Debug style
 
-.chart-pdf * {
-    border:cyan 1px solid;
-    stroke: orange;
-    stroke-width: 1px;
-}
+// .chart-pdf * {
+//   border: cyan 1px solid;
+//   stroke: orange;
+//   stroke-width: 1px;
+// }
 
 @function ptToPx($pt) {
   $magic: 1.30522;
@@ -130,7 +130,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     stroke-width: $one-pt;
   }
 
-  .major-tick line{
+  .major-tick line {
     stroke: $black;
     stroke-width: $point-five-pt;
   }

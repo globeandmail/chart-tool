@@ -139,9 +139,6 @@ Template.chartArchive.events({
 
 Template.chartArchive.rendered = function() {
 
-  StickyfillInit();
-  Stickyfill.add(document.querySelector('.sticky'));
-
   var tagsSelect = $('#archive-tags-select').reactiveSelectize({
       maxItems: null,
       valueField: '_id',

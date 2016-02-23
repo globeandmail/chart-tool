@@ -7,12 +7,16 @@
 
 .charts-archive_aside {
   @include span-columns(2.5 of 12);
-  position: sticky;
-  top: 80px;
+  position: relative;
   h2 {
     @include interface-font-bold;
     margin-bottom: 0.4em;
   }
+}
+
+.charts-archive_aside-fixed {
+  position: fixed;
+  margin-top: 35px;
 }
 
 .charts-archive_search-field {
@@ -22,6 +26,7 @@
 
 .charts-archive_results {
   @include span-columns(9.5 of 12);
+  @include shift(2.5 of 12);
   margin-top: 2.5em;
 }
 
