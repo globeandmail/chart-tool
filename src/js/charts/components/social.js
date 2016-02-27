@@ -149,8 +149,9 @@ function constructSMSURL(obj){
 
 function constructTwitterURL(obj){
   var base = 'https://twitter.com/intent/tweet?',
-      hashtag = !!(obj.social.twitter.hashtag) ? '&amp;hashtags=' + obj.social.twitter.hashtag : "";
-      url = 'url=' + window.location.href  + '&amp;via=' + obj.social.twitter.via + '&amp;text=' + encodeURI(obj.heading) + hashtag;
+      hashtag = !!(obj.social.twitter.hashtag) ? '&amp;hashtags=' + obj.social.twitter.hashtag : "",
+      via = !!(obj.social.twitter.via) ? '&amp;via=' + obj.social.twitter.via : "",
+      url = 'url=' + window.location.href  + via + '&amp;text=' + encodeURI(obj.heading) + hashtag;
   if (obj.image && obj.image.enable) {  url += '%20' + getThumbnail(obj); }
   return base + url;
 }

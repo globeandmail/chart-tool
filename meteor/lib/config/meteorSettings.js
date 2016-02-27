@@ -319,14 +319,14 @@
 			"facebook": {
 				"label": "Facebook",
 				"icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg",
-				"redirect": "http%3A%2F%2Fbeta.images.theglobeandmail.com%2Fstatic%2Ftemplates%2Finteractives%2Fshare%2Fredirect.html",
-				"appID": "PasteAppIDHere"
+				"redirect": "",
+				"appID": ""
 			},
 			"twitter": {
 				"label": "Twitter",
 				"icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
-				"via": "globeandmail",
-				"hashtag": "globeandmail"
+				"via": "",
+				"hashtag": ""
 			},
 			"email": {
 				"label": "Email",
