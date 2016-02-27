@@ -115,6 +115,8 @@ meteor/lib/config/meteorSettings.js.map
 src/styles/build/main.css
 meteor/lib/charts/stylesheets/main.css
 
+bundle.js
+meteorSettings.js
 bundle.js.map
 meteorSettings.js.map
 

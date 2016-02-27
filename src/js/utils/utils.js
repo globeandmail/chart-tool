@@ -218,9 +218,17 @@ function svgTest(root) {
 }
 
 /**
+ * Constructs the AWS URL for a given chart ID.
+ * @param  {Object} obj
+ * @return {String}
+ */
+function getThumbnailPath(obj) {
+  var imgSettings = obj.image;
+  return "https://s3.amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension;
+}
+
+/**
  * Given a chart object and container, generate and append a thumbnail
- * @param  {[type]} obj [description]
- * @return {[type]}     [description]
  */
 function generateThumb(container, obj, settings) {
 
@@ -233,7 +241,7 @@ function generateThumb(container, obj, settings) {
 
     var img = document.createElement('img');
 
-    img.setAttribute('src', "https://s3-" + imgSettings.region + ".amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension);
+    img.setAttribute('src', getThumbnailPath(obj));
     img.setAttribute('alt', obj.data.heading);
     img.setAttribute('class', settings.prefix + "thumbnail");
 
@@ -245,6 +253,16 @@ function generateThumb(container, obj, settings) {
 
   }
 
+}
+
+function csvToTable(target, data) {
+  var parsedCSV = d3.csv.parseRows(data);
+  var container = target.append("table").selectAll("tr")
+    .data(parsedCSV).enter()
+    .append("tr").selectAll("td")
+    .data(function(d) { return d; }).enter()
+    .append("td")
+    .text(function(d) { return d; });
 }
 
 module.exports = {
@@ -260,7 +278,9 @@ module.exports = {
   getTranslateXY: getTranslateXY,
   translate: translate,
   svgTest: svgTest,
+  getThumbnailPath: getThumbnailPath,
   generateThumb: generateThumb,
+  csvToTable: csvToTable,
   dataParse: require("./dataparse"),
   factory: require("./factory")
 };

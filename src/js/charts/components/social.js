@@ -7,137 +7,100 @@
 This component adds a "social" button to each chart which can be toggled to present the user with social sharing options
  */
 
-function socialComponent(node, d) {
+var getThumbnail = require("../../utils/utils").getThumbnailPath;
+
+function socialComponent(node, obj) {
 
 	var socialOptions = [];
 
-	for (var prop in d.social) {
-		if (d.social[prop]) {
-			switch (d.social[prop].label) {
+	for (var prop in obj.social) {
+		if (obj.social[prop]) {
+			switch (obj.social[prop].label) {
 				case "Twitter":
-					d.social[prop].url = constructTwitterURL(d);
-					d.social[prop].popup = true;
+					obj.social[prop].url = constructTwitterURL(obj);
+					obj.social[prop].popup = true;
 					break;
 				case "Facebook":
-					d.social[prop].url = constructFacebookURL(d);
-					d.social[prop].popup = true;
+					obj.social[prop].url = constructFacebookURL(obj);
+					obj.social[prop].popup = true;
 					break;
 				case "Email":
-					d.social[prop].url = constructMailURL(d);
-					d.social[prop].popup = false;
+					obj.social[prop].url = constructMailURL(obj);
+					obj.social[prop].popup = false;
 					break;
 				case "SMS":
-					d.social[prop].url = constructSMSURL(d);
-					d.social[prop].popup = false;
+					obj.social[prop].url = constructSMSURL(obj);
+					obj.social[prop].popup = false;
 					break;
 				default:
 					console.log('INCORRECT SOCIAL ITEM DEFINITION')
 			}
-			socialOptions.push(d.social[prop]);
+			socialOptions.push(obj.social[prop]);
 		}
 	}
 
-	function getThumbnail(d){
-		return "https://s3.amazonaws.com/" + d.image.bucket + "/" + d.image.base_path + d.id.replace(d.prefix,'') + "/" + d.image.filename + "." + d.image.extension;
-	}
-
-	function constructFacebookURL(d){
-		var base = 'https://www.facebook.com/dialog/share?';
-		var redirect = d.social.facebook.redirect;
-		return base + 'app_id=' + d.social.facebook.appID + '&amp;display=popup&amp;title=' + d.heading + '&amp;description=From%20article' + document.title + '&amp;href=' + window.location.href + '&amp;redirect_uri=' + redirect + '&amp;picture=' + getThumbnail(d);
-	}
-
-	function constructMailURL(d){
-		var base = 'mailto:?';
-		return base + 'subject=' + d.heading + '&amp;body=' + d.heading + '%0A' + getThumbnail(d) + '%0Afrom article: ' + document.title + '%0A' + window.location.href;
-	}
-
-	function constructSMSURL(d){
-		var base = 'sms:';
-		return base + '&body=Check%20out%20this%20chart: ' + d.heading+'%20'+getThumbnail(d);
-	}
-
-	function constructTwitterURL(d){
-		var base = 'https://twitter.com/intent/tweet?';
-		var hashtag = d.social.twitter.hashtag;
-		return base + 'url=' + window.location.href  + '&amp;via=' + d.social.twitter.via + '&amp;text=' + encodeURI(d.heading)+ '%20' + getThumbnail(d) + '%20';
-	}
-
-	// social popup
-	function windowPopup(url, width, height) {
-	  // calculate the position of the popup so it’s centered on the screen.
-	  var left = (screen.width / 2) - (width / 2),
-	      top = (screen.height / 2) - (height / 2);
-	  window.open(
-	    url,
-	    "",
-	    "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left
-	  );
-	}
-
-
 	var chartContainer = d3.select(node);
 
- 	var chartMeta = chartContainer.select('.ct-chart_meta');
+ 	var chartMeta = chartContainer.select('.' + obj.prefix + 'chart_meta');
 
 	var chartSocialBtn = chartMeta
 		.append('div')
-		.attr('class','ct-chart_meta_btn gi-social-btn')
+		.attr('class', obj.prefix + 'chart_meta_btn')
 		.html('share');
-	
+
 	var chartSocial = chartContainer
 		.append('div')
-		.attr('class','ct-chart_social');
+		.attr('class', obj.prefix + 'chart_social');
 
 	var chartSocialCloseBtn = chartSocial
 		.append('div')
-		.attr('class','ct-chart_social_close')
+		.attr('class', obj.prefix + 'chart_social_close')
 		.html('&#xd7;');
 
 	var chartSocialOptions = chartSocial
 		.append('div')
-		.attr('class','ct-chart_social_options');
+		.attr('class', obj.prefix + 'chart_social_options');
 
 	var chartSocialOptionsTitle = chartSocialOptions
 		.append('h3')
 		.html('Share this chart:');
 
-	chartSocialBtn.on('click',function() {
-		chartSocial.classed('active',true);
-	})
+	chartSocialBtn.on('click', function() {
+		chartSocial.classed(obj.prefix + 'active', true);
+	});
 
-	chartSocialCloseBtn.on('click',function() {
-		chartSocial.classed('active',false);
-	})
+	chartSocialCloseBtn.on('click', function() {
+		chartSocial.classed(obj.prefix + 'active', false);
+	});
 
 	var itemAmount = socialOptions.length;
-	for(var i=0; i < itemAmount; i++ ) {
+	for(var i = 0; i < itemAmount; i++ ) {
 		var socialItem = chartSocialOptions
-			.selectAll('.social-item')
+			.selectAll('.' + obj.prefix + 'social-item')
 			.data(socialOptions)
 			.enter()
 			.append('div')
-			.attr('class','social-item').html(function(d){
-				if(!d.popup){
-					return '<a href="'+d.url+'"><img class="ct-social-icon" src="'+d.icon+'" title="'+d.label+'"/></a>';
-				}else{
-					return '<a class="js-gi-share" href="'+d.url+'"><img class="ct-social-icon" src="'+d.icon+'" title="'+d.label+'"/></a>';
+			.attr('class', obj.prefix + 'social-item').html(function(d) {
+				if (!d.popup) {
+					return '<a href="' + d.url + '"><img class="' + obj.prefix + 'social-icon" src="' + d.icon + '" title="' + d.label + '"/></a>';
+				} else {
+					return '<a class="' + obj.prefix + 'js-share" href="' + d.url + '"><img class="' + obj.prefix + 'social-icon" src="' + d.icon + '" title="' + d.label + '"/></a>';
 				}
 			});
 	}
 
-	var chartSocialOptionsTitle = chartSocialOptions
-		.append('div')
-		.attr('class','ct-image-url')
-		.attr('contentEditable','true')
-		.html(function(){
-			var img = "https://s3.amazonaws.com/" + d.image.bucket + "/" + d.image.base_path + d.id.replace(d.prefix,'') + "/" + d.image.filename + "." + d.image.extension;
-			return img;
-		});
+  if (obj.image && obj.image.enable) {
+    var chartSocialOptionsTitle = chartSocialOptions
+      .append('div')
+      .attr('class', obj.prefix + 'image-url')
+      .attr('contentEditable', 'true')
+      .html(getThumbnail(obj));
+  }
 
-	var giSharePopup = document.querySelectorAll(".js-gi-share");
-  if (giSharePopup) {
-    [].forEach.call(giSharePopup, function(anchor) {
+	var sharePopup = document.querySelectorAll("." + obj.prefix + "js-share");
+
+  if (sharePopup) {
+    [].forEach.call(sharePopup, function(anchor) {
       anchor.addEventListener("click", function(e) {
         e.preventDefault();
         windowPopup(this.href, 600, 620);
@@ -146,8 +109,50 @@ function socialComponent(node, d) {
   }
 
 	return {
-		meta_nav:chartMeta
+		meta_nav: chartMeta
 	};
-	
+
 }
+
+// social popup
+function windowPopup(url, width, height) {
+  // calculate the position of the popup so it’s centered on the screen.
+  var left = (screen.width / 2) - (width / 2),
+      top = (screen.height / 2) - (height / 2);
+  window.open(
+    url,
+    "",
+    "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left
+  );
+}
+
+function constructFacebookURL(obj){
+  var base = 'https://www.facebook.com/dialog/share?',
+      redirect = obj.social.facebook.redirect,
+      url = 'app_id=' + obj.social.facebook.appID + '&amp;display=popup&amp;title=' + obj.heading + '&amp;description=From%20article' + document.title + '&amp;href=' + window.location.href + '&amp;redirect_uri=' + redirect;
+  if (obj.image && obj.image.enable) {  url += '&amp;picture=' + getThumbnail(obj); }
+  return base + url;
+}
+
+function constructMailURL(obj){
+  var base = 'mailto:?';
+  var thumbnail = (obj.image && obj.image.enable) ? '%0A' + getThumbnail(obj) : "";
+  return base + 'subject=' + obj.heading + '&amp;body=' + obj.heading + thumbnail + '%0Afrom article: ' + document.title + '%0A' + window.location.href;
+}
+
+function constructSMSURL(obj){
+  var base = 'sms:',
+      url = '&body=Check%20out%20this%20chart: ' + obj.heading;
+  if (obj.image && obj.image.enable) {  url += '%20' + getThumbnail(obj); }
+  return base + url;
+}
+
+function constructTwitterURL(obj){
+  var base = 'https://twitter.com/intent/tweet?',
+      hashtag = !!(obj.social.twitter.hashtag) ? '&amp;hashtags=' + obj.social.twitter.hashtag : "";
+      url = 'url=' + window.location.href  + '&amp;via=' + obj.social.twitter.via + '&amp;text=' + encodeURI(obj.heading) + hashtag;
+  if (obj.image && obj.image.enable) {  url += '%20' + getThumbnail(obj); }
+  return base + url;
+}
+
 module.exports = socialComponent;

@@ -11,6 +11,7 @@ var libPath           = "./src",
     browserSyncUIPort = 3060,
 
     buildPath         = "./dist/" + p.version,
+    buildPathDev      = "./dist/dev",
     buildJsFilename   = "bundle",
     buildCssFilename  = "bundle",
 
@@ -36,6 +37,7 @@ module.exports = {
   meteorBuildPath: meteorBuildPath,
 
   buildPath: buildPath,
+  buildPathDev: buildPathDev,
   buildJsFilename: buildJsFilename,
   buildCssFilename: buildCssFilename
 }

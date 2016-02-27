@@ -286,10 +286,6 @@
 .ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-5 {
   fill: #fff; }
 
-.container {
-  margin: 2em auto;
-  max-width: 620px; }
-
 .ct-chart_meta {
   position: absolute;
   text-align: right;
@@ -306,9 +302,8 @@
   margin-left: 5px;
   text-transform: uppercase;
   font-size: 0.8em; }
-
-.ct-chart_meta_btn:hover {
-  color: #08519c; }
+  .ct-chart_meta_btn:hover {
+    color: #08519c; }
 
 .ct-chart {
   position: relative;
@@ -324,13 +319,12 @@
   right: 0;
   background: white;
   background: #f5f5f5;
-  transition: transform .25s,opacity .5s;
+  transition: transform .25s, opacity .5s;
   transform: translateY(100%); }
-
-.ct-chart_data.active {
-  opacity: 1;
-  transform: translateY(0%);
-  display: block; }
+  .ct-chart_data.ct-active {
+    opacity: 1;
+    transform: translateY(0%);
+    display: block; }
 
 .ct-chart_data_close {
   position: absolute;
@@ -346,11 +340,10 @@
   color: #666;
   cursor: pointer;
   background: white; }
-
-.ct-chart_data_close:hover {
-  opacity: 0.5;
-  color: #08519c;
-  border: 1px solid #08519c; }
+  .ct-chart_data_close:hover {
+    opacity: 0.5;
+    color: #08519c;
+    border: 1px solid #08519c; }
 
 .ct-chart_data_inner {
   background: #fff;
@@ -417,10 +410,6 @@
   margin: 0;
   padding: 0; }
 
-.container {
-  margin: 2em auto;
-  max-width: 620px; }
-
 .ct-chart_meta {
   position: absolute;
   text-align: right;
@@ -437,9 +426,8 @@
   margin-left: 5px;
   text-transform: uppercase;
   font-size: 0.8em; }
-
-.ct-chart_meta_btn:hover {
-  color: #08519c; }
+  .ct-chart_meta_btn:hover {
+    color: #08519c; }
 
 .ct-chart {
   position: relative;
@@ -455,13 +443,12 @@
   right: 0;
   background: white;
   background: #f5f5f5;
-  transition: transform .25s,opacity .5s;
+  transition: transform .25s, opacity .5s;
   transform: translateY(100%); }
-
-.ct-chart_social.active {
-  opacity: 1;
-  transform: translateY(0%);
-  display: block; }
+  .ct-chart_social.ct-active {
+    opacity: 1;
+    transform: translateY(0%);
+    display: block; }
 
 .ct-chart_social_close {
   position: absolute;
@@ -477,11 +464,10 @@
   color: #666;
   cursor: pointer;
   background: white; }
-
-.ct-chart_social_close:hover {
-  opacity: 0.5;
-  color: #08519c;
-  border: 1px solid #08519c; }
+  .ct-chart_social_close:hover {
+    opacity: 0.5;
+    color: #08519c;
+    border: 1px solid #08519c; }
 
 .ct-chart_social_inner {
   background: #fff;
@@ -496,14 +482,12 @@
   bottom: 4em;
   padding: 1em .25em;
   border: 1px solid #ddd; }
-
-.ct-chart_social_inner table {
-  border-spacing: 0; }
-
-.ct-chart_social_inner table tr td {
-  padding: .5em 2em;
-  text-align: right;
-  line-height: 1.2em; }
+  .ct-chart_social_inner table {
+    border-spacing: 0; }
+    .ct-chart_social_inner table tr td {
+      padding: .5em 2em;
+      text-align: right;
+      line-height: 1.2em; }
 
 .ct-chart_social_inner table tr td:nth-child(1) {
   text-align: left; }
@@ -558,10 +542,9 @@
   flex-flow: row wrap;
   justify-content: center;
   align-items: center; }
-
-.ct-chart_social_options h3 {
-  width: 100%;
-  text-align: center; }
+  .ct-chart_social_options h3 {
+    width: 100%;
+    text-align: center; }
 
 .ct-social-icon {
   width: 50px;
@@ -576,27 +559,25 @@
   white-space: nowrap;
   overflow-x: hidden; }
 
-.social-item {
+.ct-social-item {
   display: inline-block;
   text-align: center;
   width: 18%;
   line-height: 80px;
   margin: 10px; }
-
-.social-item a {
-  text-decoration: none;
-  display: block;
-  background: none;
-  color: #000;
-  height: 80px;
-  text-align: center;
-  line-height: 80px;
-  cursor: pointer;
-  transition: opacity 0.5s;
-  opacity: 0.6; }
-
-.social-item a:hover {
-  opacity: 1; }
+  .ct-social-item a {
+    text-decoration: none;
+    display: block;
+    background: none;
+    color: #000;
+    height: 80px;
+    text-align: center;
+    line-height: 80px;
+    cursor: pointer;
+    transition: opacity 0.5s;
+    opacity: 0.6; }
+    .ct-social-item a:hover {
+      opacity: 1; }
 
 .ct-primary.ct-type_line .ct-series_group .ct-line,
 .ct-primary.ct-type_line .ct-series_group.ct-multiple .ct-line,

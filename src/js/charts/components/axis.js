@@ -665,7 +665,7 @@ function tickFinderY(scale, tickCount, tickSettings) {
   // If not, sets lower and upper bounds for the number of ticks
   // Iterates over those and makes sure that there are tick arrays where
   // the last value in the array matches the domain max value
-  // if so, tries to find the tick number closest to 5 out of the winners,
+  // if so, tries to find the tick number closest to tickGoal out of the winners,
   // and returns that arr to the scale for use
 
   var min = scale.domain()[0],

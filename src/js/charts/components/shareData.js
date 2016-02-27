@@ -6,74 +6,69 @@
 /*
 This component adds a "data" button to each chart which can be toggled to present the charts data in a tabular form along with buttons allowing the raw data to be downloaded
  */
-function shareDataComponent(node, d) {
+function shareDataComponent(node, obj) {
+
  	var chartContainer = d3.select(node);
 
  	var chartMeta = chartContainer
  		.append('div')
- 		.attr('class','ct-chart_meta');
+ 		.attr('class', obj.prefix + 'chart_meta');
 
 	var chartDataBtn = chartMeta
 		.append('div')
-		.attr('class','ct-chart_meta_btn gi-dl-btn')
+		.attr('class', obj.prefix + 'chart_meta_btn')
 		.html('data');
 
 	var chartData = chartContainer
 		.append('div')
-		.attr('class','ct-chart_data');
+		.attr('class', obj.prefix + 'chart_data');
 
 	var chartDataCloseBtn = chartData
 		.append('div')
-		.attr('class','ct-chart_data_close')
+		.attr('class', obj.prefix + 'chart_data_close')
 		.html('&#xd7;');
 
 	var chartDataTable = chartData
 		.append('div')
-		.attr('class','ct-chart_data_inner');
+		.attr('class', obj.prefix + 'chart_data_inner');
 
 	var chartDataHeader = chartData
 		.append('h2')
-		.html(d.heading);
+		.html(obj.heading);
 
 	var chartDataNav = chartData
 		.append('div')
-		.attr('class','ct-chart_data_nav');
+		.attr('class', obj.prefix + 'chart_data_nav');
 
 	var csvDLBtn = chartDataNav
 		.append('a')
-		.attr('class','ct-chart_data_btn csv')
+		.attr('class', obj.prefix + 'chart_data_btn csv')
 		.html('download csv');
 
-	csvToTable(chartDataTable,d.data.csv);
+  var csvToTable = require("../../utils/utils").csvToTable;
 
-	chartDataBtn.on('click',function() {
-		chartData.classed('active',true);
-	})
+	csvToTable(chartDataTable, obj.data.csv);
 
-	chartDataCloseBtn.on('click',function() {
-		chartData.classed('active',false);
-	})
+	chartDataBtn.on('click', function() {
+		chartData.classed(obj.prefix + 'active', true);
+	});
+
+	chartDataCloseBtn.on('click', function() {
+		chartData.classed(obj.prefix + 'active', false);
+	});
 
 	csvDLBtn.on('click',function() {
-	  var dlData = 'data:text/plain;charset=utf-8,'+ encodeURIComponent(d.data.csv);
+	  var dlData = 'data:text/plain;charset=utf-8,' + encodeURIComponent(obj.data.csv);
 	  d3.select(this)
-	  	.attr('href',dlData)
-	  	.attr('download','data_'+d.id+'.csv');
-	})
-
-  function csvToTable(target,data) {
-    var parsedCSV = d3.csv.parseRows(data);
-    var container = target.append("table").selectAll("tr")
-      .data(parsedCSV).enter()
-      .append("tr").selectAll("td")
-      .data(function(d) { return d; }).enter()
-      .append("td")
-      .text(function(d) { return d; });
-  }
+	  	.attr('href', dlData)
+	  	.attr('download','data_' + obj.id + '.csv');
+	});
 
 	return {
-		meta_nav:chartMeta,
-		data_panel:chartData
+		meta_nav: chartMeta,
+		data_panel: chartData
 	};
+
 }
+
 module.exports = shareDataComponent;

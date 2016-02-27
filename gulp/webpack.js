@@ -8,7 +8,7 @@ var gulp = require("gulp"),
 
 gulp.task("_webpack-build", function(callback) {
   // modify some webpack config options
-  var myConfig = Object.create(webpackConfig);
+  var myConfig = Object.create(webpackConfig.production);
   myConfig.plugins = myConfig.plugins.concat(
     new webpack.DefinePlugin({
       "process.env": {
@@ -17,7 +17,15 @@ gulp.task("_webpack-build", function(callback) {
       }
     }),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: {
+        screw_ie8: true
+      },
+      compress: {
+        warnings: true,
+        screw_ie8: true
+      }
+    })
   );
 
   // run webpack
@@ -28,27 +36,19 @@ gulp.task("_webpack-build", function(callback) {
     }));
     callback();
 
-    // rename bundle to bundle.min
-    gulp.src(gulpConfig.buildPath + "/bundle.js")
-      .pipe(rename(gulpConfig.buildJsFilename + ".min.js"))
-      .pipe(gulp.dest(gulpConfig.buildPath));
-
     // move d3 to folder
     gulp.src("./lib/d3/d3.min.js")
       .pipe(gulp.dest(gulpConfig.buildPath));
 
     // move build files and meteorSettings to Meteor
-    gulp.src([gulpConfig.buildPath + "/bundle.js", gulpConfig.buildPath + "/bundle.js.map"])
+    gulp.src(gulpConfig.buildPath + "/bundle.min.js")
       .pipe(gulp.dest(gulpConfig.meteorBundle));
 
-    gulp.src([gulpConfig.buildPath + "/meteorSettings.js", gulpConfig.buildPath + "/meteorSettings.js.map"])
+    gulp.src(gulpConfig.buildPath + "/meteorSettings.min.js")
       .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/config/'));
 
     // cleaning up
-    gulp.src(gulpConfig.buildPath + "/meteorSettings.js", { read: false })
-      .pipe(clean());
-
-    gulp.src(gulpConfig.buildPath + "/bundle.js", { read: false })
+    gulp.src(gulpConfig.buildPath + "/meteorSettings.min.js", { read: false })
       .pipe(clean());
 
   });
@@ -56,7 +56,7 @@ gulp.task("_webpack-build", function(callback) {
 
 gulp.task("_webpack-build-dev", function(done) {
 
-  var webpackDevConfig = Object.create(webpackConfig);
+  var webpackDevConfig = Object.create(webpackConfig.development);
   webpackDevConfig.devtool = "sourcemap";
   webpackDevConfig.debug = true;
 
@@ -68,10 +68,10 @@ gulp.task("_webpack-build-dev", function(done) {
       colors: true
     }));
 
-    gulp.src([gulpConfig.buildPath + "/bundle.js", gulpConfig.buildPath + "/bundle.js.map"])
+    gulp.src([gulpConfig.buildPathDev + "/bundle.js", gulpConfig.buildPathDev + "/bundle.js.map"])
       .pipe(gulp.dest(gulpConfig.meteorBundle));
 
-    gulp.src([gulpConfig.buildPath + "/meteorSettings.js", gulpConfig.buildPath + "/meteorSettings.js.map"])
+    gulp.src([gulpConfig.buildPathDev + "/meteorSettings.js", gulpConfig.buildPathDev + "/meteorSettings.js.map"])
       .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/config/'));
 
     done();

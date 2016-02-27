@@ -326,7 +326,7 @@
 				"label": "Twitter",
 				"icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
 				"via": "globeandmail",
-				"hashtag": "#globeandmail"
+				"hashtag": "globeandmail"
 			},
 			"email": {
 				"label": "Email",
