@@ -10,9 +10,9 @@ var libPath           = "./src",
     browserSyncPort   = 3030,
     browserSyncUIPort = 3060,
 
-    buildPath         = "./dist",
-    buildCssPath      = buildPath + "/lib/" + p.version,
-    buildCssFilename  = "gm-chart-lib.css";
+    buildPath         = "./dist/" + p.version,
+    buildJsFilename   = "bundle",
+    buildCssFilename  = "bundle",
 
     meteorPath        = "./meteor",
     meteorBundle      = meteorPath + "/lib/charts/scripts",
@@ -36,6 +36,6 @@ module.exports = {
   meteorBuildPath: meteorBuildPath,
 
   buildPath: buildPath,
-  buildCssPath: buildCssPath,
+  buildJsFilename: buildJsFilename,
   buildCssFilename: buildCssFilename
 }

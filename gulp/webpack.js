@@ -1,5 +1,7 @@
 var gulp = require("gulp"),
     gutil = require("gulp-util"),
+    rename = require('gulp-rename'),
+    clean = require("gulp-clean"),
     webpack = require("webpack"),
     webpackConfig = require("./webpack.config.js"),
     gulpConfig = require("./gulp-config.js");
@@ -26,11 +28,28 @@ gulp.task("_webpack-build", function(callback) {
     }));
     callback();
 
+    // rename bundle to bundle.min
+    gulp.src(gulpConfig.buildPath + "/bundle.js")
+      .pipe(rename(gulpConfig.buildJsFilename + ".min.js"))
+      .pipe(gulp.dest(gulpConfig.buildPath));
+
+    // move d3 to folder
+    gulp.src("./lib/d3/d3.min.js")
+      .pipe(gulp.dest(gulpConfig.buildPath));
+
+    // move build files and meteorSettings to Meteor
     gulp.src([gulpConfig.buildPath + "/bundle.js", gulpConfig.buildPath + "/bundle.js.map"])
       .pipe(gulp.dest(gulpConfig.meteorBundle));
 
     gulp.src([gulpConfig.buildPath + "/meteorSettings.js", gulpConfig.buildPath + "/meteorSettings.js.map"])
       .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/config/'));
+
+    // cleaning up
+    gulp.src(gulpConfig.buildPath + "/meteorSettings.js", { read: false })
+      .pipe(clean());
+
+    gulp.src(gulpConfig.buildPath + "/bundle.js", { read: false })
+      .pipe(clean());
 
   });
 });

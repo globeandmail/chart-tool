@@ -8,7 +8,7 @@ var gulp = require('gulp'),
 var gulpConfig = require('./gulp-config.js');
 
 var sourceCss = gulpConfig.libStylesheets + '/main.scss';
-var buildCss = gulpConfig.buildCssPath + "/css";
+var buildCss = gulpConfig.buildPath;
 
 gulp.task('_scss', function() {
   gulp.src(sourceCss)
@@ -31,11 +31,8 @@ gulp.task('_scss', function() {
 gulp.task('_scss-build', function() {
   gulp.src(sourceCss)
     .pipe(sass())
-      .pipe(sourcemaps.init())
-    .pipe(rename(gulpConfig.buildCssFilename))
-    .pipe(gulp.dest(buildCss))
     .pipe(minifyCss({ keepBreaks: false }))
-    .pipe(sourcemaps.write('.'))
+    .pipe(rename(gulpConfig.buildCssFilename + ".min.css"))
     .pipe(gulp.dest(buildCss))
       .on('error', gutil.log);
 });
