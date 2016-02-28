@@ -45,7 +45,13 @@ cleanEmbed = function(data) {
     "time_format",
     "print",
     "img",
-    "prefix"
+    "prefix",
+    "series",
+    "annotations",
+    "range",
+    "public",
+    "users",
+    "tags"
   );
   var chartObj = deleteProp(data, arr);
   var newData = csvFormat(data);
@@ -60,7 +66,8 @@ embed = function(obj) {
     "id": obj._id,
     "heading": escapeStr(obj.heading),
     "qualifier": escapeStr(obj.qualifier),
-    "source": escapeStr(obj.source)
+    "source": escapeStr(obj.source),
+    "tags": escapeStr(obj.tags)
   };
   data["chart"] = cleanEmbed(obj);
   return data;
