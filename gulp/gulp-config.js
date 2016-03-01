@@ -10,7 +10,7 @@ var libPath           = "./src",
     browserSyncPort   = 3030,
     browserSyncUIPort = 3060,
 
-    buildPath         = "./dist/" + p.version,
+    buildPath         = "./dist/" + p.version + "-" + p.buildVer,
     buildPathDev      = "./dist/dev",
     buildJsFilename   = "bundle",
     buildCssFilename  = "bundle",

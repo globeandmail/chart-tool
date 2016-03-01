@@ -9,15 +9,13 @@ var gulp = require("gulp"),
 var p = require("../package.json");
 
 gulp.task('_clean-lib', function() {
-  return gulp.src(gulpConfig.buildPath, {
-      read: false
-  }).pipe(clean());
+  return gulp.src(gulpConfig.buildPath, { read: false })
+    .pipe(clean());
 });
 
 gulp.task('_clean-meteor', function() {
-  return gulp.src(gulpConfig.meteorBuildPath, {
-      read: false
-  }).pipe(clean());
+  return gulp.src(gulpConfig.meteorBuildPath, { read: false })
+    .pipe(clean());
 });
 
 gulp.task("_jsdoc", shell.task([
