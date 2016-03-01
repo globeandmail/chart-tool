@@ -41,7 +41,13 @@ function socialComponent(node, obj) {
 
 	var chartContainer = d3.select(node);
 
- 	var chartMeta = chartContainer.select('.' + obj.prefix + 'chart_meta');
+  var chartMeta = chartContainer.select('.' + obj.prefix + 'chart_meta');
+
+  if (chartMeta.node() === null) {
+    chartMeta = chartContainer
+      .append('div')
+      .attr('class', obj.prefix + 'chart_meta');
+  }
 
 	var chartSocialBtn = chartMeta
 		.append('div')

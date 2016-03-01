@@ -1,18 +1,23 @@
 /**
  * Sharing Data module.
- * @module charts/components/share_data
+ * @module charts/components/share-data
  */
 
 /*
 This component adds a "data" button to each chart which can be toggled to present the charts data in a tabular form along with buttons allowing the raw data to be downloaded
  */
+
 function shareDataComponent(node, obj) {
 
  	var chartContainer = d3.select(node);
 
- 	var chartMeta = chartContainer
- 		.append('div')
- 		.attr('class', obj.prefix + 'chart_meta');
+  var chartMeta = chartContainer.select('.' + obj.prefix + 'chart_meta');
+
+  if (chartMeta.node() === null) {
+    chartMeta = chartContainer
+      .append('div')
+      .attr('class', obj.prefix + 'chart_meta');
+  }
 
 	var chartDataBtn = chartMeta
 		.append('div')

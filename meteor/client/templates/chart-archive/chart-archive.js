@@ -8,6 +8,7 @@ function performSearch(e) {
 
   archiveFilters.filters.search = input;
   Session.set("archiveFilters", archiveFilters);
+  setQueryUrl("search", input);
 }
 
 function setQueryUrl(type, value) {
@@ -62,7 +63,6 @@ Template.chartArchive.helpers({
   chartCount: function() {
     if (Session.get("archiveFilters")) {
       var filters = Session.get("archiveFilters");
-      filters.limit = false;
       Meteor.call("matchedCharts", filters, function(err, res) {
         if (!err) { Session.set("availableCharts", res); }
       });
@@ -87,6 +87,8 @@ Template.chartArchive.events({
     performSearch(event);
     if (event.target.value !== "") {
       setQueryUrl("search", event.target.value);
+    } else {
+      setQueryUrl("search", undefined);
     }
   },
   "change .charts-archive_count-limit": function(event) {

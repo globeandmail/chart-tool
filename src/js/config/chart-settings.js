@@ -44,7 +44,7 @@ module.exports = {
     annotations: false,
     range: false,
     series: false,
-    shareData: true,
+    share_data: true,
     social: true
   },
 

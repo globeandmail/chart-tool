@@ -189,6 +189,11 @@
   line-height: 16px; }
 
 .ct-tip_text-date {
+  font-family: "Helvetica";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 16px;
   font-weight: bold; }
 
 .ct-tip_line-x {
@@ -296,7 +301,7 @@
 .ct-chart_meta_btn {
   cursor: pointer;
   display: inline-block;
-  color: #000;
+  color: #333;
   padding: 5px;
   border-radius: 3px;
   margin-left: 5px;
@@ -304,10 +309,6 @@
   font-size: 0.8em; }
   .ct-chart_meta_btn:hover {
     color: #08519c; }
-
-.ct-chart {
-  position: relative;
-  overflow: hidden; }
 
 .ct-chart_data {
   display: block;
@@ -318,10 +319,14 @@
   bottom: 0;
   right: 0;
   background: white;
-  background: #f5f5f5;
+  background: #f3f3f3;
   transition: transform .25s, opacity .5s;
-  transform: translateY(100%); }
+  transform: translateY(100%);
+  height: 0;
+  pointer-events: none; }
   .ct-chart_data.ct-active {
+    pointer-events: auto;
+    height: auto;
     opacity: 1;
     transform: translateY(0%);
     display: block; }
@@ -330,14 +335,14 @@
   position: absolute;
   right: 1.2em;
   top: 1.8em;
-  border: 1px solid #ddd;
+  border: 1px solid #ababab;
   padding: 0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   text-align: center;
   line-height: 20px;
-  color: #666;
+  color: #333;
   cursor: pointer;
   background: white; }
   .ct-chart_data_close:hover {
@@ -347,7 +352,7 @@
 
 .ct-chart_data_inner {
   background: #fff;
-  color: #666;
+  color: #333;
   font-size: 1.2em;
   line-height: 1.6em;
   overflow: scroll;
@@ -357,7 +362,7 @@
   top: 4em;
   bottom: 4em;
   padding: 1em .25em;
-  border: 1px solid #ddd; }
+  border: 1px solid #ababab; }
 
 .ct-chart_data_inner table {
   border-spacing: 0; }
@@ -371,13 +376,13 @@
   text-align: left; }
 
 .ct-chart_data_inner table tr:nth-child(odd) td {
-  background: #f9f9f9; }
+  background: #f3f3f3; }
 
 .ct-chart_data_inner table tr:nth-child(1) td {
   background: white;
   color: black;
   font-size: 0.8em;
-  border-bottom: 1px solid #ddd; }
+  border-bottom: 1px solid #ababab; }
 
 .ct-chart_data_nav {
   position: absolute;
@@ -386,12 +391,12 @@
 
 .ct-chart_data_nav .ct-chart_data_btn {
   text-decoration: none;
-  color: #000;
+  color: #333;
   display: inline-block;
   padding: .5em 1em;
   cursor: pointer;
   border-radius: 1em;
-  border: 1px solid #ddd;
+  border: 1px solid #ababab;
   margin-left: 1em;
   text-transform: uppercase;
   font-size: 0.8em; }
@@ -420,18 +425,18 @@
 .ct-chart_meta_btn {
   cursor: pointer;
   display: inline-block;
-  color: #000;
   padding: 5px;
   border-radius: 3px;
   margin-left: 5px;
   text-transform: uppercase;
-  font-size: 0.8em; }
+  font-family: "Helvetica";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 16px;
+  font-size: 11px; }
   .ct-chart_meta_btn:hover {
     color: #08519c; }
-
-.ct-chart {
-  position: relative;
-  overflow: hidden; }
 
 .ct-chart_social {
   display: block;
@@ -442,10 +447,14 @@
   bottom: 0;
   right: 0;
   background: white;
-  background: #f5f5f5;
+  background: #f3f3f3;
   transition: transform .25s, opacity .5s;
-  transform: translateY(100%); }
+  transform: translateY(100%);
+  height: 0;
+  pointer-events: none; }
   .ct-chart_social.ct-active {
+    pointer-events: auto;
+    height: auto;
     opacity: 1;
     transform: translateY(0%);
     display: block; }
@@ -454,14 +463,14 @@
   position: absolute;
   right: 1.2em;
   top: 1.8em;
-  border: 1px solid #ddd;
+  border: 1px solid #ababab;
   padding: 0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   text-align: center;
   line-height: 20px;
-  color: #666;
+  color: #333;
   cursor: pointer;
   background: white; }
   .ct-chart_social_close:hover {
@@ -471,7 +480,7 @@
 
 .ct-chart_social_inner {
   background: #fff;
-  color: #666;
+  color: #333;
   font-size: 1.2em;
   line-height: 1.6em;
   overflow: scroll;
@@ -481,7 +490,7 @@
   top: 4em;
   bottom: 4em;
   padding: 1em .25em;
-  border: 1px solid #ddd; }
+  border: 1px solid #ababab; }
   .ct-chart_social_inner table {
     border-spacing: 0; }
     .ct-chart_social_inner table tr td {
@@ -493,13 +502,13 @@
   text-align: left; }
 
 .ct-chart_social_inner table tr:nth-child(odd) td {
-  background: #f9f9f9; }
+  background: #f3f3f3; }
 
 .ct-chart_social_inner table tr:nth-child(1) td {
   background: white;
   color: black;
   font-size: 0.8em;
-  border-bottom: 1px solid #ddd; }
+  border-bottom: 1px solid #ababab; }
 
 .ct-chart_social_nav {
   position: absolute;
@@ -508,12 +517,12 @@
 
 .ct-chart_social_nav .ct-chart_social_btn {
   text-decoration: none;
-  color: #000;
+  color: #333;
   display: inline-block;
   padding: .5em 1em;
   cursor: pointer;
   border-radius: 1em;
-  border: 1px solid #ddd;
+  border: 1px solid #ababab;
   margin-left: 1em;
   text-transform: uppercase;
   font-size: 0.8em; }
@@ -554,7 +563,7 @@
 .ct-image-url {
   padding: 1em;
   background: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #ababab;
   width: 80%;
   white-space: nowrap;
   overflow-x: hidden; }
@@ -569,7 +578,7 @@
     text-decoration: none;
     display: block;
     background: none;
-    color: #000;
+    color: #333;
     height: 80px;
     text-align: center;
     line-height: 80px;
@@ -1009,6 +1018,8 @@
   height: auto;
   background-color: #fff;
   margin: 0 0 20px 0;
+  position: relative;
+  overflow: hidden;
   font-family: "Helvetica";
   font-weight: normal;
   font-style: normal;

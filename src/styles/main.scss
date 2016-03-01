@@ -30,6 +30,8 @@
   height: auto;
   background-color: $white;
   margin: $margin;
+  position: relative;
+  overflow: hidden;
   @include utility-font;
 }
 

@@ -245,7 +245,7 @@ Meteor.methods({
   updateShareData: function(chartId, shareData) {
     return Charts.update(chartId, {
       $set: {
-        "options.shareData": shareData,
+        "options.share_data": shareData,
         lastEdited: new Date()
       }
     });
@@ -475,6 +475,7 @@ Meteor.methods({
 
   matchedCharts: function(params) {
     var parameters = queryConstructor(params);
+    delete parameters.options.limit;
     return Charts.find(parameters.find, parameters.options).count();
   }
 });

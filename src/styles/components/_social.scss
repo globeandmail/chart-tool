@@ -9,20 +9,15 @@
 .#{$prefix}chart_meta_btn {
   cursor: pointer;
   display: inline-block;
-  color: #000;
   padding: 5px;
   border-radius: 3px;
   margin-left: 5px;
   text-transform: uppercase;
-  font-size: 0.8em;
+  @include utility-font;
+  font-size: 11px;
   &:hover {
     color: $primary-color;
   }
-}
-
-.#{$prefix}chart {
-  position: relative; // May need to change this in chart tool. Can't think of a better way to be able to position stuff over the the chart
-  overflow: hidden;
 }
 
 .#{$prefix}chart_social {
@@ -34,10 +29,14 @@
   bottom: 0;
   right: 0;
   background: white;
-  background: #f5f5f5;
+  background: lighten($verylightgray, 16%);
   transition: transform .25s, opacity .5s;
   transform: translateY(100%);
+  height: 0;
+  pointer-events: none;
   &.#{$prefix}active {
+    pointer-events: auto;
+    height: auto;
     opacity: 1;
     transform: translateY(0%);
     display: block;
@@ -48,14 +47,14 @@
   position: absolute;
   right: 1.2em;
   top: 1.8em;
-  border: 1px solid #ddd;
+  border: 1px solid $lightgray;
   padding: 0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   text-align: center;
   line-height: 20px;
-  color: #666;
+  color: $text;
   cursor: pointer;
   background: white;
   &:hover {
@@ -66,8 +65,8 @@
 }
 
 .#{$prefix}chart_social_inner {
-  background: #fff;
-  color: #666;
+  background: $white;
+  color: $text;
   font-size: 1.2em;
   line-height: 1.6em;
   overflow: scroll;
@@ -77,7 +76,7 @@
   top: 4em;
   bottom: 4em;
   padding: 1em .25em;
-  border: 1px solid #ddd;
+  border: 1px solid $lightgray;
   table {
     border-spacing: 0;
     tr td {
@@ -94,14 +93,14 @@
 }
 
 .#{$prefix}chart_social_inner table tr:nth-child(odd) td {
-  background: #f9f9f9;
+  background: lighten($verylightgray, 16%);
 }
 
 .#{$prefix}chart_social_inner table tr:nth-child(1) td {
   background: white;
   color: black;
   font-size: 0.8em;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid $lightgray;
 }
 
 .#{$prefix}chart_social_nav {
@@ -112,12 +111,12 @@
 
 .#{$prefix}chart_social_nav .#{$prefix}chart_social_btn {
   text-decoration: none;
-  color: #000;
+  color: $text;
   display: inline-block;
   padding: .5em 1em;
   cursor: pointer;
   border-radius: 1em;
-  border: 1px solid #ddd;
+  border: 1px solid $lightgray;
   margin-left: 1em;
   text-transform: uppercase;
   font-size: 0.8em;
@@ -163,8 +162,8 @@
 
 .#{$prefix}image-url {
   padding: 1em;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: $white;
+  border: 1px solid $lightgray;
   width: 80%;
   white-space: nowrap;
   overflow-x: hidden;
@@ -180,7 +179,7 @@
     text-decoration: none;
     display: block;
     background: none;
-    color: #000;
+    color: $text;
     height: 80px;
     text-align: center;
     line-height: 80px;

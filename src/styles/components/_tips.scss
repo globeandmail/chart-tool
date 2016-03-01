@@ -23,6 +23,7 @@
 }
 
 .#{$prefix}tip_text-date {
+  @include utility-font;
   font-weight: bold;
 }
 

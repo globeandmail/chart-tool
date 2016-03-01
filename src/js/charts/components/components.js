@@ -8,7 +8,7 @@ var components = {
   scale: require("./scale"),
   tips: require("./tips"),
   social: require("./social"),
-  shareData: require("./shareData")
+  shareData: require("./share-data")
 };
 
 module.exports = components;
