@@ -42,11 +42,15 @@ function ChartManager(container, obj) {
   }
 
   if (chartRecipe.options.share_data) {
-    rendered.shareData = components.shareData(container, chartRecipe);
+    if (!chartRecipe.editable && !chartRecipe.exportable) {
+      rendered.shareData = components.shareData(container, chartRecipe);
+    }
   }
 
   if (chartRecipe.options.social) {
-    rendered.social = components.social(container, chartRecipe);
+    if (!chartRecipe.editable && !chartRecipe.exportable) {
+      rendered.social = components.social(container, chartRecipe);
+    }
   }
 
   if (chartRecipe.CUSTOM) {

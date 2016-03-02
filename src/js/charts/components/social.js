@@ -80,6 +80,7 @@ function socialComponent(node, obj) {
 	});
 
 	var itemAmount = socialOptions.length;
+
 	for(var i = 0; i < itemAmount; i++ ) {
 		var socialItem = chartSocialOptions
 			.selectAll('.' + obj.prefix + 'social-item')

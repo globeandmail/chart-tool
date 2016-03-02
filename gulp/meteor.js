@@ -7,7 +7,7 @@ gulp.task('_meteor-dev', shell.task([
 ]));
 
 gulp.task('_meteor-build', function() {
-  return gulp.src("./", {read: false})
+  return gulp.src("./", { read: false })
     .pipe(shell([
       'cd ' + gulpConfig.meteorPath + ' && meteor build ' + gulpConfig.meteorBuildPath + ' --architecture os.linux.x86_64',
       'echo Interface build complete at ' + gulpConfig.buildPath + '/meteor'
