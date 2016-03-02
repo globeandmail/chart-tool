@@ -1,9 +1,12 @@
 .#{$prefix}chart_source, .#{$prefix}chart_credit {
   @include utility-font;
-  padding-top: 5px;
+  padding-top: 10px;
   padding-left: 0;
   display: inline-block;
   min-width: 50px;
   text-transform: uppercase;
   font-size: 11px;
+  @media(min-width: 420px ){
+  	width: calc(100% - 100px);
+  }
 }
