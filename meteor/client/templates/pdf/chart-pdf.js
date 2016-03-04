@@ -13,6 +13,7 @@ Template.chartPdf.rendered = function() {
       dynamicHeight: true,
       x_axis: app_settings.print.x_axis,
       y_axis: app_settings.print.y_axis,
+      margin: app_settings.print.margin,
       type: "pdf"
     };
 

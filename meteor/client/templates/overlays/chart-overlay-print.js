@@ -53,14 +53,17 @@ Template.chartOverlayPrint.rendered = function() {
         width = determineWidth(data.print.columns) * magicW,
         height = determineHeight(data.print.lines, width) * magicH;
 
-    data.exportable = {};
-    data.exportable.dynamicHeight = true;
-    data.exportable.width = width;
-    data.exportable.height = height;
-    data.exportable.x_axis = app_settings.print.x_axis;
-    data.exportable.y_axis = app_settings.print.y_axis;
-    data.exportable.type = "pdf";
-    data.prefix = app_settings.prefix;
+    data.exportable = {
+      width: width,
+      height: height,
+      dynamicHeight: true,
+      x_axis: app_settings.print.x_axis,
+      y_axis: app_settings.print.y_axis,
+      margin: app_settings.print.margin,
+      type: "pdf"
+    };
+
+    data.prefix = prefix;
 
     Tracker.autorun(function(drawComp) {
       var containerExists = d3.select(".print-export-preview-chart").node();

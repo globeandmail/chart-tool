@@ -1,5 +1,5 @@
-// Debug style
-
+// PDF debugging style
+// Uncomment below to see container bounding boxes
 // .chart-pdf * {
 //   border: cyan 1px solid;
 //   stroke: orange;
@@ -28,6 +28,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     margin: 0;
     padding: 0;
     line-height: 1em;
+    margin-bottom: 2px;
   }
 
   .#{$prefix}chart_title-text {
@@ -66,9 +67,8 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     padding: 0;
     margin: 0;
     display: block;
-    // margin-top: -4px;
     line-height: 11px;
-    // padding-bottom: 5px;
+    margin-top: 2px;
   }
 
   .#{$prefix}chart_legend .#{$prefix}legend_item {

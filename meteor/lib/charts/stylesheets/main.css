@@ -7,14 +7,12 @@
   font-style: normal;
   font-size: 14px;
   line-height: 17px; }
-  .ct-chart_title:only-child {
-    padding-bottom: 15px; }
 
 .ct-chart_legend {
   padding: 4px 0; }
 
 .ct-chart_legend .ct-legend_item {
-  display: inline-block;
+  display: inline;
   margin-right: 1em;
   font-family: "Helvetica";
   font-weight: normal;
@@ -23,7 +21,7 @@
   line-height: 16px; }
 
 .ct-chart_legend .ct-legend_item .ct-legend_item_text {
-  display: inline-block;
+  display: inline;
   vertical-align: middle; }
 
 .ct-chart_legend .ct-legend_item .ct-legend_item_icon {

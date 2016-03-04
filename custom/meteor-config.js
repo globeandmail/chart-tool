@@ -161,6 +161,12 @@ app_settings = {
     },
     y_axis: {
       paddingRight: 6
+    },
+    margin: {
+      top: 7,
+      right: 2,
+      bottom: 0,
+      left: 0
     }
   }
 

@@ -72,6 +72,7 @@ function RecipeFactory(settings, obj) {
   if (t.exportable) {
     t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
     t.dimensions.height = function() { return chart.exportable.height; }
+    t.dimensions.margin = chart.exportable.margin || t.dimensions.margin;
   }
 
   if (chart.hasHours) { t.dateFormat += " " + t.timeFormat; }

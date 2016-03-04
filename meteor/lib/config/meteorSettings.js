@@ -188,7 +188,7 @@
 	    magic: {
 	      // i don't understand why these are necessary for print, but they are
 	      width: 3.698,
-	      height: 4.0705
+	      height: 3.675
 	    },
 	    x_axis: {
 	      tickTarget: 8,
@@ -208,6 +208,12 @@
 	    },
 	    y_axis: {
 	      paddingRight: 6
+	    },
+	    margin: {
+	      top: 7,
+	      right: 2,
+	      bottom: 0,
+	      left: 0
 	    }
 	  }
 	
@@ -358,7 +364,7 @@
 		"name": "chart-tool",
 		"version": "1.1.0",
 		"buildVer": "0",
-		"description": "Front- and back-end for the tool that builds automated, Globe-style charts.",
+		"description": "A responsive charting application",
 		"main": "gulpfile.js",
 		"dependencies": {},
 		"devDependencies": {
@@ -388,9 +394,10 @@
 			"d3js",
 			"meteor",
 			"gulp",
-			"grunt",
-			"mongo",
-			"globe"
+			"webpack",
+			"data visualization",
+			"chart",
+			"mongo"
 		],
 		"repository": {
 			"type": "git",
