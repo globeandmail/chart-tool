@@ -14,7 +14,7 @@ Template.chartEditPreview.events({
     if (currText === app_settings.chart.source || currText === "") {
       event.target.textContent = app_settings.chart.source + app_settings.source_suffix;
     }
-    cursorManager.setEndOfContenteditable(document.getElementsByClassName('editable-chart_source')[0]);
+    cursorManager.setEndOfContenteditable(event.target);
   },
   "blur .editable-chart_source": function(event) {
     var currText = event.target.textContent;

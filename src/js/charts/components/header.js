@@ -11,15 +11,18 @@ function headerComponent(container, obj) {
     headerGroup.style("width", obj.exportable.width + "px");
   }
 
-  headerGroup
-    .append("div")
-    .attr("class", obj.prefix + "chart_title-text")
-    .text(obj.heading);
+  if (obj.heading !== "" || obj.editable) {
+    headerGroup
+      .append("div")
+      .attr("class", obj.prefix + "chart_title-text")
+      .text(obj.heading);
 
-  if (obj.editable) {
-    headerGroup.select("." + obj.prefix + "chart_title-text")
-      .attr("contentEditable", true)
-      .classed("editable-chart_title", true);
+    if (obj.editable) {
+      headerGroup
+        .attr("contentEditable", true)
+        .classed("editable-chart_title", true);
+    }
+
   }
 
   var qualifier;

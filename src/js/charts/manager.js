@@ -19,6 +19,7 @@ function ChartManager(container, obj) {
   var rendered = chartRecipe.rendered = {};
 
   // check that each section is needed
+
   if (chartRecipe.options.head) {
     rendered.header = components.header(container, chartRecipe);
   }
@@ -41,14 +42,11 @@ function ChartManager(container, obj) {
     rendered.tips = components.tips(node, chartRecipe);
   }
 
-  if (chartRecipe.options.share_data) {
-    if (!chartRecipe.editable && !chartRecipe.exportable) {
+  if (!chartRecipe.editable && !chartRecipe.exportable) {
+    if (chartRecipe.options.share_data) {
       rendered.shareData = components.shareData(container, chartRecipe);
     }
-  }
-
-  if (chartRecipe.options.social) {
-    if (!chartRecipe.editable && !chartRecipe.exportable) {
+    if (chartRecipe.options.social) {
       rendered.social = components.social(container, chartRecipe);
     }
   }

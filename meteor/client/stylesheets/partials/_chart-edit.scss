@@ -410,12 +410,15 @@ select {
 
 // Title, qualifier and source contentEditable fields
 
-.#{$prefix}chart_title-text, .#{$prefix}chart_qualifier, .#{$prefix}chart_source-text {
+.editable-chart_title,
+.editable-chart_qualifier,
+.editable-chart_source {
   &:hover {
     cursor: text;
+    background-color: lighten($lightgray, 27%);
   }
   &:focus {
-    outline: none;
+    outline: none !important;
     background-color: lighten($lightgray, 27%);
   }
 }
@@ -438,17 +441,16 @@ select {
   display: none;
 }
 
-.#{$prefix}chart_credit {
-  &:hover {
-    cursor: text;
-    background-color: lighten($lightgray, 27%);
-  }
-}
-
 .#{$prefix}chart_source {
   text-transform: uppercase;
   &:empty:before {
     content: "Please include a chart source";
     color: $verylightgray;
+  }
+  &.editable-chart_source {
+    @media only screen and (min-width: 420px) {
+      width: auto;
+      display: block;
+    }
   }
 }
