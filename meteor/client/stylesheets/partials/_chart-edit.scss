@@ -423,14 +423,14 @@ select {
   }
 }
 
-.#{$prefix}chart_title-text {
+.editable-chart_title {
   &:empty:before {
     content: "Please include a chart title";
     color: $verylightgray;
   }
 }
 
-.#{$prefix}chart_qualifier {
+.editable-chart_qualifier {
   &:empty:before {
     content: "Please include a chart qualifier";
     color: $verylightgray;
@@ -441,16 +441,13 @@ select {
   display: none;
 }
 
-.#{$prefix}chart_source {
-  text-transform: uppercase;
+.editable-chart_source {
   &:empty:before {
     content: "Please include a chart source";
     color: $verylightgray;
   }
-  &.editable-chart_source {
-    @media only screen and (min-width: 420px) {
-      width: auto;
-      display: block;
-    }
+  @media only screen and (min-width: 420px) {
+    width: auto;
+    display: block;
   }
 }

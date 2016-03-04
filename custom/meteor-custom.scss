@@ -38,9 +38,6 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     border: none;
     line-height: 1em;
     color: $black;
-    &:empty:before {
-      content: "";
-    }
   }
 
   .#{$prefix}chart_qualifier {
@@ -54,9 +51,6 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     margin: 0;
     padding-bottom: 0;
     color: $black;
-    &:empty:before {
-      content: "";
-    }
   }
 
   .#{$prefix}chart_source {
@@ -67,9 +61,6 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     padding-bottom: 0;
     margin-bottom: 0;
     line-height: $six-five-pt;
-    &:empty:before {
-      content: "";
-    }
     @media(min-width: 420px) {
       width: auto;
     }
