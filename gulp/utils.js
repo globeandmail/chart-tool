@@ -65,8 +65,18 @@ gulp.task('buildver', function() {
 });
 
 gulp.task("_watch", ["_webpack-build-dev", "_scss"], function(done) {
-  gulp.watch(gulpConfig.libScripts + "/**/*.js", ["_webpack-build-dev"]);
-  gulp.watch(gulpConfig.libStylesheets + "/**/*.scss", ['_scss']);
-  gulp.watch(gulpConfig.customPath + "/**/*", ["_webpack-build-dev", '_scss']);
+  gulp.watch(
+    [
+      gulpConfig.libScripts + "/**/*.js",
+      gulpConfig.customPath + "/**/*.js",
+      gulpConfig.customPath + "/**/*.json"
+    ], ["_webpack-build-dev"]
+  );
+  gulp.watch(
+    [
+      gulpConfig.libStylesheets + "/**/*.scss",
+      gulpConfig.customPath + "/**/*.scss"
+    ], ['_scss']
+  );
   done();
 });

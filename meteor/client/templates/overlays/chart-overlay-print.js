@@ -69,6 +69,9 @@ Template.chartOverlayPrint.rendered = function() {
         return;
       }
 
+      d3.select(".print-export-preview-chart")
+        .style("width", width + "px");
+
       // silly hack to make sure chart isn't drawn when overlay is still display: none;
       if (Session.get("overlay-visible")) {
         setTimeout(function() {

@@ -18,6 +18,7 @@
     padding-bottom: 0.1em;
     margin: 0 0 0.3em 0;
     cursor: pointer;
+    @include user-select(none);
     @include interface-font-light;
     @include transition (all 0.1s ease-out);
     &:hover {

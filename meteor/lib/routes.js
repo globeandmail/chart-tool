@@ -248,8 +248,6 @@ Router.route('pdf', {
 
     var data = Charts.findOne({ _id: this.params._id }),
         slug = data.slug,
-        magicW = app_settings.print.magic.width,
-        magicH = app_settings.print.magic.height,
         width = determineWidth(data.print.columns),
         height = determineHeight(data.print.lines, width),
         dpi = app_settings.print.dpi;

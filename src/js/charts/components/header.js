@@ -4,7 +4,12 @@ function headerComponent(container, obj) {
 
   var headerGroup = d3.select(container)
     .append("div")
-    .classed(obj.prefix + "chart_title " + obj.prefix + obj.customClass, true);
+    .classed(obj.prefix + "chart_title " + obj.prefix + obj.customClass, true)
+
+  // hack necessary to ensure PDF fields are sized properly
+  if (obj.exportable) {
+    headerGroup.style("width", obj.exportable.width + "px");
+  }
 
   headerGroup
     .append("div")

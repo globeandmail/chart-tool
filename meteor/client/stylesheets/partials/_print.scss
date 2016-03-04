@@ -1,5 +1,7 @@
 .chart-pdf, .print-export-preview-chart, .chart-print-export {
 
+  display: inline-block;
+
   svg {
     fill: none;
     background: none;

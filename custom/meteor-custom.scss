@@ -23,13 +23,19 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
 
 .chart-pdf, .print-export-preview-chart, .chart-print-export {
 
+  .#{$prefix}chart_title {
+    font-size: $nine-pt;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+  }
+
   .#{$prefix}chart_title-text {
     font-size: $nine-pt;
     margin: 0;
     padding: 0;
     border: none;
     line-height: 1em;
-    margin-bottom: 4px;
     color: $black;
   }
 
@@ -60,9 +66,9 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     padding: 0;
     margin: 0;
     display: block;
-    margin-top: -4px;
+    // margin-top: -4px;
     line-height: 11px;
-    padding-bottom: 5px;
+    // padding-bottom: 5px;
   }
 
   .#{$prefix}chart_legend .#{$prefix}legend_item {

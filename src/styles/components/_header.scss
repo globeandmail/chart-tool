@@ -4,9 +4,6 @@
   padding: 0;
   padding-bottom: 2px;
   @include heading-font;
-  &:only-child {
-    padding-bottom: 15px;
-  }
 }
 
 // legend
@@ -15,12 +12,12 @@
 }
 
 .#{$prefix}chart_legend .#{$prefix}legend_item {
-  display: inline-block;
+  display: inline;
   margin-right: 1em;
   @include utility-font;
 }
 .#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text {
-  display: inline-block;
+  display: inline;
   vertical-align: middle;
 }
 
