@@ -160,12 +160,15 @@
   font-style: normal;
   font-size: 12px;
   line-height: 16px;
-  padding-top: 5px;
+  padding-top: 10px;
   padding-left: 0;
   display: inline-block;
   min-width: 50px;
   text-transform: uppercase;
   font-size: 11px; }
+  @media (min-width: 420px) {
+    .ct-chart_source, .ct-chart_credit {
+      width: calc(100% - 100px); } }
 
 .ct-tip_overlay {
   fill: #fff;
@@ -291,25 +294,6 @@
 .ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-5 {
   fill: #fff; }
 
-.ct-chart_meta {
-  position: absolute;
-  text-align: right;
-  width: 100%;
-  bottom: -5px;
-  right: 5px; }
-
-.ct-chart_meta_btn {
-  cursor: pointer;
-  display: inline-block;
-  color: #333;
-  padding: 5px;
-  border-radius: 3px;
-  margin-left: 5px;
-  text-transform: uppercase;
-  font-size: 0.8em; }
-  .ct-chart_meta_btn:hover {
-    color: #08519c; }
-
 .ct-chart_data {
   display: block;
   opacity: 0;
@@ -416,27 +400,52 @@
   padding: 0; }
 
 .ct-chart_meta {
-  position: absolute;
-  text-align: right;
+  position: relative;
+  text-align: left;
   width: 100%;
-  bottom: -5px;
-  right: 5px; }
+  display: inline-block;
+  float: none;
+  margin-top: 0; }
+  @media (min-width: 420px) {
+    .ct-chart_meta {
+      float: right;
+      position: relative;
+      width: auto;
+      margin-top: 8px; } }
+
+.ct-chart_meta:after {
+  clear: both;
+  content: "";
+  display: table; }
 
 .ct-chart_meta_btn {
   cursor: pointer;
   display: inline-block;
-  padding: 5px;
-  border-radius: 3px;
-  margin-left: 5px;
+  padding: 0 10px;
+  margin-top: 5px;
   text-transform: uppercase;
   font-family: "Helvetica";
   font-weight: normal;
   font-style: normal;
   font-size: 12px;
   line-height: 16px;
-  font-size: 11px; }
+  font-size: 11px;
+  color: #ababab;
+  border-right: 1px solid #ababab; }
   .ct-chart_meta_btn:hover {
     color: #08519c; }
+  @media (min-width: 420px) {
+    .ct-chart_meta_btn {
+      margin-left: 10px;
+      padding: 0;
+      border: none;
+      margin-top: 0; } }
+
+.ct-chart_meta_btn:last-child {
+  border-right: none; }
+
+.ct-chart_meta_btn:first-child {
+  margin-left: -10px; }
 
 .ct-chart_social {
   display: block;

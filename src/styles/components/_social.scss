@@ -1,23 +1,48 @@
 .#{$prefix}chart_meta {
-  position: absolute;
-  text-align: right;
+  position: relative;
+  text-align: left;
   width: 100%;
-  bottom: -5px;
-  right: 5px;
+  display: inline-block;
+  float: none;
+  margin-top: 0;
+  @media(min-width: 420px ){
+    float: right;
+    position: relative;
+    width: auto;
+    margin-top: 8px;
+  }
+}
+.#{$prefix}chart_meta:after{
+  clear: both;
+  content: "";
+  display: table;
 }
 
 .#{$prefix}chart_meta_btn {
   cursor: pointer;
   display: inline-block;
-  padding: 5px;
-  border-radius: 3px;
-  margin-left: 5px;
+  padding: 0 10px;
+  margin-top: 5px;
   text-transform: uppercase;
   @include utility-font;
   font-size: 11px;
+  color: $lightgray;
+  border-right: 1px solid $lightgray;
   &:hover {
     color: $primary-color;
   }
+  @media(min-width: 420px ){
+    margin-left: 10px;
+    padding: 0;
+    border: none;
+    margin-top: 0;
+  }
+}
+.#{$prefix}chart_meta_btn:last-child{
+  border-right: none;
+}
+.#{$prefix}chart_meta_btn:first-child{
+  margin-left: -10px;
 }
 
 .#{$prefix}chart_social {
