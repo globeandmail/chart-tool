@@ -61,6 +61,9 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     padding-bottom: 0;
     margin-bottom: 0;
     line-height: $six-five-pt;
+    @media(min-width: 420px) {
+      width: auto;
+    }
   }
 
   .#{$prefix}chart_legend {

@@ -57,7 +57,7 @@
 	
 	  s3: config.image,
 	
-	  animal_api: "http://www.whimsicalwordimal.com/api/name",
+	  animal_api: "http://www.whimsicalwordimal.com/api/name/",
 	  names: [
 	    "Sardonic Salamander",
 	    "Obstreperous Okapi",

@@ -152,7 +152,7 @@
   stroke: #000;
   stroke-linecap: square; }
 
-.ct-chart_source, .ct-chart_credit {
+.ct-chart_source {
   font-family: "Helvetica";
   font-weight: normal;
   font-style: normal;
@@ -160,13 +160,13 @@
   line-height: 16px;
   padding-top: 10px;
   padding-left: 0;
-  display: inline-block;
-  min-width: 50px;
+  display: block;
   text-transform: uppercase;
   font-size: 11px; }
-  @media (min-width: 420px) {
-    .ct-chart_source, .ct-chart_credit {
-      width: calc(100% - 100px); } }
+  @media only screen and (min-width: 420px) {
+    .ct-chart_source {
+      width: calc(100% - 100px);
+      display: inline-block; } }
 
 .ct-tip_overlay {
   fill: #fff;
