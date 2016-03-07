@@ -80,7 +80,7 @@
 	  primary: "Primary",
 	  alternate: "Alternate",
 	
-	  help: "http://www.github.com/globeandmail/chart-tool",
+	  help: "https://github.com/globeandmail/chart-tool/tree/master/README.md",
 	
 	  chart: {
 	    version: app_version,
@@ -178,8 +178,6 @@
 	  },
 	
 	  print: {
-	    default_cols: "2col",
-	    default_scale: 8,
 	    gutter_width: 4,
 	    column_width: 47,
 	    first_line_depth: 2.14,
@@ -247,7 +245,6 @@
 		"tipTimeout": 5000,
 		"ratioMobile": 1.15,
 		"ratioDesktop": 0.65,
-		"scaleMultiplier": 1.25,
 		"dateFormat": "%Y-%m-%d",
 		"timeFormat": "%H:%M",
 		"margin": {

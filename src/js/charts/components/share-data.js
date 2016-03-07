@@ -37,7 +37,7 @@ function shareDataComponent(node, obj) {
 		.append('div')
 		.attr('class', obj.prefix + 'chart_data_inner');
 
-	var chartDataHeader = chartData
+	chartData
 		.append('h2')
 		.html(obj.heading);
 

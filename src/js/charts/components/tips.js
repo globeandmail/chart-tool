@@ -28,7 +28,6 @@ function cursorPos(overlay) {
 function getTipData(obj, cursor) {
 
   var xScale = obj.rendered.plot.xScaleObj.scale,
-      yScale = obj.rendered.plot.xScaleObj.scale,
       xVal = xScale.invert(cursor.x);
 
   var tipData;
@@ -371,10 +370,6 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
         "y2": obj.dimensions.yAxisHeight()
       });
 
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
-
     tipNodes.tipBox
       .attr({
         "transform": function() {
@@ -475,10 +470,6 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
         "y1": 0,
         "y2": obj.dimensions.yAxisHeight()
       });
-
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
 
     tipNodes.tipBox
       .attr({
@@ -635,10 +626,6 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
         "y2": obj.dimensions.yAxisHeight()
       });
 
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
-
     tipNodes.tipBox
       .attr({
         "transform": function() {
@@ -793,10 +780,6 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
         "y1": 0,
         "y2": obj.dimensions.yAxisHeight()
       });
-
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
 
     tipNodes.tipBox
       .attr({
@@ -1065,7 +1048,11 @@ function StackedColumnChartTips(tipNodes, obj) {
 
 function tipDateFormatter(selection, ctx, months, data) {
 
-  var dMonth, dDate, dYear, dHour, dMinute, dHourStr, dMinuteStr;
+  var dMonth,
+      dDate,
+      dYear,
+      dHour,
+      dMinute;
 
   selection.text(function() {
     var d = data;
@@ -1131,8 +1118,8 @@ function tipDateFormatter(selection, ctx, months, data) {
 }
 
 
-function BarChartTips(tipNodes, obj) {
+// [function BarChartTips(tipNodes, obj) {
 
-}
+// }
 
 module.exports = tipsManager;

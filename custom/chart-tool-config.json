@@ -9,7 +9,6 @@
   "tipTimeout": 5000,
   "ratioMobile": 1.15,
   "ratioDesktop": 0.65,
-  "scaleMultiplier": 1.25,
 
   "dateFormat": "%Y-%m-%d",
   "timeFormat": "%H:%M",

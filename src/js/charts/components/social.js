@@ -67,7 +67,7 @@ function socialComponent(node, obj) {
 		.append('div')
 		.attr('class', obj.prefix + 'chart_social_options');
 
-	var chartSocialOptionsTitle = chartSocialOptions
+	chartSocialOptions
 		.append('h3')
 		.html('Share this chart:');
 
@@ -82,7 +82,7 @@ function socialComponent(node, obj) {
 	var itemAmount = socialOptions.length;
 
 	for(var i = 0; i < itemAmount; i++ ) {
-		var socialItem = chartSocialOptions
+		chartSocialOptions
 			.selectAll('.' + obj.prefix + 'social-item')
 			.data(socialOptions)
 			.enter()
@@ -97,7 +97,7 @@ function socialComponent(node, obj) {
 	}
 
   if (obj.image && obj.image.enable) {
-    var chartSocialOptionsTitle = chartSocialOptions
+    chartSocialOptions
       .append('div')
       .attr('class', obj.prefix + 'image-url')
       .attr('contentEditable', 'true')

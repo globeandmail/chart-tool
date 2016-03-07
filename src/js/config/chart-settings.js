@@ -59,7 +59,6 @@ module.exports = {
   prefix: settings.prefix,
   debounce: settings.debounce,
   tipTimeout: settings.tipTimeout,
-  scaleMultiplier: settings.scaleMultiplier,
   monthsAbr: settings.monthsAbr,
 
   dimensions: {

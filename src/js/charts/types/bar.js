@@ -262,8 +262,8 @@ function BarChart(node, obj) {
   return {
     xScaleObj: xScaleObj,
     yScaleObj: yScaleObj,
-    xAxisObj: { node: xAxisGroup, axis: xAxis },
-    yAxisObj: { node: yAxisGroup, axis: yAxis },
+    xAxisObj: xAxisObj,
+    yAxisObj: yAxisObj,
     seriesGroup: seriesGroup,
     series: series,
     singleBar: singleBar,
