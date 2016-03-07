@@ -133,8 +133,8 @@
         createLoop(charts);
         var debounce = utils.debounce(createLoop, charts, settings.debounce, root);
         d3.select(root)
-          .on('resize.debounce', debounce)
-          .on('resize.redraw', dispatcher.redraw(charts));
+          .on('resize.' + settings.prefix + 'debounce', debounce)
+          .on('resize.' + settings.prefix + 'redraw', dispatcher.redraw(charts));
       }
 
 
@@ -181,11 +181,12 @@
         utils: require("./utils/utils"),
         line: require("./charts/types/line"),
         area: require("./charts/types/area"),
+        multiline: require("./charts/types/multiline"),
         stackedArea: require("./charts/types/stacked-area"),
         column: require("./charts/types/column"),
         stackedColumn: require("./charts/types/stacked-column"),
         streamgraph: require("./charts/types/streamgraph"),
-        bar: require("./charts/types/bar"),
+        bar: require("./charts/types/bar")
 
       }
 

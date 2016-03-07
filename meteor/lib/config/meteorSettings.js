@@ -226,7 +226,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"CUSTOM": true,
+		"CUSTOM": false,
 		"prefix": "ct-",
 		"monthsAbr": [
 			"Jan.",

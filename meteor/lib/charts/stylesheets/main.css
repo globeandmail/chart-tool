@@ -12,7 +12,7 @@
   padding: 4px 0; }
 
 .ct-chart_legend .ct-legend_item {
-  display: inline;
+  display: inline-block;
   margin-right: 1em;
   font-family: "Helvetica";
   font-weight: normal;

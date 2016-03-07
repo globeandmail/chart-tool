@@ -131,8 +131,6 @@ app_settings = {
   },
 
   print: {
-    default_cols: "2col",
-    default_scale: 8,
     gutter_width: 4,
     column_width: 47,
     first_line_depth: 2.14,
