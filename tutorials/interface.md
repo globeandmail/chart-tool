@@ -6,7 +6,7 @@ Though the Chart Tool interface is **mostly** about the chart editing screen, th
 ----------
 
 
-## Routes
+### Routes
 
 The interface has several routes available:
 
@@ -20,7 +20,7 @@ The interface has several routes available:
 * ~~`/chart/png/download/:_id/:width/:height/:scale?`: Trigger a PNG download of specified width, height, and, optionally, scale~~ **Coming soon!**
 
 
-## API endpoints
+### API endpoints
 
 There are also a couple of JSON API endpoints available:
 
@@ -28,7 +28,7 @@ There are also a couple of JSON API endpoints available:
 * `/api/status`: Tries to write to the database and returns either true or false depending on whether the write is successful or not. Useful for setting up an alert in case your database goes down
 
 
-## Collaborative editing
+### Collaborative editing
 
 Chart Tool supports real-time collaborative editing. If another user has your chart open, you'll both be assigned random animal names and see a box warning you someone else has your chart open.
 
