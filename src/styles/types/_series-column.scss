@@ -29,7 +29,8 @@
   fill: $alternate-color;
 }
 
-.#{$prefix}column rect.muted {
+.#{$prefix}series rect.#{$prefix}column.#{$prefix}muted,
+.#{$prefix}column rect.#{$prefix}muted {
   opacity: .5;
 }
 

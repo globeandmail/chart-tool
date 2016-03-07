@@ -62,7 +62,7 @@ function StackedColumnChart(node, obj) {
       return "translate(" + xOffset + ",0)";
     })
 
-  // Add a group for each cause.
+  // Add a group for each
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
     .data(obj.data.stackedData)
     .enter().append("g")
