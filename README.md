@@ -105,7 +105,7 @@ For starters, you might want to read up on how to make your first chart. A full 
 Otherwise, these are some other tutorials you might want to check out: 
 
 * [Customize your Chart Tool with fonts, colours, etc.](https://github.com/globeandmail/chart-tool/blob/master/tutorials/customizing.md)
-* [Hook up your Chart Tool to AWS for automatic fallback image generation](https://github.com/globeandmail/chart-tool/blob/master/tutorials/aws.md)
+* [Hook up your Chart Tool to AWS for automatic fallback image generation](https://github.com/globeandmail/chart-tool/blob/master/tutorials/thumbnails.md)
 * [Set up print PDF export](https://github.com/globeandmail/chart-tool/blob/master/tutorials/print.md)
 * [Deploy Chart Tool to your own server](https://github.com/globeandmail/chart-tool/blob/master/tutorials/deploying.md)
 * [Check out other available gulp commands](https://github.com/globeandmail/chart-tool/blob/master/tutorials/gulp.md)

@@ -4,7 +4,9 @@ Take a deep breath. Good? Okay, let's get to it.
 
 PDF export can be **very finicky**. As it turns out, taking an HTML file and turning it into a PDF isn't easy. Luckily, once you get it right for your setup it should require little to no tweaking after the fact. 
 
+
 ----------
+
 
 ### **Step 1:** Install wkhtmltopdf locally
 

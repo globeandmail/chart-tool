@@ -33,7 +33,7 @@ app_settings = {
   primary: "Primary",
   alternate: "Alternate",
 
-  help: "http://www.github.com/globeandmail/chart-tool",
+  help: "https://github.com/globeandmail/chart-tool/tree/master/README.md",
 
   chart: {
     version: app_version,

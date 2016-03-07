@@ -1,6 +1,6 @@
 # Customizing your Chart Tool
 
-The `/custom` folder contains a series of files that allow you to customize your Chart Tool as you find appropriate.
+The `/custom` folder contains a series of files that allow you to customize your Chart Tool as you find appropriate. If you want to add to the core Chart Tool library's functionality, change the styling of charts or tweak your Meteor configuration, this is where you'll do it.
 
 
 ----------
@@ -8,12 +8,13 @@ The `/custom` folder contains a series of files that allow you to customize your
 
 ## `chart-tool-config.json`
 
-An absolutely essential file for generating new charts. Chart Tool uses this configuration file to scaffold a basic chart object, set parameters throughout the library, and so on. Includes instructions for the Chart Tool on how to abbreviate months, debounce and tooltip timeouts, desktop and mobile ratios, style prefixes, and so on.
+An absolutely essential file for generating new charts. Chart Tool uses this configuration file to scaffold a basic chart object, set parameters throughout the library, and so on. Includes instructions for the Chart Tool on how to abbreviate months, debounce and tooltip timeouts, desktop and mobile ratios, style prefixes, and so on. See [this example file](https://github.com/globeandmail/chart-tool/blob/master/tutorials/chart-tool-config-sample.json) for an explanation of what each configuration parameter does.
 
+If you're looking to use S3 to host chart thumbnails, check out [the tutorial](https://github.com/globeandmail/chart-tool/blob/master/tutorials/thumbnails.md).
 
 ## `meteor-config.js`
 
-
+Sets 
 
 ## `custom.js`
 
