@@ -252,6 +252,8 @@ Router.route('pdf', {
       noOutline: true,
       dpi: dpi,
       zoom: 1
+      // disableSmartShrinking: true, // as per https://github.com/wkhtmltopdf/qt/pull/12#issuecomment-66429764
+      // zoom: 0.78125
     };
 
     var url = this.request.headers.origin + "/chart/pdf/" + data._id;

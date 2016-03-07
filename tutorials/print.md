@@ -35,7 +35,7 @@ print: {
 }
 ```
 
-With the exception of `dpi` and obtuse-sounding `magic`, all other values refer to print sizes in **millimetres**. So in this case, we're setting up a print PDF that takes 47mm columns with 4mm gutters, with its first line coming out at 2.14mm and every line after that at 3.35mm.
+With the exception of `dpi` and the obtuse-sounding `magic`, all other values refer to print sizes in **millimetres**. So in this case, we're setting up a print PDF that takes 47mm columns with 4mm gutters, with its first line coming out at 2.14mm and every line after that at 3.35mm.
 
 Once you've fixed up your `meteor-config.js` file, be sure to kill any active Chart Tool processes and re-run `gulp` so that your changes can propagate across the app.
 
