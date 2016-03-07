@@ -938,12 +938,10 @@ function ColumnChartTips(tipNodes, obj, d, thisRef) {
 
 function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
 
-  console.log("obj %o", obj);
-
   var columnRects = obj.rendered.plot.series.selectAll('rect'),
       isUndefined = 0;
 
-  var thisColumn = thisRef,
+  var thisColumnRect = thisRef,
       tipData = d;
 
   for (var i = 0; i < tipData.raw.series.length; i++) {
@@ -960,60 +958,27 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
       domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
-    var parentEl = d3.select(thisColumn.parentNode.parentNode);
-    var refPos = d3.select(thisColumn).attr("x");
+    var parentEl = d3.select(thisColumnRect.parentNode.parentNode);
+    var refPos = d3.select(thisColumnRect).attr("x");
 
+    var thisColumnKey = '';
 
-    console.log("columnRects %o", columnRects);
-    console.log("thisColumn: %o", thisColumn);
+    /* Figure out which stack this selected rect is in then loop back through and (un)assign muted class */
+    columnRects.classed(obj.prefix + 'muted',function (d) {
 
+      if(this === thisColumnRect){
+        thisColumnKey = d.raw.key;
+      }
 
+      return (this === thisColumnRect) ? false : true;
 
-      /* Figure out which stack this selected rect is in */
-      columnRects.classed(obj.prefix + 'muted',function () {
-        return (this === thisColumn) ? false : true;
-      });
+    });
 
-      var i=0;
-      var columnIndex,
-          rectIndex;
+    columnRects.classed(obj.prefix + 'muted',function (d) {
 
-      columnRects.forEach(function(columnStack) {
+      return (d.raw.key === thisColumnKey) ? false : true;
 
-        var columnStackIsArray = Array.isArray(columnStack);
-
-        var j = 0;
-
-        columnStack.forEach(function(columnrect) {
-
-          if(thisColumn === columnrect){
-            columnIndex = j;
-            rectIndex = i;
-          }
-
-          j++;
-
-        })
-
-        i++;
-
-      });
-
-
-      columnRects.forEach(function(columnStack) {
-
-        var columnStackRects = columnStack[columnIndex];
-        console.log("this old columnStackRects %o", columnStackRects);
-
-        var thisSeriesKey = columnStackRects.attr('data-key');;
-
-      });
-
-
-
-
-      // columnStackRects.classed(obj.prefix + 'muted', false);
-
+    });
 
     tipNodes.tipGroup.selectAll("." + obj.prefix + "tip_text-group text")
       .data(tipData.raw.series)
