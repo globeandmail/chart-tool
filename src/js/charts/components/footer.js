@@ -12,12 +12,12 @@ function footerComponent(container, obj) {
       footerGroup.style("width", obj.exportable.width + "px");
     }
 
-    footerGroup.append("div")
+    var footerText = footerGroup.append("div")
       .attr("class", obj.prefix + "chart_source-text")
       .text(obj.source);
 
     if (obj.editable) {
-      footerGroup
+      footerText
         .attr("contentEditable", true)
         .classed("editable-chart_source", true);
     }

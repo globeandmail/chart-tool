@@ -22,7 +22,7 @@
       var settings = require("./config/chart-settings"),
           utils = require("./utils/utils");
 
-      var dispatcher = d3.dispatch("start", "finish", "redraw", "hoverIn", "hoverOut", "click");
+      var dispatcher = d3.dispatch("start", "finish", "redraw", "mouseOver", "mouseMove", "mouseOut", "click");
 
       for (var prop in dispatchFunctions) {
         if (dispatchFunctions.hasOwnProperty(prop)) {
@@ -63,6 +63,12 @@
         drawn.push({ id: obj.id, chartObj: chartObj });
         obj.chartObj = chartObj;
 
+        d3.select(container)
+          .on("click", function() { dispatcher.click(this, chartObj); })
+          .on("mouseover", function() { dispatcher.mouseOver(this, chartObj); })
+          .on("mousemove", function() { dispatcher.mouseMove(this, chartObj);  })
+          .on("mouseout", function() { dispatcher.mouseOut(this, chartObj); });
+
         dispatcher.finish(chartObj);
 
       }
@@ -95,7 +101,7 @@
       }
 
       function updateChart(id, obj) {
-        var container = '.' + settings.baseClass() + '[data-chartid=' + id + ']';
+        var container = '.' + settings.baseClass() + '[data-chartid=' + settings.prefix + id + ']';
         createChart(container, { id: id, data: obj });
       }
 
@@ -133,10 +139,9 @@
         createLoop(charts);
         var debounce = utils.debounce(createLoop, charts, settings.debounce, root);
         d3.select(root)
-          .on('resize.debounce', debounce)
-          .on('resize.redraw', dispatcher.redraw(charts));
+          .on('resize.' + settings.prefix + 'debounce', debounce)
+          .on('resize.' + settings.prefix + 'redraw', dispatcher.redraw(charts));
       }
-
 
       return {
 
@@ -181,11 +186,12 @@
         utils: require("./utils/utils"),
         line: require("./charts/types/line"),
         area: require("./charts/types/area"),
+        multiline: require("./charts/types/multiline"),
         stackedArea: require("./charts/types/stacked-area"),
         column: require("./charts/types/column"),
         stackedColumn: require("./charts/types/stacked-column"),
         streamgraph: require("./charts/types/streamgraph"),
-        bar: require("./charts/types/bar"),
+        bar: require("./charts/types/bar")
 
       }
 

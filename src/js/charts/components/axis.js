@@ -266,7 +266,6 @@ function setTickFormatX(selection, ctx, ems, monthsAbr) {
   var prevYear,
       prevMonth,
       prevDate,
-      prevHour,
       dYear,
       dMonth,
       dDate,

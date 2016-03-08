@@ -28,7 +28,6 @@ function cursorPos(overlay) {
 function getTipData(obj, cursor) {
 
   var xScale = obj.rendered.plot.xScaleObj.scale,
-      yScale = obj.rendered.plot.xScaleObj.scale,
       xVal = xScale.invert(cursor.x);
 
   var tipData;
@@ -266,7 +265,13 @@ function appendTipGroup(node, obj) {
 
 function appendTipElements(node, obj, tipNodes, dataRef) {
 
-  var tipTextGroups = tipNodes.tipGroup
+  var tipTextGroupContainer = tipNodes.tipGroup
+    .append("g")
+    .attr("class", function() {
+      return obj.prefix + "tip_text-group-container";
+    });
+
+  var tipTextGroups = tipTextGroupContainer
     .selectAll("." + obj.prefix + "tip_text-group")
     .data(dataRef)
     .enter()
@@ -275,18 +280,7 @@ function appendTipElements(node, obj, tipNodes, dataRef) {
       return obj.prefix + "tip_text-group " + obj.prefix + "tip_text-group-" + (i);
     });
 
-  tipTextGroups
-    .append("circle")
-    .attr({
-      "class": function(d, i) {
-        return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
-      },
-      "r": function(d, i) { return tipNodes.radius; },
-      "cx": function() { return tipNodes.radius; },
-      "cy": function(d, i) {
-        return ( (i + 1) * parseInt(d3.select(this).style("font-size")) * 1.13 + 9);
-      }
-    });
+  var lineHeight;
 
   tipTextGroups.append("text")
     .text(function(d) { return d.val; })
@@ -299,9 +293,23 @@ function appendTipElements(node, obj, tipNodes, dataRef) {
         return (tipNodes.radius * 2) + (tipNodes.radius / 1.5);
       },
       "y": function(d, i) {
-        return ( (i + 1) * ( parseInt(d3.select(this).style("font-size")) + 2) );
+        lineHeight = lineHeight || parseInt(d3.select(this).style("line-height"));
+        return (i + 1) * lineHeight;
       },
       "dy": "1em"
+    });
+
+  tipTextGroups
+    .append("circle")
+    .attr({
+      "class": function(d, i) {
+        return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
+      },
+      "r": function(d, i) { return tipNodes.radius; },
+      "cx": function() { return tipNodes.radius; },
+      "cy": function(d, i) {
+        return ((i + 1) * lineHeight) + (tipNodes.radius * 1.5);
+      }
     });
 
   tipNodes.tipPathCircles
@@ -403,10 +411,6 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
         "y2": obj.dimensions.yAxisHeight()
       });
 
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
-
     tipNodes.tipBox
       .attr({
         "transform": function() {
@@ -507,10 +511,6 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
         "y1": 0,
         "y2": obj.dimensions.yAxisHeight()
       });
-
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
 
     tipNodes.tipBox
       .attr({
@@ -667,10 +667,6 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
         "y2": obj.dimensions.yAxisHeight()
       });
 
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
-
     tipNodes.tipBox
       .attr({
         "transform": function() {
@@ -825,10 +821,6 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
         "y1": 0,
         "y2": obj.dimensions.yAxisHeight()
       });
-
-    var getTranslate = require("../../utils/utils").getTranslateXY;
-
-    var tipBoxTranslate = getTranslate(tipNodes.tipBox.node());
 
     tipNodes.tipBox
       .attr({
@@ -1057,7 +1049,11 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
 
 function tipDateFormatter(selection, ctx, months, data) {
 
-  var dMonth, dDate, dYear, dHour, dMinute, dHourStr, dMinuteStr;
+  var dMonth,
+      dDate,
+      dYear,
+      dHour,
+      dMinute;
 
   selection.text(function() {
     var d = data;
@@ -1123,8 +1119,8 @@ function tipDateFormatter(selection, ctx, months, data) {
 }
 
 
-function BarChartTips(tipNodes, obj) {
+// [function BarChartTips(tipNodes, obj) {
 
-}
+// }
 
 module.exports = tipsManager;

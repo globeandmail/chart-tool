@@ -1,7 +1,3 @@
-Template.header.rendered = function() {
-  StretchyInit();
-};
-
 Template.header.events({
   "blur .input-slug-edit": function(event) {
     var slugData = event.target.value;
@@ -20,3 +16,11 @@ Template.header.events({
     window.open(app_settings.help || "http://www.github.com/globeandmail/chart-tool", '_blank');
   }
 });
+
+Template.header.rendered = function() {
+  var data = Router.current() && Router.current().data();
+  if (data) {
+    StretchyInit();
+    Stretchy.resize(document.querySelector(".input-slug-edit"));
+  }
+};

@@ -13,8 +13,7 @@ function StackedColumnChart(node, obj) {
 
   // axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
-      xAxis = xAxisObj.axis, yAxis = yAxisObj.axis;
+      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
 
   axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 

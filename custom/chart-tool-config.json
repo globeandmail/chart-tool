@@ -1,6 +1,6 @@
 {
 
-  "CUSTOM": true,
+  "CUSTOM": false,
 
   "prefix": "ct-",
   "monthsAbr": ["Jan.", "Feb.", "Mar.", "Apr.", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec.", "Jan."],
@@ -9,7 +9,6 @@
   "tipTimeout": 5000,
   "ratioMobile": 1.15,
   "ratioDesktop": 0.65,
-  "scaleMultiplier": 1.25,
 
   "dateFormat": "%Y-%m-%d",
   "timeFormat": "%H:%M",
@@ -92,6 +91,11 @@
     "padding": 0.06,
     "offset": 0.12,
     "outerPadding": 0.03
+  },
+
+  "source": {
+    "prefix": "CHART TOOL",
+    "suffix": " » SOURCE:"
   },
 
   "social": {

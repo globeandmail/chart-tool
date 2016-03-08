@@ -12,7 +12,7 @@
 }
 
 .#{$prefix}chart_legend .#{$prefix}legend_item {
-  display: inline;
+  display: inline-block;
   margin-right: 1em;
   @include utility-font;
 }

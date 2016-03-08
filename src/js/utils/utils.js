@@ -165,8 +165,7 @@ function timeInterval(data) {
 
   var dataLength = data.length,
       d1 = data[0].key,
-      d2 = data[dataLength - 1].key,
-      diff = d2 - d1;
+      d2 = data[dataLength - 1].key;
 
   var ret;
 
@@ -257,7 +256,8 @@ function generateThumb(container, obj, settings) {
 
 function csvToTable(target, data) {
   var parsedCSV = d3.csv.parseRows(data);
-  var container = target.append("table").selectAll("tr")
+
+  target.append("table").selectAll("tr")
     .data(parsedCSV).enter()
     .append("tr").selectAll("td")
     .data(function(d) { return d; }).enter()

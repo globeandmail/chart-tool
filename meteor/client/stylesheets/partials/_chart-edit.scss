@@ -446,8 +446,10 @@ select {
     content: "Please include a chart source";
     color: $verylightgray;
   }
-  @media only screen and (min-width: 420px) {
-    width: auto;
-    display: block;
+}
+
+.#{$prefix}chart_source {
+  @media(min-width: 420px) {
+    width: 100%;
   }
 }

@@ -12,8 +12,7 @@ function LineChart(node, obj) {
 
   // axes
   var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis"),
-      xAxis = xAxisObj.axis, yAxis = yAxisObj.axis;
+      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
 
   axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
 
@@ -52,10 +51,7 @@ function LineChart(node, obj) {
             var output = obj.prefix + "line " + obj.prefix + "line-" + (i);
             return output;
           }
-        })
-        .on("mouseover", function(d) { obj.dispatch.hoverIn(this, obj, d); })
-        .on("mouseout", function(d) { obj.dispatch.hoverOut(this, obj, d); })
-        .on("click", function(d) { obj.dispatch.click(this, obj, d); });
+        });
 
       secondaryArr.push(pathRef);
     }

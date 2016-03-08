@@ -12,13 +12,13 @@ function headerComponent(container, obj) {
   }
 
   if (obj.heading !== "" || obj.editable) {
-    headerGroup
+    var headerText = headerGroup
       .append("div")
       .attr("class", obj.prefix + "chart_title-text")
       .text(obj.heading);
 
     if (obj.editable) {
-      headerGroup
+      headerText
         .attr("contentEditable", true)
         .classed("editable-chart_title", true);
     }

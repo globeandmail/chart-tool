@@ -10,7 +10,7 @@ app_settings = {
 
   s3: config.image,
 
-  animal_api: "http://www.whimsicalwordimal.com/api/name",
+  animal_api: "http://www.whimsicalwordimal.com/api/name/",
   names: [
     "Sardonic Salamander",
     "Obstreperous Okapi",
@@ -28,12 +28,12 @@ app_settings = {
     "Booked Baboon"
   ],
 
-  source_suffix: " » SOURCE:",
+  source_suffix: config.source.suffix,
 
   primary: "Primary",
   alternate: "Alternate",
 
-  help: "http://www.github.com/globeandmail/chart-tool",
+  help: "https://github.com/globeandmail/chart-tool/tree/master/README.md",
 
   chart: {
     version: app_version,
@@ -43,8 +43,8 @@ app_settings = {
     heading: "",
     qualifier: "",
     deck: "",
-    source: "CHART TOOL",
     class: "primary",
+    source: config.source.prefix,
     date_format: config.dateFormat,
     time_format: config.timeFormat,
     hasHours: false,
@@ -131,15 +131,12 @@ app_settings = {
   },
 
   print: {
-    default_cols: "2col",
-    default_scale: 8,
     gutter_width: 4,
     column_width: 47,
     first_line_depth: 2.14,
     line_depth: 3.35,
     dpi: 266, // this actually doesn't matter for PDFs, but good to make note
     magic: {
-      // i don't understand why these are necessary for print, but they are
       width: 3.698,
       height: 3.675
     },

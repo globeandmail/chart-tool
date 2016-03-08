@@ -1,0 +1,193 @@
+{
+
+  // determines whether or not the code in `custom.js` will
+  // be executed by the library
+  "CUSTOM": false,
+
+  // a prefix common to almost all Chart Tool classes. for example:
+  // instead of an element being classed .tip-box, it'll be classed .ct-tip-box
+  "prefix": "ct-",
+
+  // month abbreviations used for on the x-axis for time-series charts.
+  "monthsAbr": ["Jan.", "Feb.", "Mar.", "Apr.", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec.", "Jan."],
+
+  // amount of time in millseconds Chart Tool will wait after a window.resize
+  // event fires before redrawing all charts
+  "debounce": 500,
+
+  // amount of time in milliseconds to wait before hiding displayed tips
+  "tipTimeout": 5000,
+
+  // the width-to-height ratio used for mobile devices, starting at 300px wide
+  "ratioMobile": 1.15,
+
+  // the width-to-height ratio used for desktop, capping off at 900px wide
+  "ratioDesktop": 0.65,
+
+  // d3 date format all dates in the Chart Tool interface will be coerced to
+  "dateFormat": "%Y-%m-%d",
+
+  // d3 time format all datetimes in the Chart Tool interface will be coerced to
+  "timeFormat": "%H:%M",
+
+  // margins in px for the SVG portion of the chart, using D3's margin convention
+  // https://bl.ocks.org/mbostock/3019563
+  "margin": {
+    "top": 10,
+    "right": 3,
+    "bottom": 0,
+    "left": 0
+  },
+
+  // determines what the offset value in px will be for the tip box
+  "tipOffset": {
+    "vertical": 4,
+    "horizontal": 1
+  },
+
+  // padding values around the tip box
+  "tipPadding": {
+    "top": 4,
+    "right": 9,
+    "bottom": 4,
+    "left": 9
+  },
+
+  // basic settings for the yAxis object. these settings are consumed
+  // by meteor-config.js
+  "yAxis": {
+    "display": true,
+    "scale": "linear",
+    "ticks": "auto",
+    "orient": "right",
+    "format": "comma",
+    "prefix": "",
+    "suffix": "",
+    "min": "",
+    "max": "",
+    "rescale": false,
+    "nice": true,
+
+    // amount of padding to the right of the y axis labels, before the tick lines
+    "paddingRight": 9,
+
+    // minimum and maxiumum number of ticks to display on y axis by default.
+    // these values can be overriden
+    "tickLowerBound": 3,
+    "tickUpperBound": 8,
+
+    // whenever possible, Chart Tool will attempt to draw a tickGoal amount of ticks
+    "tickGoal": 5,
+
+    // threshold with below which Chart Tool will implement
+    // a mobile-sized number of ticks
+    "widthThreshold": 420,
+
+    // dy attribute for y axis text labels
+    "dy": "",
+
+    // x attribute offset for y axis text labels
+    "textX": 0,
+
+    // y attribute offset for y axis text labels
+    "textY": ""
+  },
+
+  // basically the same as yAxis
+  "xAxis": {
+    "display": true,
+    "scale": "time",
+    "ticks": "auto",
+    "orient": "bottom",
+    "format": "auto",
+    "prefix": "",
+    "suffix": "",
+    "min": "",
+    "max": "",
+    "rescale": false,
+    "nice": false,
+
+    "rangePoints": 1.0,
+    "tickTarget": 6,
+    "ticksSmall": 4,
+    "widthThreshold": 420,
+    "dy": 0.7,
+    "upper": {
+      "tickHeight": 7,
+      "textX": 6,
+      "textY": 7
+    },
+    "lower": {
+      "tickHeight": 12,
+      "textX": 6,
+      "textY": 2
+    }
+  },
+
+  // default height in pixels of bars on a bar chart. bar charts always have
+  // a fixed height, unless they're being exported as a PNG or PDF
+  "barHeight": 30,
+
+  // rangeRoundBand settings for column and bar charts
+  // https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal_rangeBands
+  "bands": {
+    "padding": 0.06,
+    "offset": 0.12,
+    "outerPadding": 0.03
+  },
+
+  // defines source line copy within the interface
+  "source": {
+    "prefix": "CHART TOOL",
+    "suffix": " » SOURCE:"
+  },
+
+  // parameters for social sharing
+  "social": {
+
+    // facebook sharing requires a redirect URL and and app ID
+    "facebook": {
+      "label": "Facebook",
+      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg",
+
+      // the redirect should be a static HTML file with contents described
+      // in solution 2 here: http://stackoverflow.com/a/24417323
+      "redirect": "",
+      "appID": ""
+    },
+
+    "twitter": {
+      "label": "Twitter",
+      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
+
+      // "via" value is optional, and should be a twitter handle
+      // without the "@", such as "globeandmail"
+      "via": "",
+
+      // similarly, "hashtag" is optional, and should be a hashtag
+      // without the "#"
+      "hashtag": ""
+    },
+    "email": {
+      "label": "Email",
+      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
+    },
+    "sms": {
+      "label": "SMS",
+      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
+    }
+  },
+
+  // settings for S3 upload. if `enable` is set to `false`, Chart Tool
+  // will generate inline base64 image fallbacks instead
+  "image": {
+    "enable": false,
+    "base_path": "",
+    "expiration": 30000,
+    "bucket": "bucketname",
+    "region": "us-east-1",
+    "filename": "thumbnail",
+    "extension": "png",
+    "thumbnailWidth": 460
+  }
+}

@@ -191,53 +191,36 @@ Router.route('/chart/pdf/:_id', {
   }
 });
 
-Router.route('/chart/png/:_id/:width/:height/:scale?', {
-  name: "chart.render.png",
-  layoutTemplate: "pngLayout",
-  template: "chartPng",
-  data: function() {
-    if (this.ready()) {
-      return Charts.findOne({ _id: this.params._id });
-    }
-  },
-  waitOn: function() {
-    return Meteor.subscribe('chart', this.params._id);
-  },
-  onAfterAction: function() {
-    return document.title = "Chart PNG – Chart Tool";
-  }
-});
+// Router.route('png', {
+//   where: 'server',
+//   name: "chart.download.png",
+//   path: "/chart/png/download/:_id/:width/:height/:scale?",
+//   action: function() {
+//     var data = Charts.findOne({ _id: this.params._id });
 
-Router.route('png', {
-  where: 'server',
-  name: "chart.download.png",
-  path: "/chart/png/download/:_id/:width/:height/:scale?",
-  action: function() {
-    var data = Charts.findOne({ _id: this.params._id });
+//     var options = {
+//       scale: this.params.scale || 1,
+//       descriptor: "web"
+//     };
 
-    var options = {
-      scale: this.params.scale || 1,
-      descriptor: "web"
-    };
+//     data.exportable = {};
+//     data.exportable.width = this.params.width;
+//     data.exportable.height = this.params.height;
+//     data.exportable.type = "png";
 
-    data.exportable = {};
-    data.exportable.width = this.params.width;
-    data.exportable.height = this.params.height;
-    data.exportable.type = "png";
+//     var headers = {
+//       'Content-Type': 'image/png',
+//       'Content-Disposition': "attachment; filename=" + data.slug + "-web-" + data.exportable.width + "x" + data.exportable.height + ".png"
+//     };
 
-    var headers = {
-      'Content-Type': 'image/png',
-      'Content-Disposition': "attachment; filename=" + data.slug + "-web-" + data.exportable.width + "x" + data.exportable.height + ".png"
-    };
+//     var url = this.request.headers.origin + "/chart/png/" + data._id + "/" + this.params.width + "/" + this.params.height + "/" + (this.params.scale || 1);
 
-    var url = this.request.headers.origin + "/chart/png/" + data._id + "/" + this.params.width + "/" + this.params.height + "/" + (this.params.scale || 1);
+//     this.response.writeHead(200, headers);
 
-    this.response.writeHead(200, headers);
+//     // return this.response;
 
-    // return this.response;
-
-  }
-});
+//   }
+// });
 
 // wkhtmltopdf implementation
 Router.route('pdf', {
@@ -269,6 +252,8 @@ Router.route('pdf', {
       noOutline: true,
       dpi: dpi,
       zoom: 1
+      // disableSmartShrinking: true, // as per https://github.com/wkhtmltopdf/qt/pull/12#issuecomment-66429764
+      // zoom: 0.78125
     };
 
     var url = this.request.headers.origin + "/chart/pdf/" + data._id;
