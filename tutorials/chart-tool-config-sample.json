@@ -136,6 +136,12 @@
     "outerPadding": 0.03
   },
 
+  // defines source line copy within the interface
+  "source": {
+    "prefix": "CHART TOOL",
+    "suffix": " » SOURCE:"
+  },
+
   // parameters for social sharing
   "social": {
 

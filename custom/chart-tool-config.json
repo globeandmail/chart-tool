@@ -93,6 +93,11 @@
     "outerPadding": 0.03
   },
 
+  "source": {
+    "prefix": "CHART TOOL",
+    "suffix": " » SOURCE:"
+  },
+
   "social": {
     "facebook": {
       "label": "Facebook",

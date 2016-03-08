@@ -28,7 +28,7 @@ app_settings = {
     "Booked Baboon"
   ],
 
-  source_suffix: " » SOURCE:",
+  source_suffix: config.source.suffix,
 
   primary: "Primary",
   alternate: "Alternate",
@@ -43,8 +43,8 @@ app_settings = {
     heading: "",
     qualifier: "",
     deck: "",
-    source: "CHART TOOL",
     class: "primary",
+    source: config.source.prefix,
     date_format: config.dateFormat,
     time_format: config.timeFormat,
     hasHours: false,
@@ -137,7 +137,6 @@ app_settings = {
     line_depth: 3.35,
     dpi: 266, // this actually doesn't matter for PDFs, but good to make note
     magic: {
-      // i don't understand why these are necessary for print, but they are
       width: 3.698,
       height: 3.675
     },

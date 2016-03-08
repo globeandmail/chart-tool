@@ -8,29 +8,29 @@ The `/custom` folder contains a series of files that allow you to customize your
 
 ### `chart-tool-config.json`
 
-An absolutely essential file for generating new charts. Chart Tool uses this configuration file to scaffold a basic chart object, set parameters throughout the library, and so on. Includes instructions for the Chart Tool on how to abbreviate months, debounce and tooltip timeouts, desktop and mobile ratios, style prefixes, and so on. See [this example file](https://github.com/globeandmail/chart-tool/blob/master/tutorials/chart-tool-config-sample.json) for an explanation of what each configuration parameter does.
+The main configuration file. Chart Tool uses this file to scaffold a basic chart object, set parameters throughout the library, and so on. Includes instructions for the Chart Tool on how to abbreviate months, debounce and tooltip timeouts, desktop and mobile ratios, style prefixes, and so on. See [this example file](https://github.com/globeandmail/chart-tool/blob/master/tutorials/chart-tool-config-sample.json) for an explanation of what each configuration parameter does.
 
 If you're looking to use S3 to host chart thumbnails, check out [the tutorial](https://github.com/globeandmail/chart-tool/blob/master/tutorials/thumbnails.md).
 
 
 ### `meteor-config.js`
 
-Sets 
+Configuration file for the interface. Defines the schema for a chart within the database (`app_settings.chart`), points to an [animal names API](https://github.com/globeandmail/chart-tool/blob/master/tutorials/interface.md#collaborative-editing), and sets print configurations throughout the app. 
 
 
 ### `custom.js`
 
-A function that is optionally invoked for each chart after all a chart's elements are rendered. Useful to perform blanket tweaks to a chart's structure as mandated by a style guide — for instance, if your style requires axis labels, you can easily add them via `custom.js` by invoking the axis nodes and dimensions and generating new SVG `text` objects. Off by default. If you'd like to enable the use of `custom.js`, make sure to change the `CUSTOM` declaration in `chart-tool-config.json` to `true`.
-
-
-### `fonts.scss`
-
-Got some custom fonts you want to point to in your `base.scss` file? Put your `@font-face` declarations here.
+A function that is optionally invoked for each chart after all of a chart's elements are rendered. Useful to perform blanket tweaks to a chart's structure as mandated by a style guide — for instance, if your style requires axis labels, you can easily add them via `custom.js` by invoking the axis nodes and dimensions and generating new SVG `text` objects. Off by default. If you'd like to enable the use of `custom.js`, make sure to change the `CUSTOM` declaration in `chart-tool-config.json` to `true`.
 
 
 ### `base.scss`
 
 This base file can contain overrides for fonts, sizes, and other SCSS variables Chart Tool needs to build a fresh copy of its style library. If you don't want to override any base SCSS variables, just comment this file out.
+
+
+### `fonts.scss`
+
+Got some custom fonts you want to point to in your `base.scss` file? Put your `@font-face` declarations here.
 
 
 ### `custom.scss`
@@ -39,6 +39,7 @@ Similar to `base.scss`, except this file sits at the bottom of Chart Tool's styl
 
 ### `meteor-custom.scss`
 
+This file overrides style settings on the Meteor-side of things. Useful for setting your own [print styles](https://github.com/globeandmail/chart-tool/blob/master/tutorials/print.md), adding base64 versions of fonts, and tweaking colours and styles within the interface.
 
 ----------
 
