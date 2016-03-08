@@ -2,12 +2,12 @@
 
 Chart Tool has several Gulp commands you can use:
 
-* **`gulp`**: Default command, will build JS and CSS files, watch for changes, and start up both BrowserSync and Meteor.js servers for development. Equivalent to running **`gulp lib-serve && gulp meteor-serve`**
-* **`gulp meteor-serve`**: Starts up a local Meteor instance of the interface at [localhost:3000](http://localhost:3000) and watches for file changes
-* **`gulp lib-serve`**: Starts up a local BrowserSync instance of the frontend at [localhost:3030](http://localhost:3030) and watches for file changes
-* **`gulp meteor-build`**: Builds the back end into a tarball in the `/dist/` folder, ready for deployment to a server
-* **`gulp lib-build`**: Build the static assets for the front-end library into the `/dist` folder
-* **`gulp buildver`: ** Returns the buildVer variable present in package.json. Optionally, accepts a `set` argument which edits the buildVer value. For instance, **`gulp buildver --set=12`** will set the buildVer in package.json to "12". Used for tracking build versions during the deployment process
+* `gulp`: Default command, will build JS and CSS files, watch for changes, and start up both BrowserSync and Meteor.js servers for development. Equivalent to running `gulp lib-serve && gulp meteor-serve`
+* `gulp meteor-serve`: Starts up a local Meteor instance of the interface at [localhost:3000](http://localhost:3000) and watches for file changes
+* `gulp lib-serve`: Starts up a local BrowserSync instance of the frontend at [localhost:3030](http://localhost:3030) and watches for file changes
+* `gulp meteor-build`: Builds the back end into a tarball in the `/dist/` folder, ready for deployment to a server
+* `gulp lib-build`: Build the static assets for the front-end library into the `/dist` folder
+* `gulp buildver`: Returns the buildVer variable present in package.json. Optionally, accepts a `set` argument which edits the buildVer value. For instance, `gulp buildver --set=12` will set the buildVer in package.json to "12". Used for tracking build versions during the deployment process
 
 There are also a few gulp tasks used by _other_ gulp tasks. They are:
 

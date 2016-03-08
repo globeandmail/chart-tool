@@ -79,7 +79,7 @@ For example:
 <script src="bundle.min.js"></script>
 ```
 
-When the Chart Tool library loads, it'll find the dispatcher functions under `window.__charttooldispatcher` and fire those functions at the appropriate time. These dispatcher events are useful for changing aspects of your chart before or after it's already been drawn. As an example, the bar labels on [this chart](www.theglobeandmail.com/report-on-business/economy/currencies/how-148-currencies-fared-against-the-loonie-in-2015/article27994400/) are drawn using a `dispatcher.finish` hook.
+When the Chart Tool library loads, it'll find the dispatcher functions under `window.__charttooldispatcher` and fire those functions at the appropriate time. These dispatcher events are useful for changing aspects of your chart before or after it's already been drawn. As an example, the bar labels on [this chart](http://www.theglobeandmail.com/report-on-business/economy/currencies/how-148-currencies-fared-against-the-loonie-in-2015/article27994400/) are drawn using a `dispatcher.finish` hook.
 
 Available dispatcher events include:
 
