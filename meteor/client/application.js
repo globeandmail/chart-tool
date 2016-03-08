@@ -48,6 +48,7 @@ drawChart = function(container, obj) {
     ChartTool.create(container, chartObj);
   } catch (e) {
     error = e;
+    console.log(error);
     drawError(container, error);
   } finally {
     return error;

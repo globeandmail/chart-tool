@@ -223,6 +223,9 @@ function svgTest(root) {
  */
 function getThumbnailPath(obj) {
   var imgSettings = obj.image;
+
+  imgSettings.bucket = require("../config/env");
+
   return "https://s3.amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension;
 }
 

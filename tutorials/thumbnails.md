@@ -26,7 +26,6 @@ This is what `chart-tool-config.json` will look like by default:
   "enable": false,
   "base_path": "",
   "expiration": 30000,
-  "bucket": "bucketname",
   "region": "us-east-1",
   "filename": "thumbnail",
   "extension": "png",
@@ -39,7 +38,6 @@ You'll need to tweak those options based on the S3 bucket you just created.
 * `enable`: Whether or not S3 upload should be used. Change this to `true`
 * `base_path`: If you want to host your thumbnails within a specific directory, specify the directory name here.
 * `expiration`: Time in milliseconds to wait before timing out an unsuccessful upload. You can probably just leave this as-is
-* `bucket`: The name of the bucket you've just created
 * `region`: The region your bucket was created under
 * `filename`: The filename for each thumbnail. You can probably just leave this as `thumbnail`
 * `extension`: The file extension. Leave this as `png`
@@ -53,6 +51,8 @@ For this step, we'll need the keys you created in [step 1](#step-1-set-up-an-s3-
 In your terminal, open up your `.bashrc` (or `.zshrc` if you're a zsh user). At the bottom of the file, add these two lines, replacing the curly braces with your AWS keys:
 
 ```sh
+export S3_CHARTTOOL_BUCKET={BUCKET NAME GOES HERE}
+export S3_CHARTTOOL_REGION={REGION NAME GOES HERE}
 export S3_CHARTTOOL_KEY={KEY GOES HERE}
 export S3_CHARTTOOL_SECRET={SECRET KEY GOES HERE}
 ```
@@ -60,7 +60,7 @@ export S3_CHARTTOOL_SECRET={SECRET KEY GOES HERE}
 Save and close the file, then restart your terminal for the changes to take effect. You can test that the environment variables are working by opening up a new shell and typing:
 
 ```sh
-$ echo $S3_CHARTTOOL_KEY && echo $S3_CHARTTOOL_SECRET
+$ echo $S3_CHARTTOOL_KEY'\n'$S3_CHARTTOOL_SECRET'\n'$S3_CHARTTOOL_BUCKET'\n'$S3_CHARTTOOL_REGION
 ```
 
 If you see both your keys returned within the terminal, you're good to go.
