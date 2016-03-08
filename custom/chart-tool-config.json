@@ -125,8 +125,6 @@
     "enable": false,
     "base_path": "",
     "expiration": 30000,
-    "bucket": "bucketname",
-    "region": "us-east-1",
     "filename": "thumbnail",
     "extension": "png",
     "thumbnailWidth": 460

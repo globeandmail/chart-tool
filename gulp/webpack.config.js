@@ -19,7 +19,11 @@ var dev = {
     extensions: ['', '.js', '.sjs'],
     fallback: __dirname
   },
-  plugins: []
+  plugins: [
+    new webpack.DefinePlugin({
+      s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
+    })
+  ]
 };
 
 var prod = {
@@ -39,7 +43,11 @@ var prod = {
     extensions: ['', '.js', '.sjs'],
     fallback: __dirname
   },
-  plugins: []
+  plugins: [
+    new webpack.DefinePlugin({
+      s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
+    })
+  ]
 };
 
 module.exports = {
