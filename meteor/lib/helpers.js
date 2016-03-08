@@ -98,13 +98,38 @@ deleteProp = function(obj, del) {
   return copy;
 }
 
+// jsonToCSV = function(objArray, config) {
+//   return Papa.unparse(objArray, {
+//     quotes: false,
+//     delimiter: config.delimiter,
+//     newline: config.newline
+//   });
+// }
 
 jsonToCSV = function(objArray, config) {
-  return Papa.unparse(objArray, {
-    quotes: false,
-    delimiter: config.delimiter,
-    newline: config.newline
-  });
+  var defaults = {
+    delimiter: ',',
+    newline: '\n'
+  };
+  var opt = config || defaults;
+  var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+  var str = '';
+
+  for (var i = 0; i < array.length; i++) {
+    var line = '';
+
+    for (var j = 0; j < array[i].length; j++) {
+      if (line != '') { line += opt.delimiter };
+      line += array[i][j];
+    }
+
+    if (i === array.length - 1) {
+      str += line;
+    } else {
+      str += line + opt.newline;
+    }
+  }
+  return str;
 }
 
 csvFormat = function(obj) {
