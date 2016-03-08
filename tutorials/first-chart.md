@@ -39,7 +39,7 @@ Once you have a local copy of Chart Tool running you're ready to make a chart.
 	![Slug and some data](images/CT-NewChart-Data.png)
 
 
-3. ## Line charts by default##
+3. ##Line charts by default##
 
 	Chart Tool initially tries to create a line chart with your data and may not recognize your date format. 	You might see a Chart error. Fear not. 
 
@@ -62,7 +62,7 @@ Once you have a local copy of Chart Tool running you're ready to make a chart.
 
 	![A clear meaningful chart](images/CT-NewChart-Details.png)
 
-5. ##Adjust settings and style## 
+5. ##Adjust settings and style##
 
 	Click on a heading to expand the options within.
 
@@ -93,7 +93,7 @@ Once you have a local copy of Chart Tool running you're ready to make a chart.
 
 
 
-6. ##Publish your chart## 
+6. ##Publish your chart##
 
 	Copy the embed code and add it to your CMS or HTML page. To deploy a Chart Tool chart your need the front-end JavaScript and CSS library on a public-facing server and linked to the HTML page that the chart appears on. 
 	
