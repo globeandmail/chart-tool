@@ -60,14 +60,19 @@ For example:
 ```html
 <script type="text/javascript">
   (function(root) {
+  
     root.__charttooldispatcher = root.__charttooldispatcher || {};
+  
     var dispatcher = root.__charttooldispatcher;
+  
     dispatcher.start = function(d) {
       console.log("Chart starts being drawn");
     };
+  
     dispatcher.finish = function(d) {
       console.log("Chart of id " + d.id + " is finished drawing!");
     };
+  
   })(this);
 </script>
 
