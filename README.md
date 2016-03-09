@@ -13,7 +13,7 @@ Chart Tool is a platform for creating, storing and displaying beautiful, respons
 ----------
 ## Contents
 
-* [How does it work?](#how-does-it-work?)
+* [How it works](#how-it-works)
 * [Features](#features)
 * [Examples and demo](#examples-and-demo)
 * [Getting started](#getting-started)
@@ -25,7 +25,7 @@ Chart Tool is a platform for creating, storing and displaying beautiful, respons
 ----------
 
 
-## How does it work?
+## How it works
 
 Chart Tool is made up of two parts:
 

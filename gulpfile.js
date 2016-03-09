@@ -30,6 +30,8 @@ gulp.task('meteor-serve', function(callback) {
 
 gulp.task('meteor-build', function(callback) {
   runSequence('_set-version',
+    '_webpack-build',
+    '_scss',
     '_clean-meteor',
     '_meteor-build',
     callback);

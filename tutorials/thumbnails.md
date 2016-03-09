@@ -48,7 +48,7 @@ You'll need to tweak those options based on the S3 bucket you just created.
 
 For this step, we'll need the keys you created in [step 1](#step-1-set-up-an-s3-bucket). For security reasons, we don't want to have your AWS keys saved within the Chart Tool repo, so we use environment variables instead.
 
-In your terminal, open up your `.bashrc` (or `.zshrc` if you're a zsh user). At the bottom of the file, add these two lines, replacing the curly braces with your AWS keys:
+In your terminal, open up your `.bashrc` (or `.zshrc` if you're a zsh user). At the bottom of the file, add these fouor lines, replacing the curly braces with your AWS bucket name, region, and keys:
 
 ```sh
 export S3_CHARTTOOL_BUCKET={BUCKET NAME GOES HERE}
@@ -57,13 +57,13 @@ export S3_CHARTTOOL_KEY={KEY GOES HERE}
 export S3_CHARTTOOL_SECRET={SECRET KEY GOES HERE}
 ```
 
-Save and close the file, then restart your terminal for the changes to take effect. You can test that the environment variables are working by opening up a new shell and typing:
+Save and close the file, then restart your terminal for the changes to take effect. You can test that the environment variables are working by opening up a new shell and pasting this in:
 
 ```sh
-$ echo $S3_CHARTTOOL_KEY'\n'$S3_CHARTTOOL_SECRET'\n'$S3_CHARTTOOL_BUCKET'\n'$S3_CHARTTOOL_REGION
+echo $S3_CHARTTOOL_KEY'\n'$S3_CHARTTOOL_SECRET'\n'$S3_CHARTTOOL_BUCKET'\n'$S3_CHARTTOOL_REGION
 ```
 
-If you see both your keys returned within the terminal, you're good to go.
+If you see all four values returned within the terminal, you're good to go.
 
 
 ### **Step 4:** Test it out
