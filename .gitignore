@@ -107,21 +107,15 @@ sftp-config.json
 
 dist/
 
-meteor/lib/charts/scripts/bundle.js
-meteor/lib/charts/scripts/bundle.js.map
-meteor/lib/config/meteorSettings.js
-meteor/lib/config/meteorSettings.js.map
+meteor/lib/charts/
+meteor/lib/config/
 
-src/styles/build/main.css
-meteor/lib/charts/stylesheets/main.css
+src/styles/build/
 
 bundle.js
-meteorSettings.js
+bundle.min.js
 bundle.js.map
+
+meteorSettings.js
+meteorSettings.min.js
 meteorSettings.js.map
-
-meteor/lib/config/meteorSettings.js.map
-
-meteor/lib/config/meteorSettings.js
-
-meteor/lib/config/meteorSettings.js.map

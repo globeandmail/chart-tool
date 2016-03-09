@@ -40,6 +40,13 @@ gulp.task("_webpack-build", function(callback) {
     gulp.src("./lib/d3/d3.min.js")
       .pipe(gulp.dest(gulpConfig.buildPath));
 
+    // move build files and meteorSettings to Meteor
+    gulp.src(gulpConfig.buildPath + "/bundle.min.js")
+      .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/charts/scripts/'));
+
+    gulp.src(gulpConfig.buildPath + "/meteorSettings.min.js")
+      .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/config/'));
+
     // cleaning up
     gulp.src(gulpConfig.buildPath + "/meteorSettings.min.js", { read: false })
       .pipe(clean());
