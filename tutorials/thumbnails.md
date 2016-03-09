@@ -26,7 +26,6 @@ This is what `chart-tool-config.json` will look like by default:
   "enable": false,
   "base_path": "",
   "expiration": 30000,
-  "region": "us-east-1",
   "filename": "thumbnail",
   "extension": "png",
   "thumbnailWidth": 460
@@ -38,7 +37,6 @@ You'll need to tweak those options based on the S3 bucket you just created.
 * `enable`: Whether or not S3 upload should be used. Change this to `true`
 * `base_path`: If you want to host your thumbnails within a specific directory, specify the directory name here.
 * `expiration`: Time in milliseconds to wait before timing out an unsuccessful upload. You can probably just leave this as-is
-* `region`: The region your bucket was created under
 * `filename`: The filename for each thumbnail. You can probably just leave this as `thumbnail`
 * `extension`: The file extension. Leave this as `png`
 * `thumbnailWidth`: Width for the the thumbnail. The height will be determined automatically based on the width.
@@ -48,7 +46,7 @@ You'll need to tweak those options based on the S3 bucket you just created.
 
 For this step, we'll need the keys you created in [step 1](#step-1-set-up-an-s3-bucket). For security reasons, we don't want to have your AWS keys saved within the Chart Tool repo, so we use environment variables instead.
 
-In your terminal, open up your `.bashrc` (or `.zshrc` if you're a zsh user). At the bottom of the file, add these fouor lines, replacing the curly braces with your AWS bucket name, region, and keys:
+In your terminal, open up your `.bashrc` (or `.zshrc` if you're a zsh user). At the bottom of the file, add these four lines, replacing the curly braces with your AWS bucket name, region, and keys:
 
 ```sh
 export S3_CHARTTOOL_BUCKET={BUCKET NAME GOES HERE}
