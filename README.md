@@ -1,6 +1,6 @@
 # Chart Tool
 
-Chart Tool is a platform for creating, storing and displaying beautiful, responsive embeddable charts. Designed to fit the needs of a fast-paced digital and print newsroom, Chart Tool generates charts in several formats: 
+Chart Tool is a platform for creating, storing and displaying beautiful, responsive embeddable charts. Designed to fit the needs of a fast-paced mobile and print newsroom, Chart Tool generates charts in several formats: 
 
 * **SVGs** that are both responsive and interactive, via an embed code
 * **JPGs and PNGs** for use as thumbnails and sharing on social media
