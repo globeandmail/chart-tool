@@ -25,4 +25,5 @@ describe('Helpers', function() {
     });
 
   });
+
 });
