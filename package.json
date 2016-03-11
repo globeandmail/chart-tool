@@ -17,6 +17,8 @@
     "gulp-shell": "^0.4.2",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.6",
+    "jest": "^0.1.40",
+    "jest-cli": "^0.9.2",
     "jsdoc": "^3.3.2",
     "json-loader": "^0.5.3",
     "run-sequence": "^1.1.4",
@@ -24,7 +26,7 @@
     "yargs": "^3.15.0"
   },
   "scripts": {
-    "test": ""
+    "test": "jest --no-watchman"
   },
   "keywords": [
     "charts",
@@ -41,15 +43,19 @@
     "type": "git",
     "url": "git@github.com:globeandmail/chart-tool.git"
   },
-  "contributors": [{
-    "author": "Tom Cardoso",
-    "email": "tcardoso@globeandmail.com"
-  }, {
-    "author": "Jeremy Agius",
-    "email": "jagius@globeandmail.com"
-  }, {
-    "author": "Michael Pereira",
-    "email": "mpereira@globeandmail.com"
-  }],
+  "contributors": [
+    {
+      "author": "Tom Cardoso",
+      "email": "tcardoso@globeandmail.com"
+    },
+    {
+      "author": "Jeremy Agius",
+      "email": "jagius@globeandmail.com"
+    },
+    {
+      "author": "Michael Pereira",
+      "email": "mpereira@globeandmail.com"
+    }
+  ],
   "license": "MIT"
 }
