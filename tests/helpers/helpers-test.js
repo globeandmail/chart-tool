@@ -1,5 +1,7 @@
 'use strict';
 
+var hasItselfAsExport = require("../meta");
+
 describe('Helpers', function() {
 
   jest.unmock('../../src/js/helpers/helpers');
@@ -100,9 +102,3 @@ describe('Helpers', function() {
   });
 
 });
-
-function hasItselfAsExport(parent, fname) {
-  it('has ' + fname + ' as an export', function() {
-    expect(parent[fname]).not.toBeNull();
-  });
-}

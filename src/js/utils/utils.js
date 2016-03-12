@@ -80,7 +80,8 @@ function getBounding(selector, dimension) {
 }
 
 /**
- * Basic factory for figuring out amount of milliseconds in a given time period.
+ * Basic factory for figuring out amount of milliseconds
+ * in a given time period.
  */
 function TimeObj() {
   this.sec = 1000;
@@ -93,7 +94,8 @@ function TimeObj() {
 }
 
 /**
- * Slightly altered Bostock magic to wrap SVG <text> nodes based on available width
+ * Slightly altered Bostock magic to wrap SVG <text> nodes
+ * based on available width
  * @param  {Object} text    D3 text selection.
  * @param  {Integer} width
  */
@@ -131,7 +133,8 @@ function wrapText(text, width) {
 }
 
 /**
- * Given two dates date and a tolerance level, return a time "context" for the difference between the two values.
+ * Given two dates date and a tolerance level, return a time
+ * "context" for the difference between the two values.
  * @param  {Object} d1     Beginning date object.
  * @param  {Object} d2     End date object.
  * @param  {Integer} tolerance
@@ -142,13 +145,15 @@ function timeDiff(d1, d2, tolerance) {
   var diff = d2 - d1,
       time = new TimeObj();
 
+  var tol = tolerance || 3;
+
   // returning the context
-  if ((diff / time.year) > tolerance) { return "years"; }
-  else if ((diff / time.month) > tolerance) { return "months"; }
-  else if ((diff / time.week) > tolerance) { return "weeks"; }
-  else if ((diff / time.day) > tolerance) { return "days"; }
-  else if ((diff / time.hour) > tolerance) { return "hours"; }
-  else if ((diff / time.min) > tolerance) { return "minutes"; }
+  if ((diff / time.year) > tol) { return "years"; }
+  else if ((diff / time.month) > tol) { return "months"; }
+  else if ((diff / time.week) > tol) { return "weeks"; }
+  else if ((diff / time.day) > tol) { return "days"; }
+  else if ((diff / time.hour) > tol) { return "hours"; }
+  else if ((diff / time.min) > tol) { return "minutes"; }
   else { return "days"; }
   // if none of these work i feel bad for you son
   // i've got 99 problems but an if/else ain"t one
@@ -200,15 +205,8 @@ function getTranslateXY(node) {
 }
 
 /**
- * Returns a translate statement because it's annoying to type out
- * @return {String}
- */
-function translate(x, y) {
-    return "translate(" + x + ", " + y + ")";
-}
-
-/**
- * Tests for SVG support, taken from https://github.com/viljamis/feature.js/
+ * Tests for SVG support, taken from
+ * https://github.com/viljamis/feature.js/
  * @param  {Object} root A reference to the browser window object.
  * @return {Boolean}
  */
@@ -230,7 +228,8 @@ function getThumbnailPath(obj) {
 }
 
 /**
- * Given a chart object and container, generate and append a thumbnail
+ * Given a chart object and container,
+ * generate and append a thumbnail
  */
 function generateThumb(container, obj, settings) {
 
@@ -279,7 +278,6 @@ module.exports = {
   timeDiff: timeDiff,
   timeInterval: timeInterval,
   getTranslateXY: getTranslateXY,
-  translate: translate,
   svgTest: svgTest,
   getThumbnailPath: getThumbnailPath,
   generateThumb: generateThumb,
