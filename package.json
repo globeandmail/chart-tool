@@ -28,6 +28,9 @@
   "scripts": {
     "test": "jest --no-watchman"
   },
+  "jest": {
+    "testDirectoryName": "tests"
+  },
   "keywords": [
     "charts",
     "d3",
