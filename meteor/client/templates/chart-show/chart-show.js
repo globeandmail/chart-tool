@@ -63,6 +63,8 @@ Template.chartShow.rendered = function() {
     var data = Router.current() && Router.current().data();
 
     if (data) {
+      data.options.share_data = false;
+      data.options.social = false;
       drawChart(".chart-show_preview", data);
     }
 
