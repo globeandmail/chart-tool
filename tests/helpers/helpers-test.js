@@ -10,7 +10,9 @@ describe('Helpers', function() {
 
   describe('isFloat', function() {
 
-    hasItselfAsExport(Helpers, 'isFloat');
+    it('has isFloat as an export', function() {
+      expect(Helpers.isFloat).not.toBeNull();
+    });
 
     var isFloat = Helpers.isFloat;
 
@@ -30,7 +32,9 @@ describe('Helpers', function() {
 
   describe('isUndefined', function() {
 
-    hasItselfAsExport(Helpers, 'isUndefined');
+    it('has isUndefined as an export', function() {
+      expect(Helpers.isUndefined).not.toBeNull();
+    });
 
     var isUndefined = Helpers.isUndefined;
 
@@ -54,7 +58,9 @@ describe('Helpers', function() {
 
   describe('extend', function() {
 
-    hasItselfAsExport(Helpers, 'extend');
+    it('has extend as an export', function() {
+      expect(Helpers.extend).not.toBeNull();
+    });
 
     var extend = Helpers.extend;
 

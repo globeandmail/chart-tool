@@ -59,14 +59,14 @@ function clearObj(obj) {
  * @return {Array}
  */
 function clearDrawn(drawn, obj) {
-  if (drawn.length) {
-    for (var i = drawn.length - 1; i >= 0; i--) {
-      if (drawn[i].id === obj.id) {
+  var length = drawn.length;
+  if (length) {
+    for (var i = 0; i < length; i++) {
+      if (drawn[i] && drawn[i].id === obj.id) {
         drawn.splice(i, 1);
       }
-    };
+    }
   }
-
   return drawn;
 }
 

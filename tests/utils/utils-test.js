@@ -10,42 +10,143 @@ describe('Utils', function() {
 
   describe('debounce', function() {
 
-    hasItselfAsExport(Utils, 'debounce');
+    it('has debounce as an export', function() {
+      expect(Utils.debounce).not.toBeNull();
+    });
+
     var debounce = Utils.debounce;
+
+    var obj = { test: "hello world" },
+        testFn = function() { return obj.test; },
+        timeout = 200;
+
+    var deb = debounce(testFn, obj, timeout, window);
+
+    it('should be a function', function() {
+      expect(typeof deb).toBe("function")
+    });
+
+    it('shouldnt execute immediately', function() {
+      var hasHappened = false;
+      expect(hasHappened).toBe(false);
+      deb();
+      expect(hasHappened).toBe(false);
+    });
+
+    it('should execute after delay', function() {
+
+      function callback() { expect(hasHappened).toBe(true); }
+
+      var hasHappened = false;
+
+      var fn = debounce(function() {
+        hasHappened = true;
+      }, null, 100, window);
+
+      var otherFn = debounce(function() {
+        callback();
+      }, null, 200, window);
+
+      expect(hasHappened).toBe(false);
+
+      fn();
+      otherFn();
+
+    });
 
   });
 
   describe('clearChart', function() {
 
-    hasItselfAsExport(Utils, 'clearChart');
+    it('has clearChart as an export', function() {
+      expect(Utils.clearChart).not.toBeNull();
+    });
+
     var clearChart = Utils.clearChart;
 
   });
 
   describe('clearObj', function() {
 
-    hasItselfAsExport(Utils, 'clearObj');
+    it('has clearObj as an export', function() {
+      expect(Utils.clearObj).not.toBeNull();
+    });
+
     var clearObj = Utils.clearObj;
+
+    it('sets the chartObj prop as undefined', function() {
+
+      var obj = { chartObj: "test" },
+          newObj = clearObj(obj);
+
+      expect(newObj.chartObj).toBeUndefined();
+
+    });
 
   });
 
   describe('clearDrawn', function() {
 
-    hasItselfAsExport(Utils, 'clearDrawn');
+    it('has clearDrawn as an export', function() {
+      expect(Utils.clearDrawn).not.toBeNull();
+    });
+
     var clearDrawn = Utils.clearDrawn;
+
+    var drawn = [
+      { id: "tabby" },
+      { id: "persian" },
+      { id: "black" },
+      { id: "siamese" },
+      { id: "shorthair" }
+    ];
+
+    var obj = { id: "siamese" },
+        dLength = drawn.length;
+
+    it('originally has that item in its array', function() {
+      var isInArray = false;
+      for (var i = 0; i < drawn.length; i++) {
+        if (drawn[i] && drawn[i].id === obj.id) {
+          isInArray = true;
+        }
+      };
+      expect(isInArray).toBe(true);
+    });
+
+    it('no longer has that item in its array', function() {
+      Utils.clearDrawn(drawn, obj);
+      var isInArray = false;
+      for (var i = 0; i < drawn.length; i++) {
+        if (drawn[i] && drawn[i].id === obj.id) {
+          isInArray = true;
+        }
+      };
+      expect(isInArray).toBe(false);
+    });
+
+    it('is one item shorter than before', function() {
+      expect(drawn.length).toBe(dLength - 1);
+    });
 
   });
 
   describe('getBounding', function() {
 
-    hasItselfAsExport(Utils, 'getBounding');
+    it('has getBounding as an export', function() {
+      expect(Utils.getBounding).not.toBeNull();
+    });
+
     var getBounding = Utils.getBounding;
 
   });
 
   describe('TimeObj', function() {
 
-    hasItselfAsExport(Utils, 'TimeObj');
+    it('has TimeObj as an export', function() {
+      expect(Utils.TimeObj).not.toBeNull();
+    });
+
     var TimeObj = Utils.TimeObj;
 
     it('returns an object', function() {
@@ -68,14 +169,20 @@ describe('Utils', function() {
 
   describe('wrapText', function() {
 
-    hasItselfAsExport(Utils, 'wrapText');
+    it('has wrapText as an export', function() {
+      expect(Utils.wrapText).not.toBeNull();
+    });
+
     var wrapText = Utils.wrapText;
 
   });
 
   describe('timeDiff', function() {
 
-    hasItselfAsExport(Utils, 'timeDiff');
+    it('has timeDiff as an export', function() {
+      expect(Utils.timeDiff).not.toBeNull();
+    });
+
     var timeDiff = Utils.timeDiff;
 
     var date = new Date(),
@@ -95,7 +202,8 @@ describe('Utils', function() {
           prevWeek = date - (time.week * tolerance),
           prevDay = date - (time.day * tolerance),
           prevHour = date - (time.hour * tolerance),
-          prevMinute = date - (time.minute * tolerance);
+          prevMinute = date - (time.min * tolerance),
+          defaultDate = date - (time.sec * tolerance);
 
       expect(timeDiff(prevYear, date, tolerance - 1)).toBe("years");
       expect(timeDiff(prevMonth, date, tolerance - 1)).toBe("months");
@@ -103,48 +211,67 @@ describe('Utils', function() {
       expect(timeDiff(prevDay, date, tolerance - 1)).toBe("days");
       expect(timeDiff(prevHour, date, tolerance - 1)).toBe("hours");
       expect(timeDiff(prevMinute, date, tolerance - 1)).toBe("minutes");
+      expect(timeDiff(defaultDate, date, tolerance - 1)).toBe("days");
     });
 
   });
 
   describe('timeInterval', function() {
 
-    hasItselfAsExport(Utils, 'timeInterval');
+    it('has timeInterval as an export', function() {
+      expect(Utils.timeInterval).not.toBeNull();
+    });
+
     var timeInterval = Utils.timeInterval;
 
   });
 
   describe('getTranslateXY', function() {
 
-    hasItselfAsExport(Utils, 'getTranslateXY');
+    it('has getTranslateXY as an export', function() {
+      expect(Utils.getTranslateXY).not.toBeNull();
+    });
+
     var getTranslateXY = Utils.getTranslateXY;
 
   });
 
   describe('svgTest', function() {
 
-    hasItselfAsExport(Utils, 'svgTest');
+    it('has svgTest as an export', function() {
+      expect(Utils.svgTest).not.toBeNull();
+    });
+
     var svgTest = Utils.svgTest;
 
   });
 
   describe('getThumbnailPath', function() {
 
-    hasItselfAsExport(Utils, 'getThumbnailPath');
+    it('has getThumbnailPath as an export', function() {
+      expect(Utils.getThumbnailPath).not.toBeNull();
+    });
+
     var getThumbnailPath = Utils.getThumbnailPath;
 
   });
 
   describe('generateThumb', function() {
 
-    hasItselfAsExport(Utils, 'generateThumb');
+    it('has generateThumb as an export', function() {
+      expect(Utils.generateThumb).not.toBeNull();
+    });
+
     var generateThumb = Utils.generateThumb;
 
   });
 
   describe('csvToTable', function() {
 
-    hasItselfAsExport(Utils, 'csvToTable');
+    it('has csvToTable as an export', function() {
+      expect(Utils.csvToTable).not.toBeNull();
+    });
+
     var csvToTable = Utils.csvToTable;
 
   });
