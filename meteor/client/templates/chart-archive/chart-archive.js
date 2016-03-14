@@ -148,6 +148,7 @@ Template.chartArchive.rendered = function() {
       searchField: 'tagName',
       options: function() { return Tags.find(); },
       onItemAdd: function(value, item) {
+
         var archiveFilters = Session.get("archiveFilters"),
             index = archiveFilters.filters.tags.indexOf(item.text());
 
@@ -187,7 +188,7 @@ Template.chartArchive.rendered = function() {
         var matchedTags = Tags.find({ tagName: { $in: currTags } }).fetch().map(function(p) {
           return p._id;
         });
-        tagsSelect.selectize.addItem(matchedTags);
+        tagsSelect.selectize.addItems(matchedTags);
       }
     }
 

@@ -17,6 +17,12 @@
 .charts-archive_aside-fixed {
   position: fixed;
   margin-top: 35px;
+  @include outer-container;
+  width: 100%;
+}
+
+.charts-archive_aside-wrapper {
+  @include span-columns(2.5 of 12);
 }
 
 .charts-archive_search-field {

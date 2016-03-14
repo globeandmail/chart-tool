@@ -361,6 +361,7 @@ select {
   box-sizing: border-box;
   box-shadow: none;
   border-radius: 0;
+  white-space: nowrap;
   @include transition (all 0.1s ease-out);
   &.focus {
     box-shadow: none;
@@ -379,6 +380,7 @@ select {
   border-radius: 4px;
   box-shadow: none;
   color: $text;
+  float: left;
 }
 
 .selectize-control.multi .selectize-input > div {
