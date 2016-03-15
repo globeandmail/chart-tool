@@ -12,44 +12,38 @@ var runSequence = require('run-sequence'),
 gulp.task('documentation', ['_jsdoc']);
 gulp.task('set-version', ["_set-version"]);
 
-gulp.task('lib-serve', function(callback) {
+gulp.task('lib-serve', function(done) {
   runSequence('_set-version',
-    '_watch',
     '_browsersync',
-    '_webpack-build-dev',
-    callback);
+    done);
 });
 
-gulp.task('meteor-serve', function(callback) {
+gulp.task('meteor-serve', function(done) {
   runSequence('_set-version',
-    '_watch',
     '_meteor-dev',
-    '_browsersync',
-    callback);
+    '_watch',
+    done);
 });
 
-gulp.task('meteor-build', function(callback) {
+gulp.task('meteor-build', function(done) {
   runSequence('_set-version',
-    '_webpack-build',
+    '_js-build',
     '_scss',
     '_clean-meteor',
     '_meteor-build',
-    callback);
+    done);
 });
 
-gulp.task('lib-build', function(callback) {
+gulp.task('lib-build', function(done) {
   runSequence('_set-version',
-    '_clean-lib',
-    '_webpack-build',
+    '_js-build',
     '_scss-build',
-    callback);
+    done);
 });
 
-gulp.task('default', function(callback) {
+gulp.task('default', function(done) {
   runSequence('_set-version',
-    '_webpack-build-dev',
     '_browsersync',
     '_meteor-dev',
-    '_watch',
-    callback);
+    done);
 });

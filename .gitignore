@@ -100,7 +100,6 @@ sftp-config.json
 .sass-cache/
 *.css.map
 
-
 ### Custom NPM repository ###
 .npmrc
 

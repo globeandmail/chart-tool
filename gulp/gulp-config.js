@@ -1,5 +1,3 @@
-var p = require("../package.json");
-
 var libPath           = "./src",
     libScripts        = libPath + "/js"
     libStylesheets    = libPath + "/styles",
@@ -10,14 +8,14 @@ var libPath           = "./src",
     browserSyncPort   = 3030,
     browserSyncUIPort = 3060,
 
-    buildPath         = "./dist/" + p.version + "-" + p.buildVer,
+    buildPath         = "./dist/" + require("../package.json").version + "-" + require("../package.json").buildVer,
     buildPathDev      = "./dist/dev",
     buildJsFilename   = "bundle",
     buildCssFilename  = "bundle",
 
     meteorPath        = "./meteor",
-    meteorBundle      = meteorPath + "/lib/charts/scripts",
-    meteorSettings    = meteorPath + "/lib/config/settings.js",
+    meteorBundle      = meteorPath + "/lib/chart-tool/scripts",
+    meteorSettings    = meteorBundle + "/settings.js",
     meteorBuildPath   = "." + buildPath + "/meteor",
 
 module.exports = {

@@ -20,7 +20,8 @@
     "jsdoc": "^3.3.2",
     "json-loader": "^0.5.3",
     "run-sequence": "^1.1.4",
-    "webpack": "^1.10.0",
+    "webpack": "^1.12.14",
+    "webpack-stream": "^3.1.0",
     "yargs": "^3.15.0"
   },
   "scripts": {
@@ -41,15 +42,19 @@
     "type": "git",
     "url": "git@github.com:globeandmail/chart-tool.git"
   },
-  "contributors": [{
-    "author": "Tom Cardoso",
-    "email": "tcardoso@globeandmail.com"
-  }, {
-    "author": "Jeremy Agius",
-    "email": "jagius@globeandmail.com"
-  }, {
-    "author": "Michael Pereira",
-    "email": "mpereira@globeandmail.com"
-  }],
+  "contributors": [
+    {
+      "author": "Tom Cardoso",
+      "email": "tcardoso@globeandmail.com"
+    },
+    {
+      "author": "Jeremy Agius",
+      "email": "jagius@globeandmail.com"
+    },
+    {
+      "author": "Michael Pereira",
+      "email": "mpereira@globeandmail.com"
+    }
+  ],
   "license": "MIT"
 }
