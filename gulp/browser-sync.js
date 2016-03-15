@@ -19,6 +19,15 @@ gulp.task('_browsersync', ["_browserSyncWatch"], function() {
     ghostMode: false
   });
 
-  gulp.watch([gulpConfig.libScripts + "/**/*.js", gulpConfig.libStylesheets + "/**/*.scss"], ["_browserSyncWatch"]);
+  gulp.watch(
+    [
+      gulpConfig.libScripts + "/**/*.js",
+      gulpConfig.customPath + "/**/*.js",
+      gulpConfig.customPath + "/**/*.json",
+      gulpConfig.libStylesheets + "/**/*.scss",
+      gulpConfig.customPath + "/**/*.scss"
+    ],
+    ["_browserSyncWatch"]
+  );
 
 });
