@@ -29,8 +29,8 @@ app_settings = {
 
   source_suffix: config.source.suffix,
 
-  primary: "News & ROB",
-  alternate: "Globe Investor",
+  primary: "Primary",
+  alternate: "Alternate",
 
   help: "https://github.com/globeandmail/chart-tool/tree/master/README.md",
 

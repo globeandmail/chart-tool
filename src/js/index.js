@@ -200,8 +200,8 @@
 
   } else {
 
-    var m = Meteor || undefined,
-        isServer = m.isServer || undefined;
+    var Meteor = Meteor || {},
+        isServer = Meteor.isServer || undefined;
 
     if (!isServer) {
       console.error("Chart Tool: no D3 library detected.");
