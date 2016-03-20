@@ -1,7 +1,5 @@
 'use strict';
 
-var hasItselfAsExport = require("../meta");
-
 describe('Helpers', function() {
 
   jest.unmock('../../src/js/helpers/helpers');

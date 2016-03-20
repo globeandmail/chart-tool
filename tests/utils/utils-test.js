@@ -1,7 +1,5 @@
 'use strict';
 
-var hasItselfAsExport = require("../meta");
-
 describe('Utils', function() {
 
   jest.unmock('../../src/js/utils/utils');
