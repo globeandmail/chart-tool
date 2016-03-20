@@ -1,52 +1,49 @@
 <template name="chartArchive">
 
-  <aside class="charts-archive_aside">
-
-    <div class="charts-archive_aside-fixed">
-      <div class="charts-archive_aside-wrapper">
-        <h2>Filters</h2>
-        <div class="edit-box">
-          <h3>Search</h3>
-          <div class="unit-edit charts-archive_search">
-            <input class="charts-archive_search-field input-search" type="text" placeholder="Search by keyword…" value="{{ searchValue }}">
-          </div>
+  <aside class="charts-archive_aside-wrapper">
+    <div class="charts-archive_aside">
+      <h2>Filters</h2>
+      <div class="edit-box">
+        <h3>Search</h3>
+        <div class="unit-edit charts-archive_search">
+          <input class="charts-archive_search-field input-search" type="text" placeholder="Search by keyword…" value="{{ searchValue }}">
         </div>
-        <div class="edit-box">
-          <h3>Tags</h3>
-          <div class="unit-edit charts-archive_tags">
-            <select id="archive-tags-select"></select>
-          </div>
+      </div>
+      <div class="edit-box">
+        <h3>Tags</h3>
+        <div class="unit-edit charts-archive_tags">
+          <select id="archive-tags-select"></select>
         </div>
-        <div class="edit-box">
-          <h3>Chart type</h3>
-          <div class="unit-edit charts-archive_type">
-            <ul>
-              <li>
-                <input id="lineType" type="checkbox" name="chart-type-line" value="line" class="input-checkbox" checked="{{ typeChecked 'line' }}">
-                <label for="lineType">Line</label>
-              </li>
-              <li>
-                <input id="multilineType" type="checkbox" name="chart-type-multiline" value="multiline" class="input-checkbox" checked="{{ typeChecked 'multiline' }}">
-                <label for="multilineType">Multiline</label>
-              </li>
-              <li>
-                <input id="areaType" type="checkbox" name="chart-type-area" value="area" class="input-checkbox" checked="{{ typeChecked 'area' }}">
-                <label for="areaType">Area</label>
-              </li>
-              <li>
-                <input id="columnType" type="checkbox" name="chart-type-column" value="column" class="input-checkbox" checked="{{ typeChecked 'column' }}">
-                <label for="columnType">Column</label>
-              </li>
-              <li>
-                <input id="barType" type="checkbox" name="chart-type-bar" value="bar" class="input-checkbox" checked="{{ typeChecked 'bar' }}">
-                <label for="barType">Bar</label>
-              </li>
-              <li>
-                <input id="streamgraphType" type="checkbox" name="chart-type-streamgraph" value="streamgraph" class="input-checkbox" checked="{{ typeChecked 'streamgraph' }}">
-                <label for="streamgraphType">Streamgraph</label>
-              </li>
-            </ul>
-          </div>
+      </div>
+      <div class="edit-box">
+        <h3>Chart type</h3>
+        <div class="unit-edit charts-archive_type">
+          <ul>
+            <li>
+              <input id="lineType" type="checkbox" name="chart-type-line" value="line" class="input-checkbox" checked="{{ typeChecked 'line' }}">
+              <label for="lineType">Line</label>
+            </li>
+            <li>
+              <input id="multilineType" type="checkbox" name="chart-type-multiline" value="multiline" class="input-checkbox" checked="{{ typeChecked 'multiline' }}">
+              <label for="multilineType">Multiline</label>
+            </li>
+            <li>
+              <input id="areaType" type="checkbox" name="chart-type-area" value="area" class="input-checkbox" checked="{{ typeChecked 'area' }}">
+              <label for="areaType">Area</label>
+            </li>
+            <li>
+              <input id="columnType" type="checkbox" name="chart-type-column" value="column" class="input-checkbox" checked="{{ typeChecked 'column' }}">
+              <label for="columnType">Column</label>
+            </li>
+            <li>
+              <input id="barType" type="checkbox" name="chart-type-bar" value="bar" class="input-checkbox" checked="{{ typeChecked 'bar' }}">
+              <label for="barType">Bar</label>
+            </li>
+            <li>
+              <input id="streamgraphType" type="checkbox" name="chart-type-streamgraph" value="streamgraph" class="input-checkbox" checked="{{ typeChecked 'streamgraph' }}">
+              <label for="streamgraphType">Streamgraph</label>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

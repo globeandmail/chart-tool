@@ -3,27 +3,22 @@
 .charts-archive {
   @include outer-container;
   margin-top: 3em;
+  position: relative;
 }
 
+.charts-archive_aside-wrapper {
+  position: fixed;
+  @include outer-container;
+  @include span-columns(1.9 of 12);
+}
+
+
 .charts-archive_aside {
-  @include span-columns(2.5 of 12);
-  position: relative;
+  margin-top: 35px;
   h2 {
     @include interface-font-bold;
     margin-bottom: 0.4em;
   }
-}
-
-.charts-archive_aside-fixed {
-  position: fixed;
-  margin-top: 35px;
-  @include outer-container;
-  width: 100%;
-  z-index: -1;
-}
-
-.charts-archive_aside-wrapper {
-  @include span-columns(2.5 of 12);
 }
 
 .charts-archive_search-field {
