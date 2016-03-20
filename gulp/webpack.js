@@ -35,8 +35,8 @@ gulp.task("_move-d3", function() {
 gulp.task("_webpack-build", function() {
   return gulp.src(gulpConfig.libScripts + "/index.js")
     .pipe(webpack(webpackConfig.production), null, function(err, stats) {
-      if (err) { throw new gutil.PluginError("_webpack-build-dev", err); }
-      gutil.log("[_webpack-build-dev]", stats.toString({ colors: true }));
+      if (err) { throw new gutil.PluginError("_webpack-build", err); }
+      gutil.log("[_webpack-build]", stats.toString({ colors: true }));
     })
     .pipe(gulp.dest(gulpConfig.buildPath))
     .pipe(gulp.dest(gulpConfig.meteorBundle));
