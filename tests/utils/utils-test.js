@@ -62,6 +62,46 @@ describe('Utils', function() {
 
     var clearChart = Utils.clearChart;
 
+    it('clears all svgs within a container', function() {
+
+      document.body.innerHTML =
+        '<div class="container">' +
+        ' <svg class="svg1"></svg>' +
+        ' <div class="div1"></div>' +
+        ' <svg class="svg2"></svg>' +
+        ' <div class="div2"></div>' +
+        '</div>';
+
+      var container = document.querySelector(".container");
+
+      expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);
+
+      clearChart(".container");
+
+      expect(container.querySelectorAll("svg").length).toBe(0);
+
+    });
+
+    it('clears all divs within a container', function() {
+
+      document.body.innerHTML =
+        '<div class="container">' +
+        ' <svg class="svg1"></svg>' +
+        ' <div class="div1"></div>' +
+        ' <svg class="svg2"></svg>' +
+        ' <div class="div2"></div>' +
+        '</div>';
+
+      var container = document.querySelector(".container");
+
+      expect(container.querySelectorAll("div").length).toBeGreaterThan(0);
+
+      clearChart(".container");
+
+      expect(container.querySelectorAll("div").length).toBe(0);
+
+    });
+
   });
 
   describe('clearObj', function() {
@@ -136,6 +176,18 @@ describe('Utils', function() {
     });
 
     var getBounding = Utils.getBounding;
+
+    it('returns the getBoundingClientRect() dimension', function() {
+
+      document.body.innerHTML =
+        '<div class="container">' +
+        ' <div class="box" style="width: 20px; height: 50px;"></div>' +
+        '</div>';
+
+      expect(getBounding(".box", "width")).toBe(20);
+      expect(getBounding(".box", "height")).toBe(50);
+
+    });
 
   });
 
