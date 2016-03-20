@@ -8,21 +8,22 @@ function performSearch(e) {
 
   archiveFilters.filters.search = input;
   Session.set("archiveFilters", archiveFilters);
-  setQueryUrl("search", input);
+  setQueryUrl(archiveFilters.filters);
 }
 
-function setQueryUrl(type, value) {
-  var query = Router.current().params.query;
+function setQueryUrl(filters) {
 
   var queryArr = [];
 
-  for (prop in query) {
-    if (prop !== type) {
-      queryArr.push(prop + "=" + query[prop])
+  for (prop in filters) {
+    if (Array.isArray(filters[prop])) {
+      if (filters[prop].length) {
+        queryArr.push(prop + "=" + filters[prop].join(","));
+      }
+    } else if (filters[prop] !== undefined && filters[prop] !== "") {
+      queryArr.push(prop + "=" + filters[prop]);
     }
   }
-
-  if (value) { queryArr.push(type + "=" + value); }
 
   var newUrl = Router.current().route.path({},
     { query: queryArr.join('&') },
@@ -85,34 +86,29 @@ Template.chartArchive.events({
   },
   "blur .charts-archive_search-field": function(event) {
     performSearch(event);
-    if (event.target.value !== "") {
-      setQueryUrl("search", event.target.value);
-    } else {
-      setQueryUrl("search", undefined);
-    }
   },
   "change .charts-archive_count-limit": function(event) {
-    var params = Session.get("archiveFilters"),
+    var archiveFilters = Session.get("archiveFilters"),
         limitVal = parseInt(event.target.value);
-    params.limit = limitVal;
-    Session.set("archiveFilters", params);
-    setQueryUrl("limit", limitVal);
+    archiveFilters.limit = limitVal;
+    Session.set("archiveFilters", archiveFilters);
+    setQueryUrl(archiveFilters.limit);
   },
   "click .input-checkbox": function() {
-    var params = Session.get("archiveFilters"),
+    var archiveFilters = Session.get("archiveFilters"),
         typeValue = event.target.value;
 
-    var index = params.filters.types.indexOf(typeValue);
+    var index = archiveFilters.filters.types.indexOf(typeValue);
 
     if (index > -1) {
-      params.filters.types.splice(index, 1);
+      archiveFilters.filters.types.splice(index, 1);
     } else {
-      params.filters.types.push(typeValue);
+      archiveFilters.filters.types.push(typeValue);
     }
 
-    Session.set("archiveFilters", params);
+    Session.set("archiveFilters", archiveFilters);
 
-    setQueryUrl("types", params.filters.types.join(","));
+    setQueryUrl(archiveFilters.filters);
 
   },
   "click .edit-box h3": function(event) {
@@ -158,7 +154,7 @@ Template.chartArchive.rendered = function() {
 
         Session.set("archiveFilters", archiveFilters);
 
-        setQueryUrl("tags", archiveFilters.filters.tags.join(","));
+        setQueryUrl(archiveFilters.filters);
       },
       onItemRemove: function(value, item) {
 
@@ -169,7 +165,7 @@ Template.chartArchive.rendered = function() {
 
         Session.set("archiveFilters", archiveFilters);
 
-        setQueryUrl("tags", archiveFilters.filters.tags.join(","));
+        setQueryUrl(archiveFilters.filters);
       }
     })[0].reactiveSelectize;
 
