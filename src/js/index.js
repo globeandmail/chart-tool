@@ -1,6 +1,5 @@
 /**
- * Chart Tool.
- * @version 1.1.0
+ * Chart Tool
  * @author Jeremy Agius <jagius@globeandmail.com>
  * @author Tom Cardoso <tcardoso@globeandmail.com>
  * @author Michael Pereira <mpereira@globeandmail.com>
@@ -201,7 +200,10 @@
 
   } else {
 
-    if (!(root.Meteor && root.Meteor.isServer)) {
+    var Meteor = Meteor || {},
+        isServer = Meteor.isServer || undefined;
+
+    if (!isServer) {
       console.error("Chart Tool: no D3 library detected.");
     }
 

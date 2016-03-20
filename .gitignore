@@ -100,15 +100,12 @@ sftp-config.json
 .sass-cache/
 *.css.map
 
-
 ### Custom NPM repository ###
 .npmrc
 
-
 dist/
 
-meteor/lib/charts/
-meteor/lib/config/
+meteor/lib/chart-tool/
 
 src/styles/build/
 

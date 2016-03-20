@@ -2,13 +2,13 @@ function timeSince(timeStamp) {
   var now = new Date(),
       secondsPast = (now.getTime() - timeStamp.getTime()) / 1000;
   if (secondsPast < 60) {
-    return parseInt(secondsPast) + ' seconds';
+    return parseInt(secondsPast) + ' seconds ago';
   }
   if (secondsPast < 3600) {
-    return parseInt(secondsPast / 60) + ' minutes';
+    return parseInt(secondsPast / 60) + ' minutes ago';
   }
   if (secondsPast <= 86400) {
-    return parseInt(secondsPast / 3600) + ' hours';
+    return parseInt(secondsPast / 3600) + ' hours ago';
   }
   if (secondsPast > 86400) {
       var day = timeStamp.getDate();
@@ -63,6 +63,8 @@ Template.chartShow.rendered = function() {
     var data = Router.current() && Router.current().data();
 
     if (data) {
+      data.options.share_data = false;
+      data.options.social = false;
       drawChart(".chart-show_preview", data);
     }
 

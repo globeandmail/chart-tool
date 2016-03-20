@@ -4,12 +4,14 @@ var path = require("path"),
 
 var dev = {
   cache: true,
+  debug: true,
+  watch: true,
+  devtool: "source-map",
   entry: {
     bundle: gulpConfig.libScripts + "/index",
     meteorSettings: gulpConfig.customPath + "/meteor-config"
   },
   output: {
-    path: gulpConfig.buildPathDev,
     filename: "[name].js"
   },
   module: {
@@ -27,13 +29,12 @@ var dev = {
 };
 
 var prod = {
-  cache: true,
+  cache: false,
   entry: {
     bundle: gulpConfig.libScripts + "/index",
     meteorSettings: gulpConfig.customPath + "/meteor-config"
   },
   output: {
-    path: gulpConfig.buildPath,
     filename: "[name].min.js"
   },
   module: {
@@ -45,7 +46,20 @@ var prod = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
+      s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET_PROD)
+    }),
+    new webpack.DefinePlugin({
+      "process.env": {
+        // This has effect on the react lib size
+        "NODE_ENV": JSON.stringify("production")
+      }
+    }),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        screw_ie8: true,
+        warnings: true
+      }
     })
   ]
 };

@@ -15,7 +15,6 @@ function bisector(data, keyVal, stacked, index) {
     var bisect = d3.bisector(function(d) { return d.key; }).left;
     return bisect(data, keyVal);
   }
-
 }
 
 function cursorPos(overlay) {

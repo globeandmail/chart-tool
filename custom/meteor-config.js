@@ -1,9 +1,8 @@
-var config = require("json!./chart-tool-config.json"),
-    p = require("json!../package.json");
+var config = require("json!./chart-tool-config.json");
 
-app_version = p.version;
-app_build = p.buildVer;
-app_name = p.name;
+app_version = require("json!../package.json").version;
+app_build = require("json!../package.json").buildVer;
+app_name = require("json!../package.json").name;
 prefix = config.prefix;
 
 app_settings = {
@@ -157,7 +156,7 @@ app_settings = {
       }
     },
     y_axis: {
-      paddingRight: 6
+      paddingRight: 5
     },
     margin: {
       top: 7,

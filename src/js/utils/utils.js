@@ -224,7 +224,9 @@ function getThumbnailPath(obj) {
 
   imgSettings.bucket = require("../config/env");
 
-  return "https://s3.amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + obj.data.id + "/" + imgSettings.filename + "." + imgSettings.extension;
+  var id = obj.id.replace(obj.prefix, "");
+
+  return "https://s3.amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + id + "/" + imgSettings.filename + "." + imgSettings.extension;
 }
 
 /**
