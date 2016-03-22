@@ -509,24 +509,28 @@ function dropTicks(selection, opts) {
       to = opts.to || selection[0].length;
 
   for (var j = from; j < to; j++) {
-    var c = selection[0][j],
-        n = selection[0][j+1];
 
-    if (!c || !n || !c.getBoundingClientRect || !n.getBoundingClientRect)
-      continue;
+    var c = selection[0][j], // current selection
+        n = selection[0][j + 1]; // next selection
+
+    if (!c || !n || !c.getBoundingClientRect || !n.getBoundingClientRect) { continue; }
 
     while ((c.getBoundingClientRect().right + tolerance) > n.getBoundingClientRect().left) {
 
-      if ((d3.select(n).data()[0] === selection.data()[to] )) {
+      if (d3.select(n).data()[0] === selection.data()[to]) {
         d3.select(c).remove();
       } else {
         d3.select(n).remove();
       }
+
       j++;
-      n = selection[0][j+1];
-      if (!n)
-        break;
+
+      n = selection[0][j + 1];
+
+      if (!n) { break; }
+
     }
+
   }
 
 }
@@ -721,13 +725,22 @@ function tickFinderY(scale, tickCount, tickSettings) {
 
 function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
 
+  dropRedundantTicks(axisNode, ctx);
+
+  // dropRedundantTicks has modified the selection, so we need to reselect
+  // to get a proper idea of what's still available
+  var newSelection = axisNode.selectAll(".tick");
+
   var ticks = scale.domain();
 
+  // array for any "major ticks", i.e. ticks with a change in context
+  // one level up. i.e., a "months" context set of ticks with a change in the year,
+  // or "days" context ticks with a change in month or year
   var majorTicks = [];
 
   var prevYear, prevMonth, prevDate, dYear, dMonth, dDate;
 
-  selection.each(function(d) {
+  newSelection.each(function(d) {
     switch (ctx) {
       case "years":
       case "months":
@@ -757,30 +770,31 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
     }
   });
 
-  dropRedundantTicks(axisNode, ctx);
-
   var t0, tn;
 
-  for (var i = 0; i < majorTicks.length + 1; i++) {
+  if (majorTicks.length > 1) {
 
-    if (i === 0) { // from t0 to m0
-      t0 = 0;
-      tn = ticks.indexOf(majorTicks[0]);
-    } else if (i === (majorTicks.length)) { // from mn to tn
-      t0 = ticks.indexOf(majorTicks[i - 1]);
-      tn = ticks.length - 1;
-    } else { // from m0 to mn
-      t0 = ticks.indexOf(majorTicks[i - 1]);
-      tn = ticks.indexOf(majorTicks[i]);
-    }
+    for (var i = 0; i < majorTicks.length + 1; i++) {
 
-    if (!!(tn - t0)) {
-      dropTicks(selection, {
-        ticks: ticks,
-        from: t0,
-        to: tn,
-        tolerance: tolerance
-      });
+      if (i === 0) { // from t0 to m0
+        t0 = 0;
+        tn = ticks.indexOf(majorTicks[0]);
+      } else if (i === (majorTicks.length)) { // from mn to tn
+        t0 = ticks.indexOf(majorTicks[i - 1]);
+        tn = ticks.length - 1;
+      } else { // from m0 to mn
+        t0 = ticks.indexOf(majorTicks[i - 1]);
+        tn = ticks.indexOf(majorTicks[i]);
+      }
+
+      if (!!(tn - t0)) {
+        dropTicks(newSelection, {
+          from: t0,
+          to: tn,
+          tolerance: tolerance
+        });
+      }
+
     }
 
   }
