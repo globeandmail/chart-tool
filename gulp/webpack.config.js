@@ -6,7 +6,7 @@ var dev = {
   cache: true,
   debug: true,
   watch: true,
-  devtool: "source-map",
+  devtool: "inline-source-map",
   entry: {
     bundle: gulpConfig.libScripts + "/index",
     meteorSettings: gulpConfig.customPath + "/meteor-config"
