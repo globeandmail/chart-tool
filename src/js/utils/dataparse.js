@@ -30,9 +30,9 @@ function inputDate(scaleType, defaultFormat, declaredFormat) {
  */
 function parse(csv, inputDateFormat, index, stacked, type) {
 
-  var keys,
-      val,
-      firstVal;
+  var keys, val;
+
+  var firstVals = {};
 
   var data = d3.csv.parse(csv, function(d, i) {
 
@@ -59,14 +59,14 @@ function parse(csv, inputDateFormat, index, stacked, type) {
 
       if (index) {
 
-        if (i === 0) {
-          firstVal = d[key];
+        if (i === 0 && !firstVals[key]) {
+          firstVals[key] = d[key];
         }
 
         if (index === "0") {
-          val = ((d[key] / firstVal) - 1) * 100;
+          val = ((d[key] / firstVals[key]) - 1) * 100;
         } else {
-          val = (d[key] / firstVal) * index;
+          val = (d[key] / firstVals[key]) * index;
         }
 
       } else {
