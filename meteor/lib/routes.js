@@ -191,37 +191,6 @@ Router.route('/chart/pdf/:_id', {
   }
 });
 
-// Router.route('png', {
-//   where: 'server',
-//   name: "chart.download.png",
-//   path: "/chart/png/download/:_id/:width/:height/:scale?",
-//   action: function() {
-//     var data = Charts.findOne({ _id: this.params._id });
-
-//     var options = {
-//       scale: this.params.scale || 1,
-//       descriptor: "web"
-//     };
-
-//     data.exportable = {};
-//     data.exportable.width = this.params.width;
-//     data.exportable.height = this.params.height;
-//     data.exportable.type = "png";
-
-//     var headers = {
-//       'Content-Type': 'image/png',
-//       'Content-Disposition': "attachment; filename=" + data.slug + "-web-" + data.exportable.width + "x" + data.exportable.height + ".png"
-//     };
-
-//     var url = this.request.headers.origin + "/chart/png/" + data._id + "/" + this.params.width + "/" + this.params.height + "/" + (this.params.scale || 1);
-
-//     this.response.writeHead(200, headers);
-
-//     // return this.response;
-
-//   }
-// });
-
 // wkhtmltopdf implementation
 Router.route('pdf', {
   where: 'server',

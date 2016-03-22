@@ -7,11 +7,22 @@
     background: none;
   }
 
-  .tip,
-  .cursor,
-  .focus,
-  .overlay {
+  .#{$prefix}bg {
     display: none;
+    fill: none;
+    stroke: none;
+  }
+
+  .#{$prefix}tip,
+  .#{$prefix}tip_overlay,
+  .#{$prefix}tip_box,
+  .#{$prefix}tip_rect,
+  .#{$prefix}tip_text,
+  .#{$prefix}tip_text-date,
+  .#{$prefix}tip_line-x {
+    display: none;
+    fill: none;
+    stroke: none;
   }
 
   .#{$prefix}chart_svg {
