@@ -26,8 +26,22 @@ function cursorPos(overlay) {
 
 function getTipData(obj, cursor) {
 
-  var xScale = obj.rendered.plot.xScaleObj.scale,
-      xVal = xScale.invert(cursor.x);
+  var xScaleObj = obj.rendered.plot.xScaleObj,
+      xScale = xScaleObj.scale,
+      scaleType = xScaleObj.obj.type;
+
+  var xVal;
+
+  if (scaleType === "ordinal-time" || scaleType === "ordinal") {
+
+    var ordinalBisection = d3.bisector(function(d) { return d; }).left,
+        rangePos = ordinalBisection(xScale.range(), cursor.x);
+
+    xVal = xScale.domain()[rangePos];
+
+  } else {
+    xVal = xScale.invert(cursor.x);
+  }
 
   var tipData;
 
