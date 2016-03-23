@@ -16,12 +16,12 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
       targetChild = options.selector,
       outputLocation = options.output;
 
-    d3.select(outputLocation).selectAll('#output').remove();
-    var outputContainer = 'output';
+    d3.select(outputLocation).selectAll('.svg-output').remove();
+    var outputContainer = 'svg-output';
     var temp_obj = d3.select(outputLocation)
       .append('div')
       .attr('xmlns', 'http://www.w3.org/1999/xhtml')
-      .attr('id', outputContainer);
+      .attr('class', outputContainer);
 
     var copy = d3.select(targetContainer).html();
     canvasWidth = d3.select(targetContainer).style('display', 'inline-block').node().getBoundingClientRect().width;
@@ -79,7 +79,7 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
         canvasTarget = options.output,
         scale = options.scale || 1;
 
-    d3.selectAll('#theCanvas').remove();
+    d3.selectAll('.canvas-output').remove();
     var svgs = d3.select(outputTarget).select('div').selectAll("svg")[0];
     var canvasHeight = 0;
     var currentHeight = 0;
@@ -88,12 +88,12 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
       canvasHeight += d3.select(svgs[i]).node().getBoundingClientRect().height;
     }
 
-    var theCanvas = d3.select(canvasTarget).append('canvas')
-      .attr('id', 'theCanvas')
+    var canvasSelection = d3.select(canvasTarget).append('canvas')
+      .attr('class', 'canvas-output')
       .attr('width', canvasWidth * scale)
       .attr('height', canvasHeight * scale);
 
-    var canvas = theCanvas.node(),
+    var canvas = canvasSelection.node(),
         context = canvas.getContext("2d");
 
     context.scale(scale, scale);
@@ -153,7 +153,7 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
         a.parentNode.removeChild(a);
       });
       a.click();
-      d3.selectAll('#theCanvas').remove();
+      d3.selectAll('.canvas-output').remove();
     })
 
   }

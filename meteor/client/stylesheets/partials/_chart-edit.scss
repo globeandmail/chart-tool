@@ -353,6 +353,10 @@ select {
   }
 }
 
+.svg-output > svg {
+  display: block;
+}
+
 .selectize-input {
   font-size: 0.8em;
   font-family: "Monaco", "Lucida Console", monospace;

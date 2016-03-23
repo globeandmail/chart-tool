@@ -222,8 +222,7 @@ Template.chartEditAside.events({
 
   "change .input-index": function(event) {
     var input = event.target.value;
-    var inputVal = (input === "") ? false : input;
-    updateAndSave("updateIndex", this, inputVal);
+    updateAndSave("updateIndex", this, input);
   },
 
   "blur .input-prefix-x": function(event) {
