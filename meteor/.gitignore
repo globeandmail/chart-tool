@@ -103,3 +103,5 @@ sftp-config.json
 
 ### Custom NPM repository ###
 .npmrc
+
+dist/
