@@ -9,8 +9,6 @@ git checkout -b "deploy-${CURRHASH}"
 
 gulp lib-build
 
-rm .gitignore
-
 git add .
 
 git commit -m "Updating buildpacks, removing gitignore"
