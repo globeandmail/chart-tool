@@ -1,3 +1,4 @@
+# Meteor deployment-specific gitignore file
 # Created by https://www.gitignore.io/api/node,osx,meteorjs,sublimetext,sass
 
 ### Node ###
@@ -102,18 +103,3 @@ sftp-config.json
 
 ### Custom NPM repository ###
 .npmrc
-
-dist/
-
-meteor/lib/chart-tool/
-meteor/.buildpacks
-
-src/styles/build/
-
-bundle.js
-bundle.min.js
-bundle.js.map
-
-meteorSettings.js
-meteorSettings.min.js
-meteorSettings.js.map

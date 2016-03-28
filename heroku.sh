@@ -12,20 +12,20 @@ heroku config:add ROOT_URL=http://chart-tool-demo.herokuapp.com
 
 heroku buildpacks:set 'https://github.com/heroku/heroku-buildpack-multi.git'
 
-echo -n "" > meteor/.buildpacks
-
-echo 'https://github.com/dscout/wkhtmltopdf-buildpack.git' >> meteor/.buildpacks
-echo 'https://github.com/jordansissel/heroku-buildpack-meteor.git' >> meteor/.buildpacks
-
 gulp lib-build
 
-git add .
+rm .gitignore
 
-git commit -m "Updating buildpacks"
+git commit -am "Updating buildpacks, removing gitignore"
 
 git filter-branch -f --prune-empty --subdirectory-filter meteor "deploy-${CURRHASH}"
 
-git commit -m "Deploying ${CURRHASH} to Heroku"
+echo -n "" > .buildpacks
+
+echo 'https://github.com/dscout/wkhtmltopdf-buildpack.git' >> .buildpacks
+echo 'https://github.com/jordansissel/heroku-buildpack-meteor.git' >> .buildpacks
+
+git commit -am "Deploying ${CURRHASH} to Heroku"
 
 git push heroku "deploy-${CURRHASH}":master --force
 
