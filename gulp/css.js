@@ -48,6 +48,8 @@ gulp.task('_scss-build', function() {
     .pipe(sass())
     .pipe(minifyCss({ keepBreaks: false }))
     .pipe(rename(gulpConfig.buildCssFilename + ".min.css"))
+    .pipe(gulp.dest(gulpConfig.meteorPath + '/lib/chart-tool/stylesheets'))
     .pipe(gulp.dest(buildCss))
       .on('error', gutil.log);
+
 });
