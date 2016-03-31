@@ -180,7 +180,7 @@ function timeInterval(data) {
 
   for (var i = 0; i < intervals.length; i++) {
     var intervalCandidate = d3.time[intervals[i].type](d1, d2, intervals[i].step).length;
-    if (intervalCandidate >= dataLength) {
+    if (intervalCandidate >= dataLength - 1) {
       var ret = intervalCandidate;
       break;
     }

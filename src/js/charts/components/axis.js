@@ -741,11 +741,12 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
   var prevYear, prevMonth, prevDate, dYear, dMonth, dDate;
 
   newSelection.each(function(d) {
+    var currSel = d3.select(this);
     switch (ctx) {
       case "years":
       case "months":
         dYear = d.getFullYear();
-        if (dYear !== prevYear) { majorTicks.push(d); }
+        if (dYear !== prevYear) { majorTicks.push(currSel); }
         prevYear = d.getFullYear();
         break;
       case "weeks":
@@ -753,18 +754,18 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
         dYear = d.getFullYear();
         dMonth = d.getMonth();
         if ((dMonth !== prevMonth) && (dYear !== prevYear)) {
-          majorTicks.push(d);
+          majorTicks.push(currSel);
         } else if (dMonth !== prevMonth) {
-          majorTicks.push(d);
+          majorTicks.push(currSel);
         } else if (dYear !== prevYear) {
-          majorTicks.push(d);
+          majorTicks.push(currSel);
         }
         prevMonth = d.getMonth();
         prevYear = d.getFullYear();
         break;
       case "hours":
         dDate = d.getDate();
-        if (dDate !== prevDate) { majorTicks.push(d); }
+        if (dDate !== prevDate) { majorTicks.push(currSel); }
         prevDate = dDate;
         break;
     }
