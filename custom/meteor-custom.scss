@@ -57,6 +57,12 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     color: $black;
   }
 
+  .#{$prefix}chart_qualifier-bar {
+    display: block;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
   .#{$prefix}chart_source {
     font-size: $six-five-pt;
     padding-top: 4px;
