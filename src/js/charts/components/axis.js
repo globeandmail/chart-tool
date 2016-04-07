@@ -738,8 +738,6 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
   // to get a proper idea of what's still available
   var newSelection = axisNode.selectAll(".tick");
 
-  var ticks = scale.domain();
-
   // array for any "major ticks", i.e. ticks with a change in context
   // one level up. i.e., a "months" context set of ticks with a change in the year,
   // or "days" context ticks with a change in month or year
