@@ -81,8 +81,20 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
 
 function appendYAxis(axisGroup, obj, scale, axis, axisName) {
 
-  var axisObj = obj[axisName],
-      axisSettings;
+  axisGroup.attr("transform", "translate(0,0)");
+
+  var axisNode = axisGroup.append("g")
+    .attr("class", obj.prefix + "y-axis");
+
+  drawYAxis(obj, axis, axisNode);
+
+}
+
+function drawYAxis(obj, axis, axisNode) {
+
+  var axisSettings;
+
+  var axisObj = obj["yAxis"];
 
   if (obj.exportable && obj.exportable.y_axis) {
     axisSettings = obj.exportable.y_axis;
@@ -92,13 +104,9 @@ function appendYAxis(axisGroup, obj, scale, axis, axisName) {
 
   obj.dimensions.yAxisPaddingRight = axisSettings.paddingRight;
 
-  axisGroup
-    .attr("transform", "translate(0,0)");
+  axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
 
-  var axisNode = axisGroup.append("g")
-    .attr("class", obj.prefix + "y-axis");
-
-  axis.tickValues(tickFinderY(scale, axisObj.ticks, axisSettings));
+  axis.tickValues(tickFinderY(axis.scale(), axisObj.ticks, axisSettings));
 
   axisNode.call(axis);
 
@@ -109,9 +117,7 @@ function appendYAxis(axisGroup, obj, scale, axis, axisName) {
   axisNode.selectAll(".tick text")
     .attr("transform", "translate(0,0)")
     .call(updateTextY, axisNode, obj, axis, axisObj)
-    .attr({
-      "transform": "translate(" + ( -(obj.dimensions.computedWidth() - obj.dimensions.labelWidth)) + ",0)"
-    });
+    .call(repositionTextY, obj.dimensions, axisObj.textX);
 
   axisNode.selectAll(".tick line")
     .attr({
@@ -473,10 +479,11 @@ function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
 }
 
-function repositionTextY(text, dimensions) {
-  var x = text.attr("x");
-  text.attr("transform", "translate(" + (dimensions.labelWidth - (x - 1)) + ",0)");
-  text.attr("x", (2 * x));
+function repositionTextY(text, dimensions, textX) {
+  text.attr({
+    "transform": "translate(" + (dimensions.labelWidth - textX) + ",0)",
+    "x": 0
+  });
 }
 
 // Clones current text selection and appends
@@ -806,25 +813,9 @@ function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
   // this section is kinda gross, sorry:
   // resets ranges and dimensions, redraws yAxis, redraws xAxis
+  // …then redraws yAxis again if tick wrapping has changed xAxis height
 
-  yAxisObj.axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
-
-  yAxisObj.node
-    .call(yAxisObj.axis);
-
-  var yAxisNode = yAxisObj.node.select("." + obj.prefix + "y-axis");
-  var axisObj = obj["yAxis"];
-
-  yAxisNode.selectAll(".tick text")
-    .attr("transform", "translate(0,0)")
-    .call(updateTextY, yAxisNode, obj, yAxisObj.axis, axisObj)
-    .call(repositionTextY, obj.dimensions);
-
-  yAxisNode.selectAll(".tick line")
-    .attr({
-      "x1": obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-      "x2": obj.dimensions.computedWidth()
-    });
+  drawYAxis(obj, yAxisObj.axis, yAxisObj.node);
 
   var setRangeType = require("./scale").setRangeType,
       setRangeArgs = require("./scale").setRangeArgs;
@@ -838,6 +829,8 @@ function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
   setRangeArgs(xAxisObj.axis.scale(), scaleObj);
 
+  var prevXAxisHeight = obj.dimensions.xAxisHeight;
+
   xAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), "xAxis");
 
   xAxisObj.node
@@ -845,6 +838,10 @@ function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
   if (obj.xAxis.scale !== "ordinal") {
     dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
+  }
+
+  if (prevXAxisHeight !== obj.dimensions.xAxisHeight) {
+    drawYAxis(obj, yAxisObj.axis, yAxisObj.node);
   }
 
 }
@@ -906,6 +903,7 @@ module.exports = {
   determineFormat: determineFormat,
   appendXAxis: appendXAxis,
   appendYAxis: appendYAxis,
+  drawYAxis: drawYAxis,
   timeAxis: timeAxis,
   discreteAxis: discreteAxis,
   ordinalTimeAxis: ordinalTimeAxis,
