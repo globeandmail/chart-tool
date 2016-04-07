@@ -252,7 +252,7 @@ function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
     .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
 
   if (obj.dimensions.computedWidth() > obj.xAxis.widthThreshold) {
-    var ordinalTickPadding = 3;
+    var ordinalTickPadding = 7;
   } else {
     var ordinalTickPadding = 4;
   }
@@ -786,13 +786,13 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
 
       if (i === 0) { // from t0 to m0
         t0 = 0;
-        tn = ticks.indexOf(majorTicks[0]);
+        tn = newSelection.data().indexOf(majorTicks[0].data()[0]);
       } else if (i === (majorTicks.length)) { // from mn to tn
-        t0 = ticks.indexOf(majorTicks[i - 1]);
-        tn = ticks.length - 1;
+        t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
+        tn = newSelection.length - 1;
       } else { // from m0 to mn
-        t0 = ticks.indexOf(majorTicks[i - 1]);
-        tn = ticks.indexOf(majorTicks[i]);
+        t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
+        tn = newSelection.data().indexOf(majorTicks[i].data()[0]);
       }
 
       if (!!(tn - t0)) {
