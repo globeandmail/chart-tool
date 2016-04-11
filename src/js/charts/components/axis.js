@@ -738,71 +738,78 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
   // to get a proper idea of what's still available
   var newSelection = axisNode.selectAll(".tick");
 
-  // array for any "major ticks", i.e. ticks with a change in context
-  // one level up. i.e., a "months" context set of ticks with a change in the year,
-  // or "days" context ticks with a change in month or year
-  var majorTicks = [];
+  // if the context is "years", every tick is a majortick so we can
+  // just pass on the block below
+  if (ctx !== "years") {
 
-  var prevYear, prevMonth, prevDate, dYear, dMonth, dDate;
+    // array for any "major ticks", i.e. ticks with a change in context
+    // one level up. i.e., a "months" context set of ticks with a change in the year,
+    // or "days" context ticks with a change in month or year
+    var majorTicks = [];
 
-  newSelection.each(function(d) {
-    var currSel = d3.select(this);
-    switch (ctx) {
-      case "years":
-      case "months":
-        dYear = d.getFullYear();
-        if (dYear !== prevYear) { majorTicks.push(currSel); }
-        prevYear = d.getFullYear();
-        break;
-      case "weeks":
-      case "days":
-        dYear = d.getFullYear();
-        dMonth = d.getMonth();
-        if ((dMonth !== prevMonth) && (dYear !== prevYear)) {
-          majorTicks.push(currSel);
-        } else if (dMonth !== prevMonth) {
-          majorTicks.push(currSel);
-        } else if (dYear !== prevYear) {
-          majorTicks.push(currSel);
+    var prevYear, prevMonth, prevDate, dYear, dMonth, dDate;
+
+    newSelection.each(function(d) {
+      var currSel = d3.select(this);
+      switch (ctx) {
+        case "months":
+          dYear = d.getFullYear();
+          if (dYear !== prevYear) { majorTicks.push(currSel); }
+          prevYear = d.getFullYear();
+          break;
+        case "weeks":
+        case "days":
+          dYear = d.getFullYear();
+          dMonth = d.getMonth();
+          if ((dMonth !== prevMonth) && (dYear !== prevYear)) {
+            majorTicks.push(currSel);
+          } else if (dMonth !== prevMonth) {
+            majorTicks.push(currSel);
+          } else if (dYear !== prevYear) {
+            majorTicks.push(currSel);
+          }
+          prevMonth = d.getMonth();
+          prevYear = d.getFullYear();
+          break;
+        case "hours":
+          dDate = d.getDate();
+          if (dDate !== prevDate) { majorTicks.push(currSel); }
+          prevDate = dDate;
+          break;
+      }
+    });
+
+    var t0, tn;
+
+    if (majorTicks.length > 1) {
+
+      for (var i = 0; i < majorTicks.length + 1; i++) {
+
+        if (i === 0) { // from t0 to m0
+          t0 = 0;
+          tn = newSelection.data().indexOf(majorTicks[0].data()[0]);
+        } else if (i === (majorTicks.length)) { // from mn to tn
+          t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
+          tn = newSelection.length - 1;
+        } else { // from m0 to mn
+          t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
+          tn = newSelection.data().indexOf(majorTicks[i].data()[0]);
         }
-        prevMonth = d.getMonth();
-        prevYear = d.getFullYear();
-        break;
-      case "hours":
-        dDate = d.getDate();
-        if (dDate !== prevDate) { majorTicks.push(currSel); }
-        prevDate = dDate;
-        break;
-    }
-  });
 
-  var t0, tn;
+        if (!!(tn - t0)) {
+          dropTicks(newSelection, {
+            from: t0,
+            to: tn,
+            tolerance: tolerance
+          });
+        }
 
-  if (majorTicks.length > 1) {
-
-    for (var i = 0; i < majorTicks.length + 1; i++) {
-
-      if (i === 0) { // from t0 to m0
-        t0 = 0;
-        tn = newSelection.data().indexOf(majorTicks[0].data()[0]);
-      } else if (i === (majorTicks.length)) { // from mn to tn
-        t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
-        tn = newSelection.length - 1;
-      } else { // from m0 to mn
-        t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
-        tn = newSelection.data().indexOf(majorTicks[i].data()[0]);
-      }
-
-      if (!!(tn - t0)) {
-        dropTicks(newSelection, {
-          from: t0,
-          to: tn,
-          tolerance: tolerance
-        });
       }
 
     }
 
+  } else {
+    dropTicks(newSelection, { tolerance: tolerance });
   }
 
 }
