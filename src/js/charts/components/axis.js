@@ -726,8 +726,6 @@ function tickFinderY(scale, tickCount, tickSettings) {
       closestArr = null;
     }
 
-    console.log(closestArr);
-
     return scale.ticks(closestArr);
 
   }
