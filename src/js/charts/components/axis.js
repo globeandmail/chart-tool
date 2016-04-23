@@ -52,7 +52,8 @@ function appendXAxis(axisGroup, obj, scale, axis, axisName) {
       axisSettings;
 
   if (obj.exportable && obj.exportable.x_axis) {
-    axisSettings = obj.exportable.x_axis;
+    var extend = require("../../helpers/helpers").extend;
+    axisSettings = extend(axisObj, obj.exportable.x_axis);
   } else {
     axisSettings = axisObj;
   }
@@ -97,7 +98,8 @@ function drawYAxis(obj, axis, axisNode) {
   var axisObj = obj["yAxis"];
 
   if (obj.exportable && obj.exportable.y_axis) {
-    axisSettings = obj.exportable.y_axis;
+    var extend = require("../../helpers/helpers").extend;
+    axisSettings = extend(axisObj, obj.exportable.y_axis);
   } else {
     axisSettings = axisObj;
   }
@@ -723,6 +725,8 @@ function tickFinderY(scale, tickCount, tickSettings) {
     } else {
       closestArr = null;
     }
+
+    console.log(closestArr);
 
     return scale.ticks(closestArr);
 
