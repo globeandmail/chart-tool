@@ -8,7 +8,14 @@ function BarChart(node, obj) {
   // bar chart operating on the y-axis, need to reverse the dataset.
   obj.data.data.reverse();
 
-  var xAxisOffset = 9;
+  var xAxisSettings;
+
+  if (obj.exportable && obj.exportable.x_axis) {
+    var extend = require("../../helpers/helpers").extend;
+    xAxisSettings = extend(obj.xAxis, obj.exportable.x_axis);
+  } else {
+    xAxisSettings = obj.xAxis;
+  }
 
   var xScaleObj = new Scale(obj, "xAxis"),
       xScale = xScaleObj.scale;
@@ -28,14 +35,14 @@ function BarChart(node, obj) {
   var textLengths = [];
 
   xAxisNode.selectAll("text")
-    .attr("y", xAxisOffset)
+    .attr("y", xAxisSettings.barOffset)
     .each(function() {
       textLengths.push(d3.select(this).node().getBoundingClientRect().height);
     });
 
   var tallestText = textLengths.reduce(function(a, b) { return (a > b ? a : b) });
 
-  obj.dimensions.xAxisHeight = tallestText + xAxisOffset;
+  obj.dimensions.xAxisHeight = tallestText + xAxisSettings.barOffset;
 
   xAxisNode.selectAll("g")
     .filter(function(d) { return d; })
@@ -94,12 +101,6 @@ function BarChart(node, obj) {
 
   yAxisGroup.attr("transform", "translate(" + obj.dimensions.labelWidth + ",0)");
 
-  if (obj.exportable && obj.exportable.x_axis) {
-    xAxisSettings = obj.exportable.x_axis;
-  } else {
-    xAxisSettings = obj.xAxis;
-  }
-
   var tickFinderX = axisModule.tickFinderY;
 
   if (obj.xAxis.widthThreshold > obj.dimensions.width) {
@@ -117,7 +118,7 @@ function BarChart(node, obj) {
   xAxisNode.call(xAxis);
 
   xAxisNode.selectAll(".tick text")
-    .attr("y", xAxisOffset)
+    .attr("y", xAxisSettings.barOffset)
     .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
   if (obj.exportable && obj.exportable.dynamicHeight) {
@@ -139,7 +140,7 @@ function BarChart(node, obj) {
     xAxisNode.call(xAxis);
 
     xAxisNode.selectAll(".tick text")
-      .attr("y", xAxisOffset)
+      .attr("y", xAxisSettings.barOffset)
       .call(axisModule.updateTextX, xAxisNode, obj, xAxis, obj.xAxis);
 
   }
