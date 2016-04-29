@@ -78,8 +78,8 @@
     fill: nth($primaryShades, $counter);
   }
 
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle-#{$counter},
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter}  {
+  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter},
+  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter} {
     fill: nth($alternateShades, $counter);
   }
 

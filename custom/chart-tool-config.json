@@ -73,6 +73,7 @@
     "ticksSmall": 4,
     "widthThreshold": 420,
     "dy": 0.7,
+    "barOffset": 9,
     "upper": {
       "tickHeight": 7,
       "textX": 6,

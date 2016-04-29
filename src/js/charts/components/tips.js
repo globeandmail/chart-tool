@@ -120,7 +120,7 @@ function hideTips(tipNodes, obj) {
 
 }
 
-function mouseIdle(tipNodes, obj, timeout) {
+function mouseIdle(tipNodes, obj) {
   return setTimeout(function() {
     hideTips(tipNodes, obj);
   }, obj.tipTimeout);
@@ -170,7 +170,7 @@ function tipsManager(node, obj) {
         .on("mousemove", function() {
           showTips(tipNodes, obj);
           clearTimeout(timeout);
-          timeout = mouseIdle(tipNodes, obj, timeout);
+          timeout = mouseIdle(tipNodes, obj);
           return fns[obj.options.type](tipNodes, innerTipElements, obj);
         });
 
@@ -190,7 +190,7 @@ function tipsManager(node, obj) {
         .on("mouseover", function(d) {
           showTips(tipNodes, obj);
           clearTimeout(timeout);
-          timeout = mouseIdle(tipNodes, obj, timeout);
+          timeout = mouseIdle(tipNodes, obj);
           fns.column(tipNodes, obj, d, this);
         })
         .on("mouseout", function(d) {

@@ -144,6 +144,7 @@ app_settings = {
       ticksSmall: 5,
       dy: 0.7,
       ems: 1.1,
+      barOffset: 5,
       upper: {
         tickHeight: 4,
         textX: 2,

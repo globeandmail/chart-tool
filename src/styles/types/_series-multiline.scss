@@ -40,8 +40,9 @@
     background: $alternate-shade-4;
   }
 
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
+  .#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
     fill: $alternate-shade-4;
   }
 
 }
+
