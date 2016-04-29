@@ -104,18 +104,7 @@ sftp-config.json
 ### Custom NPM repository ###
 .npmrc
 
-
+custom/
 dist/
-
-meteor/lib/charts/
-meteor/lib/config/
-
-src/styles/build/
-
-bundle.js
-bundle.min.js
-bundle.js.map
-
-meteorSettings.js
-meteorSettings.min.js
-meteorSettings.js.map
+src/
+meteor/
