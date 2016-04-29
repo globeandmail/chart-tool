@@ -109,6 +109,11 @@ a {
   text-decoration: none;
   cursor: pointer; }
 
+a:hover {
+  color: #871b17;
+  transition: all .1s;
+}
+
 figure {
   margin: 0;
   padding: 0; }
@@ -168,7 +173,7 @@ h3 {
 .banner nav ul li {
   display: inline-block;
   margin-right: 1em;
-  cursor: pointer;
+  /*cursor: pointer;*/
   height: 50px;
   line-height: 50px;
   transition: border-color 1s;
@@ -177,6 +182,11 @@ h3 {
 
 .banner nav ul li a {
   color: #444; }
+
+.banner nav ul li a:hover {
+  color: #CE2A23;
+  transition: all .1s;
+}
 
 .banner .developer-nav {
   position: absolute;
@@ -197,7 +207,7 @@ h3 {
   background: #F0F0F0;
   text-align: center;
   font-family: 'PrattHeavy';
-  border-bottom: 4px solid #000;
+  border-bottom: 2px solid #000;
   overflow-x: hidden; }
   @media (max-width: 767px) {
     .header {
@@ -345,7 +355,7 @@ strong {
   .faq-list .item-faq a {
     font-size: 1em;
     font-family: 'PrattHeavy';
-    color: #5792AF; }
+    color: #CE2A23; }
   .faq-list .item-faq .answer {
     transition: all .5s;
     position: relative;
