@@ -108,3 +108,7 @@ custom/
 dist/
 src/
 meteor/
+gulp/
+examples/
+lib/
+tutorials/
