@@ -16,7 +16,6 @@ meteorhacks:zones
 tmeasday:presence
 http
 d3js:d3
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -36,3 +35,5 @@ jeremy:selectize
 fourseven:scss
 kevohagan:sweetalert
 harrison:papa-parse
+standard-minifier-css
+standard-minifier-js

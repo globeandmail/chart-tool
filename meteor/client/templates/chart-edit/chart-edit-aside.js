@@ -219,10 +219,34 @@ Template.chartEditAside.events({
       confirmButtonColor: "#fff"
     });
   },
+  "click .help-time-hours-edit": function(event) {
+    sweetAlert({
+      title: "Hours?",
+      text: "Turn on this feature if your data contains timestamps as well as dates. Make sure your selected date format matches that of your data!",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
+  },
+  "click .help-date-calc": function(event) {
+    sweetAlert({
+      title: "Your dates should match?",
+      text: "This shows an example of how your dates should be formatted so Chart Tool can parse them.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
+  },
 
   "change .input-index": function(event) {
     var input = event.target.value;
     updateAndSave("updateIndex", this, input);
+  },
+  "click .help-index-edit": function(event) {
+    sweetAlert({
+      title: "Index?",
+      text: "Scale the first value in each series to this value and show all other values relative to this index.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
   },
 
   "blur .input-prefix-x": function(event) {
@@ -460,13 +484,37 @@ Template.chartEditAside.events({
     if (!input) { input = "auto"; }
     updateAndSave("updateYTicks", this, input);
   },
+  "click .help-y-ticks-edit": function(event) {
+    sweetAlert({
+      title: "Ticks?",
+      text: "Choose how many ticks to display on the Y-axis.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
+  },
   "change .input-checkbox-y-nice": function(event) {
     var val = !this.y_axis.nice;
     updateAndSave("updateYNice", this, val);
   },
+  "click .help-y-nice-edit": function(event) {
+    sweetAlert({
+      title: "Niceify?",
+      text: "Enable this to make the Y-axis end on a nice round value.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
+  },
   "change .input-checkbox-y-rescale": function(event) {
     var val = !this.y_axis.rescale;
     updateAndSave("updateYRescale", this, val);
+  },
+  "click .help-y-rescale-edit": function(event) {
+    sweetAlert({
+      title: "Rescale?",
+      text: "Rescale the Y-axis to add more whitespace at the top of the chart.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
   },
 
   "change .select-interpolation": function(event) {
@@ -505,13 +553,37 @@ Template.chartEditAside.events({
     var val = !this.options.tips;
     updateAndSave("updateTips", this, val);
   },
+  "click .help-tips": function(event) {
+    sweetAlert({
+      title: "Show tips?",
+      text: "Show tooltips with the values of each series when you hover over the chart.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
+  },
   "change .input-checkbox-share-data": function(event) {
     var val = !this.options.share_data;
     updateAndSave("updateShareData", this, val);
   },
+  "click .help-share-data": function(event) {
+    sweetAlert({
+      title: "Share data?",
+      text: "Adds a 'data' button to each chart which can be toggled to present the charts data in a tabular form along with buttons allowing the raw data to be downloaded.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
+  },
   "change .input-checkbox-social": function(event) {
     var val = !this.options.social;
     updateAndSave("updateSocial", this, val);
+  },
+  "click .help-social-sharing": function(event) {
+    sweetAlert({
+      title: "Social sharing?",
+      text: "Adds a 'social' button to each chart which can be toggled to present the user with social sharing options.",
+      type: "info",
+      confirmButtonColor: "#fff"
+    });
   },
   "change .input-checkbox-ordinal": function(event) {
     var currScale = this.x_axis.scale;
