@@ -25,7 +25,7 @@ heroku buildpacks:set 'https://github.com/heroku/heroku-buildpack-multi.git'
 echo -n "" > .buildpacks
 
 echo 'https://github.com/dscout/wkhtmltopdf-buildpack.git' >> .buildpacks
-echo 'https://github.com/jordansissel/heroku-buildpack-meteor.git' >> .buildpacks
+echo 'https://github.com/tomcardoso/heroku-buildpack-meteor.git' >> .buildpacks
 
 git add .
 

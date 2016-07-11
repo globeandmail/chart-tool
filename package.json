@@ -4,9 +4,6 @@
   "buildVer": "0",
   "description": "A responsive charting application",
   "main": "gulpfile.js",
-  "engines": {
-    "node": "4.1.0"
-  },
   "dependencies": {},
   "devDependencies": {
     "browser-sync": "^2.8.0",
