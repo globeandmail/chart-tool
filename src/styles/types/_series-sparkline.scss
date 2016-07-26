@@ -1,0 +1,32 @@
+.#{$prefix}primary.#{$prefix}type_sparkline,
+.#{$prefix}alternate.#{$prefix}type_sparkline {
+
+  .#{$prefix}series_group .#{$prefix}sparkline,
+  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}sparkline {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: $line-stroke-width;
+  }
+
+}
+
+.#{$prefix}primary.#{$prefix}type_sparkline .#{$prefix}series_group .#{$prefix}sparkline.#{$prefix}sparkline-0 {
+  stroke: $primary-color;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}primary.#{$prefix}type_sparkline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}sparkline.#{$prefix}sparkline-#{$counter} {
+    stroke: nth($primaryShades, $counter);
+  }
+}
+
+.#{$prefix}alternate.#{$prefix}type_sparkline .#{$prefix}series_group .#{$prefix}sparkline.#{$prefix}sparkline-0 {
+  stroke: $alternate-color;
+}
+
+@for $counter from 1 through $series-count-max {
+  .#{$prefix}alternate.#{$prefix}type_sparkline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}sparkline.#{$prefix}sparkline-#{$counter} {
+    stroke: nth($alternateShades, $counter);
+  }
+}

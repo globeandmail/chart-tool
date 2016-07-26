@@ -137,11 +137,15 @@ function setDomain(obj, axis) {
       break;
     case "linear":
       var chartType = obj.options.type,
-          forceMaxVal;
+          forceMaxVal,
+          useDataMinimum;
       if (chartType === "area" || chartType === "column" || chartType === "bar") {
         forceMaxVal = true;
       }
-      domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked, forceMaxVal);
+      if (chartType === "sparkline") {
+        useDataMinimum = true;
+      }
+      domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked, forceMaxVal, useDataMinimum);
       break;
     case "ordinal":
     case "ordinal-time":
@@ -164,7 +168,7 @@ function setDateDomain(data, min, max) {
   return [startDate, endDate];
 }
 
-function setNumericalDomain(data, min, max, stacked, forceMaxVal) {
+function setNumericalDomain(data, min, max, stacked, forceMaxVal, useDataMinimum) {
 
   var minVal, maxVal;
   var mArr = [];
@@ -187,6 +191,8 @@ function setNumericalDomain(data, min, max, stacked, forceMaxVal) {
 
   if (min) {
     minVal = min;
+  } else if (useDataMinimum) {
+    minVal = d3.min(mArr);
   } else if (minVal > 0) {
     minVal = 0;
   }

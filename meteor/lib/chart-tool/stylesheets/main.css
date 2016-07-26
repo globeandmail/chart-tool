@@ -640,6 +640,51 @@
 .ct-alternate.ct-type_line .ct-series_group.ct-multiple .ct-line.ct-line-5 {
   stroke: #fee5d9; }
 
+.ct-primary.ct-type_sparkline .ct-series_group .ct-sparkline,
+.ct-primary.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline,
+.ct-alternate.ct-type_sparkline .ct-series_group .ct-sparkline,
+.ct-alternate.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2px; }
+
+.ct-primary.ct-type_sparkline .ct-series_group .ct-sparkline.ct-sparkline-0 {
+  stroke: #08519c; }
+
+.ct-primary.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-1 {
+  stroke: #3182bd; }
+
+.ct-primary.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-2 {
+  stroke: #6baed6; }
+
+.ct-primary.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-3 {
+  stroke: #9ecae1; }
+
+.ct-primary.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-4 {
+  stroke: #c6dbef; }
+
+.ct-primary.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-5 {
+  stroke: #eff3ff; }
+
+.ct-alternate.ct-type_sparkline .ct-series_group .ct-sparkline.ct-sparkline-0 {
+  stroke: #a50f15; }
+
+.ct-alternate.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-1 {
+  stroke: #de2d26; }
+
+.ct-alternate.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-2 {
+  stroke: #fb6a4a; }
+
+.ct-alternate.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-3 {
+  stroke: #fc9272; }
+
+.ct-alternate.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-4 {
+  stroke: #fcbba1; }
+
+.ct-alternate.ct-type_sparkline .ct-series_group.ct-multiple .ct-sparkline.ct-sparkline-5 {
+  stroke: #fee5d9; }
+
 .ct-primary.ct-type_multiline .ct-series_group .ct-multiline,
 .ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline,
 .ct-alternate.ct-type_multiline .ct-series_group .ct-multiline,
