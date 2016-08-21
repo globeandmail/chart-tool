@@ -120,7 +120,12 @@ jsonToCSV = function(objArray, config) {
 
     for (var j = 0; j < array[i].length; j++) {
       if (line != '') { line += opt.delimiter };
-      line += array[i][j];
+      if (array[i][j].match(/,/)) {
+        line += '\"' + array[i][j] + '\"';
+      } else {
+        line += array[i][j];
+      }
+
     }
 
     if (i === array.length - 1) {
