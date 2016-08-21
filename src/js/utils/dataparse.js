@@ -30,28 +30,28 @@ function inputDate(scaleType, defaultFormat, declaredFormat) {
  */
 function parse(csv, inputDateFormat, index, stacked, type) {
 
-  var keys, val;
+  var val;
 
   var firstVals = {};
+
+  var headers = d3.csv.parseRows(csv.match(/^.*$/m)[0])[0];
 
   var data = d3.csv.parse(csv, function(d, i) {
 
     var obj = {};
 
-    if (i === 0) { keys = d3.keys(d); }
-
     if (inputDateFormat) {
       var dateFormat = d3.time.format(inputDateFormat);
-      obj.key = dateFormat.parse(d3.values(d)[0]);
+      obj.key = dateFormat.parse(d[headers[0]]);
     } else {
-      obj.key = d3.values(d)[0];
+      obj.key = d[headers[0]];
     }
 
     obj.series = [];
 
-    for (var j = 1; j < d3.keys(d).length; j++) {
+    for (var j = 1; j < headers.length; j++) {
 
-      var key = d3.keys(d)[j];
+      var key = headers[j];
 
       if (d[key] === 0 || d[key] === "") {
         d[key] = "__undefined__";
@@ -95,7 +95,7 @@ function parse(csv, inputDateFormat, index, stacked, type) {
     var stackedData = stack(d3.range(seriesAmount).map(function(key) {
       return data.map(function(d) {
         return {
-          legend: keys[key + 1],
+          legend: headers[key + 1],
           x: d.key,
           y: Number(d.series[key].val),
           raw: d
@@ -108,7 +108,7 @@ function parse(csv, inputDateFormat, index, stacked, type) {
     csv: csv,
     data: data,
     seriesAmount: seriesAmount,
-    keys: keys,
+    keys: headers,
     stackedData: stackedData || undefined
   }
 }
