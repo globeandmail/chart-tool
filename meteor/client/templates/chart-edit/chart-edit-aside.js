@@ -238,6 +238,7 @@ Template.chartEditAside.events({
 
   "change .input-index": function(event) {
     var input = event.target.value;
+    if (isNaN(Number(input)) || input === "") { input = false; }
     updateAndSave("updateIndex", this, input);
   },
   "click .help-index-edit": function(event) {

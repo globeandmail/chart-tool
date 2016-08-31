@@ -808,6 +808,8 @@ function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
 
       }
 
+    } else {
+      dropTicks(newSelection, { tolerance: tolerance });
     }
 
   } else {
