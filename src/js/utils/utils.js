@@ -270,6 +270,77 @@ function csvToTable(target, data) {
     .text(function(d) { return d; });
 }
 
+function dateFormatter(selection, ctx, months, data) {
+
+  var dMonth,
+      dDate,
+      dYear,
+      dHour,
+      dMinute;
+
+  selection.text(function(d) {
+    var date = !data ? d.key : data;
+    var dStr;
+    switch (ctx) {
+      case "years":
+        dStr = date.getFullYear();
+        break;
+      case "months":
+        dMonth = months[date.getMonth()];
+        dDate = date.getDate();
+        dYear = date.getFullYear();
+        dStr = dMonth + " " + dDate + ", " + dYear;
+        break;
+      case "weeks":
+      case "days":
+        dMonth = months[date.getMonth()];
+        dDate = date.getDate();
+        dYear = date.getFullYear();
+        dStr = dMonth + " " + dDate;
+        break;
+      case "hours":
+
+        dDate = date.getDate();
+        dHour = date.getHours();
+        dMinute = date.getMinutes();
+
+        var dHourStr,
+          dMinuteStr;
+
+        // Convert from 24h time
+        var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
+
+        if (dHour === 0) {
+          dHourStr = 12;
+        } else if (dHour > 12) {
+          dHourStr = dHour - 12;
+        } else {
+          dHourStr = dHour;
+        }
+
+        // Make minutes follow Globe style
+        if (dMinute === 0) {
+          dMinuteStr = '';
+        } else if (dMinute < 10) {
+          dMinuteStr = ':0' + dMinute;
+        } else {
+          dMinuteStr = ':' + dMinute;
+        }
+
+        dStr = dHourStr + dMinuteStr + ' ' + suffix;
+
+        break;
+      default:
+        dStr = date;
+        break;
+    }
+
+    return dStr;
+
+  });
+
+}
+
 module.exports = {
   debounce: debounce,
   clearChart: clearChart,
@@ -286,6 +357,7 @@ module.exports = {
   getThumbnailPath: getThumbnailPath,
   generateThumb: generateThumb,
   csvToTable: csvToTable,
+  dateFormatter: dateFormatter,
   dataParse: require("./dataparse"),
   factory: require("./factory")
 };

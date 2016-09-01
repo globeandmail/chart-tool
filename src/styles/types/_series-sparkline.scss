@@ -9,6 +9,14 @@
     stroke-width: $line-stroke-width;
   }
 
+  .#{$prefix}text_date {
+    font-weight: bold;
+  }
+
+  .#{$prefix}zero-line {
+    opacity: 0.2;
+  }
+
 }
 
 .#{$prefix}primary.#{$prefix}type_sparkline .#{$prefix}series_group .#{$prefix}sparkline.#{$prefix}sparkline-0 {

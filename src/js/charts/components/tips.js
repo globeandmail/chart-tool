@@ -358,7 +358,8 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require("./axis").setTickFormatY,
-        timeDiff = require("../../utils/utils").timeDiff;
+        timeDiff = require("../../utils/utils").timeDiff,
+        dateFormatter = require("../../utils/utils").dateFormatter,
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -375,7 +376,7 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+      .call(dateFormatter, ctx, obj.monthsAbr, tipData.key);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -459,7 +460,8 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require("./axis").setTickFormatY,
-        timeDiff = require("../../utils/utils").timeDiff;
+        timeDiff = require("../../utils/utils").timeDiff,
+        dateFormatter = require("../../utils/utils").dateFormatter,
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -476,7 +478,7 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+      .call(dateFormatter, ctx, obj.monthsAbr, tipData.key);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -560,7 +562,8 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require("./axis").setTickFormatY,
-        timeDiff = require("../../utils/utils").timeDiff;
+        timeDiff = require("../../utils/utils").timeDiff,
+        dateFormatter = require("../../utils/utils").dateFormatter,
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -603,7 +606,7 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].x);
+      .call(dateFormatter, ctx, obj.monthsAbr, tipData[0].x);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -715,7 +718,8 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require("./axis").setTickFormatY,
-        timeDiff = require("../../utils/utils").timeDiff;
+        timeDiff = require("../../utils/utils").timeDiff,
+        dateFormatter = require("../../utils/utils").dateFormatter,
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -758,7 +762,7 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].x);
+      .call(dateFormatter, ctx, obj.monthsAbr, tipData[0].x);
 
     tipNodes.tipGroup
       .selectAll("." + obj.prefix + "tip_text-group")
@@ -872,6 +876,7 @@ function ColumnChartTips(tipNodes, obj, d, thisRef) {
 
     var yFormatter = require("./axis").setTickFormatY,
       timeDiff = require("../../utils/utils").timeDiff,
+      dateFormatter = require("../../utils/utils").dateFormatter,
       getTranslateXY = require("../../utils/utils").getTranslateXY,
       domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
@@ -900,7 +905,7 @@ function ColumnChartTips(tipNodes, obj, d, thisRef) {
 
     if(obj.dateFormat !== undefined){
       tipNodes.tipTextDate
-        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+        .call(dateFormatter, ctx, obj.monthsAbr, tipData.key);
     }
     else{
       tipNodes.tipTextDate
@@ -940,7 +945,6 @@ function ColumnChartTips(tipNodes, obj, d, thisRef) {
 
 }
 
-
 function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
 
   var columnRects = obj.rendered.plot.series.selectAll('rect'),
@@ -960,6 +964,7 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
 
     var yFormatter = require("./axis").setTickFormatY,
       timeDiff = require("../../utils/utils").timeDiff,
+      dateFormatter = require("../../utils/utils").dateFormatter,
       domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -1002,7 +1007,7 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
 
     if(obj.dateFormat !== undefined){
       tipNodes.tipTextDate
-        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+        .call(dateFormatter, ctx, obj.monthsAbr, tipData.key);
     }
     else{
       tipNodes.tipTextDate
@@ -1059,81 +1064,5 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
   }
 
 }
-
-function tipDateFormatter(selection, ctx, months, data) {
-
-  var dMonth,
-      dDate,
-      dYear,
-      dHour,
-      dMinute;
-
-  selection.text(function() {
-    var d = data;
-    var dStr;
-    switch (ctx) {
-      case "years":
-        dStr = d.getFullYear();
-        break;
-      case "months":
-        dMonth = months[d.getMonth()];
-        dDate = d.getDate();
-        dYear = d.getFullYear();
-        dStr = dMonth + " " + dDate + ", " + dYear;
-        break;
-      case "weeks":
-      case "days":
-        dMonth = months[d.getMonth()];
-        dDate = d.getDate();
-        dYear = d.getFullYear();
-        dStr = dMonth + " " + dDate;
-        break;
-      case "hours":
-
-        dDate = d.getDate();
-        dHour = d.getHours();
-        dMinute = d.getMinutes();
-
-        var dHourStr,
-          dMinuteStr;
-
-        // Convert from 24h time
-        var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
-
-        if (dHour === 0) {
-          dHourStr = 12;
-        } else if (dHour > 12) {
-          dHourStr = dHour - 12;
-        } else {
-          dHourStr = dHour;
-        }
-
-        // Make minutes follow Globe style
-        if (dMinute === 0) {
-          dMinuteStr = '';
-        } else if (dMinute < 10) {
-          dMinuteStr = ':0' + dMinute;
-        } else {
-          dMinuteStr = ':' + dMinute;
-        }
-
-        dStr = dHourStr + dMinuteStr + ' ' + suffix;
-
-        break;
-      default:
-        dStr = d;
-        break;
-    }
-
-    return dStr;
-
-  });
-
-}
-
-
-// [function BarChartTips(tipNodes, obj) {
-
-// }
 
 module.exports = tipsManager;

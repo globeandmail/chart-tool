@@ -649,6 +649,14 @@
   stroke-linejoin: round;
   stroke-width: 2px; }
 
+.ct-primary.ct-type_sparkline .ct-text_date,
+.ct-alternate.ct-type_sparkline .ct-text_date {
+  font-weight: bold; }
+
+.ct-primary.ct-type_sparkline .ct-zero-line,
+.ct-alternate.ct-type_sparkline .ct-zero-line {
+  opacity: 0.2; }
+
 .ct-primary.ct-type_sparkline .ct-series_group .ct-sparkline.ct-sparkline-0 {
   stroke: #08519c; }
 
