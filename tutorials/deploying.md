@@ -36,7 +36,7 @@ cd programs/sever && npm install
 ### **Step 5:** Get wkhtmltopdf set up
 Copy the link to the latest stable build of wkhtmltopdf from [this page](http://wkhtmltopdf.org/downloads.html). Note: do **not** use `apt-get` — you want the latest version of wkhtmltopdf with patched Qt, and the versions on `apt-get` tend to be out of date.
 
-On your server, `wget` that link, then untar the file using `tar -xvf`. After that, `cd` into the wktmltopdf folder (it might be called "wkhtmltox") and move it to your `bin` folder:
+On your server, `wget` that link, then untar the file using `tar -xvf`. After that, `cd` into the wktmltopdf folder (it might be called "wkhtmltox") and move the binary to your `bin` folder:
 ```sh
 wget <wkhtmltopdf file address>
 tar -xvf <local path to file>
