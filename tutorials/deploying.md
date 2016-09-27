@@ -1,4 +1,4 @@
-### Deploying your own Chart Tool
+# Deploying your own Chart Tool
 
 Deploying your Chart Tool interface should be pretty straightforward, and can be done in about 15 minutes. You'll need:
 - basic knowledge of how to connect to a remote server over `ssh` and copy files over using `scp`
