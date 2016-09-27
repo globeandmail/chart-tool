@@ -4,7 +4,7 @@ Deploying your Chart Tool interface should be pretty straightforward, and can be
 - basic knowledge of how to connect to a remote server over `ssh` and copy files over using `scp`
 - a server, preferably an up-to-date version of Ubuntu loaded with `node` >= 4.1.0 and `npm`
 - access to a MongoDB instance, either on the same server or elsewhere
-- optionally, your S3 bucket name, region, key and secret key, if you're using Chart Tool's upload-to-S3 feature
+- optionally, your S3 bucket name, region, key and secret key, if you're using Chart Tool's [upload-to-S3](https://github.com/globeandmail/chart-tool/blob/master/tutorials/thumbnails.md) feature
 
 For a few different reasons, we recommend you build the project locally before trying to deploy it to a server. It'll save you a lot of pain and server space.
 
