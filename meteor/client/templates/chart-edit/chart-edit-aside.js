@@ -33,6 +33,12 @@ Template.chartEditAside.helpers({
       }
     }
   },
+  indexSelected: function(value) {
+    if (this.options) {
+      var index = this.options.indexed;
+      return (index === false || index === undefined) ? "" : Number(index);
+    }
+  },
   isStackableExpandable: function() {
     if (this.options) {
       var type = this.options["type"];
@@ -127,29 +133,13 @@ Template.chartEditAside.helpers({
       if (Object.keys(axis.format)[0] === val) { return "selected"; }
     }
   },
-  xAxFormatCustom: function() {
-    if (this.x_axis) {
-      if (this.x_axis.format.custom) { return true; }
-    }
-  },
-  xAxCustom: function() {
-    var axis = this.x_axis;
-    if (axis) {
-      var format = axis.format.custom;
-      if (format === "custom" ) {
-        return "";
-      } else {
-        return format;
-      }
-    }
-  },
   interpSelected: function(val) {
     if (this.options && this.options.interpolation === val) { return "selected"; }
   },
   yAxisFormatSelected: function(val) {
     var axis = this.y_axis;
     if (axis) {
-      if (axis.format.number === val) { return "selected"; }
+      if (axis.format === val) { return "selected"; }
     }
   },
   primaryOrAlternate: function(val) {
