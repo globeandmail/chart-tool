@@ -612,6 +612,7 @@ function dropOversetTicks(axisNode, tickWidth) {
 
     if ((axisGroupWidth + firstTickOffset) >= tickWidth) {
       var lastTick = tickArr[tickArr.length - 1];
+      d3.select(lastTick).classed("last-tick-hide", false);
       d3.select(lastTick).attr("class", "last-tick-hide");
       axisGroupWidth = axisNode.node().getBBox().width;
       tickArr = axisNode.selectAll(".tick")[0];
