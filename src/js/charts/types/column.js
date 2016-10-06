@@ -32,8 +32,12 @@ function ColumnChart(node, obj) {
 
       var singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
 
-      node.select("." + obj.prefix + "axis-group." + obj.prefix + "xAxis")
+      xAxisObj.node = node.select("." + obj.prefix + "axis-group." + obj.prefix + "xAxis");
+
+      xAxisObj.node
         .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
+
+      axisModule.dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
 
       break;
     case "ordinal":
