@@ -583,56 +583,68 @@
       </script>
     </div>
 
-    <!-- GLOBE CHART v1.0.2-18 -->
-    <!-- edited: Sun Jun 28 2015 16:07:29 GMT-0400 (EDT) -->
-    <!-- slug: rb-b1-stuff-0628-2 -->
-    <!-- md5: 4ada4680932ac3bd7e5e23ab7abaf0b9 -->
-    <div class="ct-chart" data-chartid="ct-rfo8mfrPBRHasszFi">
-      <script>
+    <!-- CHART TOOL v1.1.1-30 -->
+    <!-- edited: Wed Oct 26 2016 08:40:06 GMT-0400 (EDT) -->
+    <!-- slug: 1026-rb-exports -->
+    <div class="ct-chart" data-chartid="ct-AKyzEi36epYjQDY3y">
+      <script type="text/javascript">
         (function(root) {
           var data = {
-            "version": "1.0.2",
-            "heading": "Greek daily deposit outflows",
-            "qualifier": "In billions",
-            "source": "THE GLOBE AND MAIL » SOURCE: WSJ",
-            "chart": {
-              "class": "primary",
-              "data": "Month,Number\nJuly 2014,21300\nAug.,-19900\nSept.,44200\nOct.,62200\nNov.,-16300\nDec.,-11300\nJan. 2015,35400\nFeb.,-1000\nMarch,28700\nApril,-19700\nMay,58900\nJune,-6400",
-              "x_axis": {
-                "scale": "ordinal",
-                "ticks": "auto",
-                "orient": "bottom",
-                "format": "auto"
-              },
-              "y_axis": {
-                "scale": "linear",
-                "ticks": "auto",
-                "orient": "right",
-                "format": "round1",
-                "prefix": "€"
-              },
-              "options": {
-                "type": "column",
-                "interpolation": false,
-                "stacked": true,
-                "expanded": false,
-                "head": true,
-                "deck": false,
-                "legend": true,
-                "footer": true,
-                "x_axis": true,
-                "y_axis": true,
-                "tips": true,
-                "annotations": false,
-                "range": false,
-                "series": false
-              }
-            }
-          };
+      "version": "1.1.1",
+      "id": "AKyzEi36epYjQDY3y",
+      "heading": "Percentage of total merchandise exports, by trading partner, 2015",
+      "qualifier": "",
+      "source": "THE GLOBE AND MAIL » SOURCE: statistics canada",
+      "chart": {
+        "class": "primary",
+        "hasHours": false,
+        "data": "Region,Value\nU.S.,75.59\nEU,7.51\nChina,4.09\nMexico,1.51\nJapan,1.93\nOthers,9.38",
+        "options": {
+          "type": "column",
+          "interpolation": false,
+          "stacked": true,
+          "expanded": false,
+          "head": true,
+          "deck": false,
+          "legend": true,
+          "footer": true,
+          "x_axis": true,
+          "y_axis": true,
+          "tips": true,
+          "annotations": false,
+          "range": false,
+          "series": false,
+          "indexed": false,
+          "qualifier": true,
+          "share_data": true,
+          "social": true
+        },
+        "x_axis": {
+          "display": true,
+          "scale": "ordinal",
+          "ticks": "auto",
+          "orient": "bottom",
+          "format": "auto",
+          "rescale": false,
+          "nice": false
+        },
+        "y_axis": {
+          "display": true,
+          "scale": "linear",
+          "ticks": "auto",
+          "orient": "right",
+          "format": "comma",
+          "suffix": "%",
+          "rescale": false,
+          "nice": true
+        }
+      }
+    };
           root.__charttool = root.__charttool || [];
-          root.__charttool.push({id: 'ct-rfo8mfrPBRHasszFi', data: data});
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
         })(this);
       </script>
+
     </div>
 
     <!-- GLOBE CHART v1.0.2-16 -->

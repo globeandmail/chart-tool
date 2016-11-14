@@ -87,7 +87,7 @@ function ColumnChart(node, obj) {
     columnItem.append("rect")
       .attr({
         "class": function(d) {
-          return d.series[i].val < 0 ? "negative" : "positive";
+          return d.series[i].val < 0 ? obj.prefix + "negative" : obj.prefix + "positive";
         },
         "x": function(d) {
           if (obj.xAxis.scale !== "ordinal-time") {

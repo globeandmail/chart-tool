@@ -59,22 +59,25 @@ function StackedColumnChart(node, obj) {
         xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth();
       }
       return "translate(" + xOffset + ",0)";
-    })
+    });
 
-  // Add a group for each
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
     .data(obj.data.stackedData)
     .enter().append("g")
     .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
 
-  // Add a rect for each data point.
-  var rect = series.selectAll("rect")
+  var columnItem = series
+    .append('g')
+    .attr({
+      "class": function(d, i) { return obj.prefix + "column " + obj.prefix + "column-" + (i) },
+      "data-key": function(d, i, j) { return d[j].x; },
+      "data-legend": function(d, i, j) { return d[j].legend; },
+    });
+
+  var rect = columnItem.selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
     .attr({
-      "class": obj.prefix + "column",
-      "data-key": function(d) { return d.x; },
-      "data-legend": function(d) { return d.legend; },
       "x": function(d) { return xScale(d.x); },
       "y": function(d) { return yScale(Math.max(0, d.y0 + d.y)); },
       "height": function(d) { return Math.abs(yScale(d.y) - yScale(0)); },
