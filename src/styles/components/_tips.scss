@@ -1,5 +1,3 @@
-// temporary styles
-
 .#{$prefix}tip_overlay {
   fill: $white;
   opacity: 0;
@@ -42,19 +40,6 @@
   }
 }
 
-.#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle-0, .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_path-circle-0 {
-  fill: $primary-color;
-}
-
-.#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle-0, .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-0 {
-  fill: $alternate-color;
-}
-
-.#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle-0,
-.#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle-0 {
-  fill: $white;
-}
-
 .#{$prefix}tip .#{$prefix}tip_text-group.#{$prefix}active,
 .#{$prefix}tip .#{$prefix}tip_path-circle-group.#{$prefix}active,
 .#{$prefix}tip .#{$prefix}tip_path-circle.#{$prefix}active {
@@ -73,18 +58,18 @@
 
 @for $counter from 1 through $series-count-max {
 
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter},
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter} {
+  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
+  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
     fill: nth($primaryShades, $counter);
   }
 
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter},
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter} {
+  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
+  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
     fill: nth($alternateShades, $counter);
   }
 
-  .#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter},
-  .#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter}  {
+  .#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter - 1},
+  .#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter - 1}  {
     fill: $white;
   }
 

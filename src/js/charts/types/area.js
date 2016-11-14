@@ -27,7 +27,7 @@ function AreaChart(node, obj) {
     .attr("class", function() {
       var output = obj.prefix + "series_group";
       if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'muliple' class so we can target
+        // If more than one series append a 'multiple' class so we can target
         output += " " + obj.prefix + "multiple";
       }
       return output;
