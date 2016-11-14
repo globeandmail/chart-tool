@@ -627,101 +627,41 @@
   stroke-linejoin: round;
   stroke-width: 2.5px; }
 
+.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline {
+  stroke: #CCCCCC; }
+
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_icon {
+  background: #CCCCCC; }
+
+.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle {
+  fill: #CCCCCC; }
+
+.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline {
+  stroke: #D8CFC3; }
+
+.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_icon {
+  background: #D8CFC3; }
+
+.ct-alternate.ct-type_multiline .ct-tip .ct-tip_circle {
+  fill: #D8CFC3; }
+
 .ct-primary.ct-type_multiline .ct-series_group .ct-multiline.ct-multiline-0 {
   stroke: #852E57; }
+
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_0 .ct-legend_item_icon {
+  background: #852E57; }
+
+.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-0 {
+  fill: #852E57; }
 
 .ct-alternate.ct-type_multiline .ct-series_group .ct-multiline.ct-multiline-0 {
   stroke: #2D5783; }
 
-.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-1 {
-  stroke: #CCCCCC; }
+.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_0 .ct-legend_item_icon {
+  background: #2D5783; }
 
-.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-1 {
-  stroke: #D8CFC3; }
-
-.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_1 .ct-legend_item_icon {
-  background: #CCCCCC; }
-
-.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-1 {
-  fill: #CCCCCC; }
-
-.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_1 .ct-legend_item_icon {
-  background: #D8CFC3; }
-
-.ct-alternate.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-1 {
-  fill: #D8CFC3; }
-
-.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-2 {
-  stroke: #CCCCCC; }
-
-.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-2 {
-  stroke: #D8CFC3; }
-
-.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_2 .ct-legend_item_icon {
-  background: #CCCCCC; }
-
-.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-2 {
-  fill: #CCCCCC; }
-
-.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_2 .ct-legend_item_icon {
-  background: #D8CFC3; }
-
-.ct-alternate.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-2 {
-  fill: #D8CFC3; }
-
-.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-3 {
-  stroke: #CCCCCC; }
-
-.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-3 {
-  stroke: #D8CFC3; }
-
-.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_3 .ct-legend_item_icon {
-  background: #CCCCCC; }
-
-.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-3 {
-  fill: #CCCCCC; }
-
-.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_3 .ct-legend_item_icon {
-  background: #D8CFC3; }
-
-.ct-alternate.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-3 {
-  fill: #D8CFC3; }
-
-.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-4 {
-  stroke: #CCCCCC; }
-
-.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-4 {
-  stroke: #D8CFC3; }
-
-.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_4 .ct-legend_item_icon {
-  background: #CCCCCC; }
-
-.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-4 {
-  fill: #CCCCCC; }
-
-.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_4 .ct-legend_item_icon {
-  background: #D8CFC3; }
-
-.ct-alternate.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-4 {
-  fill: #D8CFC3; }
-
-.ct-primary.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-5 {
-  stroke: #CCCCCC; }
-
-.ct-alternate.ct-type_multiline .ct-series_group.ct-multiple .ct-multiline.ct-multiline-5 {
-  stroke: #D8CFC3; }
-
-.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_5 .ct-legend_item_icon {
-  background: #CCCCCC; }
-
-.ct-primary.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-5 {
-  fill: #CCCCCC; }
-
-.ct-alternate .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_5 .ct-legend_item_icon {
-  background: #D8CFC3; }
-
-.ct-alternate.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-5 {
-  fill: #D8CFC3; }
+.ct-alternate.ct-type_multiline .ct-tip .ct-tip_circle.ct-tip_circle-0 {
+  fill: #2D5783; }
 
 .ct-primary.ct-type_area .ct-series_group .ct-line,
 .ct-primary.ct-type_area .ct-series_group.ct-multiple .ct-line,
@@ -865,11 +805,7 @@
   stroke-width: 2.5px; }
 
 .ct-primary.ct-type_column .ct-series_group .ct-column rect,
-.ct-alternate.ct-type_column .ct-series_group .ct-column rect,
-.ct-primary.ct-type_column .ct-series_group rect.ct-column,
-.ct-alternate.ct-type_column .ct-series_group rect.ct-column,
-.ct-primary.ct-type_column .ct-series_group.ct-multiple rect.ct-column,
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple rect.ct-column {
+.ct-alternate.ct-type_column .ct-series_group .ct-column rect {
   stroke-width: 1px;
   stroke: #fff; }
 
@@ -877,54 +813,34 @@
 .ct-column rect.ct-muted {
   opacity: .5; }
 
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_0 .ct-column-0 rect,
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_0 rect.ct-column,
-.ct-primary.ct-type_column .ct-series_group .ct-column-0 rect {
+.ct-primary.ct-type_column .ct-series_group .ct-series_0 .ct-column-0 rect {
   fill: #852E57; }
 
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_0 .ct-column-0 rect,
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_0 rect.ct-column,
-.ct-alternate.ct-type_column .ct-series_group .ct-column-0 rect {
+.ct-alternate.ct-type_column .ct-series_group .ct-series_0 .ct-column-0 rect {
   fill: #2D5783; }
 
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_1 .ct-column-1 rect,
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_1 rect.ct-column,
-.ct-primary.ct-type_column .ct-series_group .ct-column-1 rect {
+.ct-primary.ct-type_column .ct-series_group .ct-series_1 .ct-column-1 rect {
   fill: #D56161; }
 
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_1 .ct-column-1 rect,
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_1 rect.ct-column,
-.ct-alternate.ct-type_column .ct-series_group .ct-column-1 rect {
+.ct-alternate.ct-type_column .ct-series_group .ct-series_1 .ct-column-1 rect {
   fill: #2A929E; }
 
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_2 .ct-column-2 rect,
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_2 rect.ct-column,
-.ct-primary.ct-type_column .ct-series_group .ct-column-2 rect {
+.ct-primary.ct-type_column .ct-series_group .ct-series_2 .ct-column-2 rect {
   fill: #C7A274; }
 
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_2 .ct-column-2 rect,
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_2 rect.ct-column,
-.ct-alternate.ct-type_column .ct-series_group .ct-column-2 rect {
+.ct-alternate.ct-type_column .ct-series_group .ct-series_2 .ct-column-2 rect {
   fill: #5FBF9B; }
 
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_3 .ct-column-3 rect,
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_3 rect.ct-column,
-.ct-primary.ct-type_column .ct-series_group .ct-column-3 rect {
+.ct-primary.ct-type_column .ct-series_group .ct-series_3 .ct-column-3 rect {
   fill: #89CAD3; }
 
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_3 .ct-column-3 rect,
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_3 rect.ct-column,
-.ct-alternate.ct-type_column .ct-series_group .ct-column-3 rect {
+.ct-alternate.ct-type_column .ct-series_group .ct-series_3 .ct-column-3 rect {
   fill: #BAAD9C; }
 
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_4 .ct-column-4 rect,
-.ct-primary.ct-type_column .ct-series_group.ct-multiple .ct-series_4 rect.ct-column,
-.ct-primary.ct-type_column .ct-series_group .ct-column-4 rect {
+.ct-primary.ct-type_column .ct-series_group .ct-series_4 .ct-column-4 rect {
   fill: #CCCCCC; }
 
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_4 .ct-column-4 rect,
-.ct-alternate.ct-type_column .ct-series_group.ct-multiple .ct-series_4 rect.ct-column,
-.ct-alternate.ct-type_column .ct-series_group .ct-column-4 rect {
+.ct-alternate.ct-type_column .ct-series_group .ct-series_4 .ct-column-4 rect {
   fill: #D8CFC3; }
 
 .ct-bg {

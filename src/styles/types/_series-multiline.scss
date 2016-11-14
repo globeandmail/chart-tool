@@ -1,6 +1,5 @@
 .#{$prefix}primary.#{$prefix}type_multiline,
 .#{$prefix}alternate.#{$prefix}type_multiline {
-
   .#{$prefix}series_group .#{$prefix}multiline,
   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline {
     fill: none;
@@ -8,41 +7,56 @@
     stroke-linejoin: round;
     stroke-width: $line-stroke-width;
   }
-
 }
+
+// Sets all other series to final colour
+
+.#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline {
+  stroke: $primary-shade-4;
+}
+
+.#{$prefix}primary .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_icon {
+  background: $primary-shade-4;
+}
+
+.#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle {
+  fill: $primary-shade-4;
+}
+
+.#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline {
+  stroke: $alternate-shade-4;
+}
+
+.#{$prefix}alternate .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_icon {
+  background: $alternate-shade-4;
+}
+
+.#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle {
+  fill: $alternate-shade-4;
+}
+
+// Sets first series to primary colour
 
 .#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}series_group .#{$prefix}multiline.#{$prefix}multiline-0 {
   stroke: $primary-color;
+}
+
+.#{$prefix}primary .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
+  background: $primary-color;
+}
+
+.#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0 {
+  fill: $primary-color;
 }
 
 .#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}series_group .#{$prefix}multiline.#{$prefix}multiline-0 {
   stroke: $alternate-color;
 }
 
-@for $counter from 1 through $series-count-max {
-  .#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline.#{$prefix}multiline-#{$counter} {
-    stroke: $primary-shade-4;
-  }
-
-  .#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline.#{$prefix}multiline-#{$counter} {
-    stroke: $alternate-shade-4;
-  }
-
-  .#{$prefix}primary .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon {
-    background: $primary-shade-4;
-  }
-
-  .#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
-    fill: $primary-shade-4;
-  }
-
-  .#{$prefix}alternate .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon {
-    background: $alternate-shade-4;
-  }
-
-  .#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter}  {
-    fill: $alternate-shade-4;
-  }
-
+.#{$prefix}alternate .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
+  background: $alternate-color;
 }
 
+.#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0 {
+  fill: $alternate-color;
+}
