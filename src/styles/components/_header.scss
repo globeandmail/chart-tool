@@ -30,14 +30,6 @@
   margin-right: 4px;
 }
 
-.#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
-  background: $primary-color;
-}
-
-.#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
-  background: $alternate-color;
-}
-
 // qualifier
 .#{$prefix}chart_qualifier {
   margin: 0;
@@ -68,11 +60,11 @@
 
 @for $counter from 1 through $series-count-max {
 
-  .#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon {
+  .#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter - 1} .#{$prefix}legend_item_icon {
     background: nth($primaryShades, $counter);
   }
 
-  .#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
+  .#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter - 1} .#{$prefix}legend_item_icon{
     background: nth($alternateShades, $counter);
   }
 
