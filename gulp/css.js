@@ -4,7 +4,7 @@ const gutil = require('gulp-util');
 const sass = require('gulp-sass');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
-const runSequence = require('run-sequence');
+const runSequence = require('run-sequence').use(gulp);
 const plumber = require('gulp-plumber');
 const csso = require('gulp-csso');
 const postCss = require('gulp-postcss');
@@ -54,7 +54,7 @@ gulp.task('scss-custom-meteor-before', () => {
     .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
 });
 
-gulp.task('_scss-custom-meteor-after', () => {
+gulp.task('scss-custom-meteor-after', () => {
   return gulp.src(`${gulpConfig.customPath}/meteor-custom.scss`)
     .pipe(rename('_custom.scss'))
     .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));

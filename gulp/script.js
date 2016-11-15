@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const del = require('del');
-const runSequence = require('run-sequence');
+const runSequence = require('run-sequence').use(gulp);
 const rollupConfig = require('./rollup.config.js');
 const gulpConfig = require('./gulp.config.js');
 const uglify = require('rollup-plugin-uglify');

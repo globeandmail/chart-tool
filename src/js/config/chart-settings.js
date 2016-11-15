@@ -1,25 +1,25 @@
 var version = {
-  version: require("json!../../../package.json").version,
-  build: require("json!../../../package.json").buildver
+  version: require('../../../package.json').version,
+  build: require('../../../package.json').buildver
 };
 
-var settings = require("json!../../../custom/chart-tool-config.json");
+var settings = require('../../../custom/chart-tool-config.json');
 
 module.exports = {
 
   CUSTOM: settings.CUSTOM,
   version: version.version,
   build: version.build,
-  id: "",
-  data: "",
+  id: '',
+  data: '',
   dateFormat: settings.dateFormat,
   timeFormat: settings.timeFormat,
   image: settings.image,
-  heading: "",
-  qualifier: "",
-  source: "",
-  deck: "",
-  index: "",
+  heading: '',
+  qualifier: '',
+  source: '',
+  deck: '',
+  index: '',
   hasHours: false,
   social: settings.social,
   seriesHighlight: function() {
@@ -29,12 +29,12 @@ module.exports = {
       return 0;
     }
   },
-  baseClass: function() { return this.prefix + "chart"; },
-  customClass: "",
+  baseClass: function() { return this.prefix + 'chart'; },
+  customClass: '',
 
   options: {
-    type: "line",
-    interpolation: "linear",
+    type: 'line',
+    interpolation: 'linear',
     stacked: false,
     expanded: false,
     head: true,
