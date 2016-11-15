@@ -10,13 +10,10 @@
 }
 
 @for $counter from 1 through $series-count-max {
-
   .#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}series_#{$counter - 1} .#{$prefix}column-#{$counter - 1} rect {
     fill: nth($primaryShades, $counter);
   }
-
   .#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}series_#{$counter - 1} .#{$prefix}column-#{$counter - 1} rect {
     fill: nth($alternateShades, $counter);
   }
-
 }

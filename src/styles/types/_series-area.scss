@@ -1,6 +1,5 @@
 .#{$prefix}primary.#{$prefix}type_area,
 .#{$prefix}alternate.#{$prefix}type_area {
-
   .#{$prefix}series_group .#{$prefix}line,
   .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
     fill: none;
@@ -9,9 +8,7 @@
     stroke: $white;
     stroke-width: $line-stroke-width;
   }
-
 }
-
 
 .#{$prefix}primary.#{$prefix}type_area .#{$prefix}line.#{$prefix}line-0 {
   stroke: $primary-color;
