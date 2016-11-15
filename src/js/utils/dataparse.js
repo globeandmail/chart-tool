@@ -11,9 +11,9 @@
  * @param  {String} declaredFormat Format passed by the chart embed code, if there is one
  * @return {String|Undefined}
  */
-function inputDate(scaleType, defaultFormat, declaredFormat) {
+export function inputDate(scaleType, defaultFormat, declaredFormat) {
 
-  if (scaleType === "time" || scaleType === "ordinal-time") {
+  if (scaleType === 'time' || scaleType === 'ordinal-time') {
     return declaredFormat || defaultFormat;
   } else {
     return undefined;
@@ -28,7 +28,7 @@ function inputDate(scaleType, defaultFormat, declaredFormat) {
  * @param  {String} index           Value to index the data to, if there is one
  * @return { {csv: String, data: Array, seriesAmount: Integer, keys: Array} }                 An object with the original CSV string, the newly-formatted data, the number of series in the data and an array of keys used.
  */
-function parse(csv, inputDateFormat, index, stacked, type) {
+export function parse(csv, inputDateFormat, index, stacked, type) {
 
   var val;
 
@@ -53,8 +53,8 @@ function parse(csv, inputDateFormat, index, stacked, type) {
 
       var key = headers[j];
 
-      if (d[key] === 0 || d[key] === "") {
-        d[key] = "__undefined__";
+      if (d[key] === 0 || d[key] === '') {
+        d[key] = '__undefined__';
       }
 
       if (index) {
@@ -63,7 +63,7 @@ function parse(csv, inputDateFormat, index, stacked, type) {
           firstVals[key] = d[key];
         }
 
-        if (index === "0") {
+        if (index === '0') {
           val = ((d[key] / firstVals[key]) - 1) * 100;
         } else {
           val = (d[key] / firstVals[key]) * index;
@@ -87,8 +87,8 @@ function parse(csv, inputDateFormat, index, stacked, type) {
   var seriesAmount = data[0].series.length;
 
   if (stacked) {
-    if (type === "stream") {
-      var stack = d3.layout.stack().offset("silhouette");
+    if (type === 'stream') {
+      var stack = d3.layout.stack().offset('silhouette');
     } else {
       var stack = d3.layout.stack();
     }
@@ -110,10 +110,5 @@ function parse(csv, inputDateFormat, index, stacked, type) {
     seriesAmount: seriesAmount,
     keys: headers,
     stackedData: stackedData || undefined
-  }
+  };
 }
-
-module.exports = {
-  inputDate: inputDate,
-  parse: parse
-};

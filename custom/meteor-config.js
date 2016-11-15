@@ -1,8 +1,9 @@
-var config = require('json!./chart-tool-config.json');
+import * as config from './chart-tool-config.json';
+import { version, buildVer, name } from '../package.json';
 
-app_version = require('json!../package.json').version;
-app_build = require('json!../package.json').buildVer;
-app_name = require('json!../package.json').name;
+app_version = version;
+app_build = buildVer;
+app_name = name;
 prefix = config.prefix;
 
 app_settings = {

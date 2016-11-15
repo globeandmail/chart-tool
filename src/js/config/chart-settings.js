@@ -1,15 +1,12 @@
-var version = {
-  version: require('../../../package.json').version,
-  build: require('../../../package.json').buildver
-};
+import { scaleLinear } from 'd3-scale';
+import * as settings from '../../../custom/chart-tool-config.json';
+import { version, build } from '../../../package.json';
 
-var settings = require('../../../custom/chart-tool-config.json');
-
-module.exports = {
+export default {
 
   CUSTOM: settings.CUSTOM,
-  version: version.version,
-  build: version.build,
+  version: version,
+  build: build,
   id: '',
   data: '',
   dateFormat: settings.dateFormat,
@@ -23,13 +20,9 @@ module.exports = {
   hasHours: false,
   social: settings.social,
   seriesHighlight: function() {
-    if (this.data.seriesAmount && this.data.seriesAmount <= 1) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return (this.data.seriesAmount && this.data.seriesAmount <= 1) ? 1 : 0;
   },
-  baseClass: function() { return this.prefix + 'chart'; },
+  baseClass: function() { return `${this.prefix}chart`; },
   customClass: '',
 
   options: {
@@ -71,7 +64,7 @@ module.exports = {
       return this.width - this.margin.left - this.margin.right;
     },
     height: function() {
-      var ratioScale = d3.scale.linear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
+      const ratioScale = scaleLinear.range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
       return Math.round(ratioScale(this.width));
     },
     computedHeight: function() {

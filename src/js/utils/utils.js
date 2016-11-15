@@ -11,31 +11,31 @@
  * @param  {Object}   root    Window object.
  * @return {Function}           Final debounce function.
  */
-function debounce(fn, obj, timeout, root) {
+export function debounce(fn, obj, timeout, root) {
   var timeoutID = -1;
   return function() {
     if (timeoutID > -1) { root.clearTimeout(timeoutID); }
     timeoutID = root.setTimeout(function(){
-      fn(obj)
+      fn(obj);
     }, timeout);
-  }
-};
+  };
+}
 
 /**
  * Remove chart SVG and divs inside a container from the DOM.
  * @param  {String} container
  */
-function clearChart(container) {
+export function clearChart(container) {
 
   var cont = document.querySelector(container);
 
-  while (cont && cont.querySelectorAll("svg").length) {
-    var svg = cont.querySelectorAll("svg");
+  while (cont && cont.querySelectorAll('svg').length) {
+    var svg = cont.querySelectorAll('svg');
     svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
   }
 
-  while (cont && cont.querySelectorAll("div").length) {
-    var div = cont.querySelectorAll("div");
+  while (cont && cont.querySelectorAll('div').length) {
+    var div = cont.querySelectorAll('div');
     div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
   }
 
@@ -106,24 +106,24 @@ function wrapText(text, width) {
         lineNumber = 0,
         lineHeight = 1.0, // ems
         x = 0,
-        y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", dy + "em");
+        y = text.attr('y'),
+        dy = parseFloat(text.attr('dy')),
+        tspan = text.text(null).append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', dy + 'em');
 
     while (word = words.pop()) {
       line.push(word);
-      tspan.text(line.join(" "));
+      tspan.text(line.join(' '));
       if (tspan.node().getComputedTextLength() > width && line.length > 1) {
         line.pop();
-        tspan.text(line.join(" "));
+        tspan.text(line.join(' '));
         line = [word];
-        tspan = text.append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+        tspan = text.append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', ++lineNumber * lineHeight + dy + 'em')
           .text(word);
       }
     }
@@ -131,7 +131,7 @@ function wrapText(text, width) {
 }
 
 /**
- * Given two dates date and a tolerance level, return a time "context" for the difference between the two values.
+ * Given two dates date and a tolerance level, return a time 'context' for the difference between the two values.
  * @param  {Object} d1     Beginning date object.
  * @param  {Object} d2     End date object.
  * @param  {Integer} tolerance
@@ -143,15 +143,15 @@ function timeDiff(d1, d2, tolerance) {
       time = new TimeObj();
 
   // returning the context
-  if ((diff / time.year) > tolerance) { return "years"; }
-  else if ((diff / time.month) > tolerance) { return "months"; }
-  else if ((diff / time.week) > tolerance) { return "weeks"; }
-  else if ((diff / time.day) > tolerance) { return "days"; }
-  else if ((diff / time.hour) > tolerance) { return "hours"; }
-  else if ((diff / time.min) > tolerance) { return "minutes"; }
-  else { return "days"; }
+  if ((diff / time.year) > tolerance) { return 'years'; }
+  else if ((diff / time.month) > tolerance) { return 'months'; }
+  else if ((diff / time.week) > tolerance) { return 'weeks'; }
+  else if ((diff / time.day) > tolerance) { return 'days'; }
+  else if ((diff / time.hour) > tolerance) { return 'hours'; }
+  else if ((diff / time.min) > tolerance) { return 'minutes'; }
+  else { return 'days'; }
   // if none of these work i feel bad for you son
-  // i've got 99 problems but an if/else ain"t one
+  // i've got 99 problems but an if/else ain't one
 
 }
 
@@ -170,12 +170,12 @@ function timeInterval(data) {
   var ret;
 
   var intervals = [
-    { type: "years", step: 1 },
-    { type: "months", step: 3 }, // quarters
-    { type: "months", step: 1 },
-    { type: "days", step: 1 },
-    { type: "hours", step: 1 },
-    { type: "minutes", step: 1 }
+    { type: 'years', step: 1 },
+    { type: 'months', step: 3 }, // quarters
+    { type: 'months', step: 1 },
+    { type: 'days', step: 1 },
+    { type: 'hours', step: 1 },
+    { type: 'minutes', step: 1 }
   ];
 
   for (var i = 0; i < intervals.length; i++) {
@@ -196,7 +196,7 @@ function timeInterval(data) {
  * @return {Array}
  */
 function getTranslateXY(node) {
-  return d3.transform(d3.select(node).attr("transform")).translate;
+  return d3.transform(d3.select(node).attr('transform')).translate;
 }
 
 /**
@@ -204,7 +204,7 @@ function getTranslateXY(node) {
  * @return {String}
  */
 function translate(x, y) {
-    return "translate(" + x + ", " + y + ")";
+    return 'translate(' + x + ', ' + y + ')';
 }
 
 /**
@@ -213,7 +213,7 @@ function translate(x, y) {
  * @return {Boolean}
  */
 function svgTest(root) {
-  return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGRect;
+  return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 }
 
 /**
@@ -224,11 +224,11 @@ function svgTest(root) {
 function getThumbnailPath(obj) {
   var imgSettings = obj.image;
 
-  imgSettings.bucket = require("../config/env");
+  imgSettings.bucket = require('../config/env');
 
-  var id = obj.id.replace(obj.prefix, "");
+  var id = obj.id.replace(obj.prefix, '');
 
-  return "https://s3.amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + id + "/" + imgSettings.filename + "." + imgSettings.extension;
+  return 'https://s3.amazonaws.com/' + imgSettings.bucket + '/' + imgSettings.base_path + id + '/' + imgSettings.filename + '.' + imgSettings.extension;
 }
 
 /**
@@ -239,7 +239,7 @@ function generateThumb(container, obj, settings) {
   var imgSettings = settings.image;
 
   var cont = document.querySelector(container),
-      fallback = cont.querySelector("." + settings.prefix + "base64img");
+      fallback = cont.querySelector('.' + settings.prefix + 'base64img');
 
   if (imgSettings && imgSettings.enable && obj.data.id) {
 
@@ -247,7 +247,7 @@ function generateThumb(container, obj, settings) {
 
     img.setAttribute('src', getThumbnailPath(obj));
     img.setAttribute('alt', obj.data.heading);
-    img.setAttribute('class', settings.prefix + "thumbnail");
+    img.setAttribute('class', settings.prefix + 'thumbnail');
 
     cont.appendChild(img);
 
@@ -262,11 +262,11 @@ function generateThumb(container, obj, settings) {
 function csvToTable(target, data) {
   var parsedCSV = d3.csv.parseRows(data);
 
-  target.append("table").selectAll("tr")
+  target.append('table').selectAll('tr')
     .data(parsedCSV).enter()
-    .append("tr").selectAll("td")
+    .append('tr').selectAll('td')
     .data(function(d) { return d; }).enter()
-    .append("td")
+    .append('td')
     .text(function(d) { return d; });
 }
 
@@ -286,6 +286,6 @@ module.exports = {
   getThumbnailPath: getThumbnailPath,
   generateThumb: generateThumb,
   csvToTable: csvToTable,
-  dataParse: require("./dataparse"),
-  factory: require("./factory")
+  dataParse: require('./dataparse'),
+  factory: require('./factory')
 };

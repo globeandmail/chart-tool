@@ -1,2 +1,2 @@
-// s3_bucket is defined in webpack.config.js
-module.exports = s3_bucket;
+// s3_bucket is defined in rollup.config.js
+export default s3_bucket;

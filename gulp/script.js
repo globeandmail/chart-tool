@@ -3,10 +3,12 @@ const del = require('del');
 const runSequence = require('run-sequence').use(gulp);
 const rollupConfig = require('./rollup.config.js');
 const gulpConfig = require('./gulp.config.js');
+const chartToolConfig = require('../custom/chart-tool-config.json');
+const rollup = require('rollup').rollup;
 const uglify = require('rollup-plugin-uglify');
 const eslint = require('rollup-plugin-eslint');
 const strip = require('rollup-plugin-strip');
-const rollup = require('rollup').rollup;
+const replace = require('rollup-plugin-replace');
 
 gulp.task('js:build', done => {
   runSequence(
@@ -48,22 +50,28 @@ gulp.task('move-meteor:build', () => {
     .pipe(gulp.dest(gulpConfig.meteorBundle));
 });
 
+let cache;
+
 gulp.task('rollup:dev', () => {
   const rConfig = Object.assign({}, rollupConfig);
-  // const replaceObj = {};
-  // replaceObj[hotlineConfig.middlewarePath] = 'http://localhost:8080';
-  // rConfig.plugins.push(
-  //   replace({
-  //     include: 'hotline-config.json',
-  //     values: replaceObj
-  //   })
-  // );
+  rConfig.cache = cache;
+  const replaceObj = {};
+  replaceObj[chartToolConfig.embedJS] = '../dist/dev/chart-tool.js';
+  replaceObj[chartToolConfig.embedCSS] = '../dist/dev/chart-tool.css';
+  rConfig.plugins.push(
+    replace({
+      include: 'chart-tool-config.json',
+      values: replaceObj
+    })
+  );
   return rollup(rConfig).then(bundle => {
+    cache = bundle;
     return bundle.write({
+      banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
       format: 'iife',
       sourceMap: true,
       dest: `${gulpConfig.buildPathDev}/chart-tool.js`,
-      moduleName: 'chartToolInit'
+      moduleName: 'ChartToolInit'
     });
   });
 });
@@ -81,9 +89,10 @@ gulp.task('rollup:build', () => {
   );
   return rollup(rConfig).then(bundle => {
     return bundle.write({
+      banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
       format: 'iife',
       dest: `${gulpConfig.buildPath}/chart-tool.min.js`,
-      moduleName: 'chartToolInit'
+      moduleName: 'ChartToolInit'
     });
   });
 });

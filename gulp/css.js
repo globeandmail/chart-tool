@@ -27,7 +27,7 @@ gulp.task('scss-compile:dev', () => {
     .pipe(sourcemaps.write())
     .pipe(rename('chart-tool.css'))
     .pipe(gulp.dest(`${gulpConfig.meteorPath}/lib/chart-tool/stylesheets`))
-    .pipe(gulp.dest(`${gulpConfig.libStylesheets}/build`))
+    .pipe(gulp.dest(`${gulpConfig.buildPathDev}/build`))
     .on('error', gutil.log);
 });
 

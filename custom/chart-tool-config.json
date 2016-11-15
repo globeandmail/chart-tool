@@ -131,7 +131,7 @@
     "thumbnailWidth": 460
   },
 
-  "embedJS": "",
-  "embedCSS": ""
+  "embedJS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.js",
+  "embedCSS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.css"
 
 }

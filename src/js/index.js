@@ -1,34 +1,45 @@
-/**
- * Chart Tool
- * @author Jeremy Agius <jagius@globeandmail.com>
- * @author Tom Cardoso <tcardoso@globeandmail.com>
- * @author Michael Pereira <mpereira@globeandmail.com>
- * @see {@link} for further information.
- * @see {@link http://www.github.com/globeandmail/chart-tool|Chart Tool}
- * @license MIT
- */
+import { select } from 'd3-selection';
+import { dispatch } from 'd3-dispatch';
+import {
+  baseClass,
+  debounce as debounceTime,
+  prefix,
+  version,
+  build
+} from './config/chart-settings';
+import {
+  clearDrawn,
+  clearObj,
+  clearChart,
+  getBounding,
+  svgTest,
+  generateThumb,
+  debounce as debounceFn
+} from './utils/utils';
 
-(function ChartToolInit(root) {
+export default (root => {
 
-  if (root.d3) {
+  'use strict';
 
-    var ChartTool = (function ChartTool() {
+  const Meteor = this.Meteor || {},
+    isServer = Meteor.isServer || undefined;
 
-      var charts = root.__charttool || [],
-          dispatchFunctions = root.__charttooldispatcher || [],
-          drawn = [];
+  if (!isServer) {
 
-      var settings = require("./config/chart-settings"),
-          utils = require("./utils/utils");
+    const ChartTool = (function ChartTool() {
 
-      var dispatcher = d3.dispatch("start", "finish", "redraw", "mouseOver", "mouseMove", "mouseOut", "click");
+      const charts = root.__charttool || [],
+        dispatchFunctions = root.__charttooldispatcher || [],
+        drawn = [];
 
-      for (var prop in dispatchFunctions) {
+      const dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
+
+      for (let prop in dispatchFunctions) {
         if (dispatchFunctions.hasOwnProperty(prop)) {
-          if (d3.keys(dispatcher).indexOf(prop) > -1) {
+          if (Object.keys(dispatcher).indexOf(prop) > -1) {
             dispatcher.on(prop, dispatchFunctions[prop]);
           } else {
-            throw "Chart Tool does not offer a dispatcher of type '" + prop + "'. For available dispatcher types, please see the ChartTool.dispatch() method." ;
+            console.log(`Chart Tool does not offer a dispatcher of type ${prop}. For available dispatcher types, please see the ChartTool.dispatch() method.`);
           }
         }
       }
@@ -42,31 +53,31 @@
 
         dispatcher.start(obj);
 
-        drawn = utils.clearDrawn(drawn, obj);
-        obj = utils.clearObj(obj);
-        container = utils.clearChart(container);
+        drawn = clearDrawn(drawn, obj);
+        obj = clearObj(obj);
+        container = clearChart(container);
 
-        var ChartManager = require("./charts/manager");
+        var ChartManager = require('./charts/manager');
 
-        obj.data.width = utils.getBounding(container, "width");
+        obj.data.width = getBounding(container, 'width');
         obj.dispatch = dispatcher;
 
         var chartObj;
 
-        if (utils.svgTest(root)) {
+        if (svgTest(root)) {
           chartObj = ChartManager(container, obj);
         } else {
-          utils.generateThumb(container, obj, settings);
+          generateThumb(container, obj, settings);
         }
 
         drawn.push({ id: obj.id, chartObj: chartObj });
         obj.chartObj = chartObj;
 
-        d3.select(container)
-          .on("click", function() { dispatcher.click(this, chartObj); })
-          .on("mouseover", function() { dispatcher.mouseOver(this, chartObj); })
-          .on("mousemove", function() { dispatcher.mouseMove(this, chartObj);  })
-          .on("mouseout", function() { dispatcher.mouseOut(this, chartObj); });
+        select(container)
+          .on('click', () => dispatcher.click(this, chartObj))
+          .on('mouseover', () => dispatcher.mouseOver(this, chartObj))
+          .on('mousemove', () => dispatcher.mouseMove(this, chartObj))
+          .on('mouseout', () => dispatcher.mouseOut(this, chartObj));
 
         dispatcher.finish(chartObj);
 
@@ -79,11 +90,11 @@
        * @return {Object}    Returns stored embed object.
        */
       function readChart(id) {
-        for (var i = 0; i < charts.length; i++) {
-           if (charts[i].id === id) {
+        for (let i = 0; i < charts.length; i++) {
+          if (charts[i].id === id) {
             return charts[i];
           }
-        };
+        }
       }
 
       /**
@@ -92,29 +103,29 @@
        * @return {Array}       List of chartid's.
        */
       function listCharts(charts) {
-        var chartsArr = [];
-        for (var i = 0; i < charts.length; i++) {
+        const chartsArr = [];
+        for (let i = 0; i < charts.length; i++) {
           chartsArr.push(charts[i].id);
-        };
+        }
         return chartsArr;
       }
 
       function updateChart(id, obj) {
-        var container = '.' + settings.baseClass() + '[data-chartid=' + settings.prefix + id + ']';
+        const container = `.${baseClass()}[data-chartid=${prefix}${id}]`;
         createChart(container, { id: id, data: obj });
       }
 
       function destroyChart(id) {
-        var container, obj;
-        for (var i = 0; i < charts.length; i++) {
+        let container, obj;
+        for (let i = 0; i < charts.length; i++) {
           if (charts[i].id === id) {
             obj = charts[i];
           }
-        };
-        container = '.' + settings.baseClass() + '[data-chartid=' + obj.id + ']';
-        utils.clearDrawn(drawn, obj);
-        utils.clearObj(obj);
-        utils.clearChart(container);
+        }
+        container = `.${baseClass()}[data-chartid=${obj.id}]`;
+        clearDrawn(drawn, obj);
+        clearObj(obj);
+        clearChart(container);
       }
 
       /**
@@ -122,12 +133,12 @@
        * @param {Array} charts Array of charts on the page.
        */
       function createLoop(charts) {
-        var chartList = listCharts(charts);
-        for (var i = 0; i < chartList.length; i++) {
-          var obj = readChart(chartList[i]);
-          var container = '.' + settings.baseClass() + '[data-chartid=' + chartList[i] + ']';
+        const chartList = listCharts(charts);
+        for (let i = 0; i < chartList.length; i++) {
+          let obj = readChart(chartList[i]);
+          let container = `.${baseClass()}[data-chartid=${chartList[i]}]`;
           createChart(container, obj);
-        };
+        }
       }
 
       /**
@@ -136,80 +147,32 @@
        */
       function initializer(charts) {
         createLoop(charts);
-        var debounce = utils.debounce(createLoop, charts, settings.debounce, root);
-        d3.select(root)
-          .on('resize.' + settings.prefix + 'debounce', debounce)
-          .on('resize.' + settings.prefix + 'redraw', dispatcher.redraw(charts));
+        const debouncer = debounceFn(createLoop, charts, debounceTime, root);
+        select(root)
+          .on(`resize.${prefix}debounce`, debouncer)
+          .on(`resize.${prefix}redraw`, dispatcher.redraw(charts));
       }
 
       return {
-
-        init: function init() {
-          return initializer(charts);
-        },
-
-        create: function create(container, obj) {
-          return createChart(container, obj);
-        },
-
-        read: function read(id) {
-          return readChart(id);
-        },
-
-        list: function list() {
-          return listCharts(charts);
-        },
-
-        update: function update(id, obj) {
-          return updateChart(id, obj);
-        },
-
-        destroy: function destroy(id) {
-          return destroyChart(id);
-        },
-
-        dispatch: function dispatch() {
-          return d3.keys(dispatcher);
-        },
-
+        init: function init() { return initializer(charts); },
+        create: function create(container, obj) { return createChart(container, obj); },
+        read: function read(id) { return readChart(id); },
+        list: function list() { return listCharts(charts); },
+        update: function update(id, obj) { return updateChart(id, obj); },
+        destroy: function destroy(id) { return destroyChart(id); },
+        dispatch: function dispatch() { return Object.keys(dispatcher); },
+        version: version,
+        build: build,
         wat: function wat() {
-          console.info("ChartTool v" + settings.version + " is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: www.github.com/globeandmail/chart-tool");
-        },
-
-        version: settings.version,
-        build: settings.build,
-        settings: require("./config/chart-settings"),
-        charts: require("./charts/manager"),
-        components: require("./charts/components/components"),
-        helpers: require("./helpers/helpers"),
-        utils: require("./utils/utils"),
-        line: require("./charts/types/line"),
-        area: require("./charts/types/area"),
-        multiline: require("./charts/types/multiline"),
-        stackedArea: require("./charts/types/stacked-area"),
-        column: require("./charts/types/column"),
-        stackedColumn: require("./charts/types/stacked-column"),
-        streamgraph: require("./charts/types/streamgraph"),
-        bar: require("./charts/types/bar")
-
-      }
+          console.log(`ChartTool v${version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: www.github.com/globeandmail/chart-tool`);
+        }
+      };
 
     })();
 
     if (!root.Meteor) { ChartTool.init(); }
-
-  } else {
-
-    var Meteor = this.Meteor || {},
-        isServer = Meteor.isServer || undefined;
-
-    if (!isServer) {
-      console.error("Chart Tool: no D3 library detected.");
-    }
-
+    root.ChartTool = ChartTool;
 
   }
 
-  root.ChartTool = ChartTool;
-
-})(typeof window !== "undefined" ? window : this);
+})(typeof window !== 'undefined' ? window : this);

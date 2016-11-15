@@ -10,7 +10,7 @@
  * @param {Object} obj
  * @return {Object} The final chart recipe.
  */
-function RecipeFactory(settings, obj) {
+export function RecipeFactory(settings, obj) {
   var dataParse = require("./dataparse");
   var helpers = require("../helpers/helpers");
 
@@ -30,16 +30,16 @@ function RecipeFactory(settings, obj) {
   t.heading          = embed.heading                          || t.heading;
   t.qualifier        = embed.qualifier                        || t.qualifier;
   t.source           = embed.source                           || t.source;
-  t.deck             = embed.deck                             || t.deck
+  t.deck             = embed.deck                             || t.deck;
   t.customClass      = chart.class                            || t.customClass;
 
   t.xAxis            = helpers.extend(t.xAxis, chart.x_axis)  || t.xAxis;
   t.yAxis            = helpers.extend(t.yAxis, chart.y_axis)  || t.yAxis;
 
   var o = t.options,
-      co = chart.options;
+    co = chart.options;
 
-  //  "options" area of embed code
+  //  'options' area of embed code
   o.type             = chart.options.type                     || o.type;
   o.interpolation    = chart.options.interpolation            || o.interpolation;
 
@@ -71,11 +71,11 @@ function RecipeFactory(settings, obj) {
 
   if (t.exportable) {
     t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
-    t.dimensions.height = function() { return chart.exportable.height; }
+    t.dimensions.height = function() { return chart.exportable.height; };
     t.dimensions.margin = chart.exportable.margin || t.dimensions.margin;
   }
 
-  if (chart.hasHours) { t.dateFormat += " " + t.timeFormat; }
+  if (chart.hasHours) { t.dateFormat += ' ' + t.timeFormat; }
   t.hasHours         = chart.hasHours                         || t.hasHours;
   t.dateFormat       = chart.dateFormat                       || t.dateFormat;
 
