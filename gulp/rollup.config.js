@@ -7,16 +7,17 @@ const replace = require('rollup-plugin-replace');
 
 module.exports = {
   entry: `${gulpConfig.libScripts}/index.js`,
-  // external: ['domain'],
   plugins: [
     json(),
     buble({
       exclude: ['node_modules/**', '*.json']
     }),
-    // replace({
-      // s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
-      // 'process.env.NODE_ENV': JSON.stringify('development')
-    // }),
+    replace({
+      include: 'env.js',
+      values: {
+        s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
+      }
+    }),
     nodeResolve({ jsnext: true }),
     commonjs()
   ]

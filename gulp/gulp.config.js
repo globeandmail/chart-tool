@@ -24,6 +24,9 @@ const libPath = './src',
   meteorBuildPath = `.${buildPath}/meteor`;
 
 module.exports = {
+  version: version,
+  build: buildVer,
+
   libPath: libPath,
   libScripts: libScripts,
   libStylesheets: libStylesheets,
