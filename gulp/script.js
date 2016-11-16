@@ -67,7 +67,6 @@ gulp.task('rollup:dev', () => {
   return rollup(rConfig).then(bundle => {
     cache = bundle;
     return bundle.write({
-      banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
       format: 'iife',
       sourceMap: true,
       dest: `${gulpConfig.buildPathDev}/chart-tool.js`,
@@ -78,18 +77,21 @@ gulp.task('rollup:dev', () => {
 
 gulp.task('rollup:build', () => {
   const rConfig = Object.assign({}, rollupConfig);
+  rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
   rConfig.plugins.push(
-    uglify(),
-    eslint({ exclude: ['node_modules/**', '*.json'] }),
     strip({
       debugger: true,
       functions: ['assert.*', 'debug', 'alert'],
       sourceMap: false
+    }),
+    uglify({
+      output: {
+        preamble: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | @license MIT */`
+      }
     })
   );
   return rollup(rConfig).then(bundle => {
     return bundle.write({
-      banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
       format: 'iife',
       dest: `${gulpConfig.buildPath}/chart-tool.min.js`,
       moduleName: 'ChartToolInit'

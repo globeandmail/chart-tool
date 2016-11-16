@@ -11,7 +11,7 @@ export default (root => {
 
   'use strict';
 
-  const Meteor = this.Meteor || {},
+  const Meteor = this && this.Meteor || {},
     isServer = Meteor.isServer || undefined;
 
   if (!isServer) {
@@ -29,7 +29,7 @@ export default (root => {
 
       for (let prop in dispatchFunctions) {
         if (dispatchFunctions.hasOwnProperty(prop)) {
-          if (Object.keys(dispatcher).indexOf(prop) > -1) {
+          if (Object.keys(dispatcher._).indexOf(prop) > -1) {
             dispatcher.on(prop, dispatchFunctions[prop]);
           } else {
             console.log(`Chart Tool does not offer a dispatcher of type ${prop}. For available dispatcher types, please see the ChartTool.dispatch() method.`);
@@ -39,7 +39,7 @@ export default (root => {
 
       function createChart(cont, chart) {
 
-        dispatcher.start(chart);
+        dispatcher.call('start', this, chart);
 
         drawn = clearDrawn(drawn, chart);
 
@@ -63,12 +63,12 @@ export default (root => {
         obj.chartObj = chartObj;
 
         select(container)
-          .on('click', () => dispatcher.click(this, chartObj))
-          .on('mouseover', () => dispatcher.mouseOver(this, chartObj))
-          .on('mousemove', () => dispatcher.mouseMove(this, chartObj))
-          .on('mouseout', () => dispatcher.mouseOut(this, chartObj));
+          .on('click', () => dispatcher.call('click', this, chartObj))
+          .on('mouseover', () => dispatcher.call('mouseOver', this, chartObj))
+          .on('mousemove', () => dispatcher.call('mouseMove', this, chartObj))
+          .on('mouseout', () => dispatcher.call('mouseOut', this, chartObj));
 
-        dispatcher.finish(chartObj);
+        dispatcher.call('finish', this, chartObj);
 
       }
 
@@ -89,7 +89,7 @@ export default (root => {
       }
 
       function updateChart(id, obj) {
-        const container = `.${settings.baseClass()}[data-chartid=${settings.prefix}${id}]`;
+        const container = `.${s.baseClass()}[data-chartid=${s.prefix}${id}]`;
         createChart(container, { id: id, data: obj });
       }
 
@@ -100,7 +100,7 @@ export default (root => {
             obj = charts[i];
           }
         }
-        container = `.${settings.baseClass()}[data-chartid=${obj.id}]`;
+        container = `.${s.baseClass()}[data-chartid=${obj.id}]`;
         clearDrawn(drawn, obj);
         clearObj(obj);
         clearChart(container);
@@ -110,17 +110,17 @@ export default (root => {
         const chartList = listCharts(charts);
         for (let i = 0; i < chartList.length; i++) {
           let data = readChart(chartList[i]);
-          let container = `.${settings.baseClass()}[data-chartid=${chartList[i]}]`;
+          let container = `.${s.baseClass()}[data-chartid=${chartList[i]}]`;
           createChart(container, data);
         }
       }
 
       function initializer(charts) {
         createLoop(charts);
-        const debouncer = debounceFn(createLoop, charts, settings.debounce, root);
+        const debouncer = debounceFn(createLoop, charts, s.debounce, root);
         select(root)
-          .on(`resize.${settings.prefix}debounce`, debouncer)
-          .on(`resize.${settings.prefix}redraw`, dispatcher.redraw(charts));
+          .on(`resize.${s.prefix}debounce`, debouncer)
+          .on(`resize.${s.prefix}redraw`, dispatcher.redraw(charts));
       }
 
       return {
@@ -131,10 +131,10 @@ export default (root => {
         update: function update(id, obj) { return updateChart(id, obj); },
         destroy: function destroy(id) { return destroyChart(id); },
         dispatch: function dispatch() { return Object.keys(dispatcher); },
-        version: settings.version,
-        build: settings.build,
+        version: s.version,
+        build: s.build,
         wat: function wat() {
-          console.log(`ChartTool v${settings.version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool`);
+          console.log(`ChartTool v${s.version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool`);
         }
       };
 

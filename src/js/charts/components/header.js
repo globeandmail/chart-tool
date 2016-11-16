@@ -49,7 +49,7 @@ export default function header(container, obj) {
     legend = headerGroup.append('div')
       .classed(`${obj.prefix}chart_legend`, true);
 
-    let keys = Object.assign({}, obj.data.keys);
+    let keys = obj.data.keys.slice();
 
     // get rid of the first item as it doesnt represent a series
     keys.shift();

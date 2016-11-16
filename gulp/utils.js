@@ -19,13 +19,25 @@ gulp.task('set-prod-node-env', done => {
   done();
 });
 
-gulp.task('build-size', () => {
+gulp.task('size:build', () => {
   return gulp.src(`${gulpConfig.buildPath}/**/*`)
     .pipe(size({ title: 'Build', gzip: true, showFiles: true }));
 });
 
+gulp.task('clean-dist:dev', () => {
+  return del([`${gulpConfig.buildPathDev}/**/*`]);
+});
+
+gulp.task('clean-dist:build', () => {
+  return del([`${gulpConfig.buildPath}/**/*`]);
+});
+
 gulp.task('clean-meteor:build', () => {
   return del([`${gulpConfig.meteorBuildPath}/**/*`]);
+});
+
+gulp.task('clean-meteor-libs', () => {
+  return del([`${gulpConfig.meteorPath}/lib/chart-tool/**/*`]);
 });
 
 gulp.task('set-version', () => {

@@ -62,15 +62,15 @@ export default class Settings {
 
     this.dimensions = {
       width: 0,
-      computedWidth: () => {
-        return this.dimensions.width - this.dimensions.margin.left - this.dimensions.margin.right;
+      computedWidth: function() {
+        return this.width - this.margin.left - this.margin.right;
       },
-      height: () => {
-        const ratioScale = scaleLinear.range([300, 900]).domain([this.dimensions.width * this.dimensions.ratioMobile, this.dimensions.width * this.dimensions.ratioDesktop]);
-        return Math.round(ratioScale(this.dimensions.width));
+      height: function() {
+        const ratioScale = scaleLinear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
+        return Math.round(ratioScale(this.width));
       },
-      computedHeight: () => {
-        return (this.height() - this.dimensions.headerHeight - this.dimensions.footerHeight - this.dimensions.margin.top - this.dimensions.margin.bottom);
+      computedHeight: function() {
+        return (this.height() - this.headerHeight - this.footerHeight - this.margin.top - this.margin.bottom);
       },
       ratioMobile: settings.ratioMobile,
       ratioDesktop: settings.ratioDesktop,
@@ -80,14 +80,14 @@ export default class Settings {
       headerHeight: 0,
       footerHeight: 0,
       xAxisHeight: 0,
-      yAxisHeight: () => {
-        return (this.computedHeight() - this.dimensions.xAxisHeight);
+      yAxisHeight: function() {
+        return (this.computedHeight() - this.xAxisHeight);
       },
       xAxisWidth: 0,
       labelWidth: 0,
       yAxisPaddingRight: settings.yAxis.paddingRight,
-      tickWidth: () => {
-        return (this.computedWidth() - (this.dimensions.labelWidth + this.dimensions.yAxisPaddingRight));
+      tickWidth: function() {
+        return (this.computedWidth() - (this.labelWidth + this.yAxisPaddingRight));
       },
       barHeight: settings.barHeight,
       bands: {
