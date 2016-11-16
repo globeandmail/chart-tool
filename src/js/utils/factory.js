@@ -1,89 +1,81 @@
+import { inputDate, parse } from './dataparse';
+import { isUndefined } from '../helpers/helpers';
+import Settings from '../config/chart-settings';
+
 /**
- * Recipe factor factory module.
+ * Chart object factory module.
  * @module utils/factory
- * @see module:charts/index
  */
 
-/**
- * Given a "recipe" of settings for a chart, patch it with an object and parse the data for the chart.
- * @param {Object} settings
- * @param {Object} obj
- * @return {Object} The final chart recipe.
- */
-export function RecipeFactory(settings, obj) {
-  var dataParse = require("./dataparse");
-  var helpers = require("../helpers/helpers");
+export default class Recipe extends Settings {
 
-  var t = helpers.extend(settings); // short for template
+  constructor(obj) {
 
-  var embed = obj.data;
-  var chart = embed.chart;
+    super();
 
-  // I'm not a big fan of indenting stuff like this
-  // (looking at you, Pereira), but I'm making an exception
-  // in this case because my eyes were bleeding.
+    const embed = obj.data,
+      chart = embed.chart;
 
-  t.dispatch         = obj.dispatch;
+    // I'm not a big fan of indenting stuff like this
+    // (looking at you, Pereira), but I'm making an exception
+    // in this case because my eyes were bleeding.
 
-  t.version          = embed.version                          || t.version;
-  t.id               = obj.id                                 || t.id;
-  t.heading          = embed.heading                          || t.heading;
-  t.qualifier        = embed.qualifier                        || t.qualifier;
-  t.source           = embed.source                           || t.source;
-  t.deck             = embed.deck                             || t.deck;
-  t.customClass      = chart.class                            || t.customClass;
+    this.dispatch    = obj.dispatch;
+    this.version     = embed.version                           || this.version;
+    this.id          = obj.id                                  || this.id;
+    this.heading     = embed.heading                           || this.heading;
+    this.qualifier   = embed.qualifier                         || this.qualifier;
+    this.source      = embed.source                            || this.source;
+    this.deck        = embed.deck                              || this.deck;
+    this.customClass = chart.class                             || this.customClass;
+    this.xAxis       = Object.assign(this.xAxis, chart.x_axis) || this.xAxis;
+    this.yAxis       = Object.assign(this.yAxis, chart.y_axis) || this.yAxis;
 
-  t.xAxis            = helpers.extend(t.xAxis, chart.x_axis)  || t.xAxis;
-  t.yAxis            = helpers.extend(t.yAxis, chart.y_axis)  || t.yAxis;
+    const o = this.options,
+      co = chart.options;
 
-  var o = t.options,
-    co = chart.options;
+    //  'options' area of embed code
+    o.type          = chart.options.type          || o.type;
+    o.interpolation = chart.options.interpolation || o.interpolation;
 
-  //  'options' area of embed code
-  o.type             = chart.options.type                     || o.type;
-  o.interpolation    = chart.options.interpolation            || o.interpolation;
+    o.social      = !isUndefined(co.social) === true ? co.social           : o.social;
+    o.share_data  = !isUndefined(co.share_data) === true ? co.share_data   : o.share_data;
+    o.stacked     = !isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
+    o.expanded    = !isUndefined(co.expanded) === true ? co.expanded       : o.expanded;
+    o.head        = !isUndefined(co.head) === true ? co.head               : o.head;
+    o.deck        = !isUndefined(co.deck) === true ? co.deck               : o.deck;
+    o.legend      = !isUndefined(co.legend) === true ? co.legend           : o.legend;
+    o.qualifier   = !isUndefined(co.qualifier) === true ? co.qualifier     : o.qualifier;
+    o.footer      = !isUndefined(co.footer) === true ? co.footer           : o.footer;
+    o.x_axis      = !isUndefined(co.x_axis) === true ? co.x_axis           : o.x_axis;
+    o.y_axis      = !isUndefined(co.y_axis) === true ? co.y_axis           : o.y_axis;
+    o.tips        = !isUndefined(co.tips) === true ? co.tips               : o.tips;
+    o.annotations = !isUndefined(co.annotations) === true ? co.annotations : o.annotations;
+    o.range       = !isUndefined(co.range) === true ? co.range             : o.range;
+    o.series      = !isUndefined(co.series) === true ? co.series           : o.series;
+    o.index       = !isUndefined(co.indexed) === true ? co.indexed         : o.index;
 
-  o.social      = !helpers.isUndefined(co.social) === true ? co.social           : o.social;
-  o.share_data   = !helpers.isUndefined(co.share_data) === true ? co.share_data  : o.share_data;
-  o.stacked     = !helpers.isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
-  o.expanded    = !helpers.isUndefined(co.expanded) === true ? co.expanded       : o.expanded;
-  o.head        = !helpers.isUndefined(co.head) === true ? co.head               : o.head;
-  o.deck        = !helpers.isUndefined(co.deck) === true ? co.deck               : o.deck;
-  o.legend      = !helpers.isUndefined(co.legend) === true ? co.legend           : o.legend;
-  o.qualifier   = !helpers.isUndefined(co.qualifier) === true ? co.qualifier     : o.qualifier;
-  o.footer      = !helpers.isUndefined(co.footer) === true ? co.footer           : o.footer;
-  o.x_axis      = !helpers.isUndefined(co.x_axis) === true ? co.x_axis           : o.x_axis;
-  o.y_axis      = !helpers.isUndefined(co.y_axis) === true ? co.y_axis           : o.y_axis;
-  o.tips        = !helpers.isUndefined(co.tips) === true ? co.tips               : o.tips;
-  o.annotations = !helpers.isUndefined(co.annotations) === true ? co.annotations : o.annotations;
-  o.range       = !helpers.isUndefined(co.range) === true ? co.range             : o.range;
-  o.series      = !helpers.isUndefined(co.series) === true ? co.series           : o.series;
-  o.index       = !helpers.isUndefined(co.indexed) === true ? co.indexed         : o.index;
+    //  these are specific to the t object and don't exist in the embed
+    this.baseClass        = embed.baseClass  || this.baseClass;
+    this.dimensions.width = embed.width      || this.dimensions.width;
+    this.prefix           = chart.prefix     || this.prefix;
+    this.exportable       = chart.exportable || this.exportable;
+    this.editable         = chart.editable   || this.editable;
 
-  //  these are specific to the t object and don't exist in the embed
-  t.baseClass        = embed.baseClass                        || t.baseClass;
+    if (this.exportable) {
+      this.dimensions.width = chart.exportable.width || embed.width || this.dimensions.width;
+      this.dimensions.height = function() { return chart.exportable.height; };
+      this.dimensions.margin = chart.exportable.margin || this.dimensions.margin;
+    }
 
-  t.dimensions.width = embed.width                            || t.dimensions.width;
+    if (chart.hasHours) { `${this.dateFormat} ${this.timeFormat}`; }
 
-  t.prefix           = chart.prefix                           || t.prefix;
-  t.exportable       = chart.exportable                       || t.exportable;
-  t.editable         = chart.editable                         || t.editable;
+    this.hasHours   = chart.hasHours   || this.hasHours;
+    this.dateFormat = chart.dateFormat || this.dateFormat;
 
-  if (t.exportable) {
-    t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
-    t.dimensions.height = function() { return chart.exportable.height; };
-    t.dimensions.margin = chart.exportable.margin || t.dimensions.margin;
+    this.dateFormat = inputDate(this.xAxis.scale, this.dateFormat, chart.date_format);
+    this.data = parse(chart.data, this.dateFormat, o.index, o.stacked, o.type) || this.data;
+
   }
 
-  if (chart.hasHours) { t.dateFormat += ' ' + t.timeFormat; }
-  t.hasHours         = chart.hasHours                         || t.hasHours;
-  t.dateFormat       = chart.dateFormat                       || t.dateFormat;
-
-  t.dateFormat = dataParse.inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
-  t.data = dataParse.parse(chart.data, t.dateFormat, o.index, o.stacked, o.type) || t.data;
-
-  return t;
-
 }
-
-module.exports = RecipeFactory;

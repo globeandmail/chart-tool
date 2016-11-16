@@ -1,63 +1,65 @@
+import Recipe from '../utils/factory';
+import base from './components/base';
+import header from './components/header';
+import footer from './components/footer';
+import plot from './components/plot';
+import qualifier from './components/qualifier';
+import tips from './components/tips';
+import shareData from './components/share-data';
+import social from './components/social';
+import { custom } from '../../../custom/custom';
+
 /**
- * Chart contruction manager module.
+ * Chart contruction manager class.
  * @module charts/manager
  */
 
-/**
- * Manages the step-by-step creation of a chart, and returns the full configuration for the chart, including references to nodes, scales, axes, etc.
- * @param {String} container Selector for the container the chart will be drawn into.
- * @param {Object} obj       Object that contains settings for the chart.
- */
-function ChartManager(container, obj) {
+export class ChartManager {
 
-  var Recipe = require("../utils/factory"),
-      settings = require("../config/chart-settings"),
-      components = require("./components/components");
+  constructor(container, obj) {
+    this.recipe = new Recipe(obj);
 
-  var chartRecipe = new Recipe(settings, obj);
+    this.recipe.rendered = {};
 
-  var rendered = chartRecipe.rendered = {};
+    const rendered = this.recipe.rendered;
 
-  // check that each section is needed
+    // check that each section is needed
 
-  if (chartRecipe.options.head) {
-    rendered.header = components.header(container, chartRecipe);
-  }
-
-  if (chartRecipe.options.footer) {
-    rendered.footer = components.footer(container, chartRecipe);
-  }
-
-  var node = components.base(container, chartRecipe);
-
-  rendered.container = node;
-
-  rendered.plot = components.plot(node, chartRecipe);
-
-  if (chartRecipe.options.qualifier) {
-    rendered.qualifier = components.qualifier(node, chartRecipe);
-  }
-
-  if (chartRecipe.options.tips) {
-    rendered.tips = components.tips(node, chartRecipe);
-  }
-
-  if (!chartRecipe.editable && !chartRecipe.exportable) {
-    if (chartRecipe.options.share_data) {
-      rendered.shareData = components.shareData(container, chartRecipe);
+    if (this.recipe.options.head) {
+      rendered.header = header(container, this.recipe);
     }
-    if (chartRecipe.options.social) {
-      rendered.social = components.social(container, chartRecipe);
+
+    if (this.recipe.options.footer) {
+      rendered.footer = footer(container, this.recipe);
     }
+
+    const node = base(container, this.recipe);
+
+    rendered.container = node;
+
+    rendered.plot = plot(node, this.recipe);
+
+    if (this.recipe.options.qualifier) {
+      rendered.qualifier = qualifier(node, this.recipe);
+    }
+
+    if (this.recipe.options.tips) {
+      rendered.tips = tips(node, this.recipe);
+    }
+
+    if (!this.recipe.editable && !this.recipe.exportable) {
+      if (this.recipe.options.share_data) {
+        rendered.shareData = shareData(container, this.recipe);
+      }
+      if (this.recipe.options.social) {
+        rendered.social = social(container, this.recipe);
+      }
+    }
+
+    if (this.recipe.CUSTOM) {
+      rendered.custom = custom(node, this.recipe, rendered);
+    }
+
   }
 
-  if (chartRecipe.CUSTOM) {
-    var custom = require("../../../custom/custom.js");
-    rendered.custom = custom(node, chartRecipe, rendered);
-  }
-
-  return chartRecipe;
-
-};
-
-module.exports = ChartManager;
+}

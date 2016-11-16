@@ -1,21 +1,11 @@
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
-import {
-  baseClass,
-  debounce as debounceTime,
-  prefix,
-  version,
-  build
-} from './config/chart-settings';
-import {
-  clearDrawn,
-  clearObj,
-  clearChart,
-  getBounding,
-  svgTest,
-  generateThumb,
-  debounce as debounceFn
-} from './utils/utils';
+import Settings from './config/chart-settings';
+import { clearDrawn, clearObj, clearChart, getBounding, svgTest, generateThumb, debounce as debounceFn } from './utils/utils';
+import { ChartManager } from './charts/manager';
+import 'core-js/library/fn/object/assign';
+
+// CHECK THAT OBJECT.ASSIGN IS GETTING POLYFILLED
 
 export default (root => {
 
@@ -29,8 +19,11 @@ export default (root => {
     const ChartTool = (function ChartTool() {
 
       const charts = root.__charttool || [],
-        dispatchFunctions = root.__charttooldispatcher || [],
-        drawn = [];
+        dispatchFunctions = root.__charttooldispatcher || [];
+
+      let drawn = [];
+
+      const s = new Settings();
 
       const dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
 
@@ -44,33 +37,29 @@ export default (root => {
         }
       }
 
-      /**
-       * Clears previous iterations of chart objects stored in obj or the drawn array, then punts chart construction to the Chart Manager.
-       * @param  {String} container A string representing the container's selector.
-       * @param  {Object} obj       The chart ID and embed data.
-       */
-      function createChart(container, obj) {
+      function createChart(cont, chart) {
 
-        dispatcher.start(obj);
+        dispatcher.start(chart);
 
-        drawn = clearDrawn(drawn, obj);
-        obj = clearObj(obj);
-        container = clearChart(container);
+        drawn = clearDrawn(drawn, chart);
 
-        var ChartManager = require('./charts/manager');
+        const obj = clearObj(chart);
+
+        const container = clearChart(cont);
 
         obj.data.width = getBounding(container, 'width');
         obj.dispatch = dispatcher;
 
-        var chartObj;
+        let chartObj;
 
         if (svgTest(root)) {
-          chartObj = ChartManager(container, obj);
+          chartObj = new ChartManager(container, obj);
         } else {
-          generateThumb(container, obj, settings);
+          generateThumb(container, obj);
         }
 
         drawn.push({ id: obj.id, chartObj: chartObj });
+
         obj.chartObj = chartObj;
 
         select(container)
@@ -83,12 +72,6 @@ export default (root => {
 
       }
 
-      /**
-       * Grabs data on a chart based on an ID.
-       * @param {Array} charts Array of charts on the page.
-       * @param  {String} id The ID for the chart.
-       * @return {Object}    Returns stored embed object.
-       */
       function readChart(id) {
         for (let i = 0; i < charts.length; i++) {
           if (charts[i].id === id) {
@@ -97,11 +80,6 @@ export default (root => {
         }
       }
 
-      /**
-       * List all the charts stored in the Chart Tool by chartid.
-       * @param {Array} charts Array of charts on the page.
-       * @return {Array}       List of chartid's.
-       */
       function listCharts(charts) {
         const chartsArr = [];
         for (let i = 0; i < charts.length; i++) {
@@ -111,7 +89,7 @@ export default (root => {
       }
 
       function updateChart(id, obj) {
-        const container = `.${baseClass()}[data-chartid=${prefix}${id}]`;
+        const container = `.${settings.baseClass()}[data-chartid=${settings.prefix}${id}]`;
         createChart(container, { id: id, data: obj });
       }
 
@@ -122,35 +100,27 @@ export default (root => {
             obj = charts[i];
           }
         }
-        container = `.${baseClass()}[data-chartid=${obj.id}]`;
+        container = `.${settings.baseClass()}[data-chartid=${obj.id}]`;
         clearDrawn(drawn, obj);
         clearObj(obj);
         clearChart(container);
       }
 
-      /**
-       * Iterate over all the charts, draw each chart into its respective container.
-       * @param {Array} charts Array of charts on the page.
-       */
       function createLoop(charts) {
         const chartList = listCharts(charts);
         for (let i = 0; i < chartList.length; i++) {
-          let obj = readChart(chartList[i]);
-          let container = `.${baseClass()}[data-chartid=${chartList[i]}]`;
-          createChart(container, obj);
+          let data = readChart(chartList[i]);
+          let container = `.${settings.baseClass()}[data-chartid=${chartList[i]}]`;
+          createChart(container, data);
         }
       }
 
-      /**
-       * Chart Tool initializer which sets up debouncing and runs the createLoop(). Run only once, when the library is first loaded.
-       * @param {Array} charts Array of charts on the page.
-       */
       function initializer(charts) {
         createLoop(charts);
-        const debouncer = debounceFn(createLoop, charts, debounceTime, root);
+        const debouncer = debounceFn(createLoop, charts, settings.debounce, root);
         select(root)
-          .on(`resize.${prefix}debounce`, debouncer)
-          .on(`resize.${prefix}redraw`, dispatcher.redraw(charts));
+          .on(`resize.${settings.prefix}debounce`, debouncer)
+          .on(`resize.${settings.prefix}redraw`, dispatcher.redraw(charts));
       }
 
       return {
@@ -161,10 +131,10 @@ export default (root => {
         update: function update(id, obj) { return updateChart(id, obj); },
         destroy: function destroy(id) { return destroyChart(id); },
         dispatch: function dispatch() { return Object.keys(dispatcher); },
-        version: version,
-        build: build,
+        version: settings.version,
+        build: settings.build,
         wat: function wat() {
-          console.log(`ChartTool v${version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: www.github.com/globeandmail/chart-tool`);
+          console.log(`ChartTool v${settings.version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool`);
         }
       };
 

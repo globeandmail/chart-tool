@@ -5,7 +5,7 @@
  * @param  {Object} rendered     An object containing references to all rendered chart elements, including axes, scales, paths, nodes, and so forth.
  * @return {Object}              Optional.
  */
-function custom(node, chartRecipe, rendered) {
+export function custom(node, chartRecipe, rendered) {
 
   // With this function, you can access all elements of a chart and modify
   // them at will. For instance: you might want to play with colour
@@ -18,5 +18,3 @@ function custom(node, chartRecipe, rendered) {
   return;
 
 }
-
-module.exports = custom;
