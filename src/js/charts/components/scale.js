@@ -123,16 +123,16 @@ export function setRange(obj, axisType) {
 }
 
 export function setRangeArgs(scale, scaleObj) {
-
   switch (scaleObj.rangeType) {
     case 'range':
-      return scale[scaleObj.rangeType](scaleObj.range);
-    case 'rangeRoundBands':
+      if (scaleObj.type === 'ordinal-time') {
+        return scale[scaleObj.rangeType](scaleObj.range, scaleObj.rangePoints);
+      } else {
+        return scale[scaleObj.rangeType](scaleObj.range);
+      }
+    case 'rangeRound':
       return scale[scaleObj.rangeType](scaleObj.range, scaleObj.bands.padding, scaleObj.bands.outerPadding);
-    case 'rangePoints':
-      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.rangePoints);
   }
-
 }
 
 export function setDomain(obj, axis) {
@@ -177,6 +177,7 @@ export function setDateDomain(data, min, max) {
 export function setNumericalDomain(data, vmin, vmax, stacked, forceMaxVal) {
 
   let minVal, maxVal;
+
   const mArr = [];
 
   map(data.data, d => {
