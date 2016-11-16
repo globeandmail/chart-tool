@@ -1,5 +1,5 @@
 .#{$prefix}tip_overlay {
-  fill: $white;
+  fill: $color-white;
   opacity: 0;
 }
 
@@ -12,11 +12,11 @@
 }
 
 .#{$prefix}tip_rect {
-  fill: $white;
+  fill: $color-white;
 }
 
 .#{$prefix}tip_text {
-  fill: $black;
+  fill: $color-black;
   @include utility-font;
 }
 
@@ -70,7 +70,7 @@
 
   .#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter - 1},
   .#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter - 1}  {
-    fill: $white;
+    fill: $color-white;
   }
 
 }

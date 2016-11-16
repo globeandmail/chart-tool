@@ -4,11 +4,11 @@ footer {
   bottom: 0;
   width: 100%;
   background-color: white;
-  border-top: 1px solid lighten($verylightgray, 10%);
+  border-top: 1px solid $color-gray-medium;
   overflow: hidden;
   @include clearfix;
   p {
-    color: $text;
+    color: $color-black;
     margin: 0;
     padding: 0;
     @include interface-font-regular;
@@ -16,7 +16,7 @@ footer {
     font-size: 12px;
     padding: 0.5em 0.5em 0.4em 0.5em;
     a {
-      color: $text;
+      color: $color-black;
       text-decoration: none;
       &:hover {
         color: $primary-color;

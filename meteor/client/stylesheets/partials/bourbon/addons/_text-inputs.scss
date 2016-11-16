@@ -90,7 +90,7 @@
 ///
 /// @type List
 
-$text-inputs-list: 'input[type="color"]',
+$color-black-inputs-list: 'input[type="color"]',
                    'input[type="date"]',
                    'input[type="datetime"]',
                    'input[type="datetime-local"]',
@@ -106,7 +106,7 @@ $text-inputs-list: 'input[type="color"]',
                    'input[type="week"]',
                    'textarea';
 
-$all-text-inputs:        assign-inputs($text-inputs-list);
-$all-text-inputs-active: assign-inputs($text-inputs-list, active);
-$all-text-inputs-focus:  assign-inputs($text-inputs-list, focus);
-$all-text-inputs-hover:  assign-inputs($text-inputs-list, hover);
+$all-text-inputs:        assign-inputs($color-black-inputs-list);
+$all-text-inputs-active: assign-inputs($color-black-inputs-list, active);
+$all-text-inputs-focus:  assign-inputs($color-black-inputs-list, focus);
+$all-text-inputs-hover:  assign-inputs($color-black-inputs-list, hover);

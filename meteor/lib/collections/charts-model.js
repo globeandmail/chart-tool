@@ -15,7 +15,7 @@ Charts.deny({
 Meteor.methods({
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
-  addChart: function (text, data) {
+  addChart: function(text, data) {
     var newChart = extend(app_settings.chart),
         now = new Date();
 
@@ -26,6 +26,10 @@ Meteor.methods({
     newChart.md5 = CryptoJS.MD5(data).toString();
 
     return Charts.insert(newChart);
+  },
+
+  deleteChart: function(chartId) {
+    return Charts.remove(chartId);
   },
 
   forkChart: function(chartId) {

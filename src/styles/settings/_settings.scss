@@ -17,7 +17,6 @@ $utility-font-style: normal;
 $utility-font-size: 13px;
 $utility-font-line-height: 16px;
 
-
 @mixin heading-font {
   font-family: $heading-font-family;
   font-weight: $heading-font-weight;
@@ -49,13 +48,21 @@ $alternate-shade-3: #BAAD9C;
 $alternate-shade-4: #D8CFC3;
 $alternateShades: $alternate-color, $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4;
 
-$black: #111;
-$text: #111;
-$lightgray: #595959;
-$verylightgray: #777777;
-$white: #fff;
+$color-black: #111111;
+$color-gray-dark: #595959;
+$color-gray-medium: #777777;
+$color-gray-light: #F9F9F9;
+$color-white: #FFFFFF;
 
-$axis-stroke-color: $black;
+$color-red: #DA161F;
+$color-orange: #FF6B00;
+$color-green: #50AA30;
+$color-blue: #29639C;
+$color-yellow: #F8E71C;
+$color-beige: #FFF8E7;
+$color-red-bright: #F90611;
+
+$axis-stroke-color: $color-black;
 $axis-stroke-width: 1px;
 $axis-stroke-dasharray: 1, 3px;
 $line-stroke-width: 2.5px;

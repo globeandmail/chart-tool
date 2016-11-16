@@ -5,7 +5,7 @@
 .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}bar,
 .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}bar {
   stroke-width: 1px;
-  stroke: $white;
+  stroke: $color-white;
 }
 
 @for $counter from 1 through $series-count-max {
