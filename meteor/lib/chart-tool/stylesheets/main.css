@@ -34,7 +34,7 @@
 
 .ct-chart_qualifier {
   margin: 0;
-  background: #fff;
+  background: #FFFFFF;
   height: auto;
   font-family: "Helvetica";
   font-weight: normal;
@@ -46,11 +46,11 @@
   margin-top: 2px; }
 
 .ct-chart_qualifier-text-bg {
-  stroke: #fff;
+  stroke: #FFFFFF;
   stroke-width: 10px;
   stroke-linecap: round;
   stroke-linejoin: round;
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-fo.ct-qualifier, .ct-fo.ct-qualifier > div {
   display: inline-block;
@@ -97,17 +97,17 @@
   display: none; }
 
 .ct-yAxis .ct-minor line {
-  stroke: #111;
+  stroke: #111111;
   stroke-dasharray: 1, 3px;
   shape-rendering: crispEdges; }
 
 .ct-type_bar .ct-xAxis .ct-minor line {
-  stroke: #111;
+  stroke: #111111;
   stroke-dasharray: 1, 3px;
   shape-rendering: crispEdges; }
 
 .ct-axis-group g.tick line {
-  stroke: #111;
+  stroke: #111111;
   stroke-width: 1px; }
 
 .ct-yAxis g.tick text {
@@ -115,7 +115,7 @@
 
 .ct-axis-group path {
   shape-rendering: crispEdges;
-  stroke: #111;
+  stroke: #111111;
   stroke-width: 1px; }
 
 .ct-axis-group text {
@@ -127,12 +127,12 @@
 
 .ct-axis-group path {
   shape-rendering: crispEdges;
-  stroke: #111;
+  stroke: #111111;
   stroke-width: 1px; }
 
 .ct-axis-group .major-tick line {
   display: inline;
-  stroke: #111;
+  stroke: #111111;
   stroke-width: 1px; }
 
 .last-tick-hide {
@@ -143,7 +143,7 @@
 
 .ct-zero-line {
   stroke-width: 1px;
-  stroke: #111;
+  stroke: #111111;
   stroke-linecap: square; }
 
 .ct-chart_source {
@@ -163,7 +163,7 @@
       display: inline-block; } }
 
 .ct-tip_overlay {
-  fill: #fff;
+  fill: #FFFFFF;
   opacity: 0; }
 
 .ct-tip_box {
@@ -173,10 +173,10 @@
     opacity: 1; }
 
 .ct-tip_rect {
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-tip_text {
-  fill: #111;
+  fill: #111111;
   font-family: "Helvetica";
   font-weight: normal;
   font-style: normal;
@@ -198,7 +198,7 @@
   .ct-tip_line-x.ct-active {
     opacity: 1; }
   .ct-tip_line-x line {
-    stroke: #111;
+    stroke: #111111;
     stroke-dasharray: 1, 3px;
     stroke-width: 1px;
     shape-rendering: crispEdges; }
@@ -226,7 +226,7 @@
 
 .ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-0,
 .ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-0 {
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-primary .ct-tip .ct-tip_path-circle-1,
 .ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-1 {
@@ -238,7 +238,7 @@
 
 .ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-1,
 .ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-1 {
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-primary .ct-tip .ct-tip_path-circle-2,
 .ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-2 {
@@ -250,7 +250,7 @@
 
 .ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-2,
 .ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-2 {
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-primary .ct-tip .ct-tip_path-circle-3,
 .ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-3 {
@@ -262,7 +262,7 @@
 
 .ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-3,
 .ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-3 {
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-primary .ct-tip .ct-tip_path-circle-4,
 .ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-4 {
@@ -274,7 +274,7 @@
 
 .ct-primary .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-4,
 .ct-alternate .ct-tip.ct-tip_stacked .ct-tip_path-circle.ct-tip_path-circle-4 {
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-chart_data {
   display: block;
@@ -285,7 +285,7 @@
   bottom: 0;
   right: 0;
   background: white;
-  background: #a0a0a0;
+  background: #F9F9F9;
   transition: transform .25s, opacity .5s;
   transform: translateY(100%);
   height: 0;
@@ -301,14 +301,14 @@
   position: absolute;
   right: 1.2em;
   top: 1.8em;
-  border: 1px solid #595959;
+  border: 1px solid #777777;
   padding: 0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   text-align: center;
   line-height: 20px;
-  color: #111;
+  color: #111111;
   cursor: pointer;
   background: white; }
   .ct-chart_data_close:hover {
@@ -317,8 +317,8 @@
     border: 1px solid #852E57; }
 
 .ct-chart_data_inner {
-  background: #fff;
-  color: #111;
+  background: #FFFFFF;
+  color: #111111;
   font-size: 1.2em;
   line-height: 1.6em;
   overflow: scroll;
@@ -328,7 +328,7 @@
   top: 4em;
   bottom: 4em;
   padding: 1em .25em;
-  border: 1px solid #595959; }
+  border: 1px solid #777777; }
 
 .ct-chart_data_inner table {
   border-spacing: 0; }
@@ -342,13 +342,13 @@
   text-align: left; }
 
 .ct-chart_data_inner table tr:nth-child(odd) td {
-  background: #a0a0a0; }
+  background: #F9F9F9; }
 
 .ct-chart_data_inner table tr:nth-child(1) td {
   background: white;
   color: black;
   font-size: 0.8em;
-  border-bottom: 1px solid #595959; }
+  border-bottom: 1px solid #777777; }
 
 .ct-chart_data_nav {
   position: absolute;
@@ -357,12 +357,12 @@
 
 .ct-chart_data_nav .ct-chart_data_btn {
   text-decoration: none;
-  color: #111;
+  color: #111111;
   display: inline-block;
   padding: .5em 1em;
   cursor: pointer;
   border-radius: 1em;
-  border: 1px solid #595959;
+  border: 1px solid #777777;
   margin-left: 1em;
   text-transform: uppercase;
   font-size: 0.8em; }
@@ -412,8 +412,8 @@
   font-size: 13px;
   line-height: 16px;
   font-size: 11px;
-  color: #595959;
-  border-right: 1px solid #595959; }
+  color: #777777;
+  border-right: 1px solid #777777; }
   .ct-chart_meta_btn:hover {
     color: #852E57; }
   @media (min-width: 420px) {
@@ -438,7 +438,7 @@
   bottom: 0;
   right: 0;
   background: white;
-  background: #a0a0a0;
+  background: #F9F9F9;
   transition: transform .25s, opacity .5s;
   transform: translateY(100%);
   height: 0;
@@ -454,14 +454,14 @@
   position: absolute;
   right: 1.2em;
   top: 1.8em;
-  border: 1px solid #595959;
+  border: 1px solid #777777;
   padding: 0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   text-align: center;
   line-height: 20px;
-  color: #111;
+  color: #111111;
   cursor: pointer;
   background: white; }
   .ct-chart_social_close:hover {
@@ -470,8 +470,8 @@
     border: 1px solid #852E57; }
 
 .ct-chart_social_inner {
-  background: #fff;
-  color: #111;
+  background: #FFFFFF;
+  color: #111111;
   font-size: 1.2em;
   line-height: 1.6em;
   overflow: scroll;
@@ -481,7 +481,7 @@
   top: 4em;
   bottom: 4em;
   padding: 1em .25em;
-  border: 1px solid #595959; }
+  border: 1px solid #777777; }
   .ct-chart_social_inner table {
     border-spacing: 0; }
     .ct-chart_social_inner table tr td {
@@ -493,13 +493,13 @@
   text-align: left; }
 
 .ct-chart_social_inner table tr:nth-child(odd) td {
-  background: #a0a0a0; }
+  background: #F9F9F9; }
 
 .ct-chart_social_inner table tr:nth-child(1) td {
   background: white;
   color: black;
   font-size: 0.8em;
-  border-bottom: 1px solid #595959; }
+  border-bottom: 1px solid #777777; }
 
 .ct-chart_social_nav {
   position: absolute;
@@ -508,12 +508,12 @@
 
 .ct-chart_social_nav .ct-chart_social_btn {
   text-decoration: none;
-  color: #111;
+  color: #111111;
   display: inline-block;
   padding: .5em 1em;
   cursor: pointer;
   border-radius: 1em;
-  border: 1px solid #595959;
+  border: 1px solid #777777;
   margin-left: 1em;
   text-transform: uppercase;
   font-size: 0.8em; }
@@ -553,8 +553,8 @@
 
 .ct-image-url {
   padding: 1em;
-  background: #fff;
-  border: 1px solid #595959;
+  background: #FFFFFF;
+  border: 1px solid #777777;
   width: 80%;
   white-space: nowrap;
   overflow-x: hidden; }
@@ -569,7 +569,7 @@
     text-decoration: none;
     display: block;
     background: none;
-    color: #111;
+    color: #111111;
     height: 80px;
     text-align: center;
     line-height: 80px;
@@ -670,7 +670,7 @@
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke: #fff;
+  stroke: #FFFFFF;
   stroke-width: 2.5px; }
 
 .ct-primary.ct-type_area .ct-line.ct-line-0 {
@@ -716,7 +716,7 @@
 .ct-primary.ct-type_bar .ct-series_group.ct-multiple rect.ct-bar,
 .ct-alternate.ct-type_bar .ct-series_group.ct-multiple rect.ct-bar {
   stroke-width: 1px;
-  stroke: #fff; }
+  stroke: #FFFFFF; }
 
 .ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_0 .ct-bar-0 rect,
 .ct-primary.ct-type_bar .ct-series_group.ct-multiple .ct-series_0 rect.ct-bar,
@@ -801,13 +801,13 @@
 .ct-primary.ct-type_stream .ct-series_group .ct-series .ct-stream-series.ct-line,
 .ct-alternate.ct-type_stream .ct-series_group .ct-series .ct-stream-series.ct-line {
   fill: none;
-  stroke: #fff;
+  stroke: #FFFFFF;
   stroke-width: 2.5px; }
 
 .ct-primary.ct-type_column .ct-series_group .ct-column rect,
 .ct-alternate.ct-type_column .ct-series_group .ct-column rect {
   stroke-width: 1px;
-  stroke: #fff; }
+  stroke: #FFFFFF; }
 
 .ct-series rect.ct-column.ct-muted,
 .ct-column rect.ct-muted {
@@ -844,7 +844,7 @@
   fill: #D8CFC3; }
 
 .ct-bg {
-  fill: #fff; }
+  fill: #FFFFFF; }
 
 .ct-chart_svg {
   display: block; }
@@ -852,7 +852,7 @@
 .ct-chart {
   width: 100%;
   height: auto;
-  background-color: #fff;
+  background-color: #FFFFFF;
   margin: 0 0 20px 0;
   position: relative;
   overflow: hidden;

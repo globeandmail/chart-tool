@@ -9,7 +9,7 @@ header {
   background-color: white;
   z-index: 2000;
   .topbar {
-    @include background-image(linear-gradient(darken($text, 60%), lighten($text, 10%)));
+    @include background-image(linear-gradient(darken($color-black, 60%), lighten($color-black, 10%)));
     position: absolute;
     left: 0px;
     top: 0px;
@@ -34,7 +34,7 @@ header {
 
 .edit-indicator, .header-help {
   padding-left: 0.3em;
-  color: $text;
+  color: $color-black;
   @include interface-font-light;
   opacity: 0.2;
   @include transition (all 0.1s ease-out);
@@ -61,22 +61,22 @@ header {
   font-size: 1.5em;
   @include interface-font-bold;
   border: none;
-  color: $text;
+  color: $color-black;
   padding: 0.3em 0 0.4em 0;
-  border-bottom: 1px solid lighten($verylightgray, 10%);
+  border-bottom: 1px solid $color-gray-medium;
   margin-bottom: -1px;
   letter-spacing: -0.02em;
   min-width: 100px;
   @include transition (width 0.1s);
   @include transition (all 0.1s ease-out);
   @include placeholder {
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
   &:focus {
     outline: none;
-    border-color: $text;
+    border-color: $color-black;
     @include placeholder {
-      color: lighten($verylightgray, 18%);
+      color: $color-gray-medium;
     }
     @include transition (all 0.1s ease-in);
   }
@@ -106,7 +106,7 @@ header {
   a {
     @include interface-font-light;
     display: inline;
-    color: $text;
+    color: $color-black;
     text-decoration: none;
     @include transition (all 0.1s ease-out);
     &:hover {
@@ -117,7 +117,7 @@ header {
 }
 
 .header-help {
-  color: $text;
+  color: $color-black;
   @include transition (all 0.1s ease-out);
   &:hover {
     color: $primary-color;

@@ -46,12 +46,12 @@ $shade2: #999;
 $shade3: #ccc;
 $shade4: #EEE;
 $shade5: #F5F5F5;
-$black: #000;
-$text: #333;
-$lightgray: #ababab;
-$verylightgray: #cacaca;
-$white : #fff;
+$color-black: #000;
+$color-black: #333;
+$color-gray-dark: #ababab;
+$color-gray-medium: #cacaca;
+$color-white : #fff;
 
-$axis-stroke-color: $black;
+$axis-stroke-color: $color-black;
 $axis-stroke-width: 1px;
 $axis-stroke-dasharray: 1, 3px;

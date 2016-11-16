@@ -10,6 +10,6 @@
 .#{$prefix}primary.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series.#{$prefix}line,
 .#{$prefix}alternate.#{$prefix}type_stream .#{$prefix}series_group .#{$prefix}series .#{$prefix}stream-series.#{$prefix}line {
   fill: none;
-  stroke: $white;
+  stroke: $color-white;
   stroke-width: $line-stroke-width;
 }

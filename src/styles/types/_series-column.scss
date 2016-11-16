@@ -1,7 +1,7 @@
 .#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect,
 .#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect {
   stroke-width: 1px;
-  stroke: $white;
+  stroke: $color-white;
 }
 
 .#{$prefix}series rect.#{$prefix}column.#{$prefix}muted,

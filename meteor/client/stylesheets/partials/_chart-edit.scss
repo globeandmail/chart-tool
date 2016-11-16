@@ -7,14 +7,14 @@
 
 .options-area {
   @include span-columns(6, block-collapse);
-  border-left: 1px solid $text;
+  border-left: 1px solid $color-black;
   padding-left: 1em;
 }
 
 .edit-box {
   margin-bottom: 1.6em;
   h3 {
-    border-bottom: 1px solid $text;
+    border-bottom: 1px solid $color-black;
     padding-bottom: 0.1em;
     margin: 0 0 0.3em 0;
     cursor: pointer;
@@ -33,13 +33,13 @@
     margin: 0.7em 0 0.5em 0;
   }
   span {
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
 }
 
 select {
   @include interface-font-light;
-  border: 1px solid $text;
+  border: 1px solid $color-black;
   outline: none;
   background: transparent;
   width: auto;
@@ -69,7 +69,7 @@ select {
 
 .input-data-edit {
   border: none;
-  background-color: lighten($lightgray, 27%);
+  background-color: $color-gray-light;
   min-height: 14em;
   width: 100%;
   padding: 0.3em;
@@ -77,15 +77,15 @@ select {
   font-size: 0.8em;
   tab-size: 20;
   font-family: "Monaco", "Lucida Console", monospace;
-  border: 2px solid lighten($lightgray, 27%);
+  border: 2px solid $color-gray-light;
   box-sizing: border-box;
   @include transition (all 0.1s ease-out);
   @include placeholder {
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
   &:focus {
     outline: none;
-    border: 2px solid $text;
+    border: 2px solid $color-black;
     @include transition (all 0.1s ease-in);
   }
 }
@@ -157,14 +157,14 @@ select {
     @include interface-font-light;
   }
   .input-border {
-    border: 1px solid $text;
+    border: 1px solid $color-black;
     border-radius: 100%;
     height: 1em;
     width: 1em;
   }
   input[type="radio"] {
     border-radius: 50%;
-    border: 1px solid $text;
+    border: 1px solid $color-black;
     box-shadow: inset 0px 0px 0px 2px white;
     width: 1em;
     height: 1em;
@@ -268,7 +268,7 @@ select {
     color: $primary-color;
     @include interface-font-black;
     margin: 0;
-    border-bottom: 1px solid lighten($verylightgray, 10%);
+    border-bottom: 1px solid $color-gray-medium;
     margin-bottom: 0.75em;
     padding-bottom: 0.2em;
   }
@@ -286,7 +286,7 @@ select {
 }
 
 .chart-error-container {
-  background-color: lighten($lightgray, 27%);
+  background-color: $color-gray-light;
   width: 100%;
   height: 400px;
   .chart-error {
@@ -311,7 +311,7 @@ select {
   h3 {
     padding-bottom: 0.1em;
     margin-bottom: 0.5em;
-    border-bottom: 1px solid $text;
+    border-bottom: 1px solid $color-black;
     @include interface-font-light;
   }
 }
@@ -326,7 +326,7 @@ select {
 
 .embed-code {
   h3 span {
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
 }
 
@@ -334,18 +334,18 @@ select {
   display: block;
   font-family: "Monaco", "Lucida Console", monospace;
   text-align: left;
-  background-color: lighten($lightgray, 27%);
+  background-color: $color-gray-light;
   height: 9em;
   width: 100%;
   padding: 0.3em;
   resize: none;
   font-size: 0.8em;
-  border: 2px solid lighten($lightgray, 27%);
+  border: 2px solid $color-gray-light;
   overflow-y: auto;
   box-sizing: border-box;
   @include transition (all 0.1s ease-out);
   &:hover {
-    background-color: lighten($lightgray, 15%);
+    background-color: $color-gray-medium;
     cursor: pointer;
   }
   &:focus {
@@ -360,8 +360,8 @@ select {
 .selectize-input {
   font-size: 0.8em;
   font-family: "Monaco", "Lucida Console", monospace;
-  background-color: lighten($lightgray, 27%);
-  border: 2px solid lighten($lightgray, 27%);
+  background-color: $color-gray-light;
+  border: 2px solid $color-gray-light;
   box-sizing: border-box;
   box-shadow: none;
   border-radius: 0;
@@ -370,7 +370,7 @@ select {
   &.focus {
     box-shadow: none;
     outline: none;
-    border: 2px solid $text;
+    border: 2px solid $color-black;
     border-radius: 0;
     @include transition (all 0.1s ease-in);
   }
@@ -380,10 +380,10 @@ select {
   font-family: "Monaco", "Lucida Console", monospace;
   background: none;
   text-shadow: none;
-  border: 1px solid $text;
+  border: 1px solid $color-black;
   border-radius: 4px;
   box-shadow: none;
-  color: $text;
+  color: $color-black;
   float: left;
 }
 
@@ -392,8 +392,8 @@ select {
 }
 
 .selectize-control.multi .selectize-input [data-value].active {
-  background-color: $text;
-  color: lighten($lightgray, 27%);
+  background-color: $color-black;
+  color: $color-gray-light;
 }
 
 .selectize-dropdown {
@@ -402,16 +402,16 @@ select {
 
 .selectize-dropdown .active {
   background-color: lighten($primary-color, 60%);
-  color: $text;
+  color: $color-black;
 }
 
 .selectize-dropdown [data-selectable] .highlight {
   background: lighten($primary-color, 50%);
-  color: $text;
+  color: $color-black;
 }
 
 .selectize-dropdown .active.create {
-  color: $text;
+  color: $color-black;
 }
 
 // Title, qualifier and source contentEditable fields
@@ -421,25 +421,25 @@ select {
 .editable-chart_source {
   &:hover {
     cursor: text;
-    background-color: lighten($lightgray, 27%);
+    background-color: $color-gray-light;
   }
   &:focus {
     outline: none !important;
-    background-color: lighten($lightgray, 27%);
+    background-color: $color-gray-light;
   }
 }
 
 .editable-chart_title {
   &:empty:before {
     content: "Please include a chart title";
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
 }
 
 .editable-chart_qualifier {
   &:empty:before {
     content: "Please include a chart qualifier";
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
 }
 
@@ -450,12 +450,29 @@ select {
 .editable-chart_source {
   &:empty:before {
     content: "Please include a chart source";
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
 }
 
 .#{$prefix}chart_source {
   @media(min-width: 420px) {
     width: 100%;
+  }
+}
+
+.unit-delete {
+  @include appearance(none);
+  background: none;
+  border: 1px solid $color-red;
+  color: $color-red;
+  font-size: 1em;
+  padding: 0.4em 0.5em 0.45em 0.5em;
+  border-radius: 4px;
+  margin-top: 0.4em;
+  @include transition (all 0.1s ease-out);
+  &:hover {
+    background-color: $color-red;
+    color: $color-white;
+    @include transition (all 0.1s ease-in);
   }
 }
