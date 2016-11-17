@@ -1,90 +1,81 @@
-function StackedColumnChart(node, obj) {
+import { axisManager as Axis, axisCleanup, addZeroLine, dropOversetTicks } from '../components/axis';
+import { scaleManager as Scale } from '../components/scale';
+import { timeInterval } from '../../utils/utils';
+import 'd3-selection-multi';
 
-  var axisModule = require("../components/axis"),
-      scaleModule = require("../components/scale"),
-      Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager;
+export default function stackedColumnChart(node, obj) {
 
-  //  scales
-  var yScaleObj = new Scale(obj, "yAxis"),
-      xScaleObj = new Scale(obj, "xAxis"),
-      yScale = yScaleObj.scale,
-      xScale = xScaleObj.scale;
+  const yScaleObj = new Scale(obj, 'yAxis'),
+    xScaleObj = new Scale(obj, 'xAxis'),
+    yScale = yScaleObj.scale,
+    xScale = xScaleObj.scale;
 
-  // axes
-  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
+  const xAxisObj = new Axis(node, obj, xScaleObj.scale, 'xAxis'),
+    yAxisObj = new Axis(node, obj, yScaleObj.scale, 'yAxis');
 
-  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
+  axisCleanup(node, obj, xAxisObj, yAxisObj);
+
+  let singleColumn;
 
   switch (obj.xAxis.scale) {
-    case "time":
-
-      var timeInterval = require("../../utils/utils").timeInterval,
-          timeElapsed = timeInterval(obj.data.data);
-      var singleColumn = obj.dimensions.tickWidth() / timeElapsed;
-
+    case 'time':
+      singleColumn = obj.dimensions.tickWidth() / (timeInterval(obj.data.data) + 1);
       xAxisObj.range = [0, (obj.dimensions.tickWidth() - singleColumn)];
-
-      axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
-
+      axisCleanup(node, obj, xAxisObj, yAxisObj);
       break;
-    case "ordinal-time":
-
-      var singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
-
-      node.select("." + obj.prefix + "axis-group." + obj.prefix + "xAxis")
-        .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
-
+    case 'ordinal-time':
+      singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
+      xAxisObj.node = node.select(`.${obj.prefix}axis-group.${obj.prefix}xAxis`)
+        .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)},${obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight})`);
+      dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
       break;
-    case "ordinal":
-      var singleColumn = xScale.rangeBand();
+    case 'ordinal':
+      singleColumn = xScale.rangeBand();
       break;
   }
 
-  var seriesGroup = node.append("g")
-    .attr("class", function() {
-      var output = obj.prefix + "series_group";
+  const seriesGroup = node.append('g')
+    .attr('class', () => {
+      let output = `${obj.prefix}series_group`;
       if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'muliple' class so we can target
-        output += " " + obj.prefix + "multiple";
+        output += ` ${obj.prefix}multiple`;
       }
       return output;
     })
-    .attr("transform", function() {
-      var xOffset;
-      if (obj.xAxis.scale === "ordinal-time") {
+    .attr('transform', () => {
+      let xOffset;
+      if (obj.xAxis.scale === 'ordinal-time') {
         xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2);
       } else {
         xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth();
       }
-      return "translate(" + xOffset + ",0)";
+      return `translate(${xOffset},0)`;
     });
 
-  var series = seriesGroup.selectAll("g." + obj.prefix + "series")
+  const series = seriesGroup.selectAll(`g.${obj.prefix}series`)
     .data(obj.data.stackedData)
-    .enter().append("g")
-    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
+    .enter().append('g')
+    .attr('class', (d, i) => { return `${obj.prefix}series ${obj.prefix}series-${i}`; });
 
-  var columnItem = series
+  const columnItem = series
     .append('g')
     .attrs({
-      "class": function(d, i) { return obj.prefix + "column " + obj.prefix + "column-" + (i) },
-      "data-key": function(d, i, j) { return d[j].x; },
-      "data-legend": function(d, i, j) { return d[j].legend; },
+      'class': (d, i) => { return `${obj.prefix}column ${obj.prefix}column-${i}`; },
+      'data-key': (d, i, j) => { return d[j].x; },
+      'data-legend': (d, i, j) => { return d[j].legend; },
     });
 
-  var rect = columnItem.selectAll("rect")
-    .data(function(d) { return d; })
-    .enter().append("rect")
+  const rect = columnItem.selectAll('rect')
+    .data(d => { return d; })
+    .enter().append('rect')
     .attrs({
-      "x": function(d) { return xScale(d.x); },
-      "y": function(d) { return yScale(Math.max(0, d.y0 + d.y)); },
-      "height": function(d) { return Math.abs(yScale(d.y) - yScale(0)); },
-      "width": singleColumn
+      'x': d => { return xScale(d.x); },
+      'y': d => { return yScale(Math.max(0, d.y0 + d.y)); },
+      'height': d => { return Math.abs(yScale(d.y) - yScale(0)); },
+      'width': singleColumn
     });
 
-  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
     xScaleObj: xScaleObj,
@@ -97,5 +88,3 @@ function StackedColumnChart(node, obj) {
   };
 
 }
-
-module.exports = StackedColumnChart;

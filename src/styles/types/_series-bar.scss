@@ -10,14 +10,14 @@
 
 @for $counter from 1 through $series-count-max {
 
-  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter - 1} .#{$prefix}bar-#{$counter - 1} rect,
-  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter - 1} rect.#{$prefix}bar,
+  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series-#{$counter - 1} .#{$prefix}bar-#{$counter - 1} rect,
+  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series-#{$counter - 1} rect.#{$prefix}bar,
   .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-#{$counter - 1} rect {
     fill: nth($primaryShades, $counter);
   }
 
-  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter - 1} .#{$prefix}bar-#{$counter - 1} rect,
-  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series_#{$counter - 1} rect.#{$prefix}bar,
+  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series-#{$counter - 1} .#{$prefix}bar-#{$counter - 1} rect,
+  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}series-#{$counter - 1} rect.#{$prefix}bar,
   .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-#{$counter - 1} rect {
     fill: nth($alternateShades, $counter);
   }
