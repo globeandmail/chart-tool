@@ -55,7 +55,7 @@ function AreaChart(node, obj) {
 
       var pathRef = seriesGroup.append("path")
         .datum(obj.data.data)
-        .attr({
+        .attrs({
           "d": area,
           "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
           "class": function() {
@@ -66,7 +66,7 @@ function AreaChart(node, obj) {
 
       seriesGroup.append("path")
         .datum(obj.data.data)
-        .attr({
+        .attrs({
           "d": line,
           "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
           "class": function() {
@@ -98,7 +98,7 @@ function AreaChart(node, obj) {
 
   seriesGroup.append("path")
     .datum(obj.data.data)
-    .attr({
+    .attrs({
       "d": hArea,
       "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
       "class": function() {
@@ -109,7 +109,7 @@ function AreaChart(node, obj) {
 
   seriesGroup.append("path")
     .datum(obj.data.data)
-    .attr({
+    .attrs({
       "d": hLine,
       "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
       "class": function() {

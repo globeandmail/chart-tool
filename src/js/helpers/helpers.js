@@ -29,11 +29,11 @@ export function isUndefined(val) {
 }
 
 export function arrayDiff(a1, a2) {
-  let o1 = {}, o2 = {}, diff = [], i, len, k;
-  for (i = 0, len = a1.length; i < len; i++) { o1[a1[i]] = true; }
-  for (i = 0, len = a2.length; i < len; i++) { o2[a2[i]] = true; }
-  for (k in o1) { if (!(k in o2)) { diff.push(k); } }
-  for (k in o2) { if (!(k in o1)) { diff.push(k); } }
+  const o1 = {}, o2 = {}, diff = [];
+  for (let i = 0; i < a1.length; i++) { o1[a1[i]] = true; }
+  for (let i = 0; i < a2.length; i++) { o2[a2[i]] = true; }
+  for (let k in o1) { if (!(k in o2)) { diff.push(k); } }
+  for (let k in o2) { if (!(k in o1)) { diff.push(k); } }
   return diff;
 }
 

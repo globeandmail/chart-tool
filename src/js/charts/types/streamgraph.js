@@ -21,7 +21,7 @@ function StreamgraphChart(node, obj) {
   }
 
   var seriesGroup = node.append("g")
-    .attr({
+    .attrs({
       "class": obj.prefix + "series_group",
       "transform": function() {
         return "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"

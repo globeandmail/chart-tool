@@ -48,50 +48,20 @@ export class ScaleObj {
 }
 
 export function setScaleType(type) {
-
-  let scaleType;
-
   switch (type) {
-    case 'time':
-      scaleType = scaleTime();
-      break;
-    case 'ordinal':
-      scaleType = scaleBand();
-      break;
-    case 'ordinal-time':
-      scaleType = scalePoint();
-      break;
-    case 'linear':
-      scaleType = scaleLinear();
-      break;
-    case 'identity':
-      scaleType = scaleIdentity();
-      break;
-    case 'pow':
-      scaleType = scalePow();
-      break;
-    case 'sqrt':
-      scaleType = scaleSqrt();
-      break;
-    case 'log':
-      scaleType = scaleLog();
-      break;
-    case 'quantize':
-      scaleType = scaleQuantize();
-      break;
-    case 'quantile':
-      scaleType = scaleQuantile();
-      break;
-    case 'threshold':
-      scaleType = scaleThreshold();
-      break;
-    default:
-      scaleType = scaleLinear();
-      break;
+    case 'time': return scaleTime();
+    case 'ordinal': return scaleBand();
+    case 'ordinal-time': return scalePoint();
+    case 'linear': return scaleLinear();
+    case 'identity': return scaleIdentity();
+    case 'pow': return scalePow();
+    case 'sqrt': return scaleSqrt();
+    case 'log': return scaleLog();
+    case 'quantize': return scaleQuantize();
+    case 'quantile': return scaleQuantile();
+    case 'threshold': return scaleThreshold();
+    default: return scaleLinear();
   }
-
-  return scaleType;
-
 }
 
 export function setRangeType(axis) {

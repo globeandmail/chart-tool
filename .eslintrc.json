@@ -27,7 +27,9 @@
       }
     ],
     "semi": ["error", "always"],
-    "space-in-parens": ["error", "never"]
+    "space-in-parens": ["error", "never"],
+    "no-var": ["error"],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }]
   },
   "globals": {
     "DocumentTouch": false

@@ -68,7 +68,7 @@ function StackedColumnChart(node, obj) {
 
   var columnItem = series
     .append('g')
-    .attr({
+    .attrs({
       "class": function(d, i) { return obj.prefix + "column " + obj.prefix + "column-" + (i) },
       "data-key": function(d, i, j) { return d[j].x; },
       "data-legend": function(d, i, j) { return d[j].legend; },
@@ -77,7 +77,7 @@ function StackedColumnChart(node, obj) {
   var rect = columnItem.selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
-    .attr({
+    .attrs({
       "x": function(d) { return xScale(d.x); },
       "y": function(d) { return yScale(Math.max(0, d.y0 + d.y)); },
       "height": function(d) { return Math.abs(yScale(d.y) - yScale(0)); },

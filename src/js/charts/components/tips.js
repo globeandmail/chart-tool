@@ -157,7 +157,7 @@ function tipsManager(node, obj) {
     case "stream":
 
       tipNodes.overlay = tipNodes.tipNode.append("rect")
-        .attr({
+        .attrs({
           "class": obj.prefix + "tip_overlay",
           "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
           "width": obj.dimensions.tickWidth(),
@@ -208,7 +208,7 @@ function appendTipGroup(node, obj) {
       chartNode = d3.select(node.node().parentNode.parentNode);
 
   var tipNode = svgNode.append("g")
-    .attr({
+    .attrs({
       "transform": "translate(" + obj.dimensions.margin.left + "," + obj.dimensions.margin.top + ")",
       "class": obj.prefix + "tip"
     })
@@ -223,13 +223,13 @@ function appendTipGroup(node, obj) {
   xTipLine.append("line");
 
   var tipBox = tipNode.append("g")
-    .attr({
+    .attrs({
       "class": obj.prefix + "tip_box",
       "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"
     });
 
   var tipRect = tipBox.append("rect")
-    .attr({
+    .attrs({
       "class": obj.prefix + "tip_rect",
       "transform": "translate(0,0)",
       "width": 1,
@@ -254,7 +254,7 @@ function appendTipGroup(node, obj) {
     .insert("g", ":first-child")
     .attr("class", obj.prefix + "tip_text-date-group")
     .append("text")
-    .attr({
+    .attrs({
       "class": obj.prefix + "tip_text-date",
       "x": 0,
       "y": 0,
@@ -297,7 +297,7 @@ function appendTipElements(node, obj, tipNodes, dataRef) {
 
   tipTextGroups.append("text")
     .text(function(d) { return d.val; })
-    .attr({
+    .attrs({
       "class": function(d, i) {
         return (obj.prefix + "tip_text " + obj.prefix + "tip_text-" + (i));
       },
@@ -314,7 +314,7 @@ function appendTipElements(node, obj, tipNodes, dataRef) {
 
   tipTextGroups
     .append("circle")
-    .attr({
+    .attrs({
       "class": function(d, i) {
         return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
       },
@@ -330,7 +330,7 @@ function appendTipElements(node, obj, tipNodes, dataRef) {
     .data(dataRef)
     .enter()
     .append("circle")
-    .attr({
+    .attrs({
       "class": function(d, i) {
         return (obj.prefix + "tip_path-circle " + obj.prefix + "tip_path-circle-" + (i));
       },
@@ -385,7 +385,7 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipGroup
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -403,7 +403,7 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
       .selectAll("." + obj.prefix + "tip_path-circle")
         .data(tipData.series)
         .classed(obj.prefix + "active", function(d) { return d.val ? true : false; })
-        .attr({
+        .attrs({
           "cx": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
           "cy": function(d) {
             if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
@@ -411,13 +411,13 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
         });
 
     tipNodes.tipRect
-      .attr({
+      .attrs({
         "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
         "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
       });
 
     tipNodes.xTipLine.select("line")
-      .attr({
+      .attrs({
         "x1": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "x2": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "y1": 0,
@@ -425,7 +425,7 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipBox
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -486,7 +486,7 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipGroup
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -504,7 +504,7 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
       .selectAll("." + obj.prefix + "tip_path-circle")
         .data(tipData.series)
         .classed(obj.prefix + "active", function(d) { return d.val ? true : false; })
-        .attr({
+        .attrs({
           "cx": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
           "cy": function(d) {
             if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
@@ -512,13 +512,13 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
         });
 
     tipNodes.tipRect
-      .attr({
+      .attrs({
         "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
         "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
       });
 
     tipNodes.xTipLine.select("line")
-      .attr({
+      .attrs({
         "x1": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "x2": obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "y1": 0,
@@ -526,7 +526,7 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipBox
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -624,7 +624,7 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipGroup
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -655,7 +655,7 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
             return false;
           }
         })
-        .attr({
+        .attrs({
           "cx": function(d) {
             return obj.rendered.plot.xScaleObj.scale(d.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight
           },
@@ -667,13 +667,13 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
         });
 
     tipNodes.tipRect
-      .attr({
+      .attrs({
         "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
         "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
       });
 
     tipNodes.xTipLine.select("line")
-      .attr({
+      .attrs({
         "x1": obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "x2": obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "y1": 0,
@@ -681,7 +681,7 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipBox
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -779,7 +779,7 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipGroup
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -810,7 +810,7 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
             return false;
           }
         })
-        .attr({
+        .attrs({
           "cx": function(d) {
             return obj.rendered.plot.xScaleObj.scale(d.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight
           },
@@ -822,13 +822,13 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
         });
 
     tipNodes.tipRect
-      .attr({
+      .attrs({
         "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
         "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
       });
 
     tipNodes.xTipLine.select("line")
-      .attr({
+      .attrs({
         "x1": obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "x2": obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         "y1": 0,
@@ -836,7 +836,7 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipBox
-      .attr({
+      .attrs({
         "transform": function() {
           if (cursor.x > obj.dimensions.tickWidth() / 2) {
             // tipbox pointing left
@@ -915,13 +915,13 @@ function ColumnChartTips(tipNodes, obj, d, thisRef) {
       });
 
     tipNodes.tipRect
-      .attr({
+      .attrs({
         "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
         "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
       });
 
     tipNodes.tipBox
-      .attr({
+      .attrs({
         "transform": function() {
 
           var x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
@@ -1014,7 +1014,7 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
 
     tipNodes.tipGroup
       .append("circle")
-      .attr({
+      .attrs({
         "class": function(d, i) {
           return (obj.prefix + "tip_circle " + obj.prefix + "tip_circle-" + (i));
         },
@@ -1033,13 +1033,13 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
       });
 
     tipNodes.tipRect
-      .attr({
+      .attrs({
         "width": tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
         "height": tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
       });
 
     tipNodes.tipBox
-      .attr({
+      .attrs({
         "transform": function() {
 
           if (refPos > obj.dimensions.tickWidth() / 2) {

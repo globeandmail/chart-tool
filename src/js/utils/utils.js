@@ -1,13 +1,17 @@
 import { select } from 'd3-selection';
 import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
+import {
+  curveLinear,
+  curveCardinal,
+  curveCatmullRom,
+  curveMonotoneX,
+  curveNatural,
+  curveStepBefore,
+  curveStepAfter
+} from 'd3-shape';
 import Settings from '../config/chart-settings';
 import bucket from '../config/env';
-
-/**
- * Utilities module. Functions that aren't specific to any one module.
- * @module utils/utils
- */
 
 export function debounce(fn, obj, timeout, root) {
   let timeoutID = -1;
@@ -67,19 +71,21 @@ export class TimeObj {
 
 export function wrapText(text, width) {
   text.each(function() {
-    let text = select(this),
-      words = text.text().split(/\s+/).reverse(),
-      word,
-      line = [],
-      lineNumber = 0,
+
+    const text = select(this),
+      y = text.attr('y'),
       lineHeight = 1.0, // ems
       x = 0,
-      y = text.attr('y'),
-      dy = parseFloat(text.attr('dy')),
+      dy = parseFloat(text.attr('dy'));
+
+    let words = text.text().split(/\s+/).reverse(),
+      line = [],
+      lineNumber = 0,
+      word,
       tspan = text.text(null).append('tspan')
         .attr('x', x)
         .attr('y', y)
-        .attr('dy', dy + 'em');
+        .attr('dy', `${dy}em`);
 
     while (word = words.pop()) {
       line.push(word);
@@ -91,7 +97,7 @@ export function wrapText(text, width) {
         tspan = text.append('tspan')
           .attr('x', x)
           .attr('y', y)
-          .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+          .attr('dy', `${++lineNumber * lineHeight + dy}em`)
           .text(word);
       }
     }
@@ -145,12 +151,30 @@ export function timeInterval(data) {
 
 }
 
-// export function getTranslateXY(node) {
-//   return d3.transform(d3.select(node).attr('transform')).translate;
-// }
+export function getCurve(interp) {
+  switch (interp) {
+    case 'cardinal':
+      return curveCardinal;
+    case 'linear':
+      return curveLinear;
+    case 'step-before':
+      return curveStepBefore;
+    case 'step-after':
+      return curveStepAfter;
+    case 'monotone':
+      return curveMonotoneX;
+    case 'catmull-rom':
+      return curveCatmullRom;
+    case 'natural':
+      return curveNatural;
+  }
+}
 
-export function translate(x, y) {
-  return `translate(${x}, ${y})`;
+export function getTranslate(node) {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttributeNS(null, 'transform', node.getAttribute('transform'));
+  const matrix = g.transform.baseVal.consolidate().matrix;
+  return [matrix.e, matrix.f];
 }
 
 export function svgTest(root) {
@@ -161,7 +185,8 @@ export function getThumbnailPath(obj) {
   const imgSettings = obj.image;
   imgSettings.bucket = bucket;
   const id = obj.id.replace(obj.prefix, '');
-  return 'https://s3.amazonaws.com/' + imgSettings.bucket + '/' + imgSettings.base_path + id + '/' + imgSettings.filename + '.' + imgSettings.extension;
+
+  return `https://s3.amazonaws.com/${imgSettings.bucket}/${imgSettings.base_path}${id}/${imgSettings.filename}.${imgSettings.extension}`;
 }
 
 export function generateThumb(container, obj) {
@@ -171,7 +196,7 @@ export function generateThumb(container, obj) {
   const imgSettings = settings.image;
 
   const cont = document.querySelector(container),
-    fallback = cont.querySelector('.' + settings.prefix + 'base64img');
+    fallback = cont.querySelector(`.${settings.prefix}base64img`);
 
   if (imgSettings && imgSettings.enable && obj.data.id) {
 
@@ -179,7 +204,7 @@ export function generateThumb(container, obj) {
 
     img.setAttribute('src', getThumbnailPath(obj));
     img.setAttribute('alt', obj.data.heading);
-    img.setAttribute('class', settings.prefix + 'thumbnail');
+    img.setAttribute('class', `${settings.prefix}thumbnail`);
 
     cont.appendChild(img);
 

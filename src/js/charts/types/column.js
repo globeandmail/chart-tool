@@ -72,7 +72,7 @@ function ColumnChart(node, obj) {
       .selectAll("." + obj.prefix + "column")
       .data(obj.data.data).enter()
       .append("g")
-      .attr({
+      .attrs({
         "class": obj.prefix + "column " + obj.prefix + "column-" + (i),
         "data-series": i,
         "data-key": function(d) { return d.key; },
@@ -85,7 +85,7 @@ function ColumnChart(node, obj) {
       });
 
     columnItem.append("rect")
-      .attr({
+      .attrs({
         "class": function(d) {
           return d.series[i].val < 0 ? obj.prefix + "negative" : obj.prefix + "positive";
         },
@@ -120,7 +120,7 @@ function ColumnChart(node, obj) {
       var columnOffset = obj.dimensions.bands.offset;
 
       columnItem.selectAll("rect")
-        .attr({
+        .attrs({
           "x": function(d) {
             if (obj.xAxis.scale !== "ordinal-time") {
               return ((i * singleColumn) + (singleColumn * (columnOffset / 2)));

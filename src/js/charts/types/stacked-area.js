@@ -38,7 +38,7 @@ function StackedAreaChart(node, obj) {
   var series = seriesGroup.selectAll("g." + obj.prefix + "series")
     .data(obj.data.stackedData)
     .enter().append("svg:g")
-    .attr({
+    .attrs({
       "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
       "class": function(d, i) {
         var output = obj.prefix + "series " + obj.prefix + "series_" + (i);

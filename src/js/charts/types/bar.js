@@ -90,7 +90,7 @@ function BarChart(node, obj) {
             textHeight = d3.select(this).node().getBBox().height;
         if (tspanCount > 1) {
           tspans
-            .attr({
+            .attrs({
               "y": ((textHeight / tspanCount) / 2) - (textHeight / 2)
             });
         }
@@ -165,7 +165,7 @@ function BarChart(node, obj) {
       .selectAll("." + obj.prefix + "bar")
       .data(obj.data.data).enter()
       .append("g")
-      .attr({
+      .attrs({
         "class": obj.prefix + "bar " + obj.prefix + "bar-" + (i),
         "data-series": i,
         "data-key": function(d) { return d.key; },
@@ -176,7 +176,7 @@ function BarChart(node, obj) {
       });
 
     barItem.append("rect")
-      .attr({
+      .attrs({
         "class": function(d) {
           return d.series[i].val < 0 ? "negative" : "positive";
         },
@@ -195,7 +195,7 @@ function BarChart(node, obj) {
     if (obj.data.seriesAmount > 1) {
       var barOffset = obj.dimensions.bands.offset;
       barItem.selectAll("rect")
-        .attr({
+        .attrs({
           "y": function() {
             return ((i * singleBar) + (singleBar * (barOffset / 2)));
           },
@@ -210,7 +210,7 @@ function BarChart(node, obj) {
     .classed(obj.prefix + "minor", true);
 
   xAxisNode.selectAll("line")
-    .attr({
+    .attrs({
       "y1": function() {
         if (obj.exportable && obj.exportable.dynamicHeight) {
           // dynamic height, so calculate where the y1 should go
@@ -247,7 +247,7 @@ function BarChart(node, obj) {
       });
 
     d3.select(node.node().parentNode).select("." + obj.prefix + "bg")
-      .attr({
+      .attrs({
         "height": obj.dimensions.computedHeight()
       });
 
