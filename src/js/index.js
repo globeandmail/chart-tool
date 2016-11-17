@@ -120,7 +120,7 @@ export default (root => {
         const debouncer = debounceFn(createLoop, charts, s.debounce, root);
         select(root)
           .on(`resize.${s.prefix}debounce`, debouncer)
-          .on(`resize.${s.prefix}redraw`, dispatcher.redraw(charts));
+          .on(`resize.${s.prefix}redraw`, dispatcher.call('redraw', this, charts));
       }
 
       return {

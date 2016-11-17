@@ -76,6 +76,8 @@ export default class Recipe extends Settings {
     this.dateFormat = inputDate(this.xAxis.scale, this.dateFormat, chart.date_format);
     this.data = parse(chart.data, this.dateFormat, o.index, o.stacked, o.type) || this.data;
 
+    if (!this.data.stackedData) { o.stacked = false; }
+
   }
 
 }

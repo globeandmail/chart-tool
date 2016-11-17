@@ -157,8 +157,10 @@ export function setNumericalDomain(data, vmin, vmax, stacked, forceMaxVal) {
   });
 
   if (stacked) {
-    maxVal = max(data.stackedData[data.stackedData.length - 1], d => {
-      return (d.y0 + d.y);
+    maxVal = max(data.stackedData, layer => {
+      return max(layer, d => {
+        return d[0] + d[1];
+      });
     });
   } else {
     maxVal = max(mArr);

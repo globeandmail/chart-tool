@@ -51,13 +51,13 @@ export default function stackedAreaChart(node, obj) {
     });
 
   const a = area().curve(getCurve(obj.options.interpolation))
-    .x(d => { return xScale(d.x); })
-    .y0(d => { return yScale(d.y0); })
-    .y1(d => { return yScale(d.y0 + d.y); });
+    .x(d => { return xScale(d.data[obj.data.keys[0]]); })
+    .y0(d => { return yScale(d[1] - d[0]); })
+    .y1(d => { return yScale(d[1]); });
 
   const l = line().curve(getCurve(obj.options.interpolation))
-    .x(d => { return xScale(d.x); })
-    .y(d => { return yScale(d.y0 + d.y); });
+    .x(d => { return xScale(d.data[obj.data.keys[0]]); })
+    .y(d => { return yScale(d[1]); });
 
   series.append('path')
     .attr('class', (d, i) => {

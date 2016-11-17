@@ -64,7 +64,7 @@ export default function barChart(node, obj) {
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
     totalBarHeight = (obj.dimensions.barHeight * obj.data.data.length * obj.data.seriesAmount);
-    yScale.rangeRoundBands([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding);
+    yScale.rangeRound([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding);
     obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding * 2);
   }
 
@@ -94,7 +94,7 @@ export default function barChart(node, obj) {
       .call(wrapText, maxLabelWidth)
       .each(function() {
         const tspans = select(this).selectAll('tspan'),
-          tspanCount = tspans[0].length,
+          tspanCount = tspans._groups[0].length,
           textHeight = select(this).node().getBBox().height;
         if (tspanCount > 1) {
           tspans.attr('y', ((textHeight / tspanCount) / 2) - (textHeight / 2));
@@ -160,7 +160,7 @@ export default function barChart(node, obj) {
     })
     .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`);
 
-  const singleBar = yScale.rangeBand() / obj.data.seriesAmount;
+  const singleBar = yScale.bandwidth() / obj.data.seriesAmount;
 
   let series, barItem;
 
@@ -233,7 +233,7 @@ export default function barChart(node, obj) {
 
     obj.dimensions.totalXAxisHeight = xAxisGroup.node().getBoundingClientRect().height;
 
-    obj.dimensions.computedHeight = () => { return this.totalXAxisHeight; };
+    obj.dimensions.computedHeight = function() { return this.totalXAxisHeight; };
 
     select(node.node().parentNode)
       .attr('height', () => {

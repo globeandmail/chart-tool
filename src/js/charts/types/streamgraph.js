@@ -32,13 +32,13 @@ export default function streamgraphChart(node, obj) {
     .attr('class', (d, i) => { return `${obj.prefix}series ${obj.prefix}series-${i}`; });
 
   const a = area().curve(getCurve(obj.options.interpolation))
-    .x(d => { return xScale(d.x); })
-    .y0(d => { return yScale(d.y0); })
-    .y1(d => { return yScale(d.y0 + d.y); });
+    .x((d, i) => { return xScale(obj.data.data[i].key); })
+    .y0(d => { return yScale(d[0]); })
+    .y1(d => { return yScale(d[1]); });
 
   const l = line().curve(getCurve(obj.options.interpolation))
-    .x(d => { return xScale(d.x); })
-    .y(d => { return yScale(d.y0 + d.y); });
+    .x((d, i) => { return xScale(obj.data.data[i].key); })
+    .y(d => { return yScale(d[1]); });
 
   series.append('path')
     .attr('class', (d, i) => {

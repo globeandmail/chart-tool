@@ -1,6 +1,6 @@
 import { csvParseRows, csvParse } from 'd3-dsv';
 import { timeParse } from 'd3-time-format';
-import { stack } from 'd3-shape';
+import { stack, stackOffsetSilhouette } from 'd3-shape';
 import { range } from 'd3-array';
 
 /**
@@ -76,17 +76,16 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
 
   let stackedData;
 
-  if (stacked) {
-    const stackFn = type === 'stream' ? stack().offset('silhouette') : stack();
-    stackedData = stackFn(range(seriesAmount).map(key => {
-      return data.map(d => {
-        return {
-          legend: headers[key + 1],
-          x: d.key,
-          y: Number(d.series[key].val),
-          raw: d
-        };
-      });
+  if (stacked && headers.length > 2) {
+    const stackFn = type === 'stream' ? stack().offset(stackOffsetSilhouette) : stack();
+    stackFn.keys(headers.slice(1));
+    stackedData = stackFn(range(data.length).map(i => {
+      const o = {};
+      o[headers[i]] = data[i].key;
+      for (let j = 0; j < data[i].series.length; j++) {
+        o[data[i].series[j].key] = data[i].series[j].val;
+      }
+      return o;
     }));
   }
 
@@ -95,7 +94,7 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
     data: data,
     seriesAmount: seriesAmount,
     keys: headers,
-    stackedData: stackedData || undefined
+    stackedData: stackedData
   };
 
 }

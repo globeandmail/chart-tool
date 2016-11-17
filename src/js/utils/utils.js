@@ -26,11 +26,11 @@ export function debounce(fn, obj, timeout, root) {
 export function clearChart(cont) {
   let el = document.querySelector(cont);
   while (el && el.querySelectorAll('svg').length) {
-    let svg = cont.querySelectorAll('svg');
+    let svg = el.querySelectorAll('svg');
     svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
   }
   while (el && el.querySelectorAll('div').length) {
-    let div = cont.querySelectorAll('div');
+    let div = el.querySelectorAll('div');
     div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
   }
   return cont;

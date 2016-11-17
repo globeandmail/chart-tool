@@ -29,7 +29,7 @@ export default function columnChart(node, obj) {
       dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
       break;
     case 'ordinal':
-      singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
+      singleColumn = xScale.bandwidth() / obj.data.seriesAmount;
       break;
   }
 

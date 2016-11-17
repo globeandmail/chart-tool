@@ -2541,7 +2541,6 @@ var formatTypes = {
   "x": function(x) { return Math.round(x).toString(16); }
 };
 
-// [[fill]align][sign][symbol][0][width][,][.precision][type]
 var re = /^(?:(.)?([<>=^]))?([+\-\( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?([a-z%])?$/i;
 
 var formatSpecifier = function(specifier) {
@@ -5727,6 +5726,15 @@ var stack = function() {
   return stack;
 };
 
+var stackOffsetSilhouette = function(series, order) {
+  if (!((n = series.length) > 0)) return;
+  for (var j = 0, s0 = series[order[0]], n, m = s0.length; j < m; ++j) {
+    for (var i = 0, y = 0; i < n; ++i) y += series[i][j][1] || 0;
+    s0[j][1] += s0[j][0] = -y / 2;
+  }
+  none$1(series, order);
+};
+
 var ascending$2 = function(series) {
   var sums = series.map(sum$1);
   return none$2(series).sort(function(a, b) { return sums[a] - sums[b]; });
@@ -5753,11 +5761,11 @@ function debounce$1(fn, obj, timeout, root) {
 function clearChart(cont) {
   var el = document.querySelector(cont);
   while (el && el.querySelectorAll('svg').length) {
-    var svg = cont.querySelectorAll('svg');
+    var svg = el.querySelectorAll('svg');
     svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
   }
   while (el && el.querySelectorAll('div').length) {
-    var div = cont.querySelectorAll('div');
+    var div = el.querySelectorAll('div');
     div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
   }
   return cont;
@@ -5951,11 +5959,6 @@ function csvToTable(target, data) {
     .text(function (d) { return d; });
 }
 
-/**
- * Data parsing module. Takes a CSV and turns it into an Object, and optionally determines the formatting to use when parsing dates.
- * @module utils/dataparse
- */
-
 function inputDate(scaleType, defaultFormat, declaredFormat) {
   if (scaleType === 'time' || scaleType === 'ordinal-time') {
     return declaredFormat || defaultFormat;
@@ -6024,17 +6027,16 @@ function parse(csv, inputDateFormat, index, stacked, type) {
 
   var stackedData;
 
-  if (stacked) {
-    var stackFn = type === 'stream' ? stack().offset('silhouette') : stack();
-    stackedData = stackFn(range(seriesAmount).map(function (key) {
-      return data.map(function (d) {
-        return {
-          legend: headers[key + 1],
-          x: d.key,
-          y: Number(d.series[key].val),
-          raw: d
-        };
-      });
+  if (stacked && headers.length > 2) {
+    var stackFn = type === 'stream' ? stack().offset(stackOffsetSilhouette) : stack();
+    stackFn.keys(headers.slice(1));
+    stackedData = stackFn(range(data.length).map(function (i) {
+      var o = {};
+      o[headers[i]] = data[i].key;
+      for (var j = 0; j < data[i].series.length; j++) {
+        o[data[i].series[j].key] = data[i].series[j].val;
+      }
+      return o;
     }));
   }
 
@@ -6043,7 +6045,7 @@ function parse(csv, inputDateFormat, index, stacked, type) {
     data: data,
     seriesAmount: seriesAmount,
     keys: headers,
-    stackedData: stackedData || undefined
+    stackedData: stackedData
   };
 
 }
@@ -6083,11 +6085,6 @@ function arraySame(a1, a2) {
   }
   return ret;
 }
-
-/**
- * Chart object factory module.
- * @module utils/factory
- */
 
 var Recipe = (function (Settings$$1) {
   function Recipe(obj) {
@@ -6156,6 +6153,8 @@ var Recipe = (function (Settings$$1) {
 
     this.dateFormat = inputDate(this.xAxis.scale, this.dateFormat, chart.date_format);
     this.data = parse(chart.data, this.dateFormat, o.index, o.stacked, o.type) || this.data;
+
+    if (!this.data.stackedData) { o.stacked = false; }
 
   }
 
@@ -7732,8 +7731,10 @@ function setNumericalDomain(data, vmin, vmax, stacked, forceMaxVal) {
   });
 
   if (stacked) {
-    maxVal = max(data.stackedData[data.stackedData.length - 1], function (d) {
-      return (d.y0 + d.y);
+    maxVal = max(data.stackedData, function (layer) {
+      return max(layer, function (d) {
+        return d[0] + d[1];
+      });
     });
   } else {
     maxVal = max(mArr);
@@ -7980,11 +7981,20 @@ function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
   axis.tickPadding(0);
 
-  scale.rangeExtent([0, dimensions.tickWidth()]);
+  scale
+    .rangeRound([0, dimensions.tickWidth()])
+    .paddingInner(dimensions.bands.padding);
+    // .paddingOuter(paddingOuter);
 
-  scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding);
+  // debugger;
 
-  var bandStep = scale.rangeBand();
+  // scale.rangeExtent([0, dimensions.tickWidth()]);
+
+  // scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding);
+
+  // const bandStep = scale.rangeBand();
+
+  var bandStep = scale.bandwidth();
 
   axisNode.call(axis);
 
@@ -8154,7 +8164,7 @@ function setTickFormatX(selection$$1, ctx, ems, monthsAbr) {
 
 }
 
-function setTickFormatY(fmt, d, lastTick) {
+function setTickFormatY(fmt, d) {
   // checking for a format and formatting y-axis values accordingly
 
   var currentFormat;
@@ -8163,11 +8173,7 @@ function setTickFormatY(fmt, d, lastTick) {
     case 'general':
       currentFormat = format('g')(d);
       break;
-    case 'si': {
-      var prefix = formatPrefix(lastTick);
-      currentFormat = format(prefix.scale(d)) + prefix.symbol;
-      break;
-    }
+    case 'si':
     case 'comma':
       if (isFloat(parseFloat(d))) {
         currentFormat = format(',.2f')(d);
@@ -9052,13 +9058,13 @@ function stackedAreaChart(node, obj) {
     });
 
   var a = area().curve(getCurve(obj.options.interpolation))
-    .x(function (d) { return xScale(d.x); })
-    .y0(function (d) { return yScale(d.y0); })
-    .y1(function (d) { return yScale(d.y0 + d.y); });
+    .x(function (d) { return xScale(d.data[obj.data.keys[0]]); })
+    .y0(function (d) { return yScale(d[1] - d[0]); })
+    .y1(function (d) { return yScale(d[1]); });
 
   var l = line().curve(getCurve(obj.options.interpolation))
-    .x(function (d) { return xScale(d.x); })
-    .y(function (d) { return yScale(d.y0 + d.y); });
+    .x(function (d) { return xScale(d.data[obj.data.keys[0]]); })
+    .y(function (d) { return yScale(d[1]); });
 
   series.append('path')
     .attr('class', function (d, i) {
@@ -9116,7 +9122,7 @@ function columnChart(node, obj) {
       dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
       break;
     case 'ordinal':
-      singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
+      singleColumn = xScale.bandwidth() / obj.data.seriesAmount;
       break;
   }
 
@@ -9234,8 +9240,6 @@ function columnChart(node, obj) {
 }
 
 function barChart(node, obj) {
-  var this$1 = this;
-
 
   // because the elements will be appended in reverse due to the
   // bar chart operating on the y-axis, need to reverse the dataset.
@@ -9295,7 +9299,7 @@ function barChart(node, obj) {
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
     totalBarHeight = (obj.dimensions.barHeight * obj.data.data.length * obj.data.seriesAmount);
-    yScale.rangeRoundBands([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding);
+    yScale.rangeRound([totalBarHeight, 0], obj.dimensions.bands.padding, obj.dimensions.bands.outerPadding);
     obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding * 2);
   }
 
@@ -9325,7 +9329,7 @@ function barChart(node, obj) {
       .call(wrapText, maxLabelWidth)
       .each(function() {
         var tspans = select(this).selectAll('tspan'),
-          tspanCount = tspans[0].length,
+          tspanCount = tspans._groups[0].length,
           textHeight = select(this).node().getBBox().height;
         if (tspanCount > 1) {
           tspans.attr('y', ((textHeight / tspanCount) / 2) - (textHeight / 2));
@@ -9391,7 +9395,7 @@ function barChart(node, obj) {
     })
     .attr('transform', ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"));
 
-  var singleBar = yScale.rangeBand() / obj.data.seriesAmount;
+  var singleBar = yScale.bandwidth() / obj.data.seriesAmount;
 
   var series, barItem;
 
@@ -9466,7 +9470,7 @@ function barChart(node, obj) {
 
     obj.dimensions.totalXAxisHeight = xAxisGroup.node().getBoundingClientRect().height;
 
-    obj.dimensions.computedHeight = function () { return this$1.totalXAxisHeight; };
+    obj.dimensions.computedHeight = function() { return this.totalXAxisHeight; };
 
     select(node.node().parentNode)
       .attr('height', function () {
@@ -9526,7 +9530,7 @@ function stackedColumnChart(node, obj) {
       dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
       break;
     case 'ordinal':
-      singleColumn = xScale.rangeBand();
+      singleColumn = xScale.bandwidth();
       break;
   }
 
@@ -9557,17 +9561,17 @@ function stackedColumnChart(node, obj) {
     .append('g')
     .attrs({
       'class': function (d, i) { return ((obj.prefix) + "column " + (obj.prefix) + "column-" + i); },
-      'data-key': function (d, i, j) { return d[j].x; },
-      'data-legend': function (d, i, j) { return d[j].legend; },
+      'data-key': function (d, i, j) { return d[0].data[obj.data.keys[0]]; },
+      'data-legend': function (d, i, j) { return d.key; },
     });
 
   var rect = columnItem.selectAll('rect')
     .data(function (d) { return d; })
     .enter().append('rect')
     .attrs({
-      'x': function (d) { return xScale(d.x); },
-      'y': function (d) { return yScale(Math.max(0, d.y0 + d.y)); },
-      'height': function (d) { return Math.abs(yScale(d.y) - yScale(0)); },
+      'x': function (d) { return xScale(d.data[obj.data.keys[0]]); },
+      'y': function (d) { return yScale(Math.max(0, d[1])); },
+      'height': function (d) { return Math.abs(yScale(d[1]) - yScale(d[0])); },
       'width': singleColumn
     });
 
@@ -9613,13 +9617,13 @@ function streamgraphChart(node, obj) {
     .attr('class', function (d, i) { return ((obj.prefix) + "series " + (obj.prefix) + "series-" + i); });
 
   var a = area().curve(getCurve(obj.options.interpolation))
-    .x(function (d) { return xScale(d.x); })
-    .y0(function (d) { return yScale(d.y0); })
-    .y1(function (d) { return yScale(d.y0 + d.y); });
+    .x(function (d, i) { return xScale(obj.data.data[i].key); })
+    .y0(function (d) { return yScale(d[0]); })
+    .y1(function (d) { return yScale(d[1]); });
 
   var l = line().curve(getCurve(obj.options.interpolation))
-    .x(function (d) { return xScale(d.x); })
-    .y(function (d) { return yScale(d.y0 + d.y); });
+    .x(function (d, i) { return xScale(obj.data.data[i].key); })
+    .y(function (d) { return yScale(d[1]); });
 
   series.append('path')
     .attr('class', function (d, i) {
@@ -9734,11 +9738,6 @@ function qualifier(node, obj) {
   };
 
 }
-
-/**
- * Tips handling module.
- * @module charts/components/tips
- */
 
 function bisectData(data, keyVal, stacked) {
   if (stacked) {
@@ -10579,11 +10578,6 @@ function tipDateFormatter(selection$$1, ctx, months, data) {
 
 }
 
-/**
- * Data sharing button module.
- * @module charts/components/share-data
- */
-
 function shareData(node, obj) {
 
   var chartContainer = select(node);
@@ -10651,11 +10645,6 @@ function shareData(node, obj) {
   };
 
 }
-
-/**
- * Social sharing button module.
- * @module charts/components/social
- */
 
 function social$1(node, obj) {
 
@@ -10834,11 +10823,6 @@ function custom$1(node, chartRecipe, rendered) {
 
 }
 
-/**
- * Chart contruction manager class.
- * @module charts/manager
- */
-
 var ChartManager = function ChartManager(container, obj) {
   this.recipe = new Recipe(obj);
 
@@ -10906,7 +10890,6 @@ var _aFunction = function(it){
   return it;
 };
 
-// optional / simple context binding
 var aFunction = _aFunction;
 var _ctx = function(fn, that, length){
   aFunction(fn);
@@ -10945,7 +10928,6 @@ var _fails = function(exec){
   }
 };
 
-// Thank's IE8 for his funny defineProperty
 var _descriptors = !_fails(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
@@ -10961,7 +10943,6 @@ var _ie8DomDefine = !_descriptors && !_fails(function(){
   return Object.defineProperty(_domCreate('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
-// 7.1.1 ToPrimitive(input [, PreferredType])
 var isObject$2 = _isObject;
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
@@ -11086,7 +11067,6 @@ var _cof = function(it){
   return toString.call(it).slice(8, -1);
 };
 
-// fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = _cof;
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -11098,7 +11078,6 @@ var _defined = function(it){
   return it;
 };
 
-// to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject$1 = _iobject;
 var defined = _defined;
 var _toIobject = function(it){
@@ -11112,7 +11091,6 @@ var _toInteger = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
 
-// 7.1.15 ToLength
 var toInteger = _toInteger;
 var min$1       = Math.min;
 var _toLength = function(it){
@@ -11127,8 +11105,6 @@ var _toIndex = function(index, length){
   return index < 0 ? max$1(index + length, 0) : min$2(index, length);
 };
 
-// false -> Array#indexOf
-// true  -> Array#includes
 var toIObject$1 = _toIobject;
 var toLength  = _toLength;
 var toIndex   = _toIndex;
@@ -11191,7 +11167,6 @@ var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
 
-// 19.1.2.14 / 15.2.3.14 Object.keys(O)
 var $keys       = _objectKeysInternal;
 var enumBugKeys = _enumBugKeys;
 
@@ -11211,13 +11186,11 @@ var _objectPie = {
 	f: f$3
 };
 
-// 7.1.13 ToObject(argument)
 var defined$1 = _defined;
 var _toObject = function(it){
   return Object(defined$1(it));
 };
 
-// 19.1.2.1 Object.assign(target, source, ...)
 var getKeys  = _objectKeys;
 var gOPS     = _objectGops;
 var pIE      = _objectPie;
@@ -11250,14 +11223,11 @@ var _objectAssign = !$assign || _fails(function(){
   } return T;
 } : $assign;
 
-// 19.1.3.1 Object.assign(target, source)
 var $export = _export;
 
 $export($export.S + $export.F, 'Object', {assign: _objectAssign});
 
 var this$1 = undefined;
-// CHECK THAT OBJECT.ASSIGN IS GETTING POLYFILLED
-
 var index = (function (root) {
 
   'use strict';
@@ -11373,7 +11343,7 @@ var index = (function (root) {
         var debouncer = debounce$1(createLoop, charts, s.debounce, root);
         select(root)
           .on(("resize." + (s.prefix) + "debounce"), debouncer)
-          .on(("resize." + (s.prefix) + "redraw"), dispatcher.redraw(charts));
+          .on(("resize." + (s.prefix) + "redraw"), dispatcher.call('redraw', this, charts));
       }
 
       return {

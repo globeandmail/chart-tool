@@ -2,7 +2,7 @@ import { axisRight, axisBottom, axisLeft } from 'd3-axis';
 import { select } from 'd3-selection';
 import { max } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
-import { format, formatPrefix } from 'd3-format';
+import { format } from 'd3-format';
 import { timeYears, timeMonths, timeWeeks, timeDays, timeHours, timeMinutes } from 'd3-time';
 import { setRangeType, setRangeArgs } from './scale';
 import { timeDiff, wrapText, getTranslate } from '../../utils/utils';
@@ -188,11 +188,20 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
   axis.tickPadding(0);
 
-  scale.rangeExtent([0, dimensions.tickWidth()]);
+  scale
+    .rangeRound([0, dimensions.tickWidth()])
+    .paddingInner(dimensions.bands.padding);
+    // .paddingOuter(paddingOuter);
 
-  scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding);
+  // debugger;
 
-  const bandStep = scale.rangeBand();
+  // scale.rangeExtent([0, dimensions.tickWidth()]);
+
+  // scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding);
+
+  // const bandStep = scale.rangeBand();
+
+  const bandStep = scale.bandwidth();
 
   axisNode.call(axis);
 
@@ -362,7 +371,7 @@ export function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
 }
 
-export function setTickFormatY(fmt, d, lastTick) {
+export function setTickFormatY(fmt, d) {
   // checking for a format and formatting y-axis values accordingly
 
   let currentFormat;
@@ -371,11 +380,7 @@ export function setTickFormatY(fmt, d, lastTick) {
     case 'general':
       currentFormat = format('g')(d);
       break;
-    case 'si': {
-      const prefix = formatPrefix(lastTick);
-      currentFormat = format(prefix.scale(d)) + prefix.symbol;
-      break;
-    }
+    case 'si':
     case 'comma':
       if (isFloat(parseFloat(d))) {
         currentFormat = format(',.2f')(d);

@@ -30,7 +30,7 @@ export default function stackedColumnChart(node, obj) {
       dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
       break;
     case 'ordinal':
-      singleColumn = xScale.rangeBand();
+      singleColumn = xScale.bandwidth();
       break;
   }
 
@@ -61,17 +61,17 @@ export default function stackedColumnChart(node, obj) {
     .append('g')
     .attrs({
       'class': (d, i) => { return `${obj.prefix}column ${obj.prefix}column-${i}`; },
-      'data-key': (d, i, j) => { return d[j].x; },
-      'data-legend': (d, i, j) => { return d[j].legend; },
+      'data-key': (d, i, j) => { return d[0].data[obj.data.keys[0]]; },
+      'data-legend': (d, i, j) => { return d.key; },
     });
 
   const rect = columnItem.selectAll('rect')
     .data(d => { return d; })
     .enter().append('rect')
     .attrs({
-      'x': d => { return xScale(d.x); },
-      'y': d => { return yScale(Math.max(0, d.y0 + d.y)); },
-      'height': d => { return Math.abs(yScale(d.y) - yScale(0)); },
+      'x': d => { return xScale(d.data[obj.data.keys[0]]); },
+      'y': d => { return yScale(Math.max(0, d[1])); },
+      'height': d => { return Math.abs(yScale(d[1]) - yScale(d[0])); },
       'width': singleColumn
     });
 
