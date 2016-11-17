@@ -2535,6 +2535,7 @@ var formatTypes = {
   "x": function(x) { return Math.round(x).toString(16); }
 };
 
+// [[fill]align][sign][symbol][0][width][,][.precision][type]
 var re = /^(?:(.)?([<>=^]))?([+\-\( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?([a-z%])?$/i;
 
 var formatSpecifier = function(specifier) {
@@ -5963,6 +5964,11 @@ var utils = Object.freeze({
 	csvToTable: csvToTable
 });
 
+/**
+ * Data parsing module. Takes a CSV and turns it into an Object, and optionally determines the formatting to use when parsing dates.
+ * @module utils/dataparse
+ */
+
 function inputDate(scaleType, defaultFormat, declaredFormat) {
   if (scaleType === 'time' || scaleType === 'ordinal-time') {
     return declaredFormat || defaultFormat;
@@ -6128,6 +6134,11 @@ var helpers = Object.freeze({
 	sameKeys: sameKeys,
 	cleanStr: cleanStr
 });
+
+/**
+ * Chart object factory module.
+ * @module utils/factory
+ */
 
 var Recipe = (function (Settings$$1) {
   function Recipe(obj) {
@@ -8980,41 +8991,31 @@ function multiLineChart(node, obj) {
 
 }
 
-var require$$1 = ( axis && axis['default'] ) || axis;
+function sreaChart(node, obj) {
 
-var require$$0 = ( scale && scale['default'] ) || scale;
+  var xScaleObj = new scaleManager(obj, 'xAxis'),
+    yScaleObj = new scaleManager(obj, 'yAxis'),
+    xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-function AreaChart(node, obj) {
+  var xAxisObj = new axisManager(node, obj, xScaleObj.scale, 'xAxis'),
+    yAxisObj = new axisManager(node, obj, yScaleObj.scale, 'yAxis');
 
-  var axisModule = require$$1,
-      scaleModule = require$$0,
-      Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager;
+  axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  //  scales
-  var xScaleObj = new Scale(obj, "xAxis"),
-      yScaleObj = new Scale(obj, "yAxis"),
-      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
-
-  // axes
-  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
-
-  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
-
-  if (xScaleObj.obj.type === "ordinal") {
-    xScale.rangeRoundPoints([0, obj.dimensions.tickWidth()], 1.0);
+  if (xScaleObj.obj.type === 'ordinal') {
+    xScale.rangeRound([0, obj.dimensions.tickWidth()], 1.0);
   }
 
-  // wha?
-  if (obj.data.seriesAmount === 1) { obj.seriesHighlight = function() { return 0; }; }
+  if (obj.data.seriesAmount === 1) {
+    obj.seriesHighlight = function () { return 0; };
+  }
 
-  var seriesGroup = node.append("g")
-    .attr("class", function() {
-      var output = obj.prefix + "series_group";
+  var seriesGroup = node.append('g')
+    .attr('class', function () {
+      var output = (obj.prefix) + "series_group";
       if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'multiple' class so we can target
-        output += " " + obj.prefix + "multiple";
+        // If more than one series append a 'muliple' class so we can target
+        output += " " + (obj.prefix) + "multiple";
       }
       return output;
     });
@@ -9022,89 +9023,87 @@ function AreaChart(node, obj) {
   // Secondary array is used to store a reference to all series except for the highlighted item
   var secondaryArr = [];
 
-  for (var i = obj.data.seriesAmount - 1; i >= 0; i--) {
+  var loop = function ( i ) {
     // Dont want to include the highlighted item in the loop
     // because we always want it to sit above all the other lines
 
     if (i !== obj.seriesHighlight()) {
 
-      var area = d3.svg.area().interpolate(obj.options.interpolation)
-        .defined(function(d) { return !isNaN(d.series[i].val); })
-        .x(function(d) { return xScale(d.key); })
+      var a = area().curve(getCurve(obj.options.interpolation))
+        .defined(function (d) { return !isNaN(d.series[i].val); })
+        .x(function (d) { return xScale(d.key); })
         .y0(yScale(0))
-        .y1(function(d) { return yScale(d.series[i].val); });
+        .y1(function (d) { return yScale(d.series[i].val); });
 
-      var line = d3.svg.line().interpolate(obj.options.interpolation)
-        .defined(function(d) { return !isNaN(d.series[i].val); })
-        .x(function(d) { return xScale(d.key); })
-        .y(function(d) { return yScale(d.series[i].val); });
+      var l = line().curve(getCurve(obj.options.interpolation))
+        .defined(function (d) { return !isNaN(d.series[i].val); })
+        .x(function (d) { return xScale(d.key); })
+        .y(function (d) { return yScale(d.series[i].val); });
 
-      var pathRef = seriesGroup.append("path")
+      var pathRef = seriesGroup.append('path')
         .datum(obj.data.data)
         .attrs({
-          "d": area,
-          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
-          "class": function() {
-            var output = obj.prefix + "fill " + obj.prefix + "fill-" + (i);
-            return output;
+          'd': a,
+          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+          'class': function () {
+            return ((obj.prefix) + "fill " + (obj.prefix) + "fill-" + i);
           }
         });
 
-      seriesGroup.append("path")
+      seriesGroup.append('path')
         .datum(obj.data.data)
         .attrs({
-          "d": line,
-          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
-          "class": function() {
-            var output = obj.prefix + "line " + obj.prefix + "line-" + (i);
-            return output;
+          'd': l,
+          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+          'class': function () {
+            return ((obj.prefix) + "line " + (obj.prefix) + "line-" + i);
           }
         });
 
       secondaryArr.push(pathRef);
     }
 
-  }
+  };
+
+  for (var i = obj.data.seriesAmount - 1; i >= 0; i--) loop( i );
 
   // Loop through all the secondary series (all series except the highlighted one)
   // and set the colours in the correct order
 
-  var secondaryArr = secondaryArr.reverse();
+  secondaryArr.reverse();
 
-  var hArea = d3.svg.area().interpolate(obj.options.interpolation)
-    .defined(function(d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
-    .x(function(d) { return xScale(d.key); })
+  var hArea = area().curve(getCurve(obj.options.interpolation))
+    .defined(function (d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
+    .x(function (d) { return xScale(d.key); })
     .y0(yScale(0))
-    .y1(function(d) { return yScale(d.series[obj.seriesHighlight()].val); });
+    .y1(function (d) { return yScale(d.series[obj.seriesHighlight()].val); });
 
-  var hLine = d3.svg.line().interpolate(obj.options.interpolation)
-    .defined(function(d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
-    .x(function(d) { return xScale(d.key); })
-    .y(function(d) { return yScale(d.series[obj.seriesHighlight()].val); });
+  var hLine = line().curve(getCurve(obj.options.interpolation))
+    .defined(function (d) { return !isNaN(d.series[obj.seriesHighlight()].val); })
+    .x(function (d) { return xScale(d.key); })
+    .y(function (d) { return yScale(d.series[obj.seriesHighlight()].val); });
 
-  seriesGroup.append("path")
+  seriesGroup.append('path')
     .datum(obj.data.data)
     .attrs({
-      "d": hArea,
-      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
-      "class": function() {
-        var output = obj.prefix + "fill " + obj.prefix + "fill-" + (obj.seriesHighlight()) + " " + obj.prefix + "highlight";
-        return output;
-      }
+      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+      'class': function () {
+        return ((obj.prefix) + "fill " + (obj.prefix) + "fill-" + (obj.seriesHighlight()) + " " + (obj.prefix) + "highlight");
+      },
+      'd': hArea
     });
 
-  seriesGroup.append("path")
+  seriesGroup.append('path')
     .datum(obj.data.data)
     .attrs({
-      "d": hLine,
-      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
-      "class": function() {
-        var output = obj.prefix + "line " + obj.prefix + "line-" + (obj.seriesHighlight()) + " " + obj.prefix + "highlight";
-        return output;
-      }
+      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+      'class': function () {
+        return ((obj.prefix) + "line " + (obj.prefix) + "line-" + (obj.seriesHighlight()) + " " + (obj.prefix) + "highlight");
+      },
+      'd': hLine
     });
 
-  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
     xScaleObj: xScaleObj,
@@ -9120,85 +9119,77 @@ function AreaChart(node, obj) {
 
 }
 
-var area$1 = AreaChart;
+function stackedAreaChart(node, obj) {
 
-function StackedAreaChart(node, obj) {
+  var xScaleObj = new scaleManager(obj, 'xAxis'),
+    yScaleObj = new scaleManager(obj, 'yAxis'),
+    xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  var axisModule = require$$1,
-      scaleModule = require$$0,
-      Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager;
+  var xAxisObj = new axisManager(node, obj, xScaleObj.scale, 'xAxis'),
+    yAxisObj = new axisManager(node, obj, yScaleObj.scale, 'yAxis');
 
-  //  scales
-  var xScaleObj = new Scale(obj, "xAxis"),
-      yScaleObj = new Scale(obj, "yAxis"),
-      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
+  axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  // axes
-  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
-
-  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
-
-  if (xScaleObj.obj.type === "ordinal") {
-    xScale.rangeRoundPoints([0, obj.dimensions.tickWidth()], 1.0);
+  if (xScaleObj.obj.type === 'ordinal') {
+    xScale.rangeRound([0, obj.dimensions.tickWidth()], 1.0);
   }
 
-  // wha?
-  if (obj.data.seriesAmount === 1) { obj.seriesHighlight = function() { return 0; }; }
+  if (obj.data.seriesAmount === 1) {
+    obj.seriesHighlight = function () { return 0; };
+  }
 
-  node.classed(obj.prefix + "stacked", true);
+  node.classed(((obj.prefix) + "stacked"), true);
 
-  var seriesGroup = node.append("g")
-    .attr("class", function() {
-      var output = obj.prefix + "series_group";
+  var seriesGroup = node.append('g')
+    .attr('class', function () {
+      var output = (obj.prefix) + "series_group";
       if (obj.data.seriesAmount > 1) {
         // If more than one series append a 'muliple' class so we can target
-        output += " " + obj.prefix + "multiple";
+        output += " " + (obj.prefix) + "multiple";
       }
       return output;
     });
 
-  var series = seriesGroup.selectAll("g." + obj.prefix + "series")
+  var series = seriesGroup.selectAll(("g." + (obj.prefix) + "series"))
     .data(obj.data.stackedData)
-    .enter().append("svg:g")
+    .enter().append('g')
     .attrs({
-      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
-      "class": function(d, i) {
-        var output = obj.prefix + "series " + obj.prefix + "series_" + (i);
+      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+      'class': function (d, i) {
+        var output = (obj.prefix) + "series " + (obj.prefix) + "series-" + i;
         if (i === obj.seriesHighlight()) {
-          output = obj.prefix + "series " + obj.prefix + "series_" + (i) + " " + obj.prefix + "highlight";
+          output += " " + (obj.prefix) + "highlight";
+        } else {
+          return output;
         }
+      }
+    });
+
+  var a = area().curve(getCurve(obj.options.interpolation))
+    .x(function (d) { return xScale(d.x); })
+    .y0(function (d) { return yScale(d.y0); })
+    .y1(function (d) { return yScale(d.y0 + d.y); });
+
+  var l = line().curve(getCurve(obj.options.interpolation))
+    .x(function (d) { return xScale(d.x); })
+    .y(function (d) { return yScale(d.y0 + d.y); });
+
+  series.append('path')
+    .attr('class', function (d, i) {
+      var output = (obj.prefix) + "fill " + (obj.prefix) + "fill-" + i;
+      if (i === obj.seriesHighlight()) {
+        output += " " + (obj.prefix) + "highlight";
+      } else {
         return output;
       }
-    });
-
-  var area = d3.svg.area().interpolate(obj.options.interpolation)
-    .defined(function(d) { return !isNaN(d.y0 + d.y); })
-    .x(function(d) { return xScale(d.x); })
-    .y0(function(d) { return yScale(d.y0); })
-    .y1(function(d) { return yScale(d.y0 + d.y); });
-
-  var line = d3.svg.line().interpolate(obj.options.interpolation)
-    .defined(function(d) { return !isNaN(d.y0 + d.y); })
-    .x(function(d) { return xScale(d.x); })
-    .y(function(d) { return yScale(d.y0 + d.y); });
-
-  series.append("path")
-    .attr("class", function(d, i) {
-      var output = obj.prefix + "fill " + obj.prefix + "fill-" + (i);
-      if (i === obj.seriesHighlight()) {
-        output = obj.prefix + "fill " + obj.prefix + "fill-" + (i) + " " + obj.prefix + "highlight";
-      }
-      return output;
     })
-    .attr("d", area);
+    .attr('d', a);
 
-  series.append("path")
-    .attr("class", function(d, i) { return obj.prefix + "line " + obj.prefix + "line-" + (i); })
-    .attr("d", line);
+  series.append('path')
+    .attr('class', function (d, i) { return ((obj.prefix) + "line " + (obj.prefix) + "line-" + i); })
+    .attr('d', l);
 
-  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
     xScaleObj: xScaleObj,
@@ -9213,120 +9204,100 @@ function StackedAreaChart(node, obj) {
 
 }
 
-var stackedArea = StackedAreaChart;
+function columnChart(node, obj) {
 
-var require$$0$1 = ( utils && utils['default'] ) || utils;
+  var xScaleObj = new scaleManager(obj, 'xAxis'),
+    yScaleObj = new scaleManager(obj, 'yAxis'),
+    xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-function ColumnChart(node, obj) {
+  var xAxisObj = new axisManager(node, obj, xScaleObj.scale, 'xAxis'),
+    yAxisObj = new axisManager(node, obj, yScaleObj.scale, 'yAxis');
 
-  var axisModule = require$$1,
-      scaleModule = require$$0,
-      Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager;
+  axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  //  scales
-  var xScaleObj = new Scale(obj, "xAxis"),
-      yScaleObj = new Scale(obj, "yAxis"),
-      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
-
-  // axes
-  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
-
-  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
+  var singleColumn;
 
   switch (obj.xAxis.scale) {
-    case "time":
-
-      var timeInterval = require$$0$1.timeInterval,
-          timeElapsed = timeInterval(obj.data.data) + 1;
-      var singleColumn = obj.dimensions.tickWidth() / timeElapsed / obj.data.seriesAmount;
-
+    case 'time':
+      singleColumn = obj.dimensions.tickWidth() / (timeInterval$$1(obj.data.data) + 1) / obj.data.seriesAmount;
       xAxisObj.range = [0, (obj.dimensions.tickWidth() - (singleColumn * obj.data.seriesAmount))];
-
-      axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
-
+      axisCleanup(node, obj, xAxisObj, yAxisObj);
       break;
-    case "ordinal-time":
-
-      var singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
-
-      xAxisObj.node = node.select("." + obj.prefix + "axis-group." + obj.prefix + "xAxis");
-
-      xAxisObj.node
-        .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
-
-      axisModule.dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
-
+    case 'ordinal-time':
+      singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
+      xAxisObj.node = node.select(("." + (obj.prefix) + "axis-group." + (obj.prefix) + "xAxis"))
+        .attr('transform', ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")"));
+      dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
       break;
-    case "ordinal":
-      var singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
+    case 'ordinal':
+      singleColumn = xScale.rangeBand() / obj.data.seriesAmount;
       break;
   }
 
-  var seriesGroup = node.append("g")
-    .attr("class", function() {
-      var output = obj.prefix + "series_group";
+  var seriesGroup = node.append('g')
+    .attr('class', function () {
+      var output = (obj.prefix) + "series_group";
       if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'multiple' class so we can target
-        output += " " + obj.prefix + "multiple";
+        output += " " + (obj.prefix) + "multiple";
       }
       return output;
     })
-    .attr("transform", function() {
+    .attr('transform', function () {
       var xOffset;
-      if (obj.xAxis.scale === "ordinal-time") {
+      if (obj.xAxis.scale === 'ordinal-time') {
         xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2);
       } else {
         xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth();
       }
-      return "translate(" + xOffset + ",0)";
+      return ("translate(" + xOffset + ",0)");
     });
 
-  for (var i = 0; i < obj.data.seriesAmount; i++) {
+  var series, columnItem;
 
-    var series = seriesGroup.append("g").attr("class", obj.prefix + "series_" + i);
+  var loop = function ( i ) {
 
-    var columnItem = series
-      .selectAll("." + obj.prefix + "column")
+    series = seriesGroup.append('g').attr('class', ((obj.prefix) + "series-" + i));
+
+    columnItem = series
+      .selectAll(("." + (obj.prefix) + "column"))
       .data(obj.data.data).enter()
-      .append("g")
+      .append('g')
       .attrs({
-        "class": obj.prefix + "column " + obj.prefix + "column-" + (i),
-        "data-series": i,
-        "data-key": function(d) { return d.key; },
-        "data-legend": function() { return obj.data.keys[i + 1]; },
-        "transform": function(d) {
-          if (obj.xAxis.scale !== "ordinal-time") {
-            return "translate(" + xScale(d.key) + ",0)";
+        'class': ((obj.prefix) + "column " + (obj.prefix) + "column-" + i),
+        'data-series': i,
+        'data-key': function(d) { return d.key; },
+        'data-legend': function() { return obj.data.keys[i + 1]; },
+        'transform': function(d) {
+          if (obj.xAxis.scale !== 'ordinal-time') {
+            return ("translate(" + (xScale(d.key)) + ",0)");
           }
         }
       });
 
-    columnItem.append("rect")
+    columnItem.append('rect')
       .attrs({
-        "class": function(d) {
-          return d.series[i].val < 0 ? obj.prefix + "negative" : obj.prefix + "positive";
+        'class': function(d) {
+          return d.series[i].val < 0 ? ((obj.prefix) + "negative") : ((obj.prefix) + "positive");
         },
-        "x": function(d) {
-          if (obj.xAxis.scale !== "ordinal-time") {
+        'x': function(d) {
+          if (obj.xAxis.scale !== 'ordinal-time') {
             return i * singleColumn;
           } else {
-            return xScale(d.key)
+            return xScale(d.key);
           }
         },
-        "y": function(d) {
-          if (d.series[i].val !== "__undefined__") {
+        'y': function(d) {
+          if (d.series[i].val !== '__undefined__') {
             return yScale(Math.max(0, d.series[i].val));
           }
         },
-        "height": function(d) {
-          if (d.series[i].val !== "__undefined__") {
+        'height': function(d) {
+          if (d.series[i].val !== '__undefined__') {
             return Math.abs(yScale(d.series[i].val) - yScale(0));
           }
         },
-        "width": function() {
-          if (obj.xAxis.scale !== "ordinal-time") {
+        'width': function() {
+          if (obj.xAxis.scale !== 'ordinal-time') {
             return singleColumn;
           } else {
             return singleColumn / obj.data.seriesAmount;
@@ -9338,17 +9309,17 @@ function ColumnChart(node, obj) {
 
       var columnOffset = obj.dimensions.bands.offset;
 
-      columnItem.selectAll("rect")
+      columnItem.selectAll('rect')
         .attrs({
-          "x": function(d) {
-            if (obj.xAxis.scale !== "ordinal-time") {
+          'x': function(d) {
+            if (obj.xAxis.scale !== 'ordinal-time') {
               return ((i * singleColumn) + (singleColumn * (columnOffset / 2)));
             } else {
               return xScale(d.key) + (i * (singleColumn / obj.data.seriesAmount));
             }
           },
-          "width": function() {
-            if (obj.xAxis.scale !== "ordinal-time") {
+          'width': function () {
+            if (obj.xAxis.scale !== 'ordinal-time') {
               return (singleColumn - (singleColumn * columnOffset));
             } else {
               return singleColumn / obj.data.seriesAmount;
@@ -9357,9 +9328,11 @@ function ColumnChart(node, obj) {
         });
     }
 
-  }
+  };
 
-  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
+  for (var i = 0; i < obj.data.seriesAmount; i++) loop( i );
+
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
     xScaleObj: xScaleObj,
@@ -9374,14 +9347,18 @@ function ColumnChart(node, obj) {
 
 }
 
-var column = ColumnChart;
+var require$$3 = ( scale && scale['default'] ) || scale;
 
 var require$$2 = ( helpers && helpers['default'] ) || helpers;
+
+var require$$0 = ( utils && utils['default'] ) || utils;
+
+var require$$1 = ( axis && axis['default'] ) || axis;
 
 function BarChart(node, obj) {
 
   var axisModule = require$$1,
-    scaleModule = require$$0,
+    scaleModule = require$$3,
     Scale = scaleModule.scaleManager;
 
   // because the elements will be appended in reverse due to the
@@ -9461,7 +9438,7 @@ function BarChart(node, obj) {
   }
 
   if (yAxisNode.node().getBBox().width > maxLabelWidth) {
-    var wrapText = require$$0$1.wrapText;
+    var wrapText = require$$0.wrapText;
     yAxisNode.selectAll("text")
       .call(wrapText, maxLabelWidth)
       .each(function() {
@@ -9655,93 +9632,79 @@ function BarChart(node, obj) {
 
 var bar = BarChart;
 
-function StackedColumnChart(node, obj) {
+function stackedColumnChart(node, obj) {
 
-  var axisModule = require$$1,
-      scaleModule = require$$0,
-      Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager;
+  var yScaleObj = new scaleManager(obj, 'yAxis'),
+    xScaleObj = new scaleManager(obj, 'xAxis'),
+    yScale = yScaleObj.scale,
+    xScale = xScaleObj.scale;
 
-  //  scales
-  var yScaleObj = new Scale(obj, "yAxis"),
-      xScaleObj = new Scale(obj, "xAxis"),
-      yScale = yScaleObj.scale,
-      xScale = xScaleObj.scale;
+  var xAxisObj = new axisManager(node, obj, xScaleObj.scale, 'xAxis'),
+    yAxisObj = new axisManager(node, obj, yScaleObj.scale, 'yAxis');
 
-  // axes
-  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
+  axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
+  var singleColumn;
 
   switch (obj.xAxis.scale) {
-    case "time":
-
-      var timeInterval = require$$0$1.timeInterval,
-          timeElapsed = timeInterval(obj.data.data);
-      var singleColumn = obj.dimensions.tickWidth() / timeElapsed;
-
+    case 'time':
+      singleColumn = obj.dimensions.tickWidth() / (timeInterval$$1(obj.data.data) + 1);
       xAxisObj.range = [0, (obj.dimensions.tickWidth() - singleColumn)];
-
-      axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
-
+      axisCleanup(node, obj, xAxisObj, yAxisObj);
       break;
-    case "ordinal-time":
-
-      var singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
-
-      node.select("." + obj.prefix + "axis-group." + obj.prefix + "xAxis")
-        .attr("transform", "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")");
-
+    case 'ordinal-time':
+      singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
+      xAxisObj.node = node.select(("." + (obj.prefix) + "axis-group." + (obj.prefix) + "xAxis"))
+        .attr('transform', ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)) + "," + (obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight) + ")"));
+      dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
       break;
-    case "ordinal":
-      var singleColumn = xScale.rangeBand();
+    case 'ordinal':
+      singleColumn = xScale.rangeBand();
       break;
   }
 
-  var seriesGroup = node.append("g")
-    .attr("class", function() {
-      var output = obj.prefix + "series_group";
+  var seriesGroup = node.append('g')
+    .attr('class', function () {
+      var output = (obj.prefix) + "series_group";
       if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'muliple' class so we can target
-        output += " " + obj.prefix + "multiple";
+        output += " " + (obj.prefix) + "multiple";
       }
       return output;
     })
-    .attr("transform", function() {
+    .attr('transform', function () {
       var xOffset;
-      if (obj.xAxis.scale === "ordinal-time") {
+      if (obj.xAxis.scale === 'ordinal-time') {
         xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2);
       } else {
         xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth();
       }
-      return "translate(" + xOffset + ",0)";
+      return ("translate(" + xOffset + ",0)");
     });
 
-  var series = seriesGroup.selectAll("g." + obj.prefix + "series")
+  var series = seriesGroup.selectAll(("g." + (obj.prefix) + "series"))
     .data(obj.data.stackedData)
-    .enter().append("g")
-    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
+    .enter().append('g')
+    .attr('class', function (d, i) { return ((obj.prefix) + "series " + (obj.prefix) + "series-" + i); });
 
   var columnItem = series
     .append('g')
     .attrs({
-      "class": function(d, i) { return obj.prefix + "column " + obj.prefix + "column-" + (i) },
-      "data-key": function(d, i, j) { return d[j].x; },
-      "data-legend": function(d, i, j) { return d[j].legend; },
+      'class': function (d, i) { return ((obj.prefix) + "column " + (obj.prefix) + "column-" + i); },
+      'data-key': function (d, i, j) { return d[j].x; },
+      'data-legend': function (d, i, j) { return d[j].legend; },
     });
 
-  var rect = columnItem.selectAll("rect")
-    .data(function(d) { return d; })
-    .enter().append("rect")
+  var rect = columnItem.selectAll('rect')
+    .data(function (d) { return d; })
+    .enter().append('rect')
     .attrs({
-      "x": function(d) { return xScale(d.x); },
-      "y": function(d) { return yScale(Math.max(0, d.y0 + d.y)); },
-      "height": function(d) { return Math.abs(yScale(d.y) - yScale(0)); },
-      "width": singleColumn
+      'x': function (d) { return xScale(d.x); },
+      'y': function (d) { return yScale(Math.max(0, d.y0 + d.y)); },
+      'height': function (d) { return Math.abs(yScale(d.y) - yScale(0)); },
+      'width': singleColumn
     });
 
-  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
     xScaleObj: xScaleObj,
@@ -9755,67 +9718,58 @@ function StackedColumnChart(node, obj) {
 
 }
 
-var stackedColumn = StackedColumnChart;
+function streamgraphChart(node, obj) {
 
-function StreamgraphChart(node, obj) {
+  var xScaleObj = new scaleManager(obj, 'xAxis'),
+    yScaleObj = new scaleManager(obj, 'yAxis'),
+    xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  var axisModule = require$$1,
-      scaleModule = require$$0,
-      Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager;
+  var xAxisObj = new axisManager(node, obj, xScaleObj.scale, 'xAxis'),
+    yAxisObj = new axisManager(node, obj, yScaleObj.scale, 'yAxis');
 
-  //  scales
-  var xScaleObj = new Scale(obj, "xAxis"),
-      yScaleObj = new Scale(obj, "yAxis"),
-      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
+  axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  // axes
-  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
-
-  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
-
-  if (xScaleObj.obj.type === "ordinal") {
-    xScale.rangeRoundPoints([0, obj.dimensions.tickWidth()], 1.0);
+  if (xScaleObj.obj.type === 'ordinal') {
+    xScale.rangeRound([0, obj.dimensions.tickWidth()], 1.0);
   }
 
-  var seriesGroup = node.append("g")
+  var seriesGroup = node.append('g')
     .attrs({
-      "class": obj.prefix + "series_group",
-      "transform": function() {
-        return "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"
-    }});
+      'class': ((obj.prefix) + "series_group"),
+      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+    });
 
   // Add a group for each cause.
-  var series = seriesGroup.selectAll("g." + obj.prefix + "series")
+  var series = seriesGroup.selectAll(("g." + (obj.prefix) + "series"))
     .data(obj.data.stackedData)
-    .enter().append("g")
-    .attr("class", function(d, i) { return obj.prefix + "series " + obj.prefix + "series_" + (i); });
+    .enter().append('g')
+    .attr('class', function (d, i) { return ((obj.prefix) + "series " + (obj.prefix) + "series-" + i); });
 
-  var area = d3.svg.area().interpolate(obj.options.interpolation)
-    .x(function(d) { return xScale(d.x); })
-    .y0(function(d) { return yScale(d.y0); })
-    .y1(function(d) { return yScale(d.y0 + d.y); });
+  var a = area().curve(getCurve(obj.options.interpolation))
+    .x(function (d) { return xScale(d.x); })
+    .y0(function (d) { return yScale(d.y0); })
+    .y1(function (d) { return yScale(d.y0 + d.y); });
 
-  var line = d3.svg.line().interpolate(obj.options.interpolation)
-    .x(function(d) { return xScale(d.x); })
-    .y(function(d) { return yScale(d.y0 + d.y); });
+  var l = line().curve(getCurve(obj.options.interpolation))
+    .x(function (d) { return xScale(d.x); })
+    .y(function (d) { return yScale(d.y0 + d.y); });
 
-  series.append("path")
-    .attr("class", function(d, i) {
-      var output = obj.prefix + "stream-series " + obj.prefix + "stream-" + (i);
+  series.append('path')
+    .attr('class', function (d, i) {
+      var output = (obj.prefix) + "stream-series " + (obj.prefix) + "stream-" + i;
       if (i === obj.seriesHighlight()) {
-        output = obj.prefix + "stream-series " + obj.prefix + "stream-" + (i) + " " + obj.prefix + "highlight";
+        output += " " + (obj.prefix) + "highlight";
+      } else {
+        return output;
       }
-      return output;
     })
-    .attr("d", area);
+    .attr('d', a);
 
-  series.append("path")
-    .attr("class", function() { return obj.prefix + "stream-series " + obj.prefix + "line"; })
-    .attr("d", line);
+  series.append('path')
+    .attr('class', ((obj.prefix) + "stream-series " + (obj.prefix) + "line"))
+    .attr('d', l);
 
-  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
     xScaleObj: xScaleObj,
@@ -9830,8 +9784,6 @@ function StreamgraphChart(node, obj) {
 
 }
 
-var streamgraph = StreamgraphChart;
-
 function plot(node, obj) {
   switch(obj.options.type) {
     case 'line':
@@ -9839,13 +9791,13 @@ function plot(node, obj) {
     case 'multiline':
       return multiLineChart(node, obj);
     case 'area':
-      return obj.options.stacked ? stackedArea(node, obj) : area$1(node, obj);
+      return obj.options.stacked ? stackedAreaChart(node, obj) : sreaChart(node, obj);
     case 'bar':
       return bar(node, obj);
     case 'column':
-      return obj.options.stacked ? stackedColumn(node, obj) : column(node, obj);
+      return obj.options.stacked ? stackedColumnChart(node, obj) : columnChart(node, obj);
     case 'stream':
-      return streamgraph(node, obj);
+      return streamgraphChart(node, obj);
     default:
       return lineChart(node, obj);
   }
@@ -9915,6 +9867,11 @@ function qualifier(node, obj) {
   };
 
 }
+
+/**
+ * Tips handling module.
+ * @module charts/components/tips
+ */
 
 function bisector$1(data, keyVal, stacked, index) {
   if (stacked) {
@@ -10271,7 +10228,7 @@ function LineChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require$$1.setTickFormatY,
-        timeDiff = require$$0$1.timeDiff;
+        timeDiff = require$$0.timeDiff;
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -10372,7 +10329,7 @@ function AreaChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require$$1.setTickFormatY,
-        timeDiff = require$$0$1.timeDiff;
+        timeDiff = require$$0.timeDiff;
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -10473,7 +10430,7 @@ function StackedAreaChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require$$1.setTickFormatY,
-        timeDiff = require$$0$1.timeDiff;
+        timeDiff = require$$0.timeDiff;
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -10628,7 +10585,7 @@ function StreamgraphTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     var yFormatter = require$$1.setTickFormatY,
-        timeDiff = require$$0$1.timeDiff;
+        timeDiff = require$$0.timeDiff;
         domain = obj.rendered.plot.xScaleObj.scale.domain(),
         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -10784,8 +10741,8 @@ function ColumnChartTips(tipNodes, obj, d, thisRef) {
   if (!isUndefined) {
 
     var yFormatter = require$$1.setTickFormatY,
-      timeDiff = require$$0$1.timeDiff,
-      getTranslateXY = require$$0$1.getTranslateXY,
+      timeDiff = require$$0.timeDiff,
+      getTranslateXY = require$$0.getTranslateXY,
       domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -10872,7 +10829,7 @@ function StackedColumnChartTips(tipNodes, obj, d, thisRef) {
   if (!isUndefined) {
 
     var yFormatter = require$$1.setTickFormatY,
-      timeDiff = require$$0$1.timeDiff,
+      timeDiff = require$$0.timeDiff,
       domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
 
@@ -11051,6 +11008,11 @@ function tipDateFormatter(selection, ctx, months, data) {
 
 var tips = tipsManager;
 
+/**
+ * Data sharing button module.
+ * @module charts/components/share-data
+ */
+
 function shareData(node, obj) {
 
   var chartContainer = select(node);
@@ -11118,6 +11080,11 @@ function shareData(node, obj) {
   };
 
 }
+
+/**
+ * Social sharing button module.
+ * @module charts/components/social
+ */
 
 function social$1(node, obj) {
 
@@ -11295,6 +11262,11 @@ function custom$1(node, chartRecipe, rendered) {
 
 }
 
+/**
+ * Chart contruction manager class.
+ * @module charts/manager
+ */
+
 var ChartManager = function ChartManager(container, obj) {
   this.recipe = new Recipe(obj);
 
@@ -11362,6 +11334,7 @@ var _aFunction = function(it){
   return it;
 };
 
+// optional / simple context binding
 var aFunction = _aFunction;
 var _ctx = function(fn, that, length){
   aFunction(fn);
@@ -11400,6 +11373,7 @@ var _fails = function(exec){
   }
 };
 
+// Thank's IE8 for his funny defineProperty
 var _descriptors = !_fails(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
@@ -11415,6 +11389,7 @@ var _ie8DomDefine = !_descriptors && !_fails(function(){
   return Object.defineProperty(_domCreate('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
+// 7.1.1 ToPrimitive(input [, PreferredType])
 var isObject$2 = _isObject;
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
@@ -11539,6 +11514,7 @@ var _cof = function(it){
   return toString.call(it).slice(8, -1);
 };
 
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
 var cof = _cof;
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function(it){
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -11550,6 +11526,7 @@ var _defined = function(it){
   return it;
 };
 
+// to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject$1 = _iobject;
 var defined = _defined;
 var _toIobject = function(it){
@@ -11563,6 +11540,7 @@ var _toInteger = function(it){
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
 
+// 7.1.15 ToLength
 var toInteger = _toInteger;
 var min$1       = Math.min;
 var _toLength = function(it){
@@ -11577,6 +11555,8 @@ var _toIndex = function(index, length){
   return index < 0 ? max$1(index + length, 0) : min$2(index, length);
 };
 
+// false -> Array#indexOf
+// true  -> Array#includes
 var toIObject$1 = _toIobject;
 var toLength  = _toLength;
 var toIndex   = _toIndex;
@@ -11639,6 +11619,7 @@ var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
 
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
 var $keys       = _objectKeysInternal;
 var enumBugKeys = _enumBugKeys;
 
@@ -11658,11 +11639,13 @@ var _objectPie = {
 	f: f$3
 };
 
+// 7.1.13 ToObject(argument)
 var defined$1 = _defined;
 var _toObject = function(it){
   return Object(defined$1(it));
 };
 
+// 19.1.2.1 Object.assign(target, source, ...)
 var getKeys  = _objectKeys;
 var gOPS     = _objectGops;
 var pIE      = _objectPie;
@@ -11695,11 +11678,14 @@ var _objectAssign = !$assign || _fails(function(){
   } return T;
 } : $assign;
 
+// 19.1.3.1 Object.assign(target, source)
 var $export = _export;
 
 $export($export.S + $export.F, 'Object', {assign: _objectAssign});
 
 var this$1 = undefined;
+// CHECK THAT OBJECT.ASSIGN IS GETTING POLYFILLED
+
 var index = (function (root) {
 
   'use strict';

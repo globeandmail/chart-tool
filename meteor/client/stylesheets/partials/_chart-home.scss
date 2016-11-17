@@ -13,7 +13,7 @@
   letter-spacing: -3px;
   text-align: center;
   text-rendering: optimizeLegibilty;
-  border-bottom: 2px solid lighten($lightgray, 15%);
+  border-bottom: 2px solid $color-gray-medium;
   margin-bottom: 0.4em;
 }
 
@@ -29,7 +29,7 @@
   border-radius: 0.5em;
   display: block;
   a {
-    color: $text;
+    color: $color-black;
     text-decoration: none;
   }
   &:hover {

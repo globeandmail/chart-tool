@@ -10,7 +10,7 @@
   margin: 0 auto;
   margin-bottom: 2em;
   width: 30%;
-  border-bottom: 1px solid $text;
+  border-bottom: 1px solid $color-black;
 }
 
 .status-number {
@@ -32,7 +32,7 @@
   text-align: center;
   p {
     font-size: 1.3em;
-    color: $lightgray;
+    color: $color-gray-dark;
   }
 }
 
@@ -57,7 +57,7 @@
     height: 1em;
     display: inline-block;
     margin-right: 0.4em;
-    background-color: $verylightgray;
+    background-color: $color-gray-medium;
   }
   .status-inactive {
     background-color: #D0021B;

@@ -28,19 +28,19 @@
 %input {
   display: inline-block;
   padding: 0.35em 0.5em;
-  border: 1px solid $text;
+  border: 1px solid $color-black;
   border-radius: 0.4em;
   font-size: 1.2em;
   background-color: none;
-  color: $text;
+  color: $color-black;
   @include transition (all 0.1s ease-out);
   @include placeholder {
     @include interface-font-light;
   }
   &:focus {
     cursor: pointer;
-    color: $text;
-    box-shadow: inset 0px 0px 0px 1px $text;
+    color: $color-black;
+    box-shadow: inset 0px 0px 0px 1px $color-black;
     outline: none;
     @include transition (all 0.1s ease-in);
     @include placeholder {
@@ -75,7 +75,7 @@
     content: "";
     height: 0;
     width: 0;
-    @include triangle(10px 8px, $text, down);
+    @include triangle(10px 8px, $color-black, down);
     position: absolute;
     top: 50%;
     margin-top: -3px;
@@ -89,7 +89,7 @@
 }
 
 .help-toggle {
-  color: $lightgray;
+  color: $color-gray-dark;
   padding-left: 0.2em;
   cursor: pointer;
   text-decoration: none;

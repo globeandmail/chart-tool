@@ -33,7 +33,7 @@
 // qualifier
 .#{$prefix}chart_qualifier {
   margin: 0;
-  background: $white;
+  background: $color-white;
   height: auto;
   @include utility-font;
 }
@@ -43,15 +43,15 @@
 }
 
 .#{$prefix}chart_qualifier-text {
-  fill: $text;
+  fill: $color-black;
 }
 
 .#{$prefix}chart_qualifier-text-bg {
-  stroke: $white;
+  stroke: $color-white;
   stroke-width: 10px;
   stroke-linecap: round;
   stroke-linejoin: round;
-  fill: $white;
+  fill: $color-white;
 }
 
 .#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {

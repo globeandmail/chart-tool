@@ -48,7 +48,7 @@
 	}
 
 	h2 {
-		color: $text;
+		color: $color-black;
 		font-size: 2em;
 		text-align: center;
 		@include interface-font-bold;
@@ -61,7 +61,7 @@
 	}
 
 	p {
-		color: $text;
+		color: $color-black;
 		font-size: 1.3em;
 		text-align: center;
 		position: relative;
@@ -89,12 +89,13 @@
 			box-shadow: 0 0 2px rgba(128, 179, 235, 0.5), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 		}
 		&.cancel {
-			background-color: lighten($verylightgray, 10%);
+			background: none;
+			// background-color: $color-gray-medium;
 			&:hover {
-				background-color: lighten($verylightgray, 10%);
+				// background-color: $color-gray-medium;
 			}
 			&:active {
-				background-color: lighten($verylightgray, 10%);
+				// background-color: $color-gray-medium;
 			}
 			// Cancel button should keep the same style
 			&:focus {

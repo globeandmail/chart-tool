@@ -592,5 +592,26 @@ Template.chartEditAside.events({
       type: "info",
       confirmButtonColor: "#fff"
     });
+  },
+  "click .unit-delete": function(event) {
+    var chartId = this._id;
+    sweetAlert({
+      title: "Are you sure you want to delete this chart?",
+      text: "Deleted charts can't be recovered. Do you really want to do this?",
+      type: "warning",
+      confirmButtonColor: "#fff",
+      confirmButtonText: "Delete chart",
+      cancelButtonText: "Cancel",
+      showCancelButton: true
+    },
+    function(isConfirm) {
+      if (isConfirm) {
+        Meteor.call("deleteChart", chartId, function(err, result) {
+          if (!err) {
+            Router.go('chart.archive');
+          }
+        });
+      }
+    });
   }
 });
