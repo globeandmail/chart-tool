@@ -11118,7 +11118,7 @@ function social$1(node, obj) {
 
   var chartContainer = select(node);
 
-  var chartMeta = chartContainer.select('.' + obj.prefix + 'chart_meta');
+  var chartMeta = chartContainer.select(("." + (obj.prefix) + "chart_meta"));
 
   if (chartMeta.node() === null) {
     chartMeta = chartContainer
@@ -11164,7 +11164,8 @@ function social$1(node, obj) {
       .data(socialOptions)
       .enter()
       .append('div')
-      .attr('class', obj.prefix + 'social-item').html(function (d) {
+      .attr('class', ((obj.prefix) + "social-item"))
+      .html(function (d) {
         if (!d.popup) {
           return ("<a href='" + (d.url) + "'><img class='" + (obj.prefix) + "social-icon' src='" + (d.icon) + "' title='" + (d.label) + "'></a>");
         } else {
@@ -11216,29 +11217,29 @@ function constructFacebookURL(obj){
     redirect = obj.social.facebook.redirect;
   var url = "app_id=" + (obj.social.facebook.appID) + "&amp;display=popup&amp;title=" + (obj.heading) + "&amp;description=From%20article" + (document.title) + "&amp;href=" + (window.location.href) + "&amp;redirect_uri=" + redirect;
   if (obj.image && obj.image.enable) { url += "&amp;picture=" + (getThumbnailPath(obj)); }
-  return base + url;
+  return ("" + base + url);
 }
 
 function constructMailURL(obj){
   var base = 'mailto:?';
   var thumbnail = (obj.image && obj.image.enable) ? ("%0A" + (getThumbnailPath(obj))) : '';
-  return base + "subject=" + (obj.heading) + "&amp;body=" + (obj.heading) + thumbnail + "%0Afrom article: " + (document.title) + "%0A" + (window.location.href);
+  return (base + "subject=" + (obj.heading) + "&amp;body=" + (obj.heading) + thumbnail + "%0Afrom article: " + (document.title) + "%0A" + (window.location.href));
 }
 
 function constructSMSURL(obj){
   var base = 'sms:';
   var url = "&body=Check%20out%20this%20chart: " + (obj.heading);
   if (obj.image && obj.image.enable) {  url += "%20" + (getThumbnailPath(obj)); }
-  return base + url;
+  return ("" + base + url);
 }
 
 function constructTwitterURL(obj){
   var base = 'https://twitter.com/intent/tweet?',
-    hashtag = !!(obj.social.twitter.hashtag) ? ("&amp;hashtags=" + (obj.social.twitter.hashtag)) : '',
-    via = !!(obj.social.twitter.via) ? ("&amp;via=" + (obj.social.twitter.via)) : '';
+    hashtag = (obj.social.twitter.hashtag) ? ("&amp;hashtags=" + (obj.social.twitter.hashtag)) : '',
+    via = (obj.social.twitter.via) ? ("&amp;via=" + (obj.social.twitter.via)) : '';
   var url = "url=" + (window.location.href) + via + "&amp;text=" + (encodeURI(obj.heading)) + hashtag;
   if (obj.image && obj.image.enable) {  url += "%20" + (getThumbnailPath(obj)); }
-  return base + url;
+  return ("" + base + url);
 }
 
 /**
