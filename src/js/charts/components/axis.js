@@ -288,46 +288,30 @@ export function setTickFormatX(selection, ctx, ems, monthsAbr) {
     let dStr;
 
     switch (ctx) {
-      case 'years': {
+      case 'years':
         dStr = d.getFullYear();
         break;
-      }
-      case 'months': {
-
+      case 'months':
         dMonth = monthsAbr[d.getMonth()];
         dYear = d.getFullYear();
-
         if (dYear !== prevYear) {
           newTextNode(node, dYear, ems);
         }
-
         dStr = dMonth;
-
         prevYear = dYear;
-
         break;
-      }
       case 'weeks':
-      case 'days': {
+      case 'days':
         dYear = d.getFullYear();
         dMonth = monthsAbr[d.getMonth()];
         dDate = d.getDate();
-
-        if (dMonth !== prevMonth) {
-          dStr = `${dMonth} ${dDate}`;
-        } else {
-          dStr = dDate;
-        }
-
+        dStr = dMonth !== prevMonth ? `${dMonth} ${dDate}` : dDate;
         if (dYear !== prevYear) {
           newTextNode(node, dYear, ems);
         }
-
         prevMonth = dMonth;
         prevYear = dYear;
-
         break;
-      }
       case 'hours': {
         dMonth = monthsAbr[d.getMonth()];
         dDate = d.getDate();
@@ -367,10 +351,9 @@ export function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
         break;
       }
-      default: {
+      default:
         dStr = d;
         break;
-      }
     }
 
     return dStr;
