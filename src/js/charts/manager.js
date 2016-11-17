@@ -4,7 +4,7 @@ import header from './components/header';
 import footer from './components/footer';
 import plot from './components/plot';
 import qualifier from './components/qualifier';
-import tips from './components/tips';
+import { tipsManager as tips } from './components/tips';
 import shareData from './components/share-data';
 import social from './components/social';
 import { custom } from '../../../custom/custom';

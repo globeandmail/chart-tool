@@ -10,6 +10,7 @@
     "ecmaFeatures": {}
   },
   "rules": {
+    "no-console": ["warn"],
     "prefer-template": "error",
     "array-bracket-spacing": ["error", "never"],
     "computed-property-spacing": ["error", "never"],
