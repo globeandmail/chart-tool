@@ -68,9 +68,9 @@
     fill: nth($alternateShades, $counter);
   }
 
-  .#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter - 1},
-  .#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter - 1}  {
-    fill: $color-white;
-  }
+}
 
+.#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle,
+.#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle {
+  fill: $color-white;
 }
