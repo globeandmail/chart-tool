@@ -79,7 +79,6 @@ app_settings = {
       suffix: config.xAxis.suffix,
       min: config.xAxis.min,
       max: config.xAxis.max,
-      rescale: config.xAxis.rescale,
       nice: config.xAxis.nice
     },
     y_axis: {
@@ -92,7 +91,6 @@ app_settings = {
       suffix: config.yAxis.suffix,
       min: config.yAxis.min,
       max: config.yAxis.max,
-      rescale: config.yAxis.rescale,
       nice: config.yAxis.nice
     },
 

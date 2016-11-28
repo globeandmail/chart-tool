@@ -189,41 +189,25 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
   axis.tickPadding(0);
 
   scale
-    .rangeRound([0, dimensions.tickWidth()])
-    .paddingInner(dimensions.bands.padding);
-    // .paddingOuter(paddingOuter);
+    .range([0, dimensions.tickWidth()])
+    .paddingInner(dimensions.bands.padding)
+    .paddingOuter(dimensions.bands.outerPadding);
 
-  // debugger;
-
-  // scale.rangeExtent([0, dimensions.tickWidth()]);
-
-  // scale.rangeRoundBands([0, dimensions.tickWidth()], dimensions.bands.padding, dimensions.bands.outerPadding);
-
-  // const bandStep = scale.rangeBand();
-
-  const bandStep = scale.bandwidth();
+  const bandWidth = scale.bandwidth();
 
   axisNode.call(axis);
 
   axisNode.selectAll('text')
     .style('text-anchor', 'middle')
     .attr('dy', `${axisSettings.dy}em`)
-    .call(wrapText, bandStep);
+    .call(wrapText, bandWidth);
 
-  const firstXPos = getTranslate(axisNode.select('.tick').node())[0] * -1;
-
-  const xPos = (- (bandStep / 2) - (bandStep * dimensions.bands.outerPadding));
+  const xPos = -(bandWidth / 2) - ((scale.step() * dimensions.bands.padding) / 2);
 
   axisNode.selectAll('line')
     .attrs({
       'x1': xPos,
       'x2': xPos
-    });
-
-  axisNode.select('line')
-    .attrs({
-      'x1': firstXPos,
-      'x2': firstXPos
     });
 
   axisNode.selectAll('line')
@@ -232,7 +216,7 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
   const lastTick = axisNode.append('g')
     .attrs({
       'class': 'tick',
-      'transform': `translate(${dimensions.tickWidth() + (bandStep / 2) + bandStep * dimensions.bands.outerPadding},0)`
+      'transform': `translate(${dimensions.tickWidth() + (bandWidth / 2) + ((scale.step() * dimensions.bands.padding) / 2)},0)`
     });
 
   lastTick.append('line')
@@ -487,12 +471,14 @@ export function newTextNode(selection, text, ems) {
     parent = select(selection.node().parentNode),
     lineHeight = ems || 1.6, // ems
     dy = parseFloat(selection.attr('dy')),
-    x = parseFloat(selection.attr('x'));
+    x = parseFloat(selection.attr('x')),
+    textAnchor = selection.style('text-anchor');
 
   const cloned = parent.append(nodeName)
     .attr('dy', `${lineHeight + dy}em`)
     .attr('x', x)
-    .text(() => { return text; });
+    .style('text-anchor', textAnchor)
+    .text(text);
 
   return cloned;
 
@@ -510,8 +496,8 @@ export function dropTicks(selection, opts) {
 
   for (let j = from; j < to; j++) {
 
-    const c = selection._groups[j]; // current selection
-    let n = selection._groups[j + 1]; // next selection
+    const c = selection._groups[0][j]; // current selection
+    let n = selection._groups[0][j + 1]; // next selection
 
     if (!c || !n || !c.getBoundingClientRect || !n.getBoundingClientRect) { continue; }
 
@@ -525,7 +511,7 @@ export function dropTicks(selection, opts) {
 
       j++;
 
-      n = selection[0][j + 1];
+      n = selection._groups[0][j + 1];
 
       if (!n) { break; }
 
@@ -598,16 +584,20 @@ export function dropOversetTicks(axisNode, tickWidth) {
 
   if (tickArr.length) {
 
-    const firstTickOffset = getTranslate(select(tickArr[0])
-      .node())[0];
+    const firstTickOffset = getTranslate(tickArr[0])[0];
 
     const lastTick = tickArr[tickArr.length - 1];
-    select(lastTick).classed('last-tick-hide', false);
+
+    // debugger;
+
+
 
     if ((axisGroupWidth + firstTickOffset) >= tickWidth) {
       select(lastTick).classed('last-tick-hide', true);
-      axisGroupWidth = axisNode.node().getBBox().width;
-      tickArr = axisNode.selectAll('.tick')._groups[0];
+      // axisGroupWidth = axisNode.node().getBBox().width;
+      // tickArr = axisNode.selectAll('.tick')._groups[0];
+    } else {
+      select(lastTick).classed('last-tick-hide', false);
     }
 
   }
@@ -781,18 +771,18 @@ export function ordinalTimeTicks(selection, axisNode, ctx, scale, tolerance) {
       }
     });
 
-    let t0, tn;
-
     if (majorTicks.length > 1) {
 
       for (let i = 0; i < majorTicks.length + 1; i++) {
+
+        let t0, tn;
 
         if (i === 0) { // from t0 to m0
           t0 = 0;
           tn = newSelection.data().indexOf(majorTicks[0].data()[0]);
         } else if (i === (majorTicks.length)) { // from mn to tn
           t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
-          tn = newSelection.length - 1;
+          tn = newSelection._groups[0].length - 1;
         } else { // from m0 to mn
           t0 = newSelection.data().indexOf(majorTicks[i - 1].data()[0]);
           tn = newSelection.data().indexOf(majorTicks[i].data()[0]);

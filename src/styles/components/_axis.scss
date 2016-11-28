@@ -31,6 +31,7 @@
 
 .#{$prefix}axis-group text {
   @include utility-font;
+  fill: $color-black;
 }
 
 .#{$prefix}axis-group path {

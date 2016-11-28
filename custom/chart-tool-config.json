@@ -90,7 +90,7 @@
 
   "bands": {
     "padding": 0.06,
-    "offset": 0.12,
+    "offset": 0.06,
     "outerPadding": 0.03
   },
 

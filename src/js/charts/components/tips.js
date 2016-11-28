@@ -463,8 +463,8 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
         for (let k = 0; k < tipData.length; k++) {
           if (i === 0) {
-            if (d.raw.series[i].val !== '__undefined__') {
-              text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.raw.series[i].val) + obj.yAxis.suffix;
+            if (!isNaN(d[0] + d[1])) {
+              text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
               break;
             } else {
               text = 'n/a';
@@ -473,13 +473,13 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
           } else if (k === i) {
             let hasUndefined = 0;
             for (let j = 0; j < i; j++) {
-              if (d.raw.series[j].val === '__undefined__') {
+              if (isNaN(d[0] + d[1])) {
                 hasUndefined++;
                 break;
               }
             }
-            if (!hasUndefined && (d.raw.series[i].val !== '__undefined__')) {
-              text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.raw.series[i].val) + obj.yAxis.suffix;
+            if (!hasUndefined && !isNaN(d[0] + d[1])) {
+              text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
               break;
             } else {
               text = 'n/a';
@@ -491,7 +491,7 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
       });
 
     tipNodes.tipTextDate
-      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].x);
+      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].data[obj.data.keys[0]]);
 
     tipNodes.tipGroup
       .selectAll(`.${obj.prefix}tip_text-group`)
@@ -499,12 +499,13 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
       .classed(`${obj.prefix}active`, (d, i) => {
         let hasUndefined = 0;
         for (let j = 0; j < i; j++) {
-          if (d.raw.series[j].val === '__undefined__') {
+          if (isNaN(d[0] + d[1])) {
             hasUndefined++;
             break;
           }
         }
-        if (d.raw.series[i].val !== '__undefined__' && !hasUndefined) {
+
+        if (!hasUndefined && !isNaN(d[0] + d[1])) {
           return true;
         } else {
           return false;
@@ -530,12 +531,12 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         .classed(`${obj.prefix}active`, (d, i) => {
           let hasUndefined = 0;
           for (let j = 0; j < i; j++) {
-            if (d.raw.series[j].val === '__undefined__') {
+            if (isNaN(d[0] + d[1])) {
               hasUndefined++;
               break;
             }
           }
-          if (d.raw.series[i].val !== '__undefined__' && !hasUndefined) {
+          if (!hasUndefined && !isNaN(d[0] + d[1])) {
             return true;
           } else {
             return false;
@@ -543,12 +544,12 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         })
         .attrs({
           'cx': d => {
-            return obj.rendered.plot.xScaleObj.scale(d.x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight;
+            return obj.rendered.plot.xScaleObj.scale(d.data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight;
           },
           'cy': d => {
-            const y = d.y || 0,
-              y0 = d.y0 || 0;
-            return obj.rendered.plot.yScaleObj.scale(y + y0);
+            if (!isNaN(d[1])) {
+              return obj.rendered.plot.yScaleObj.scale(d[1]);
+            }
           }
         });
 
@@ -560,21 +561,21 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
     tipNodes.xTipLine.select('line')
       .attrs({
-        'x1': obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-        'x2': obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'x1': obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'x2': obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
         'y1': 0,
         'y2': obj.dimensions.yAxisHeight()
       });
 
     tipNodes.tipBox
-      .attrs('transform', function() {
+      .attr('transform', function() {
         let x;
         if (cursor.x > obj.dimensions.tickWidth() / 2) {
           // tipbox pointing left
-          x = obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+          x = obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
         } else {
           // tipbox pointing right
-          x = obj.rendered.plot.xScaleObj.scale(tipData[0].x) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+          x = obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
         }
         return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
       });
@@ -584,180 +585,180 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 }
 
 export function columnChartTips(tipNodes, obj, d, thisRef) {
-
-  const columnRects = obj.rendered.plot.columnItem.selectAll('rect');
-
-  const cursor = cursorPos(tipNodes.overlay);
-
-  let isUndefined = 0;
-
-  const thisColumn = thisRef,
-    tipData = d;
-
-  for (let i = 0; i < tipData.series.length; i++) {
-    if (tipData.series[i].val === '__undefined__') {
-      isUndefined++;
-      break;
-    }
-  }
-
-  if (!isUndefined) {
-
-    const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
-
-    columnRects
-      .classed(`${obj.prefix}muted`, () => {
-        return (this === thisColumn) ? false : true;
-      });
-
-    tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
-      .data(tipData.series)
-      .text(d => {
-        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-        if (d.val) {
-          return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-        } else {
-          return 'n/a';
-        }
-      });
-
-    if (obj.dateFormat !== undefined) {
-      tipNodes.tipTextDate.call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
-    } else {
-      tipNodes.tipTextDate.text(tipData.key);
-    }
-
-    tipNodes.tipGroup
-      .selectAll(`.${obj.prefix}tip_text-group`)
-      .data(tipData.series)
-      .classed(`${obj.prefix}active`, d => {
-        return d.val ? true : false;
-      });
-
-    tipNodes.tipRect
-      .attrs({
-        'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-        'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-      });
-
-    tipNodes.tipBox
-      .attr('transform', function() {
-        let x;
-        if (cursor.x > obj.dimensions.tickWidth() / 2) {
-          // tipbox pointing left
-          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
-        } else {
-          // tipbox pointing right
-          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
-        }
-        return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
-      });
-
-    showTips(tipNodes, obj);
-
-  }
+  //
+  // const columnRects = obj.rendered.plot.columnItem.selectAll('rect');
+  //
+  // const cursor = cursorPos(tipNodes.overlay);
+  //
+  // let isUndefined = 0;
+  //
+  // const thisColumn = thisRef,
+  //   tipData = d;
+  //
+  // for (let i = 0; i < tipData.series.length; i++) {
+  //   if (tipData.series[i].val === '__undefined__') {
+  //     isUndefined++;
+  //     break;
+  //   }
+  // }
+  //
+  // if (!isUndefined) {
+  //
+  //   const domain = obj.rendered.plot.xScaleObj.scale.domain(),
+  //     ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+  //
+  //   columnRects
+  //     .classed(`${obj.prefix}muted`, () => {
+  //       return (this === thisColumn) ? false : true;
+  //     });
+  //
+  //   tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
+  //     .data(tipData.series)
+  //     .text(d => {
+  //       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
+  //       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
+  //       if (d.val) {
+  //         return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+  //       } else {
+  //         return 'n/a';
+  //       }
+  //     });
+  //
+  //   if (obj.dateFormat !== undefined) {
+  //     tipNodes.tipTextDate.call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+  //   } else {
+  //     tipNodes.tipTextDate.text(tipData.key);
+  //   }
+  //
+  //   tipNodes.tipGroup
+  //     .selectAll(`.${obj.prefix}tip_text-group`)
+  //     .data(tipData.series)
+  //     .classed(`${obj.prefix}active`, d => {
+  //       return d.val ? true : false;
+  //     });
+  //
+  //   tipNodes.tipRect
+  //     .attrs({
+  //       'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+  //       'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+  //     });
+  //
+  //   tipNodes.tipBox
+  //     .attr('transform', function() {
+  //       let x;
+  //       if (cursor.x > obj.dimensions.tickWidth() / 2) {
+  //         // tipbox pointing left
+  //         x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+  //       } else {
+  //         // tipbox pointing right
+  //         x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+  //       }
+  //       return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
+  //     });
+  //
+  //   showTips(tipNodes, obj);
+  //
+  // }
 
 }
 
 export function stackedColumnChartTips(tipNodes, obj, d, thisRef) {
-
-  const columnRects = obj.rendered.plot.series.selectAll('rect');
-
-  let isUndefined = 0;
-
-  const thisColumnRect = thisRef,
-    tipData = d;
-
-  for (let i = 0; i < tipData.raw.series.length; i++) {
-    if (tipData.raw.series[i].val === '__undefined__') {
-      isUndefined++;
-      break;
-    }
-  }
-
-  if (!isUndefined) {
-
-    const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
-
-    const refPos = select(thisColumnRect).attr('x');
-
-    let thisColumnKey = '';
-
-    /* Figure out which stack this selected rect is in then loop back through and (un)assign muted class */
-    columnRects.classed(`${obj.prefix}muted`, d => {
-      if (this === thisColumnRect) {
-        thisColumnKey = d.raw.key;
-      }
-      return (this === thisColumnRect) ? false : true;
-    });
-
-    columnRects.classed(`${obj.prefix}muted`, d => {
-      return (d.raw.key === thisColumnKey) ? false : true;
-    });
-
-    tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
-      .data(tipData.raw.series)
-      .text(d => {
-        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-        if (d.val) {
-          return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-        } else {
-          return 'n/a';
-        }
-      });
-
-    if (obj.dateFormat !== undefined) {
-      tipNodes.tipTextDate
-        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
-    } else {
-      tipNodes.tipTextDate
-        .text(() => {
-          return tipData.raw.key;
-        });
-    }
-
-    tipNodes.tipGroup
-      .append('circle')
-      .attrs({
-        'class': function(d, i) {
-          return `${obj.prefix}tip_circle ${obj.prefix}tip_circle-${i}`;
-        },
-        'r': tipNodes.radius,
-        'cx': tipNodes.radius,
-        'cy': function(d, i) {
-          return ((i + 1) * parseInt(select(this).style('font-size')) * 1.13 + 9);
-        }
-      });
-
-    tipNodes.tipGroup
-      .selectAll(`.${obj.prefix}tip_text-group`)
-      .data(tipData.raw.series)
-      .classed(`.${obj.prefix}active`, d => { return d.val ? true : false; });
-
-    tipNodes.tipRect
-      .attrs({
-        'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-        'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-      });
-
-    tipNodes.tipBox
-      .attr('transform', function() {
-        let x;
-        if (refPos > obj.dimensions.tickWidth() / 2) {
-          // tipbox pointing left
-          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
-        } else {
-          // tipbox pointing right
-          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
-        }
-        return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
-      });
-
-  }
+  //
+  // const columnRects = obj.rendered.plot.series.selectAll('rect');
+  //
+  // let isUndefined = 0;
+  //
+  // const thisColumnRect = thisRef,
+  //   tipData = d;
+  //
+  // for (let i = 0; i < tipData.raw.series.length; i++) {
+  //   if (tipData.raw.series[i].val === '__undefined__') {
+  //     isUndefined++;
+  //     break;
+  //   }
+  // }
+  //
+  // if (!isUndefined) {
+  //
+  //   const domain = obj.rendered.plot.xScaleObj.scale.domain(),
+  //     ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+  //
+  //   const refPos = select(thisColumnRect).attr('x');
+  //
+  //   let thisColumnKey = '';
+  //
+  //   /* Figure out which stack this selected rect is in then loop back through and (un)assign muted class */
+  //   columnRects.classed(`${obj.prefix}muted`, d => {
+  //     if (this === thisColumnRect) {
+  //       thisColumnKey = d.raw.key;
+  //     }
+  //     return (this === thisColumnRect) ? false : true;
+  //   });
+  //
+  //   columnRects.classed(`${obj.prefix}muted`, d => {
+  //     return (d.raw.key === thisColumnKey) ? false : true;
+  //   });
+  //
+  //   tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
+  //     .data(tipData.raw.series)
+  //     .text(d => {
+  //       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
+  //       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
+  //       if (d.val) {
+  //         return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+  //       } else {
+  //         return 'n/a';
+  //       }
+  //     });
+  //
+  //   if (obj.dateFormat !== undefined) {
+  //     tipNodes.tipTextDate
+  //       .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+  //   } else {
+  //     tipNodes.tipTextDate
+  //       .text(() => {
+  //         return tipData.raw.key;
+  //       });
+  //   }
+  //
+  //   tipNodes.tipGroup
+  //     .append('circle')
+  //     .attrs({
+  //       'class': function(d, i) {
+  //         return `${obj.prefix}tip_circle ${obj.prefix}tip_circle-${i}`;
+  //       },
+  //       'r': tipNodes.radius,
+  //       'cx': tipNodes.radius,
+  //       'cy': function(d, i) {
+  //         return ((i + 1) * parseInt(select(this).style('font-size')) * 1.13 + 9);
+  //       }
+  //     });
+  //
+  //   tipNodes.tipGroup
+  //     .selectAll(`.${obj.prefix}tip_text-group`)
+  //     .data(tipData.raw.series)
+  //     .classed(`.${obj.prefix}active`, d => { return d.val ? true : false; });
+  //
+  //   tipNodes.tipRect
+  //     .attrs({
+  //       'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+  //       'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+  //     });
+  //
+  //   tipNodes.tipBox
+  //     .attr('transform', function() {
+  //       let x;
+  //       if (refPos > obj.dimensions.tickWidth() / 2) {
+  //         // tipbox pointing left
+  //         x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - select(this).node().getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+  //       } else {
+  //         // tipbox pointing right
+  //         x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+  //       }
+  //       return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
+  //     });
+  //
+  // }
 
 }
 

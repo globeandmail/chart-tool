@@ -104,19 +104,9 @@ Template.chartEditAside.helpers({
       return (this.x_axis.nice ? true : false);
     }
   },
-  xRescale: function() {
-    if (this.x_axis) {
-      return (this.x_axis.rescale ? true : false);
-    }
-  },
   yNice: function() {
     if (this.y_axis) {
       return (this.y_axis.nice ? true : false);
-    }
-  },
-  yRescale: function() {
-    if (this.y_axis) {
-      return (this.y_axis.rescale ? true : false);
     }
   },
   dateCalc: function() {
@@ -350,11 +340,6 @@ Template.chartEditAside.events({
     var val = !this.x_axis.nice;
     updateAndSave("updateXNice", this, val);
   },
-  "change .input-checkbox-x-rescale": function(event) {
-    var val = !this.x_axis.rescale;
-    updateAndSave("updateXRescale", this, val);
-  },
-
 
   "blur .input-custom-x": function(event) {
     var format = event.target.value,
@@ -491,18 +476,6 @@ Template.chartEditAside.events({
     sweetAlert({
       title: "Niceify?",
       text: "Enable this to make the Y-axis end on a nice round value.",
-      type: "info",
-      confirmButtonColor: "#fff"
-    });
-  },
-  "change .input-checkbox-y-rescale": function(event) {
-    var val = !this.y_axis.rescale;
-    updateAndSave("updateYRescale", this, val);
-  },
-  "click .help-y-rescale-edit": function(event) {
-    sweetAlert({
-      title: "Rescale?",
-      text: "Rescale the Y-axis to add more whitespace at the top of the chart.",
       type: "info",
       confirmButtonColor: "#fff"
     });

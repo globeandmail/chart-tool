@@ -1,16 +1,4 @@
-import {
-  scaleTime,
-  scaleBand,
-  scalePoint,
-  scaleLinear,
-  scaleIdentity,
-  scalePow,
-  scaleSqrt,
-  scaleLog,
-  scaleQuantize,
-  scaleQuantile,
-  scaleThreshold
-} from 'd3-scale';
+import { scaleTime, scaleBand, scalePoint, scaleLinear } from 'd3-scale';
 import { min, max, extent } from 'd3-array';
 import { timeDiff, timeInterval } from '../../utils/utils';
 import { map } from 'd3-collection';
@@ -27,7 +15,6 @@ export function scaleManager(obj, axisType) {
   setRangeArgs(scale, scaleObj);
 
   if (axis.nice) { niceify(scale, axisType, scaleObj); }
-  if (axis.rescale) { rescale(scale, axisType, axis); }
 
   return {
     obj: scaleObj,
@@ -40,7 +27,7 @@ export class ScaleObj {
   constructor(obj, axis, axisType) {
     this.type = axis.scale;
     this.domain = setDomain(obj, axis);
-    this.rangeType = setRangeType(axis);
+    this.rangeType = 'range';
     this.range = setRange(obj, axisType);
     this.bands = obj.dimensions.bands;
     this.rangePoints = axis.rangePoints || 1.0;
@@ -53,28 +40,7 @@ export function setScaleType(type) {
     case 'ordinal': return scaleBand();
     case 'ordinal-time': return scalePoint();
     case 'linear': return scaleLinear();
-    case 'identity': return scaleIdentity();
-    case 'pow': return scalePow();
-    case 'sqrt': return scaleSqrt();
-    case 'log': return scaleLog();
-    case 'quantize': return scaleQuantize();
-    case 'quantile': return scaleQuantile();
-    case 'threshold': return scaleThreshold();
     default: return scaleLinear();
-  }
-}
-
-export function setRangeType(axis) {
-  switch(axis.scale) {
-    case 'time':
-    case 'linear':
-    case 'ordinal-time':
-      return 'range';
-    case 'ordinal':
-    case 'discrete':
-      return 'rangeRound';
-    default:
-      return 'range';
   }
 }
 
@@ -93,15 +59,12 @@ export function setRange(obj, axisType) {
 }
 
 export function setRangeArgs(scale, scaleObj) {
-  switch (scaleObj.rangeType) {
-    case 'range':
-      if (scaleObj.type === 'ordinal-time') {
-        return scale[scaleObj.rangeType](scaleObj.range, scaleObj.rangePoints);
-      } else {
-        return scale[scaleObj.rangeType](scaleObj.range);
-      }
-    case 'rangeRound':
-      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.bands.padding, scaleObj.bands.outerPadding);
+  if (scaleObj.rangeType === 'range') {
+    if (scaleObj.type === 'ordinal-time') {
+      return scale[scaleObj.rangeType](scaleObj.range).padding(0.5).align(0);
+    } else {
+      return scale[scaleObj.rangeType](scaleObj.range);
+    }
   }
 }
 
@@ -184,26 +147,6 @@ export function setNumericalDomain(data, vmin, vmax, stacked, forceMaxVal) {
 
 export function setDiscreteDomain(data) {
   return data.data.map(d => { return d.key; });
-}
-
-export function rescale(scale, axisType, axisObj) {
-  switch(axisObj.scale) {
-    case 'linear':
-      if (!axisObj.max) { rescaleNumerical(scale); }
-      break;
-  }
-}
-
-export function rescaleNumerical(scale) {
-
-  // rescales the 'top' end of the domain
-  const ticks = scale.ticks(10).slice(),
-    tickIncr = Math.abs(ticks[ticks.length - 1]) - Math.abs(ticks[ticks.length - 2]);
-
-  const newMax = ticks[ticks.length - 1] + tickIncr;
-
-  scale.domain([scale.domain()[0], newMax]);
-
 }
 
 export function niceify(scale, axisType, scaleObj) {
