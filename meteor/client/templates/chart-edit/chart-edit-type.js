@@ -53,18 +53,6 @@ Template.chartEditType.events({
           QualifierOption: true
         });
         break;
-      case "stream":
-        updateObject(this, {
-          Type: type,
-          Interpolation: false,
-          stacked: defaults.stacked,
-          XScale: "time",
-          YScale: "linear",
-          XNice: false,
-          YNice: true,
-          QualifierOption: true
-        });
-        break;
       case "bar":
         updateObject(this, {
           Type: type,
