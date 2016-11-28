@@ -61,8 +61,8 @@ export default function stackedColumnChart(node, obj) {
     .append('g')
     .attrs({
       'class': (d, i) => { return `${obj.prefix}column ${obj.prefix}column-${i}`; },
-      'data-key': (d, i, j) => { return d[0].data[obj.data.keys[0]]; },
-      'data-legend': (d, i, j) => { return d.key; },
+      'data-key': (d, i) => { return d[0].data[obj.data.keys[0]]; },
+      'data-legend': (d, i) => { return d.key; },
     });
 
   const rect = columnItem.selectAll('rect')

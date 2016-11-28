@@ -1,4 +1,4 @@
-import Recipe from '../utils/factory';
+import recipe from '../utils/factory';
 import base from './components/base';
 import header from './components/header';
 import footer from './components/footer';
@@ -17,7 +17,8 @@ import { custom } from '../../../custom/custom';
 export class ChartManager {
 
   constructor(container, obj) {
-    this.recipe = new Recipe(obj);
+
+    this.recipe = recipe(obj);
 
     this.recipe.rendered = {};
 

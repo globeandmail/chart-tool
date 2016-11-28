@@ -58,3 +58,40 @@ export function sameKeys(o1, o2) {
 export function cleanStr(str) {
   return (str === undefined) ? '' : str;
 }
+
+export function extend(from, to) {
+
+  let target;
+
+  if (from == null || typeof from != 'object') return from;
+  if (from.constructor != Object && from.constructor != Array) return from;
+  if (from.constructor == Date || from.constructor == RegExp || from.constructor == Function ||
+    from.constructor == String || from.constructor == Number || from.constructor == Boolean)
+    return new from.constructor(from);
+
+  target = to || new from.constructor();
+
+  for (let name in from) {
+    target[name] = typeof target[name] == 'undefined' ? extend(from[name], null) : target[name];
+  }
+
+  return target;
+}
+
+export function completeAssign(target, ...sources) {
+  sources.forEach(source => {
+    let descriptors = Object.keys(source).reduce((descriptors, key) => {
+      descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
+      return descriptors;
+    }, {});
+    // by default, Object.assign copies enumerable Symbols too
+    Object.getOwnPropertySymbols(source).forEach(sym => {
+      let descriptor = Object.getOwnPropertyDescriptor(source, sym);
+      if (descriptor.enumerable) {
+        descriptors[sym] = descriptor;
+      }
+    });
+    Object.defineProperties(target, descriptors);
+  });
+  return target;
+}

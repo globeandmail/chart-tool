@@ -8,10 +8,10 @@ import { timeDiff } from '../../utils/utils';
  * @module charts/components/tips
  */
 
-export function bisectData(data, keyVal, stacked) {
+export function bisectData(data, keyVal, stacked, xKey) {
   if (stacked) {
     const arr = [];
-    const bisectFn = bisector(d => { return d.x; }).left;
+    const bisectFn = bisector(d => { return d.data[xKey]; }).left;
     for (let i = 0; i < data.length; i++) {
       arr.push(bisectFn(data[i], keyVal));
     }
@@ -52,7 +52,7 @@ export function getTipData(obj, cursor) {
 
   if (obj.options.stacked) {
     const data = obj.data.stackedData;
-    const i = bisectData(data, xVal, obj.options.stacked);
+    const i = bisectData(data, xVal, obj.options.stacked, obj.data.keys[0]);
 
     const arr = [];
     let refIndex;
@@ -139,8 +139,7 @@ export function tipsManager(node, obj) {
     line: lineChartTips,
     multiline: lineChartTips,
     area: obj.options.stacked ? stackedAreaChartTips : areaChartTips,
-    column: obj.options.stacked ? stackedColumnChartTips : columnChartTips,
-    stream: streamgraphTips
+    column: obj.options.stacked ? stackedColumnChartTips : columnChartTips
   };
 
   let dataReference;
@@ -157,7 +156,6 @@ export function tipsManager(node, obj) {
     case 'line':
     case 'multiline':
     case 'area':
-    case 'stream':
 
       tipNodes.overlay = tipNodes.tipNode.append('rect')
         .attrs({
@@ -442,8 +440,8 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
   let isUndefined = 0;
 
-  for (let i = 0; i < tipData.series.length; i++) {
-    if (tipData.series[i].val === '__undefined__') {
+  for (let i = 0; i < tipData.length; i++) {
+    if (tipData[i].val === '__undefined__') {
       isUndefined++;
       break;
     }
@@ -583,12 +581,6 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
   }
 
-}
-
-export function streamgraphTips(tipNodes, innerTipEls, obj) {
-  // streamgraph tips implementation is currently
-  // *exactly* the same as stacked area tips, so…
-  stackedAreaChartTips(tipNodes, innerTipEls, obj);
 }
 
 export function columnChartTips(tipNodes, obj, d, thisRef) {

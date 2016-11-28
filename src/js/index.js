@@ -1,6 +1,6 @@
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
-import Settings from './config/chart-settings';
+import chartSettings from './config/chart-settings';
 import { clearDrawn, clearObj, clearChart, getBounding, svgTest, generateThumb, debounce as debounceFn } from './utils/utils';
 import { ChartManager } from './charts/manager';
 import 'core-js/library/fn/object/assign';
@@ -22,8 +22,6 @@ export default (root => {
         dispatchFunctions = root.__charttooldispatcher || [];
 
       let drawn = [];
-
-      const s = new Settings();
 
       const dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
 
@@ -89,7 +87,7 @@ export default (root => {
       }
 
       function updateChart(id, obj) {
-        const container = `.${s.baseClass()}[data-chartid=${s.prefix}${id}]`;
+        const container = `.${chartSettings.baseClass}[data-chartid=${chartSettings.prefix}${id}]`;
         createChart(container, { id: id, data: obj });
       }
 
@@ -100,7 +98,7 @@ export default (root => {
             obj = charts[i];
           }
         }
-        container = `.${s.baseClass()}[data-chartid=${obj.id}]`;
+        container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
         clearDrawn(drawn, obj);
         clearObj(obj);
         clearChart(container);
@@ -110,17 +108,17 @@ export default (root => {
         const chartList = listCharts(charts);
         for (let i = 0; i < chartList.length; i++) {
           let data = readChart(chartList[i]);
-          let container = `.${s.baseClass()}[data-chartid=${chartList[i]}]`;
+          let container = `.${chartSettings.baseClass}[data-chartid=${chartList[i]}]`;
           createChart(container, data);
         }
       }
 
       function initializer(charts) {
         createLoop(charts);
-        const debouncer = debounceFn(createLoop, charts, s.debounce, root);
+        const debouncer = debounceFn(createLoop, charts, chartSettings.debounce, root);
         select(root)
-          .on(`resize.${s.prefix}debounce`, debouncer)
-          .on(`resize.${s.prefix}redraw`, dispatcher.call('redraw', this, charts));
+          .on(`resize.${chartSettings.prefix}debounce`, debouncer)
+          .on(`resize.${chartSettings.prefix}redraw`, dispatcher.call('redraw', this, charts));
       }
 
       return {
@@ -131,10 +129,10 @@ export default (root => {
         update: function update(id, obj) { return updateChart(id, obj); },
         destroy: function destroy(id) { return destroyChart(id); },
         dispatch: function dispatch() { return Object.keys(dispatcher); },
-        version: s.version,
-        build: s.build,
+        version: chartSettings.version,
+        build: chartSettings.build,
         wat: function wat() {
-          console.log(`ChartTool v${s.version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool`);
+          console.log(`ChartTool v${chartSettings.version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool`);
         }
       };
 

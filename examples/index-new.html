@@ -1,0 +1,690 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Chart Tool — chart tests</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <style type="text/css">
+    .wrapper {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+  </style>
+
+  <link rel="stylesheet" type="text/css" href="../dist/dev/chart-tool.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+
+    <!-- Chart types
+
+    Line chart, single series, time
+    Line chart, multiple series, time
+    Line chart, single series, ordinal
+    Line chart, single series, ordinal-time
+    Line chart, single series, time (hh:mm)
+    Line chart, single series, ordinal-time (hh:mm)
+
+    Column chart, single series, ordinal
+    Column chart, multiple series, ordinal
+    Column chart, single series, time
+    Column chart, multiple series, time
+    Column chart, single series, ordinal-time
+    Column chart, multiple series, ordinal-time
+    Column chart, stacked, ordinal
+    Column chart, stacked, time
+    Column chart, stacked, ordinal-time
+
+    Area chart, single series, time
+    Area chart, multiple series, time
+    Area chart, ordinal
+    Area chart, ordinal-time
+    Area chart, stacked, time
+    Area chart, stacked, ordinal
+    Area chart, stacked, ordinal-time
+
+    Multiline chart, time
+    Multiline chart, ordinal
+    Multiline chart, ordinal-time
+
+    Streamgraph chart, time
+    Streamgraph chart, ordinal
+    Streamgraph chart, ordinal-time
+
+    Bar chart, single series, ordinal
+    Bar chart, multiple series, ordinal
+    Bar chart, stacked, ordinal
+
+    Axis acale formatting (for both x- and y-axes)
+
+    Prefix formatting
+    Suffix formatting
+    Number formatting
+    Minimum value (unless column, area, or bar chart)
+    Maximum value
+    Ticks
+    Niceification
+    Rescaling
+
+    Other
+    Disabling tips
+    Disabling social share
+    Disabling data download -->
+
+    <!-- <div class="ct-chart" data-chartid="ct-myLQ47NsJvjuesxMK">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "id": "myLQ47NsJvjuesxMK",
+            "heading": "Two-income families in Ontario, by income level",
+            "qualifier": "In millions of families",
+            "source": "THE GLOBE AND MAIL » SOURCE: statscan",
+            "chart": {
+              "class": "primary",
+              "data": "Year,Less than $50k,$50k to $80k,$80k and above\n2000-01-01,1.05511,0.73545,0.93488\n2001-01-01,0.99348,0.74861,1.02457\n2002-01-01,0.99102,0.73557,1.07813\n2003-01-01,0.9781,0.7247,1.12739\n2004-01-01,0.95948,0.72033,1.20387\n2005-01-01,0.91098,0.71128,1.2694\n2006-01-01,0.90893,0.70305,1.34016\n2007-01-01,0.87284,0.6949,1.41588\n2008-01-01,0.85912,0.68486,1.47335\n2009-01-01,0.89169,0.69985,1.46547\n2010-01-01,0.86663,0.69062,1.51673\n2011-01-01,0.84898,0.6825,1.57287\n2012-01-01,0.83332,0.67191,1.62058\n2013-01-01,0.81948,0.66635,1.6702",
+              "options": {
+                "type": "line",
+                "interpolation": "linear",
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": false,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "scale": "time",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "display": true,
+                "nice": false
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "round1",
+                "min": "0.4",
+                "max": "1.8",
+                "rescale": false,
+                "display": true,
+                "nice": true
+              },
+              "hasHours": false
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-ahbkFx8efBmMT3zJG">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "id": "ahbkFx8efBmMT3zJG",
+            "heading": "Effect of parental income on participation in higher education for 18-24 year olds in  college or university",
+            "qualifier": "",
+            "source": "THE GLOBE AND MAIL » SOURCE: ontario ministry of training, colleges and universities",
+            "chart": {
+              "class": "primary",
+              "data": "Quartile,18-24 year olds in college or university\nLowest quartile,36\nLower middle quartile,45\nUpper middle quartile,46\nHighest quartile,57\nTotal,46",
+              "options": {
+                "type": "column",
+                "interpolation": false,
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": false,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "scale": "ordinal",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "display": true,
+                "nice": false
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "suffix": "%",
+                "max": "60",
+                "rescale": true,
+                "display": true,
+                "nice": true
+              },
+              "hasHours": false
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-CWTDrX6wZggWEKZKX">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "id": "CWTDrX6wZggWEKZKX",
+            "heading": "Weighted average undergraduate tuition fees for Canadian full-time students in 2015/2016, by province",
+            "qualifier": "",
+            "source": "THE GLOBE AND MAIL » SOURCE: statscan",
+            "chart": {
+              "class": "primary",
+              "data": "Province,Amount\nCanada,6191\nNfld.,2660\nPEI,6119\nN.S.,6817\nN.B,6353\nQue.,2799\nOnt.,7868\nMan.,3930\nSask.,6885\nAlta.,5738\nB.C.,5305",
+              "options": {
+                "type": "column",
+                "interpolation": false,
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": false,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "scale": "ordinal",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "display": true,
+                "nice": false
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "prefix": "$",
+                "max": "8000",
+                "rescale": true,
+                "display": true,
+                "nice": true
+              },
+              "hasHours": false
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-dQbKEs4y77LKjrasq">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "id": "dQbKEs4y77LKjrasq",
+            "heading": "Canadian tuition fees, by academic year",
+            "qualifier": "",
+            "source": "THE GLOBE AND MAIL » SOURCE: statscan",
+            "chart": {
+              "class": "primary",
+              "data": "Year,Ontario,Canada,British Columbia,Quebec\n2006-01-01,5155,4400,4740,1932\n2007-01-01,5388,4558,4922,2056\n2008-01-01,5667,4747,4746,2180\n2009-01-01,5985,4942,4706,2309\n2010-01-01,6316,5146,4758,2411\n2011-01-01,6815,5313,4919,2520\n2012-01-01,6975,5586,4931,2565\n2013-01-01,7257,5767,5018,2657\n2014-01-01,7562,5998,5201,2740\n2015-01-01,7868,6191,5305,2799",
+              "options": {
+                "type": "line",
+                "interpolation": "linear",
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": false,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "scale": "time",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "display": true,
+                "nice": false
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "prefix": "$",
+                "min": "1000",
+                "max": "9000",
+                "rescale": true,
+                "display": true,
+                "nice": true
+              },
+              "hasHours": false
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-hwZk6nmC6uxbGg2S8">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "id": "hwZk6nmC6uxbGg2S8",
+            "heading": "Household expenditures on postsecondary education as a percentage of total expenditures, 2009",
+            "qualifier": "",
+            "source": "THE GLOBE AND MAIL » SOURCE: statscan",
+            "chart": {
+              "class": "primary",
+              "data": "Province,Expenditure\nNfld.,3.6\nPEI,5.8\nN.S.,5.3\nN.B,6\nQue.,2.4\nOnt.,5.1\nMan.,4\nSask.,4.9\nAlta.,3.9\nB.C.,6.9",
+              "options": {
+                "type": "column",
+                "interpolation": false,
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": false,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "scale": "ordinal",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "display": true,
+                "nice": false
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "suffix": "%",
+                "rescale": false,
+                "display": true,
+                "nice": true
+              },
+              "hasHours": false
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-zxw8DhvaFGxSyFEEM">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "id": "zxw8DhvaFGxSyFEEM",
+            "heading": "Revenue breakdown for Canadian universities and degree-granting colleges, 2013/14",
+            "qualifier": "",
+            "source": "THE GLOBE AND MAIL » SOURCE: statscan",
+            "chart": {
+              "class": "primary",
+              "data": "Provinces,Student fees,Other private revenues,Government revenues\nNfld.,9.534081041,21.55213608,68.91378287\nQue.,14.75088391,21.36616106,63.88295504\nSask.,16.09870009,27.49576833,56.40553157\nAlta.,19.26109734,29.24899694,51.48990572\nMan.,18.16564786,23.12030636,58.71404578\nPEI,23.5953,22.55831154,53.84638846\nB.C.,26.63369469,26.58355953,46.78274578\nN.B.,24.90411463,28.66592529,46.42996008\nOnt.,32.06030168,27.95320769,39.98649064\nN.S.,29.62556256,29.43282486,40.94161258",
+              "options": {
+                "type": "column",
+                "interpolation": false,
+                "stacked": true,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": false,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "scale": "ordinal",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "display": true,
+                "nice": false
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "suffix": "%",
+                "max": "100",
+                "rescale": true,
+                "display": true,
+                "nice": true
+              },
+              "hasHours": false
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-o5qKRwC5SForeg8Q2">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "id": "o5qKRwC5SForeg8Q2",
+            "heading": "Percentage of Canadian youth population by varying career expectation patterns, 2000 to 2010",
+            "qualifier": "",
+            "source": "THE GLOBE AND MAIL » SOURCE: statscan",
+            "chart": {
+              "class": "primary",
+              "data": "Age,percent\nAge 15,9.6\nAge 17,6.9\nAge 21,15.9\nAge 23,16\nNew decision at age 25,38.3\nUndecided at age 25,13.3",
+              "options": {
+                "type": "column",
+                "interpolation": false,
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": true,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "scale": "ordinal",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "display": true,
+                "nice": false
+              },
+              "y_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "suffix": "%",
+                "max": "40",
+                "rescale": true,
+                "display": true,
+                "nice": true
+              },
+              "hasHours": false
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-Zkm9iYtmR9Z69iQpg">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.1.0",
+            "id": "Zkm9iYtmR9Z69iQpg",
+            "heading": "University performance by category, 2016",
+            "qualifier": "Scores out of 100",
+            "source": "THE GLOBE AND MAIL » SOURCE: Times Higher Education World University Rankings",
+            "chart": {
+              "class": "primary",
+              "hasHours": false,
+              "data": "Category,University of Toronto,UBC,Peking University,Oxford University\nTeaching,74.6,61.2,84.6,89.6\nInternational outlook,78.3,92,50.3,94.5\nResearch,86.3,72.5,80.3,99.1\nCitations,91.9,92.9,71.6,99.2\nIndustry income,48.8,41.1,100,62.5",
+              "options": {
+                "type": "column",
+                "interpolation": false,
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": true,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "display": true,
+                "scale": "ordinal",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "nice": false
+              },
+              "y_axis": {
+                "display": true,
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "rescale": false,
+                "nice": true
+              }
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div> -->
+
+    <div class="ct-chart" data-chartid="ct-Rq6rwkk66TNq53MKm">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.1.1",
+            "id": "Rq6rwkk66TNq53MKm",
+            "heading": "Central bank rates",
+            "qualifier": "",
+            "source": "THE GLOBE AND MAIL » SOURCE: BLOOMBERG",
+            "chart": {
+              "class": "primary",
+              "hasHours": false,
+              "data": "Date,BoC overnight rate,Fed target rate (upper bound),BoE official bank rate,ECB main refinancing rate,Swedish repo rate\n2005-01-31,2.5,2.25,4.75,2,2\n2005-02-28,2.5,2.5,4.75,2,2\n2005-03-31,2.5,2.75,4.75,2,2\n2005-04-29,2.5,2.75,4.75,2,2\n2005-05-31,2.5,3,4.75,2,2\n2005-06-30,2.5,3.25,4.75,2,1.5\n2005-07-29,2.5,3.25,4.75,2,1.5\n2005-08-31,2.5,3.5,4.5,2,1.5\n2005-09-30,2.75,3.75,4.5,2,1.5\n2005-10-31,3,3.75,4.5,2,1.5\n2005-11-30,3,4,4.5,2,1.5\n2005-12-30,3.25,4.25,4.5,2.25,1.5\n2006-01-31,3.5,4.5,4.5,2.25,1.75\n2006-02-28,3.5,4.5,4.5,2.25,2\n2006-03-31,3.75,4.75,4.5,2.5,2\n2006-04-28,4,4.75,4.5,2.5,2\n2006-05-31,4.25,5,4.5,2.5,2\n2006-06-30,4.25,5.25,4.5,2.75,2.25\n2006-07-31,4.25,5.25,4.5,2.75,2.25\n2006-08-31,4.25,5.25,4.75,3,2.5\n2006-09-29,4.25,5.25,4.75,3,2.5\n2006-10-31,4.25,5.25,4.75,3.25,2.75\n2006-11-30,4.25,5.25,5,3.25,2.75\n2006-12-29,4.25,5.25,5,3.5,3\n2007-01-31,4.25,5.25,5.25,3.5,3\n2007-02-28,4.25,5.25,5.25,3.5,3.25\n2007-03-30,4.25,5.25,5.25,3.75,3.25\n2007-04-30,4.25,5.25,5.25,3.75,3.25\n2007-05-31,4.25,5.25,5.5,3.75,3.25\n2007-06-29,4.25,5.25,5.5,4,3.5\n2007-07-31,4.5,5.25,5.75,4,3.5\n2007-08-31,4.5,5.25,5.75,4,3.5\n2007-09-28,4.5,4.75,5.75,4,3.75\n2007-10-31,4.5,4.5,5.75,4,4\n2007-11-30,4.5,4.5,5.75,4,4\n2007-12-31,4.25,4.25,5.5,4,4\n2008-01-31,4,3,5.5,4,4\n2008-02-29,4,3,5.25,4,4.25\n2008-03-31,3.5,2.25,5.25,4,4.25\n2008-04-30,3,2,5,4,4.25\n2008-05-30,3,2,5,4,4.25\n2008-06-30,3,2,5,4,4.25\n2008-07-31,3,2,5,4.25,4.5\n2008-08-29,3,2,5,4.25,4.5\n2008-09-30,3,2,5,4.25,4.75\n2008-10-31,2.25,1,4.5,3.75,3.75\n2008-11-28,2.25,1,3,3.25,3.75\n2008-12-31,1.5,0.25,2,2.5,2\n2009-01-30,1,0.25,1.5,2,2\n2009-02-27,1,0.25,1,2,1\n2009-03-31,0.5,0.25,0.5,1.5,1\n2009-04-30,0.25,0.25,0.5,1.25,0.5\n2009-05-29,0.25,0.25,0.5,1,0.5\n2009-06-30,0.25,0.25,0.5,1,0.5\n2009-07-31,0.25,0.25,0.5,1,0.25\n2009-08-31,0.25,0.25,0.5,1,0.25\n2009-09-30,0.25,0.25,0.5,1,0.25\n2009-10-30,0.25,0.25,0.5,1,0.25\n2009-11-30,0.25,0.25,0.5,1,0.25\n2009-12-31,0.25,0.25,0.5,1,0.25\n2010-01-29,0.25,0.25,0.5,1,0.25\n2010-02-26,0.25,0.25,0.5,1,0.25\n2010-03-31,0.25,0.25,0.5,1,0.25\n2010-04-30,0.25,0.25,0.5,1,0.25\n2010-05-31,0.25,0.25,0.5,1,0.25\n2010-06-30,0.5,0.25,0.5,1,0.25\n2010-07-30,0.75,0.25,0.5,1,0.5\n2010-08-31,0.75,0.25,0.5,1,0.5\n2010-09-30,1,0.25,0.5,1,0.75\n2010-10-29,1,0.25,0.5,1,1\n2010-11-30,1,0.25,0.5,1,1\n2010-12-31,1,0.25,0.5,1,1.25\n2011-01-31,1,0.25,0.5,1,1.25\n2011-02-28,1,0.25,0.5,1,1.5\n2011-03-31,1,0.25,0.5,1,1.5\n2011-04-29,1,0.25,0.5,1.25,1.75\n2011-05-31,1,0.25,0.5,1.25,1.75\n2011-06-30,1,0.25,0.5,1.25,1.75\n2011-07-29,1,0.25,0.5,1.5,2\n2011-08-31,1,0.25,0.5,1.5,2\n2011-09-30,1,0.25,0.5,1.5,2\n2011-10-31,1,0.25,0.5,1.5,2\n2011-11-30,1,0.25,0.5,1.25,2\n2011-12-30,1,0.25,0.5,1,1.75\n2012-01-31,1,0.25,0.5,1,1.75\n2012-02-29,1,0.25,0.5,1,1.5\n2012-03-30,1,0.25,0.5,1,1.5\n2012-04-30,1,0.25,0.5,1,1.5\n2012-05-31,1,0.25,0.5,1,1.5\n2012-06-29,1,0.25,0.5,1,1.5\n2012-07-31,1,0.25,0.5,0.75,1.5\n2012-08-31,1,0.25,0.5,0.75,1.5\n2012-09-28,1,0.25,0.5,0.75,1.25\n2012-10-31,1,0.25,0.5,0.75,1.25\n2012-11-30,1,0.25,0.5,0.75,1.25\n2012-12-31,1,0.25,0.5,0.75,1\n2013-01-31,1,0.25,0.5,0.75,1\n2013-02-28,1,0.25,0.5,0.75,1\n2013-03-29,1,0.25,0.5,0.75,1\n2013-04-30,1,0.25,0.5,0.75,1\n2013-05-31,1,0.25,0.5,0.5,1\n2013-06-28,1,0.25,0.5,0.5,1\n2013-07-31,1,0.25,0.5,0.5,1\n2013-08-30,1,0.25,0.5,0.5,1\n2013-09-30,1,0.25,0.5,0.5,1\n2013-10-31,1,0.25,0.5,0.5,1\n2013-11-29,1,0.25,0.5,0.25,1\n2013-12-31,1,0.25,0.5,0.25,0.75\n2014-01-31,1,0.25,0.5,0.25,0.75\n2014-02-28,1,0.25,0.5,0.25,0.75\n2014-03-31,1,0.25,0.5,0.25,0.75\n2014-04-30,1,0.25,0.5,0.25,0.75\n2014-05-30,1,0.25,0.5,0.25,0.75\n2014-06-30,1,0.25,0.5,0.15,0.75\n2014-07-31,1,0.25,0.5,0.15,0.25\n2014-08-29,1,0.25,0.5,0.15,0.25\n2014-09-30,1,0.25,0.5,0.05,0.25\n2014-10-31,1,0.25,0.5,0.05,0\n2014-11-28,1,0.25,0.5,0.05,0\n2014-12-31,1,0.25,0.5,0.05,0\n2015-01-30,0.75,0.25,0.5,0.05,0\n2015-02-27,0.75,0.25,0.5,0.05,-0.1\n2015-03-31,0.75,0.25,0.5,0.05,-0.25\n2015-04-30,0.75,0.25,0.5,0.05,-0.25\n2015-05-29,0.75,0.25,0.5,0.05,-0.25\n2015-06-30,0.75,0.25,0.5,0.05,-0.25\n2015-07-31,0.5,0.25,0.5,0.05,-0.35\n2015-08-31,0.5,0.25,0.5,0.05,-0.35\n2015-09-30,0.5,0.25,0.5,0.05,-0.35\n2015-10-30,0.5,0.25,0.5,0.05,-0.35\n2015-11-30,0.5,0.25,0.5,0.05,-0.35\n2015-12-31,0.5,0.5,0.5,0.05,-0.35\n2016-01-29,0.5,0.5,0.5,0.05,-0.35\n2016-02-29,0.5,0.5,0.5,0.05,-0.5\n2016-03-31,0.5,0.5,0.5,0,-0.5\n2016-04-29,0.5,0.5,0.5,0,-0.5\n2016-05-31,0.5,0.5,0.5,0,-0.5\n2016-06-30,0.5,0.5,0.5,0,-0.5\n2016-07-29,0.5,0.5,0.5,0,-0.5\n2016-08-31,0.5,0.5,0.25,0,-0.5\n2016-09-30,0.5,0.5,0.25,0,-0.5\n2016-10-07,0.5,0.5,0.25,0,-0.5",
+              "options": {
+                "type": "line",
+                "interpolation": "linear",
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": true,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": false,
+                "social": true
+              },
+              "x_axis": {
+                "display": true,
+                "scale": "time",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "nice": false
+              },
+              "y_axis": {
+                "display": true,
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "round1",
+                "suffix": "%",
+                "rescale": false,
+                "nice": true
+              }
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <div class="ct-chart" data-chartid="ct-J8XRoygi4xEWbqnik">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.1.0",
+            "id": "J8XRoygi4xEWbqnik",
+            "heading": "Non-housing debt balance",
+            "qualifier": "In trillions of U.S. dollars",
+            "source": "THE GLOBE AND MAIL » SOURCE: NEW YORK FED",
+            "chart": {
+              "class": "primary",
+              "hasHours": false,
+              "data": "Quarter,Student loan,Auto loan,Credit card,Other\n2003-03-31,0.241,0.641,0.688,0.478\n2003-06-30,0.243,0.622,0.693,0.486\n2003-09-30,0.249,0.684,0.693,0.477\n2003-12-31,0.253,0.704,0.698,0.449\n2004-03-31,0.26,0.72,0.695,0.447\n2004-06-30,0.263,0.743,0.697,0.423\n2004-09-30,0.33,0.751,0.706,0.41\n2004-12-31,0.346,0.728,0.717,0.423\n2005-03-31,0.364,0.725,0.71,0.394\n2005-06-30,0.374,0.774,0.717,0.402\n2005-09-30,0.378,0.83,0.732,0.405\n2005-12-31,0.392,0.792,0.736,0.416\n2006-03-31,0.435,0.788,0.723,0.418\n2006-06-30,0.439,0.796,0.739,0.423\n2006-09-30,0.447,0.821,0.754,0.442\n2006-12-31,0.482,0.821,0.767,0.406\n2007-03-31,0.506,0.794,0.764,0.404\n2007-06-30,0.514,0.807,0.796,0.408\n2007-09-30,0.529,0.818,0.817,0.413\n2007-12-31,0.548,0.815,0.839,0.422\n2008-03-31,0.579,0.808,0.837,0.415\n2008-06-30,0.586,0.81,0.85,0.401\n2008-09-30,0.611,0.809,0.858,0.412\n2008-12-31,0.639,0.791,0.866,0.412\n2009-03-31,0.663,0.766,0.843,0.409\n2009-06-30,0.675,0.743,0.824,0.389\n2009-09-30,0.695,0.739,0.812,0.382\n2009-12-31,0.721,0.722,0.795,0.379\n2010-03-31,0.758,0.705,0.762,0.363\n2010-06-30,0.762,0.702,0.744,0.349\n2010-09-30,0.778,0.71,0.731,0.343\n2010-12-31,0.812,0.711,0.73,0.341\n2011-03-31,0.839,0.706,0.696,0.329\n2011-06-30,0.851,0.713,0.694,0.33\n2011-09-30,0.87,0.73,0.693,0.327\n2011-12-31,0.874,0.734,0.704,0.33\n2012-03-31,0.904,0.737,0.679,0.319\n2012-06-30,0.914,0.75,0.672,0.312\n2012-09-30,0.956,0.768,0.674,0.311\n2012-12-31,0.966,0.783,0.679,0.317\n2013-03-31,0.986,0.794,0.66,0.307\n2013-06-30,0.994,0.814,0.668,0.296\n2013-09-30,1.027,0.845,0.672,0.304\n2013-12-31,1.08,0.863,0.683,0.317\n2014-03-31,1.111,0.875,0.659,0.314\n2014-06-30,1.118,0.905,0.669,0.323\n2014-09-30,1.126,0.934,0.68,0.327\n2014-12-31,1.157,0.955,0.7,0.335\n2015-03-31,1.189,0.968,0.684,0.329\n2015-06-30,1.19,1.006,0.703,0.339\n2015-09-30,1.203,1.045,0.714,0.351\n2015-12-31,1.232,1.064,0.733,0.351\n2016-03-31,1.261,1.071,0.712,0.354\n2016-06-30,1.259,1.103,0.729,0.356",
+              "options": {
+                "type": "area",
+                "interpolation": "linear",
+                "stacked": true,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": true,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true,
+                "share_data": true,
+                "social": true
+              },
+              "x_axis": {
+                "display": true,
+                "scale": "time",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "nice": false
+              },
+              "y_axis": {
+                "display": true,
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "round1",
+                "prefix": "$",
+                "rescale": false,
+                "nice": true
+              }
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-' + data.id, data: data});
+        })(this);
+      </script>
+    </div>
+
+    <script src="../dist/dev/chart-tool.js" async defer></script>
+
+  </div>
+
+</body>
+
+</html>

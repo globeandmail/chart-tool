@@ -5,7 +5,6 @@ import stackedArea from '../types/stacked-area';
 import column from '../types/column';
 import bar from '../types/bar';
 import stackedColumn from '../types/stacked-column';
-import streamgraph from '../types/streamgraph';
 
 export default function plot(node, obj) {
   switch(obj.options.type) {
@@ -19,8 +18,6 @@ export default function plot(node, obj) {
       return bar(node, obj);
     case 'column':
       return obj.options.stacked ? stackedColumn(node, obj) : column(node, obj);
-    case 'stream':
-      return streamgraph(node, obj);
     default:
       return line(node, obj);
   }

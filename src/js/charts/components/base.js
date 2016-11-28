@@ -8,7 +8,7 @@ export default function base(container, obj) {
   const chartBase = select(container)
     .insert('svg', `.${obj.prefix}chart_source`)
     .attrs({
-      'class': `${obj.baseClass()}_svg ${obj.prefix}${obj.customClass} ${obj.prefix}type_${obj.options.type} ${obj.prefix}series-${obj.data.seriesAmount}`,
+      'class': `${obj.baseClass}_svg ${obj.prefix}${obj.customClass} ${obj.prefix}type_${obj.options.type} ${obj.prefix}series-${obj.data.seriesAmount}`,
       'width': obj.dimensions.computedWidth() + margin.left + margin.right,
       'height': obj.dimensions.computedHeight() + margin.top + margin.bottom,
       'version': 1.1,

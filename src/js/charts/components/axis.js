@@ -378,14 +378,14 @@ export function setTickFormatY(fmt, d) {
 
   switch (fmt) {
     case 'general':
-      currentFormat = format('g')(d);
+      currentFormat = format('')(d);
       break;
     case 'si':
     case 'comma':
       if (isFloat(parseFloat(d))) {
         currentFormat = format(',.2f')(d);
       } else {
-        currentFormat = format(',g')(d);
+        currentFormat = format(',')(d);
       }
       break;
     case 'round1':
@@ -401,7 +401,7 @@ export function setTickFormatY(fmt, d) {
       currentFormat = format(',.4f')(d);
       break;
     default:
-      currentFormat = format(',g')(d);
+      currentFormat = format(',')(d);
       break;
   }
 

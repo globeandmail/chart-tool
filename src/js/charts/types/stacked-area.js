@@ -28,10 +28,7 @@ export default function stackedAreaChart(node, obj) {
   const seriesGroup = node.append('g')
     .attr('class', () => {
       let output = `${obj.prefix}series_group`;
-      if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'muliple' class so we can target
-        output += ` ${obj.prefix}multiple`;
-      }
+      if (obj.data.seriesAmount > 1) { output += ` ${obj.prefix}multiple`; }
       return output;
     });
 
@@ -42,31 +39,27 @@ export default function stackedAreaChart(node, obj) {
       'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
       'class': (d, i) => {
         let output = `${obj.prefix}series ${obj.prefix}series-${i}`;
-        if (i === obj.seriesHighlight()) {
-          output += ` ${obj.prefix}highlight`;
-        } else {
-          return output;
-        }
+        if (i === obj.seriesHighlight()) { output += ` ${obj.prefix}highlight`; }
+        return output;
       }
     });
 
   const a = area().curve(getCurve(obj.options.interpolation))
+    .defined(d => { return !isNaN(d[0] + d[1]); })
     .x(d => { return xScale(d.data[obj.data.keys[0]]); })
-    .y0(d => { return yScale(d[1] - d[0]); })
+    .y0(d => { return yScale(d[0]); })
     .y1(d => { return yScale(d[1]); });
 
   const l = line().curve(getCurve(obj.options.interpolation))
+    .defined(d => { return !isNaN(d[0] + d[1]); })
     .x(d => { return xScale(d.data[obj.data.keys[0]]); })
     .y(d => { return yScale(d[1]); });
 
   series.append('path')
     .attr('class', (d, i) => {
       let output = `${obj.prefix}fill ${obj.prefix}fill-${i}`;
-      if (i === obj.seriesHighlight()) {
-        output += ` ${obj.prefix}highlight`;
-      } else {
-        return output;
-      }
+      if (i === obj.seriesHighlight()) { output += ` ${obj.prefix}highlight`; }
+      return output;
     })
     .attr('d', a);
 

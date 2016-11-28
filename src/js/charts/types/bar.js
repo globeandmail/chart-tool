@@ -242,9 +242,7 @@ export default function barChart(node, obj) {
       });
 
     select(node.node().parentNode).select(`.${obj.prefix}bg`)
-      .attrs({
-        'height': obj.dimensions.computedHeight()
-      });
+      .attr('height', obj.dimensions.computedHeight());
 
   }
 
