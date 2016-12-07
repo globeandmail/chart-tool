@@ -4,7 +4,7 @@ import { max } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
 import { format } from 'd3-format';
 import { timeYears, timeMonths, timeWeeks, timeDays, timeHours, timeMinutes } from 'd3-time';
-import { setRangeType, setRangeArgs } from './scale';
+import { setRangeArgs } from './scale';
 import { timeDiff, wrapText, getTranslate } from '../../utils/utils';
 import { isFloat } from '../../helpers/helpers';
 import 'd3-selection-multi';
@@ -53,9 +53,9 @@ export function determineFormat(context) {
   }
 }
 
-export function appendXAxis(axisGroup, obj, scale, axis, axisName) {
+export function appendXAxis(axisGroup, obj, scale, axis, axisType) {
 
-  const axisObj = obj[axisName];
+  const axisObj = obj[axisType];
 
   let axisSettings;
 
@@ -64,6 +64,8 @@ export function appendXAxis(axisGroup, obj, scale, axis, axisName) {
   } else {
     axisSettings = axisObj;
   }
+
+  axisSettings.axisType = axisType;
 
   axisGroup
     .attr('transform', `translate(0, ${obj.dimensions.yAxisHeight()})`);
@@ -87,22 +89,15 @@ export function appendXAxis(axisGroup, obj, scale, axis, axisName) {
 
 }
 
-export function appendYAxis(axisGroup, obj, scale, axis) {
+export function appendYAxis(axisGroup, obj, scale, axis, axisType) {
 
   axisGroup.attr('transform', 'translate(0,0)');
 
-  const axisNode = axisGroup.append('g')
-    .attr('class', `${obj.prefix}y-axis`);
+  const axisNode = axisGroup.append('g').attr('class', `${obj.prefix}y-axis`);
 
-  drawYAxis(obj, axis, axisNode);
-
-}
-
-export function drawYAxis(obj, axis, axisNode) {
+  const axisObj = obj[axisType];
 
   let axisSettings;
-
-  const axisObj = obj.yAxis;
 
   if (obj.exportable && obj.exportable.y_axis) {
     axisSettings = Object.assign(axisObj, obj.exportable.y_axis);
@@ -110,11 +105,26 @@ export function drawYAxis(obj, axis, axisNode) {
     axisSettings = axisObj;
   }
 
+  axisSettings.axisType = axisType;
+
   obj.dimensions.yAxisPaddingRight = axisSettings.paddingRight;
+
+  switch(axisObj.scale) {
+    case 'linear':
+      drawYAxis(obj, axis, axisNode, axisSettings);
+      break;
+    case 'ordinal':
+      discreteAxis(axisNode, scale, axis, axisSettings, obj.dimensions);
+      break;
+  }
+
+}
+
+export function drawYAxis(obj, axis, axisNode, axisSettings) {
 
   axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
 
-  axis.tickValues(tickFinderY(axis.scale(), axisObj.ticks, axisSettings));
+  axis.tickValues(tickFinderY(axis.scale(), axisSettings));
 
   axisNode.call(axis);
 
@@ -124,8 +134,8 @@ export function drawYAxis(obj, axis, axisNode) {
 
   axisNode.selectAll('.tick text')
     .attr('transform', 'translate(0,0)')
-    .call(updateTextY, axisNode, obj, axis, axisObj)
-    .call(repositionTextY, obj.dimensions, axisObj.textX);
+    .call(updateTextY, axisNode, obj, axis, axisSettings)
+    .call(repositionTextY, obj.dimensions, axisSettings.textX);
 
   axisNode.selectAll('.tick line')
     .attrs({
@@ -188,43 +198,72 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
   axis.tickPadding(0);
 
-  scale
-    .range([0, dimensions.tickWidth()])
-    .paddingInner(dimensions.bands.padding)
-    .paddingOuter(dimensions.bands.outerPadding);
-
   const bandWidth = scale.bandwidth();
 
   axisNode.call(axis);
 
-  axisNode.selectAll('text')
-    .style('text-anchor', 'middle')
-    .attr('dy', `${axisSettings.dy}em`)
-    .call(wrapText, bandWidth);
+  if (axisSettings.axisType === 'xAxis') {
+    axisNode.selectAll('text')
+      .style('text-anchor', 'middle')
+      .attr('dy', `${axisSettings.dy}em`)
+      .call(wrapText, bandWidth);
 
-  const xPos = -(bandWidth / 2) - ((scale.step() * dimensions.bands.padding) / 2);
+    const xPos = -(bandWidth / 2) - ((scale.step() * dimensions.bands.padding) / 2);
 
-  axisNode.selectAll('line')
-    .attrs({
-      'x1': xPos,
-      'x2': xPos
-    });
+    axisNode.selectAll('line')
+      .attrs({
+        'x1': xPos,
+        'x2': xPos
+      });
 
-  axisNode.selectAll('line')
-    .attr('y2', axisSettings.upper.tickHeight);
+    axisNode.selectAll('line')
+      .attr('y2', axisSettings.upper.tickHeight);
 
-  const lastTick = axisNode.append('g')
-    .attrs({
-      'class': 'tick',
-      'transform': `translate(${dimensions.tickWidth() + (bandWidth / 2) + ((scale.step() * dimensions.bands.padding) / 2)},0)`
-    });
+    const lastTick = axisNode.append('g')
+      .attrs({
+        'class': 'tick',
+        'transform': `translate(${dimensions.tickWidth() + (bandWidth / 2) + ((scale.step() * dimensions.bands.padding) / 2)},0)`
+      });
 
-  lastTick.append('line')
-    .attrs({
-      'y2': axisSettings.upper.tickHeight,
-      'x1': xPos,
-      'x2': xPos
-    });
+    lastTick.append('line')
+      .attrs({
+        'y2': axisSettings.upper.tickHeight,
+        'x1': xPos,
+        'x2': xPos
+      });
+
+  } else {
+
+    axisNode.selectAll('line').remove();
+    axisNode.selectAll('text').attr('x', 0);
+
+    let maxLabelWidth;
+
+    if (dimensions.width > axisSettings.widthThreshold) {
+      maxLabelWidth = dimensions.computedWidth() / 3.5;
+    } else {
+      maxLabelWidth = dimensions.computedWidth() / 3;
+    }
+
+
+    if (axisNode.node().getBBox().width > maxLabelWidth) {
+      axisNode.selectAll('text')
+        .call(wrapText, maxLabelWidth)
+        .each(function() {
+          const tspans = select(this).selectAll('tspan'),
+            tspanCount = tspans._groups[0].length,
+            textHeight = select(this).node().getBBox().height;
+          if (tspanCount > 1) {
+            tspans.attr('y', ((textHeight / tspanCount) / 2) - (textHeight / 2));
+          }
+        });
+    }
+
+    dimensions.labelWidth = axisNode.node().getBBox().width;
+
+    select(axisNode.node().parentNode).attr('transform', `translate(${dimensions.labelWidth},0)`);
+
+  }
 
 }
 
@@ -588,10 +627,6 @@ export function dropOversetTicks(axisNode, tickWidth) {
 
     const lastTick = tickArr[tickArr.length - 1];
 
-    // debugger;
-
-
-
     if ((axisGroupWidth + firstTickOffset) >= tickWidth) {
       select(lastTick).classed('last-tick-hide', true);
       // axisGroupWidth = axisNode.node().getBBox().width;
@@ -663,7 +698,7 @@ export function tickFinderX(domain, period, tickGoal) {
 
 }
 
-export function tickFinderY(scale, tickCount, tickSettings) {
+export function tickFinderY(scale, tickSettings) {
 
   // In a nutshell:
   // Checks if an explicit number of ticks has been declared
@@ -676,9 +711,9 @@ export function tickFinderY(scale, tickCount, tickSettings) {
   const min = scale.domain()[0],
     max = scale.domain()[1];
 
-  if (tickCount !== 'auto') {
+  if (tickSettings.ticks !== 'auto') {
 
-    return scale.ticks(tickCount);
+    return scale.ticks(tickSettings.ticks);
 
   } else {
 
@@ -814,10 +849,10 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
   // resets ranges and dimensions, redraws yAxis, redraws xAxis
   // …then redraws yAxis again if tick wrapping has changed xAxis height
 
-  drawYAxis(obj, yAxisObj.axis, yAxisObj.node);
+  axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
 
   const scaleObj = {
-    rangeType: setRangeType(obj.xAxis),
+    rangeType: 'range',
     range: xAxisObj.range || [0, obj.dimensions.tickWidth()],
     bands: obj.dimensions.bands,
     rangePoints: obj.xAxis.rangePoints
@@ -837,7 +872,7 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
   }
 
   if (prevXAxisHeight !== obj.dimensions.xAxisHeight) {
-    drawYAxis(obj, yAxisObj.axis, yAxisObj.node);
+    axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
   }
 
 }

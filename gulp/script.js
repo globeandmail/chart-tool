@@ -16,6 +16,7 @@ gulp.task('js:build', done => {
     'clean-buildpath',
     'clean-meteorsettings',
     'rollup:build',
+    'rollup-meteor:build',
     'move-meteor:build',
     done);
 });
@@ -24,6 +25,7 @@ gulp.task('js:dev', done => {
   runSequence(
     'clean-meteorbundle',
     'rollup:dev',
+    'rollup-meteor:dev',
     'move-meteor:dev',
     done);
 });
@@ -75,6 +77,29 @@ gulp.task('rollup:dev', () => {
   });
 });
 
+gulp.task('rollup-meteor:dev', () => {
+  const rConfig = Object.assign({}, rollupConfig);
+  rConfig.entry = `${gulpConfig.customPath}/meteor-config.js`;
+  rConfig.cache = cache;
+  const replaceObj = {};
+  replaceObj[chartToolConfig.embedJS] = '../dist/dev/chart-tool.js';
+  replaceObj[chartToolConfig.embedCSS] = '../dist/dev/chart-tool.css';
+  rConfig.plugins.push(
+    replace({
+      include: 'chart-tool-config.json',
+      values: replaceObj
+    })
+  );
+  return rollup(rConfig).then(bundle => {
+    cache = bundle;
+    return bundle.write({
+      format: 'es',
+      dest: `${gulpConfig.meteorSettings}`,
+      moduleName: 'meteorSettings'
+    });
+  });
+});
+
 gulp.task('rollup:build', () => {
   const rConfig = Object.assign({}, rollupConfig);
   rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
@@ -95,6 +120,26 @@ gulp.task('rollup:build', () => {
       format: 'iife',
       dest: `${gulpConfig.buildPath}/chart-tool.min.js`,
       moduleName: 'ChartToolInit'
+    });
+  });
+});
+
+gulp.task('rollup-meteor:build', () => {
+  const rConfig = Object.assign({}, rollupConfig);
+  rConfig.entry = `${gulpConfig.customPath}/meteor-config.js`;
+  rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
+  rConfig.plugins.push(
+    strip({
+      debugger: true,
+      functions: ['assert.*', 'debug', 'alert'],
+      sourceMap: false
+    })
+  );
+  return rollup(rConfig).then(bundle => {
+    return bundle.write({
+      format: 'es',
+      dest: `${gulpConfig.meteorSettings}`,
+      moduleName: 'meteorSettings'
     });
   });
 });

@@ -1,4 +1,4 @@
-import { axisManager as Axis, axisCleanup, addZeroLine, dropOversetTicks } from '../components/axis';
+import { axisManager as Axis, axisCleanup, addZeroLine } from '../components/axis';
 import { scaleManager as Scale } from '../components/scale';
 import { timeInterval } from '../../utils/utils';
 import 'd3-selection-multi';
@@ -40,13 +40,13 @@ export default function columnChart(node, obj) {
     })
     .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`);
 
-  let series, columnItem;
+  const series = [], columnItems = [];
 
   for (let i = 0; i < obj.data.seriesAmount; i++) {
 
-    series = seriesGroup.append('g').attr('class', `${obj.prefix}series-${i}`);
+    let seriesItem = seriesGroup.append('g').attr('class', `${obj.prefix}series-${i}`);
 
-    columnItem = series
+    let columnItem = seriesItem
       .selectAll(`.${obj.prefix}column`)
       .data(obj.data.data).enter()
       .append('g')
@@ -99,7 +99,7 @@ export default function columnChart(node, obj) {
 
       columnItem.selectAll('rect')
         .attrs({
-          'x': function(d) {
+          'x': d => {
             if (obj.xAxis.scale !== 'ordinal-time') {
               return ((i * singleColumn) + (singleColumn * (columnOffset / 2)));
             } else {
@@ -116,6 +116,9 @@ export default function columnChart(node, obj) {
         });
     }
 
+    series.push(seriesItem);
+    columnItems.push(columnItem);
+
   }
 
   addZeroLine(obj, node, yAxisObj, 'yAxis');
@@ -128,7 +131,7 @@ export default function columnChart(node, obj) {
     seriesGroup: seriesGroup,
     series: series,
     singleColumn: singleColumn,
-    columnItem: columnItem
+    columnItems: columnItems
   };
 
 }

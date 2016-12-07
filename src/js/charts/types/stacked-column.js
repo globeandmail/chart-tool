@@ -61,7 +61,6 @@ export default function stackedColumnChart(node, obj) {
     .append('g')
     .attrs({
       'class': (d, i) => { return `${obj.prefix}column ${obj.prefix}column-${i}`; },
-      'data-key': d => { return d[0].data[obj.data.keys[0]]; },
       'data-legend': d => { return d.key; },
     });
 
@@ -69,6 +68,7 @@ export default function stackedColumnChart(node, obj) {
     .data(d => { return d; })
     .enter().append('rect')
     .attrs({
+      'data-key': d => { return d.data[obj.data.keys[0]]; },
       'x': d => { return xScale(d.data[obj.data.keys[0]]); },
       'y': d => { return yScale(Math.max(0, d[1])); },
       'height': d => { return Math.abs(yScale(d[1]) - yScale(d[0])); },

@@ -4,10 +4,10 @@
   stroke: $color-white;
 }
 
-.#{$prefix}series rect.#{$prefix}column.#{$prefix}muted,
-.#{$prefix}column rect.#{$prefix}muted {
-  opacity: .5;
+.#{$prefix}type_column rect {
+  transition: opacity 0.3s;
 }
+
 
 @for $counter from 1 through $series-count-max {
   .#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}series-#{$counter - 1} .#{$prefix}column-#{$counter - 1} rect {

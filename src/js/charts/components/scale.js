@@ -16,6 +16,12 @@ export function scaleManager(obj, axisType) {
 
   if (axis.nice) { niceify(scale, axisType, scaleObj); }
 
+  if (scaleObj.type === 'ordinal') {
+    scale
+      .paddingInner(scaleObj.bands.padding)
+      .paddingOuter(scaleObj.bands.outerPadding);
+  }
+
   return {
     obj: scaleObj,
     scale: scale

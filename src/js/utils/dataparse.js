@@ -1,6 +1,6 @@
 import { csvParseRows, csvParse } from 'd3-dsv';
 import { timeParse } from 'd3-time-format';
-import { stack, stackOffsetWiggle, stackOrderInsideOut } from 'd3-shape';
+import { stack } from 'd3-shape';
 import { range } from 'd3-array';
 
 /**
@@ -16,7 +16,7 @@ export function inputDate(scaleType, defaultFormat, declaredFormat) {
   }
 }
 
-export function parse(csv, inputDateFormat, index, stacked, type) {
+export function parse(csv, inputDateFormat, index, stacked) {
 
   let val;
 

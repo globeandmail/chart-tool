@@ -64,13 +64,13 @@ export default function recipe(obj) {
     t.dimensions.margin = chart.exportable.margin || t.dimensions.margin;
   }
 
-  if (chart.hasHours) { `${t.dateFormat} ${t.timeFormat}`; }
+  if (chart.hasHours) { t.dateFormat += ` ${t.timeFormat}`; }
 
   t.hasHours   = chart.hasHours   || t.hasHours;
   t.dateFormat = chart.dateFormat || t.dateFormat;
 
   t.dateFormat = inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
-  t.data = parse(chart.data, t.dateFormat, o.index, o.stacked, o.type) || t.data;
+  t.data = parse(chart.data, t.dateFormat, o.index, o.stacked) || t.data;
 
   if (!t.data.stackedData) { o.stacked = false; }
 
