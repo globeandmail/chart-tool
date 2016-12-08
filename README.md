@@ -49,8 +49,8 @@ Chart Tool is made up of two parts:
   * Column charts
   * Stacked column charts
   * Bar charts
+  * Stacked bar charts
   * Multiline charts
-  * Streamgraphs
   * No pies [(sorry)](http://www.storytellingwithdata.com/blog/2011/07/death-to-pie-charts)
 * **Highly configurable:** Don't want tips to appear for a specific chart, or want to manually set the number of ticks to be displayed? No problem!
 * **"Ordinal-time" scales:** Treat time series data as if it were ordinal — this is very useful for visualizing stock price charts, or when you want to skip weekends and holidays
