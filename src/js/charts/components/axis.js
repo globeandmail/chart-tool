@@ -434,11 +434,9 @@ export function setTickFormatY(fmt, d) {
 
 export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
 
-  const lastTick = axis.tickValues()[axis.tickValues().length - 1];
-
   textNodes
     .text((d, i) => {
-      let val = setTickFormatY(axisObj.format, d, lastTick);
+      let val = setTickFormatY(axisObj.format, d);
       if (i === axis.tickValues().length - 1) {
         val = (axisObj.prefix || '') + val + (axisObj.suffix || '');
       }
@@ -449,13 +447,12 @@ export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
 
 export function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
-  const arr = [],
-    lastTick = axis.tickValues()[axis.tickValues().length - 1];
+  const arr = [];
 
   textNodes
     .attr('transform', 'translate(0,0)')
     .text((d, i) => {
-      let val = setTickFormatY(axisObj.format, d, lastTick);
+      let val = setTickFormatY(axisObj.format, d);
       if (i === axis.tickValues().length - 1) {
         val = (axisObj.prefix || '') + val + (axisObj.suffix || '');
       }
@@ -920,8 +917,6 @@ export function addZeroLine(obj, node, Axis, axisType) {
       });
 
     }
-
-    refLine.style('display', 'none');
 
   }
 

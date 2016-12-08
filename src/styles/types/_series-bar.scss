@@ -1,11 +1,13 @@
 .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect,
-.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect,
-.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group rect.#{$prefix}bar,
-.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group rect.#{$prefix}bar,
-.#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}bar,
-.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group.#{$prefix}multiple rect.#{$prefix}bar {
+.#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect {
   stroke-width: 1px;
   stroke: $color-white;
+  shape-rendering: crispEdges;
+  transition: opacity 0.3s;
+}
+
+.#{$prefix}bar-label {
+  dominant-baseline: middle;
 }
 
 @for $counter from 1 through $series-count-max {

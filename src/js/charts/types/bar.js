@@ -1,18 +1,14 @@
 import { select } from 'd3-selection';
-import { axisManager as Axis } from '../components/axis';
+import { axisManager as Axis, setTickFormatY as setLabelFormat } from '../components/axis';
 import { scaleManager as Scale } from '../components/scale';
 import 'd3-selection-multi';
 
 export default function barChart(node, obj) {
 
   // because the elements will be appended in reverse due to the
-  // bar chart operating on the y-axis, need to reverse the dataset.
+  // bar chart operating on the y-axis, need to reverse the dataset
   obj.data.data.reverse();
 
-  const xScaleObj = new Scale(obj, 'xAxis'),
-    xScale = xScaleObj.scale;
-
-  //  scales
   const yScaleObj = new Scale(obj, 'yAxis'),
     yScale = yScaleObj.scale;
 
@@ -20,12 +16,17 @@ export default function barChart(node, obj) {
 
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
-    totalBarHeight = (obj.dimensions.barHeight * obj.data.data.length * obj.data.seriesAmount);
+    let bands = obj.dimensions.bands;
+    const step = obj.dimensions.barHeight / ((bands.padding * -1) + 1);
+    totalBarHeight = (step * obj.data.data.length * obj.data.seriesAmount) - (step * bands.padding) + (step * bands.outerPadding * 2);
     yScale.range([totalBarHeight, 0]);
-    obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding * 2);
+    obj.dimensions.yAxisHeight = totalBarHeight;
   }
 
   const yAxisObj = new Axis(node, obj, yScale, 'yAxis');
+
+  const xScaleObj = new Scale(obj, 'xAxis'),
+    xScale = xScaleObj.scale;
 
   const seriesGroup = node.append('g')
     .attr('class', () => {
@@ -39,6 +40,8 @@ export default function barChart(node, obj) {
 
   const series = [], barItems = [];
 
+  const widestText = { value: null, width: null, height: null };
+
   for (let i = 0; i < obj.data.seriesAmount; i++) {
 
     let seriesItem = seriesGroup.append('g').attr('class', `${obj.prefix}series-${i}`);
@@ -50,9 +53,9 @@ export default function barChart(node, obj) {
       .attrs({
         'class': `${obj.prefix}bar ${obj.prefix}bar-${i}`,
         'data-series': i,
-        'data-key': d => { return d.key; },
-        'data-legend': () => { return obj.data.keys[i + 1]; },
-        'transform': d => { return `translate(0,${yScale(d.key)})`; }
+        'data-key': d => d.key,
+        'data-legend': () => obj.data.keys[i + 1],
+        'transform': d => `translate(0,${yScale(d.key)})`
       });
 
     barItem.append('rect')
@@ -64,18 +67,59 @@ export default function barChart(node, obj) {
         'height': singleBar
       });
 
+    barItem.append('text')
+      .attrs({
+        'x': 0,
+        'y': (i * singleBar),
+        'class': `${obj.prefix}bar-label`
+      })
+      .text((d, j) => {
+        let val = setLabelFormat(obj.xAxis.format, d.series[i].val);
+        if (i === 0 && j === obj.data.data.length - 1) {
+          val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+        }
+        return val;
+      })
+      .each(function(d) {
+        if (Number(d.series[i].val) > widestText.value) {
+          widestText.value = Number(d.series[i].val);
+          widestText.width = Math.ceil(this.getComputedTextLength());
+        }
+        if (this.getBBox().height > widestText.height) {
+          widestText.height = this.getBBox().height;
+        }
+      });
+
     if (obj.data.seriesAmount > 1) {
       let barOffset = obj.dimensions.bands.offset;
-      barItem.selectAll('rect')
-        .attrs({
-          'y': ((i * singleBar) + (singleBar * (barOffset / 2))),
-          'height': singleBar - (singleBar * barOffset)
+      barItem
+        .attr('transform', d => {
+          const offset = i * (singleBar * (barOffset / 2));
+          return `translate(0,${yScale(d.key) + offset})`;
         });
     }
 
     series.push(seriesItem);
     barItems.push(barItem);
 
+  }
+
+  xScale.range([0, obj.dimensions.tickWidth() - widestText.width - obj.dimensions.barLabelOffset]);
+
+  for (let i = 0; i < series.length; i++) {
+    series[i].selectAll(`.${obj.prefix}bar rect`)
+      .attrs({
+        'width': d => { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
+        'x': d => { return xScale(Math.min(0, d.series[i].val)); }
+      });
+
+    series[i].selectAll(`.${obj.prefix}bar-label`)
+      .attrs({
+        'x': d => {
+          return xScale(Math.max(0, d.series[i].val)) + obj.dimensions.barLabelOffset;
+        },
+        'y': () => { return i * singleBar + Math.ceil(singleBar / 2); }
+      });
   }
 
   node.append('line')
@@ -91,15 +135,17 @@ export default function barChart(node, obj) {
 
   if (!obj.exportable) {
 
+    obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
+
     // fixed height, so transform accordingly and modify the dimension function and parent rects
     select(node.node().parentNode)
       .attr('height', () => {
         let margin = obj.dimensions.margin;
-        return node.node().getBoundingClientRect().height + margin.top + margin.bottom;
+        return obj.dimensions.computedHeight() + margin.top + margin.bottom;
       });
 
     select(node.node().parentNode).select(`.${obj.prefix}bg`)
-      .attr('height', node.node().getBoundingClientRect().height);
+      .attr('height', obj.dimensions.computedHeight());
 
   }
 

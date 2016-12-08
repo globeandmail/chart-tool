@@ -33,9 +33,7 @@ export default function columnChart(node, obj) {
   const seriesGroup = node.append('g')
     .attr('class', () => {
       let output = `${obj.prefix}series_group`;
-      if (obj.data.seriesAmount > 1) {
-        output += ` ${obj.prefix}multiple`;
-      }
+      if (obj.data.seriesAmount > 1) { output += ` ${obj.prefix}multiple`; }
       return output;
     })
     .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`);
@@ -53,9 +51,9 @@ export default function columnChart(node, obj) {
       .attrs({
         'class': `${obj.prefix}column ${obj.prefix}column-${i}`,
         'data-series': i,
-        'data-key': function(d) { return d.key; },
-        'data-legend': function() { return obj.data.keys[i + 1]; },
-        'transform': function(d) {
+        'data-key': d => d.key,
+        'data-legend': () => obj.data.keys[i + 1],
+        'transform': d => {
           if (obj.xAxis.scale !== 'ordinal-time') {
             return `translate(${xScale(d.key)},0)`;
           }
@@ -64,27 +62,27 @@ export default function columnChart(node, obj) {
 
     columnItem.append('rect')
       .attrs({
-        'class': function(d) {
+        'class': d => {
           return d.series[i].val < 0 ? `${obj.prefix}negative` : `${obj.prefix}positive`;
         },
-        'x': function(d) {
+        'x': d => {
           if (obj.xAxis.scale !== 'ordinal-time') {
             return i * singleColumn;
           } else {
             return xScale(d.key);
           }
         },
-        'y': function(d) {
+        'y': d => {
           if (d.series[i].val !== '__undefined__') {
             return yScale(Math.max(0, d.series[i].val));
           }
         },
-        'height': function(d) {
+        'height': d => {
           if (d.series[i].val !== '__undefined__') {
             return Math.abs(yScale(d.series[i].val) - yScale(0));
           }
         },
-        'width': function() {
+        'width': () => {
           if (obj.xAxis.scale !== 'ordinal-time') {
             return singleColumn;
           } else {

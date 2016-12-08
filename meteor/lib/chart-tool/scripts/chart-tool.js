@@ -4194,8 +4194,9 @@ var tipPadding = {"top":4,"right":9,"bottom":4,"left":9};
 var tipRadius = 3.5;
 var yAxis = {"display":true,"scale":"linear","ticks":"auto","orient":"right","format":"comma","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":true,"paddingRight":9,"tickLowerBound":3,"tickUpperBound":8,"tickGoal":5,"widthThreshold":420,"dy":"","textX":0,"textY":""};
 var xAxis = {"display":true,"scale":"time","ticks":"auto","orient":"bottom","format":"auto","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":false,"rangePoints":1,"tickTarget":6,"ticksSmall":4,"widthThreshold":420,"dy":0.7,"barOffset":9,"upper":{"tickHeight":7,"textX":6,"textY":7},"lower":{"tickHeight":12,"textX":6,"textY":2}};
-var barHeight = 30;
-var bands = {"padding":0.06,"offset":0.06,"outerPadding":0.03};
+var barHeight = 25;
+var barLabelOffset = 6;
+var bands = {"padding":0.12,"offset":0.06,"outerPadding":0.06};
 
 var social = {"facebook":{"label":"Facebook","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg","redirect":"","appID":""},"twitter":{"label":"Twitter","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg","via":"","hashtag":""},"email":{"label":"Email","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"},"sms":{"label":"SMS","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"}};
 var image = {"enable":false,"base_path":"","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
@@ -4285,6 +4286,7 @@ var chartSettings = {
       return (this.computedWidth() - (this.labelWidth + this.yAxisPaddingRight));
     },
     barHeight: barHeight,
+    barLabelOffset: barLabelOffset,
     bands: {
       padding: bands.padding,
       offset: bands.offset,
@@ -7619,6 +7621,7 @@ function scaleManager(obj, axisType) {
 
   if (scaleObj.type === 'ordinal') {
     scale
+      .align(0.5)
       .paddingInner(scaleObj.bands.padding)
       .paddingOuter(scaleObj.bands.outerPadding);
   }
@@ -8201,13 +8204,12 @@ function setTickFormatY(fmt, d) {
 
 function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
-  var arr = [],
-    lastTick = axis.tickValues()[axis.tickValues().length - 1];
+  var arr = [];
 
   textNodes
     .attr('transform', 'translate(0,0)')
     .text(function (d, i) {
-      var val = setTickFormatY(axisObj.format, d, lastTick);
+      var val = setTickFormatY(axisObj.format, d);
       if (i === axis.tickValues().length - 1) {
         val = (axisObj.prefix || '') + val + (axisObj.suffix || '');
       }
@@ -8673,8 +8675,6 @@ function addZeroLine(obj, node, Axis, axisType) {
 
     }
 
-    refLine.style('display', 'none');
-
   }
 
 }
@@ -9103,9 +9103,7 @@ function columnChart(node, obj) {
   var seriesGroup = node.append('g')
     .attr('class', function () {
       var output = (obj.prefix) + "series_group";
-      if (obj.data.seriesAmount > 1) {
-        output += " " + (obj.prefix) + "multiple";
-      }
+      if (obj.data.seriesAmount > 1) { output += " " + (obj.prefix) + "multiple"; }
       return output;
     })
     .attr('transform', ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"));
@@ -9123,9 +9121,9 @@ function columnChart(node, obj) {
       .attrs({
         'class': ((obj.prefix) + "column " + (obj.prefix) + "column-" + i),
         'data-series': i,
-        'data-key': function(d) { return d.key; },
-        'data-legend': function() { return obj.data.keys[i + 1]; },
-        'transform': function(d) {
+        'data-key': function (d) { return d.key; },
+        'data-legend': function () { return obj.data.keys[i + 1]; },
+        'transform': function (d) {
           if (obj.xAxis.scale !== 'ordinal-time') {
             return ("translate(" + (xScale(d.key)) + ",0)");
           }
@@ -9134,27 +9132,27 @@ function columnChart(node, obj) {
 
     columnItem.append('rect')
       .attrs({
-        'class': function(d) {
+        'class': function (d) {
           return d.series[i].val < 0 ? ((obj.prefix) + "negative") : ((obj.prefix) + "positive");
         },
-        'x': function(d) {
+        'x': function (d) {
           if (obj.xAxis.scale !== 'ordinal-time') {
             return i * singleColumn;
           } else {
             return xScale(d.key);
           }
         },
-        'y': function(d) {
+        'y': function (d) {
           if (d.series[i].val !== '__undefined__') {
             return yScale(Math.max(0, d.series[i].val));
           }
         },
-        'height': function(d) {
+        'height': function (d) {
           if (d.series[i].val !== '__undefined__') {
             return Math.abs(yScale(d.series[i].val) - yScale(0));
           }
         },
-        'width': function() {
+        'width': function () {
           if (obj.xAxis.scale !== 'ordinal-time') {
             return singleColumn;
           } else {
@@ -9211,13 +9209,9 @@ function columnChart(node, obj) {
 function barChart(node, obj) {
 
   // because the elements will be appended in reverse due to the
-  // bar chart operating on the y-axis, need to reverse the dataset.
+  // bar chart operating on the y-axis, need to reverse the dataset
   obj.data.data.reverse();
 
-  var xScaleObj = new scaleManager(obj, 'xAxis'),
-    xScale = xScaleObj.scale;
-
-  //  scales
   var yScaleObj = new scaleManager(obj, 'yAxis'),
     yScale = yScaleObj.scale;
 
@@ -9225,12 +9219,17 @@ function barChart(node, obj) {
 
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
-    totalBarHeight = (obj.dimensions.barHeight * obj.data.data.length * obj.data.seriesAmount);
+    var bands = obj.dimensions.bands;
+    var step = obj.dimensions.barHeight / ((bands.padding * -1) + 1);
+    totalBarHeight = (step * obj.data.data.length * obj.data.seriesAmount) - (step * bands.padding) + (step * bands.outerPadding * 2);
     yScale.range([totalBarHeight, 0]);
-    obj.dimensions.yAxisHeight = totalBarHeight - (totalBarHeight * obj.dimensions.bands.outerPadding * 2);
+    obj.dimensions.yAxisHeight = totalBarHeight;
   }
 
   var yAxisObj = new axisManager(node, obj, yScale, 'yAxis');
+
+  var xScaleObj = new scaleManager(obj, 'xAxis'),
+    xScale = xScaleObj.scale;
 
   var seriesGroup = node.append('g')
     .attr('class', function () {
@@ -9243,6 +9242,8 @@ function barChart(node, obj) {
   var singleBar = yScale.bandwidth() / obj.data.seriesAmount;
 
   var series = [], barItems = [];
+
+  var widestText = { value: null, width: null, height: null };
 
   var loop = function ( i ) {
 
@@ -9269,12 +9270,35 @@ function barChart(node, obj) {
         'height': singleBar
       });
 
+    barItem.append('text')
+      .attrs({
+        'x': 0,
+        'y': (i * singleBar),
+        'class': ((obj.prefix) + "bar-label")
+      })
+      .text(function (d, j) {
+        var val = setTickFormatY(obj.xAxis.format, d.series[i].val);
+        if (i === 0 && j === obj.data.data.length - 1) {
+          val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+        }
+        return val;
+      })
+      .each(function(d) {
+        if (Number(d.series[i].val) > widestText.value) {
+          widestText.value = Number(d.series[i].val);
+          widestText.width = Math.ceil(this.getComputedTextLength());
+        }
+        if (this.getBBox().height > widestText.height) {
+          widestText.height = this.getBBox().height;
+        }
+      });
+
     if (obj.data.seriesAmount > 1) {
       var barOffset = obj.dimensions.bands.offset;
-      barItem.selectAll('rect')
-        .attrs({
-          'y': ((i * singleBar) + (singleBar * (barOffset / 2))),
-          'height': singleBar - (singleBar * barOffset)
+      barItem
+        .attr('transform', function (d) {
+          var offset = i * (singleBar * (barOffset / 2));
+          return ("translate(0," + (yScale(d.key) + offset) + ")");
         });
     }
 
@@ -9284,6 +9308,26 @@ function barChart(node, obj) {
   };
 
   for (var i = 0; i < obj.data.seriesAmount; i++) loop( i );
+
+  xScale.range([0, obj.dimensions.tickWidth() - widestText.width - obj.dimensions.barLabelOffset]);
+
+  var loop$1 = function ( i ) {
+    series[i].selectAll(("." + (obj.prefix) + "bar rect"))
+      .attrs({
+        'width': function (d) { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
+        'x': function (d) { return xScale(Math.min(0, d.series[i].val)); }
+      });
+
+    series[i].selectAll(("." + (obj.prefix) + "bar-label"))
+      .attrs({
+        'x': function (d) {
+          return xScale(Math.max(0, d.series[i].val)) + obj.dimensions.barLabelOffset;
+        },
+        'y': function () { return i * singleBar + Math.ceil(singleBar / 2); }
+      });
+  };
+
+  for (var i$1 = 0; i$1 < series.length; i$1++) loop$1( i$1 );
 
   node.append('line')
     .style('shape-rendering', 'crispEdges')
@@ -9298,15 +9342,17 @@ function barChart(node, obj) {
 
   if (!obj.exportable) {
 
+    obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
+
     // fixed height, so transform accordingly and modify the dimension function and parent rects
     select(node.node().parentNode)
       .attr('height', function () {
         var margin = obj.dimensions.margin;
-        return node.node().getBoundingClientRect().height + margin.top + margin.bottom;
+        return obj.dimensions.computedHeight() + margin.top + margin.bottom;
       });
 
     select(node.node().parentNode).select(("." + (obj.prefix) + "bg"))
-      .attr('height', node.node().getBoundingClientRect().height);
+      .attr('height', obj.dimensions.computedHeight());
 
   }
 
@@ -9318,6 +9364,166 @@ function barChart(node, obj) {
     series: series,
     singleBar: singleBar,
     barItems: barItems
+  };
+
+}
+
+function stackedBarChart(node, obj) {
+
+  // because the elements will be appended in reverse due to the
+  // bar chart operating on the y-axis, need to reverse the dataset
+  obj.data.data.reverse();
+
+  var yScaleObj = new scaleManager(obj, 'yAxis'),
+    yScale = yScaleObj.scale;
+
+  var totalBarHeight;
+
+  // need this for fixed-height bars
+  if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
+    var bands = obj.dimensions.bands;
+    var step = obj.dimensions.barHeight / ((bands.padding * -1) + 1);
+    totalBarHeight = (step * obj.data.data.length) - (step * bands.padding) + (step * bands.outerPadding * 2);
+    yScale.range([totalBarHeight, 0]);
+    obj.dimensions.yAxisHeight = totalBarHeight;
+  }
+
+  var yAxisObj = new axisManager(node, obj, yScale, 'yAxis');
+
+  var xScaleObj = new scaleManager(obj, 'xAxis'),
+    xScale = xScaleObj.scale;
+
+  var seriesGroup = node.append('g')
+    .attr('class', function () {
+      var output = (obj.prefix) + "series_group";
+      if (obj.data.seriesAmount > 1) { output += " " + (obj.prefix) + "multiple"; }
+      return output;
+    })
+    .attr('transform', ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"));
+
+  var singleBar = yScale.bandwidth();
+
+  var widestText = { value: null, width: null, height: null };
+
+  var series = seriesGroup.selectAll(("g." + (obj.prefix) + "series"))
+    .data(obj.data.stackedData)
+    .enter().append('g')
+    .attr('class', function (d, i) { return ((obj.prefix) + "series " + (obj.prefix) + "series-" + i); });
+
+  var barItem = series
+    .append('g')
+    .attrs({
+      'class': function (d, i) { return ((obj.prefix) + "bar " + (obj.prefix) + "bar-" + i); },
+      'data-legend': function (d) { return d.key; },
+    });
+
+  var rect = barItem.selectAll('rect')
+    .data(function (d) { return d; })
+    .enter().append('rect')
+    .attrs({
+      'data-key': function (d) { return d.data[obj.data.keys[0]]; },
+      'y': function (d) { return yScale(d.data[obj.data.keys[0]]); },
+      'x': function (d) { return xScale(d[0]); },
+      'width': function (d) { return Math.abs(xScale(d[1]) - xScale(d[0])); },
+      'height': singleBar
+    });
+
+  var textGroup = seriesGroup.append('g')
+    .attr('class', ((obj.prefix) + "bar-labels"));
+
+  var lastStack = obj.data.stackedData[obj.data.stackedData.length - 1];
+
+  var text = textGroup.selectAll(("." + (obj.prefix) + "bar-label"))
+    .data(function () {
+      return [].concat(yScale.domain()).reverse().map(function (d) {
+        var data = obj.data.data.filter(function (item) { return item.key === d; })[0];
+        return {
+          key: d,
+          value: data.series.reduce(function (a, b) {
+            return Number(a.val) + Number(b.val);
+          })
+        };
+      });
+    })
+    .enter().append('text')
+    .attrs({
+      'class': function (d, i) { return ((obj.prefix) + "bar-label " + (obj.prefix) + "bar-label-" + i); },
+      'data-legend': function (d) { return d.key; },
+      'x': function (d, i) {
+        return xScale(Math.max(0, lastStack[i][1]));
+      },
+      'y': function (d) { return yScale(d.key) + Math.ceil(singleBar / 2); }
+    })
+    .text(function (d, i) {
+      var val = setTickFormatY(obj.xAxis.format, d.value);
+      if (i === 0) {
+        val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+      }
+      return val;
+    })
+    .each(function(d) {
+      if (d.value > widestText.value) {
+        widestText.value = d.value;
+        widestText.width = Math.ceil(this.getComputedTextLength());
+      }
+      if (this.getBBox().height > widestText.height) {
+        widestText.height = this.getBBox().height;
+      }
+    });
+
+  xScale.range([0, obj.dimensions.tickWidth() - widestText.width - obj.dimensions.barLabelOffset]);
+
+  rect
+    .attrs({
+      'x': function (d) { return xScale(d[0]); },
+      'width': function (d) { return Math.abs(xScale(d[1]) - xScale(d[0])); }
+    });
+
+  text
+    .attrs({
+      'x': function (d) {
+        return xScale(Math.max(0, d.value)) + obj.dimensions.barLabelOffset;
+      }
+    });
+
+  node.append('line')
+    .style('shape-rendering', 'crispEdges')
+    .attrs({
+      'class': ((obj.prefix) + "zero-line"),
+      'y1': yScale.range()[0],
+      'y2': yScale.range()[1],
+      'x1': xScale(0),
+      'x2': xScale(0),
+      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)")
+    });
+
+  if (!obj.exportable) {
+
+    obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
+
+    // fixed height, so transform accordingly and modify the dimension function and parent rects
+    select(node.node().parentNode)
+      .attr('height', function () {
+        var margin = obj.dimensions.margin;
+        return obj.dimensions.computedHeight() + margin.top + margin.bottom;
+      });
+
+    select(node.node().parentNode).select(("." + (obj.prefix) + "bg"))
+      .attr('height', obj.dimensions.computedHeight());
+
+  }
+
+  return {
+    xScaleObj: xScaleObj,
+    yScaleObj: yScaleObj,
+    yAxisObj: yAxisObj,
+    seriesGroup: seriesGroup,
+    series: series,
+    singleBar: singleBar,
+    barItem: barItem,
+    rect: rect,
+    textGroup: textGroup,
+    text: text
   };
 
 }
@@ -9356,9 +9562,7 @@ function stackedColumnChart(node, obj) {
   var seriesGroup = node.append('g')
     .attr('class', function () {
       var output = (obj.prefix) + "series_group";
-      if (obj.data.seriesAmount > 1) {
-        output += " " + (obj.prefix) + "multiple";
-      }
+      if (obj.data.seriesAmount > 1) { output += " " + (obj.prefix) + "multiple"; }
       return output;
     })
     .attr('transform', function () {
@@ -9417,7 +9621,7 @@ function plot(node, obj) {
     case 'area':
       return obj.options.stacked ? stackedAreaChart(node, obj) : sreaChart(node, obj);
     case 'bar':
-      return barChart(node, obj);
+      return obj.options.stacked ? stackedBarChart(node, obj) : barChart(node, obj);
     case 'column':
       return obj.options.stacked ? stackedColumnChart(node, obj) : columnChart(node, obj);
     default:
@@ -9518,21 +9722,30 @@ function cursorPos(overlay) {
 
 function getTipData(obj, cursor) {
 
-  var xScaleObj = obj.rendered.plot.xScaleObj,
-    xScale = xScaleObj.scale,
-    scaleType = xScaleObj.obj.type;
+  var scale, scaleType, cursorVal;
+
+  if (obj.options.type === 'bar') {
+    scale = obj.rendered.plot.yScaleObj.scale.copy();
+    scale.domain(scale.domain().reverse());
+    scaleType = obj.rendered.plot.yScaleObj.obj.type;
+    cursorVal = cursor.y;
+  } else {
+    scale = obj.rendered.plot.xScaleObj.scale;
+    scaleType = obj.rendered.plot.xScaleObj.obj.type;
+    cursorVal = cursor.x;
+  }
 
   var xVal, tipData;
 
   if (scaleType === 'ordinal-time' || scaleType === 'ordinal') {
 
-    var step = xScale.step(),
-      domainPosition = Math.floor(cursor.x / step);
+    var step = scale.step(),
+      domainPosition = Math.floor(cursorVal / step);
 
-    if (domainPosition > xScale.domain().length) {
-      xVal = xScale.domain()[xScale.domain().length - 1];
+    if (domainPosition > scale.domain().length) {
+      xVal = scale.domain()[scale.domain().length - 1];
     } else {
-      xVal = xScale.domain()[domainPosition];
+      xVal = scale.domain()[domainPosition];
     }
 
     for (var i = 0; i < obj.data.data.length; i++) {
@@ -9548,7 +9761,7 @@ function getTipData(obj, cursor) {
 
   }
 
-  xVal = xScale.invert(cursor.x);
+  xVal = scale.invert(cursorVal);
 
   if (obj.options.stacked) {
     var data = obj.data.stackedData;
@@ -9606,8 +9819,8 @@ function showTips(tipNodes, obj) {
 
 function hideTips(tipNodes, obj) {
 
-  if (obj.options.type === 'column') {
-    obj.rendered.plot.seriesGroup.selectAll('rect')
+  if (obj.options.type === 'column' || obj.options.type === 'bar') {
+    obj.rendered.plot.seriesGroup.selectAll(("." + (obj.prefix) + "muted"))
       .classed(((obj.prefix) + "muted"), false);
   }
 
@@ -9642,7 +9855,7 @@ function tipsManager(node, obj) {
     multiline: lineChartTips,
     area: obj.options.stacked ? stackedAreaChartTips : areaChartTips,
     column: obj.options.stacked ? stackedColumnChartTips : columnChartTips,
-    bar: obj.options.stacked ? stackedBarChartTips : function() {}
+    bar: obj.options.stacked ? stackedBarChartTips : barChartTips
   };
 
   var dataReference;
@@ -10086,8 +10299,13 @@ function columnChartTips(tipNodes, innerTipEls, obj) {
   obj.rendered.plot.seriesGroup.selectAll('rect')
     .classed(((obj.prefix) + "muted"), true);
 
-  obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"] rect"))
-    .classed(((obj.prefix) + "muted"), false);
+  if (obj.options.stacked) {
+    obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"]"))
+      .classed(((obj.prefix) + "muted"), false);
+  } else {
+    obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"] rect"))
+      .classed(((obj.prefix) + "muted"), false);
+  }
 
   tipNodes.tipGroup
     .selectAll(("." + (obj.prefix) + "tip_text-group"))
@@ -10150,89 +10368,51 @@ function columnChartTips(tipNodes, innerTipEls, obj) {
 }
 
 function stackedColumnChartTips(tipNodes, innerTipEls, obj) {
+  // stacked column tips implementation is the same
+  // as column tips except for one line, so…
+  columnChartTips(tipNodes, innerTipEls, obj);
+}
+
+function barChartTips(tipNodes, innerTipEls, obj) {
 
   var cursor = cursorPos(tipNodes.overlay),
     tipData = getTipData(obj, cursor);
 
-  tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
-    .data(tipData.series)
-    .text(function (d) {
-      if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-      if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-      if (d.val) {
-        return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-      } else {
-        return 'n/a';
-      }
-    });
+  tipNodes.tipGroup.style('display', 'none');
 
   obj.rendered.plot.seriesGroup.selectAll('rect')
+    .classed(((obj.prefix) + "muted"), true);
+
+  obj.rendered.plot.seriesGroup.selectAll(("." + (obj.prefix) + "bar-label"))
+    .classed(((obj.prefix) + "muted"), true);
+
+  obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"] rect"))
+    .classed(((obj.prefix) + "muted"), false);
+
+  obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"] ." + (obj.prefix) + "bar-label"))
+    .classed(((obj.prefix) + "muted"), false);
+
+}
+
+function stackedBarChartTips(tipNodes, innerTipEls, obj) {
+
+  var cursor = cursorPos(tipNodes.overlay),
+    tipData = getTipData(obj, cursor);
+
+  tipNodes.tipGroup.style('display', 'none');
+
+  obj.rendered.plot.seriesGroup.selectAll('rect')
+    .classed(((obj.prefix) + "muted"), true);
+
+  obj.rendered.plot.seriesGroup.selectAll(("." + (obj.prefix) + "bar-label"))
     .classed(((obj.prefix) + "muted"), true);
 
   obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"]"))
     .classed(((obj.prefix) + "muted"), false);
 
-  tipNodes.tipGroup
-    .selectAll(("." + (obj.prefix) + "tip_text-group"))
-    .data(tipData.series)
-    .classed(((obj.prefix) + "active"), function (d) { return d.val ? true : false; });
+  obj.rendered.plot.seriesGroup.selectAll(("[data-legend=\"" + (tipData.key) + "\"]"))
+    .classed(((obj.prefix) + "muted"), false);
 
-  if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-    tipNodes.tipTextDate.text(tipData.key);
-  } else {
-    var domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
-
-    tipNodes.tipTextDate
-    .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
-  }
-
-  tipNodes.tipGroup
-    .attr('transform', function () {
-      var x;
-      if (cursor.x > obj.dimensions.tickWidth() / 2) {
-        // tipbox pointing left
-        x = obj.dimensions.tipPadding.left;
-      } else {
-        // tipbox pointing right
-        x = obj.dimensions.tipPadding.right;
-      }
-      return ("translate(" + x + "," + (obj.dimensions.tipPadding.top) + ")");
-    });
-
-  tipNodes.tipRect
-    .attrs({
-      'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-      'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-    });
-
-  tipNodes.tipBox
-    .attr('transform', function() {
-      var x;
-
-      if (cursor.x > obj.dimensions.tickWidth() / 2) {
-        // tipbox pointing left
-
-        var colWidth;
-
-        if (!obj.rendered.plot.xScaleObj.scale.bandwidth) {
-          colWidth = obj.rendered.plot.singleColumn;
-        } else {
-          colWidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
-        }
-
-        x = obj.rendered.plot.xScaleObj.scale(tipData.key)  + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - obj.dimensions.tipOffset.horizontal - this.getBoundingClientRect().width + colWidth;
-
-      } else {
-        // tipbox pointing right
-        x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
-      }
-      return ("translate(" + x + "," + (obj.dimensions.tipOffset.vertical) + ")");
-    });
-
-}
-
-function stackedBarChartTips(tipNodes, innerTipEls, obj) {
 
 }
 

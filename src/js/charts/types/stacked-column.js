@@ -37,9 +37,7 @@ export default function stackedColumnChart(node, obj) {
   const seriesGroup = node.append('g')
     .attr('class', () => {
       let output = `${obj.prefix}series_group`;
-      if (obj.data.seriesAmount > 1) {
-        output += ` ${obj.prefix}multiple`;
-      }
+      if (obj.data.seriesAmount > 1) { output += ` ${obj.prefix}multiple`; }
       return output;
     })
     .attr('transform', () => {
@@ -65,7 +63,7 @@ export default function stackedColumnChart(node, obj) {
     });
 
   const rect = columnItem.selectAll('rect')
-    .data(d => { return d; })
+    .data(d => d)
     .enter().append('rect')
     .attrs({
       'data-key': d => { return d.data[obj.data.keys[0]]; },

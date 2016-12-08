@@ -88,12 +88,13 @@
     }
   },
 
-  "barHeight": 30,
+  "barHeight": 25,
+  "barLabelOffset": 6,
 
   "bands": {
-    "padding": 0.06,
+    "padding": 0.12,
     "offset": 0.06,
-    "outerPadding": 0.03
+    "outerPadding": 0.06
   },
 
   "source": {

@@ -84,6 +84,7 @@ const chartSettings = {
       return (this.computedWidth() - (this.labelWidth + this.yAxisPaddingRight));
     },
     barHeight: settings.barHeight,
+    barLabelOffset: settings.barLabelOffset,
     bands: {
       padding: settings.bands.padding,
       offset: settings.bands.offset,

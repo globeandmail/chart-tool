@@ -4,13 +4,15 @@
 
 .#{$prefix}yAxis .#{$prefix}minor line {
   stroke: $axis-stroke-color;
-  // stroke-dasharray: $axis-stroke-dasharray;
   shape-rendering: crispEdges;
+}
+
+.#{$prefix}yAxis .tick:not(.#{$prefix}minor) line {
+  display: none;
 }
 
 .#{$prefix}type_bar .#{$prefix}xAxis .#{$prefix}minor line {
   stroke: $axis-stroke-color;
-  // stroke-dasharray: $axis-stroke-dasharray;
   shape-rendering: crispEdges;
 }
 

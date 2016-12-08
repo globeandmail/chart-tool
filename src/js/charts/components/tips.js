@@ -32,21 +32,30 @@ export function cursorPos(overlay) {
 
 export function getTipData(obj, cursor) {
 
-  const xScaleObj = obj.rendered.plot.xScaleObj,
-    xScale = xScaleObj.scale,
-    scaleType = xScaleObj.obj.type;
+  let scale, scaleType, cursorVal;
+
+  if (obj.options.type === 'bar') {
+    scale = obj.rendered.plot.yScaleObj.scale.copy();
+    scale.domain(scale.domain().reverse());
+    scaleType = obj.rendered.plot.yScaleObj.obj.type;
+    cursorVal = cursor.y;
+  } else {
+    scale = obj.rendered.plot.xScaleObj.scale;
+    scaleType = obj.rendered.plot.xScaleObj.obj.type;
+    cursorVal = cursor.x;
+  }
 
   let xVal, tipData;
 
   if (scaleType === 'ordinal-time' || scaleType === 'ordinal') {
 
-    const step = xScale.step(),
-      domainPosition = Math.floor(cursor.x / step);
+    const step = scale.step(),
+      domainPosition = Math.floor(cursorVal / step);
 
-    if (domainPosition > xScale.domain().length) {
-      xVal = xScale.domain()[xScale.domain().length - 1];
+    if (domainPosition > scale.domain().length) {
+      xVal = scale.domain()[scale.domain().length - 1];
     } else {
-      xVal = xScale.domain()[domainPosition];
+      xVal = scale.domain()[domainPosition];
     }
 
     for (let i = 0; i < obj.data.data.length; i++) {
@@ -62,7 +71,7 @@ export function getTipData(obj, cursor) {
 
   }
 
-  xVal = xScale.invert(cursor.x);
+  xVal = scale.invert(cursorVal);
 
   if (obj.options.stacked) {
     const data = obj.data.stackedData;
@@ -120,8 +129,8 @@ export function showTips(tipNodes, obj) {
 
 export function hideTips(tipNodes, obj) {
 
-  if (obj.options.type === 'column') {
-    obj.rendered.plot.seriesGroup.selectAll('rect')
+  if (obj.options.type === 'column' || obj.options.type === 'bar') {
+    obj.rendered.plot.seriesGroup.selectAll(`.${obj.prefix}muted`)
       .classed(`${obj.prefix}muted`, false);
   }
 
@@ -156,7 +165,7 @@ export function tipsManager(node, obj) {
     multiline: lineChartTips,
     area: obj.options.stacked ? stackedAreaChartTips : areaChartTips,
     column: obj.options.stacked ? stackedColumnChartTips : columnChartTips,
-    bar: obj.options.stacked ? stackedBarChartTips : function() {}
+    bar: obj.options.stacked ? stackedBarChartTips : barChartTips
   };
 
   let dataReference;
@@ -600,8 +609,13 @@ export function columnChartTips(tipNodes, innerTipEls, obj) {
   obj.rendered.plot.seriesGroup.selectAll('rect')
     .classed(`${obj.prefix}muted`, true);
 
-  obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"] rect`)
-    .classed(`${obj.prefix}muted`, false);
+  if (obj.options.stacked) {
+    obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"]`)
+      .classed(`${obj.prefix}muted`, false);
+  } else {
+    obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"] rect`)
+      .classed(`${obj.prefix}muted`, false);
+  }
 
   tipNodes.tipGroup
     .selectAll(`.${obj.prefix}tip_text-group`)
@@ -664,89 +678,51 @@ export function columnChartTips(tipNodes, innerTipEls, obj) {
 }
 
 export function stackedColumnChartTips(tipNodes, innerTipEls, obj) {
+  // stacked column tips implementation is the same
+  // as column tips except for one line, so…
+  columnChartTips(tipNodes, innerTipEls, obj);
+}
+
+export function barChartTips(tipNodes, innerTipEls, obj) {
 
   const cursor = cursorPos(tipNodes.overlay),
     tipData = getTipData(obj, cursor);
 
-  tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
-    .data(tipData.series)
-    .text(d => {
-      if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-      if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-      if (d.val) {
-        return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-      } else {
-        return 'n/a';
-      }
-    });
+  tipNodes.tipGroup.style('display', 'none');
 
   obj.rendered.plot.seriesGroup.selectAll('rect')
+    .classed(`${obj.prefix}muted`, true);
+
+  obj.rendered.plot.seriesGroup.selectAll(`.${obj.prefix}bar-label`)
+    .classed(`${obj.prefix}muted`, true);
+
+  obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"] rect`)
+    .classed(`${obj.prefix}muted`, false);
+
+  obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"] .${obj.prefix}bar-label`)
+    .classed(`${obj.prefix}muted`, false);
+
+}
+
+export function stackedBarChartTips(tipNodes, innerTipEls, obj) {
+
+  const cursor = cursorPos(tipNodes.overlay),
+    tipData = getTipData(obj, cursor);
+
+  tipNodes.tipGroup.style('display', 'none');
+
+  obj.rendered.plot.seriesGroup.selectAll('rect')
+    .classed(`${obj.prefix}muted`, true);
+
+  obj.rendered.plot.seriesGroup.selectAll(`.${obj.prefix}bar-label`)
     .classed(`${obj.prefix}muted`, true);
 
   obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"]`)
     .classed(`${obj.prefix}muted`, false);
 
-  tipNodes.tipGroup
-    .selectAll(`.${obj.prefix}tip_text-group`)
-    .data(tipData.series)
-    .classed(`${obj.prefix}active`, d => { return d.val ? true : false; });
+  obj.rendered.plot.seriesGroup.selectAll(`[data-legend="${tipData.key}"]`)
+    .classed(`${obj.prefix}muted`, false);
 
-  if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-    tipNodes.tipTextDate.text(tipData.key);
-  } else {
-    const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
-
-    tipNodes.tipTextDate
-    .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
-  }
-
-  tipNodes.tipGroup
-    .attr('transform', () => {
-      let x;
-      if (cursor.x > obj.dimensions.tickWidth() / 2) {
-        // tipbox pointing left
-        x = obj.dimensions.tipPadding.left;
-      } else {
-        // tipbox pointing right
-        x = obj.dimensions.tipPadding.right;
-      }
-      return `translate(${x},${obj.dimensions.tipPadding.top})`;
-    });
-
-  tipNodes.tipRect
-    .attrs({
-      'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-      'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-    });
-
-  tipNodes.tipBox
-    .attr('transform', function() {
-      let x;
-
-      if (cursor.x > obj.dimensions.tickWidth() / 2) {
-        // tipbox pointing left
-
-        let colWidth;
-
-        if (!obj.rendered.plot.xScaleObj.scale.bandwidth) {
-          colWidth = obj.rendered.plot.singleColumn;
-        } else {
-          colWidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
-        }
-
-        x = obj.rendered.plot.xScaleObj.scale(tipData.key)  + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - obj.dimensions.tipOffset.horizontal - this.getBoundingClientRect().width + colWidth;
-
-      } else {
-        // tipbox pointing right
-        x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
-      }
-      return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
-    });
-
-}
-
-export function stackedBarChartTips(tipNodes, innerTipEls, obj) {
 
 }
 

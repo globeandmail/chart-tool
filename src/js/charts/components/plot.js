@@ -4,6 +4,7 @@ import area from '../types/area';
 import stackedArea from '../types/stacked-area';
 import column from '../types/column';
 import bar from '../types/bar';
+import stackedBar from '../types/stacked-bar';
 import stackedColumn from '../types/stacked-column';
 
 export default function plot(node, obj) {
@@ -15,7 +16,7 @@ export default function plot(node, obj) {
     case 'area':
       return obj.options.stacked ? stackedArea(node, obj) : area(node, obj);
     case 'bar':
-      return bar(node, obj);
+      return obj.options.stacked ? stackedBar(node, obj) : bar(node, obj);
     case 'column':
       return obj.options.stacked ? stackedColumn(node, obj) : column(node, obj);
     default:

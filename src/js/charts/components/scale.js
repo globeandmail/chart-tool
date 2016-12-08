@@ -18,6 +18,7 @@ export function scaleManager(obj, axisType) {
 
   if (scaleObj.type === 'ordinal') {
     scale
+      .align(0.5)
       .paddingInner(scaleObj.bands.padding)
       .paddingOuter(scaleObj.bands.outerPadding);
   }
