@@ -14,7 +14,7 @@ gulp.task('scripts:watch', ['js:dev'], done => {
   done();
 });
 
-gulp.task('browsersync', ['js:dev', 'scss:dev'], () => {
+gulp.task('browsersync', ['clean-dist:dev', 'js:dev', 'scss:dev'], () => {
 
   browserSync({
     port: gulpConfig.browserSyncPort,

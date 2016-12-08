@@ -62,7 +62,7 @@ $color-yellow: #F8E71C;
 $color-beige: #FFF8E7;
 $color-red-bright: #F90611;
 
-$axis-stroke-color: $color-black;
+$axis-stroke-color: lighten($color-gray-medium, 35%);
 $axis-stroke-width: 1px;
 $axis-stroke-dasharray: 1, 3px;
 $line-stroke-width: 2.5px;

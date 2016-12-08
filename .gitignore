@@ -105,16 +105,8 @@ sftp-config.json
 
 dist/
 
-# meteor/lib/chart-tool/
-
 meteor/.buildpacks
 
-src/styles/build/
-
-# bundle.js
-# bundle.min.js
-bundle.js.map
-
-# meteorSettings.js
-# meteorSettings.min.js
-meteorSettings.js.map
+# chart-tool.js
+# chart-tool.min.js
+chart-tool.js.map

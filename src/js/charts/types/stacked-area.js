@@ -1,80 +1,73 @@
-function StackedAreaChart(node, obj) {
+import { axisManager as Axis, axisCleanup, addZeroLine } from '../components/axis';
+import { scaleManager as Scale } from '../components/scale';
+import { line, area } from 'd3-shape';
+import { getCurve } from '../../utils/utils';
+import 'd3-selection-multi';
 
-  var axisModule = require("../components/axis"),
-      scaleModule = require("../components/scale"),
-      Axis = axisModule.axisManager,
-      Scale = scaleModule.scaleManager;
+export default function stackedAreaChart(node, obj) {
 
-  //  scales
-  var xScaleObj = new Scale(obj, "xAxis"),
-      yScaleObj = new Scale(obj, "yAxis"),
-      xScale = xScaleObj.scale, yScale = yScaleObj.scale;
+  const xScaleObj = new Scale(obj, 'xAxis'),
+    yScaleObj = new Scale(obj, 'yAxis'),
+    xScale = xScaleObj.scale, yScale = yScaleObj.scale;
 
-  // axes
-  var xAxisObj = new Axis(node, obj, xScaleObj.scale, "xAxis"),
-      yAxisObj = new Axis(node, obj, yScaleObj.scale, "yAxis");
+  const xAxisObj = new Axis(node, obj, xScaleObj.scale, 'xAxis'),
+    yAxisObj = new Axis(node, obj, yScaleObj.scale, 'yAxis');
 
-  axisModule.axisCleanup(node, obj, xAxisObj, yAxisObj);
+  axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  if (xScaleObj.obj.type === "ordinal") {
-    xScale.rangeRoundPoints([0, obj.dimensions.tickWidth()], 1.0);
+  if (xScaleObj.obj.type === 'ordinal') {
+    xScale.rangeRound([0, obj.dimensions.tickWidth()], 1.0);
   }
 
-  // wha?
-  if (obj.data.seriesAmount === 1) { obj.seriesHighlight = function() { return 0; } }
+  if (obj.data.seriesAmount === 1) {
+    obj.seriesHighlight = () => { return 0; };
+  }
 
-  node.classed(obj.prefix + "stacked", true);
+  node.classed(`${obj.prefix}stacked`, true);
 
-  var seriesGroup = node.append("g")
-    .attr("class", function() {
-      var output = obj.prefix + "series_group";
-      if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'muliple' class so we can target
-        output += " " + obj.prefix + "multiple";
-      }
+  const seriesGroup = node.append('g')
+    .attr('class', () => {
+      let output = `${obj.prefix}series_group`;
+      if (obj.data.seriesAmount > 1) { output += ` ${obj.prefix}multiple`; }
       return output;
     });
 
-  var series = seriesGroup.selectAll("g." + obj.prefix + "series")
+  const series = seriesGroup.selectAll(`g.${obj.prefix}series`)
     .data(obj.data.stackedData)
-    .enter().append("svg:g")
-    .attr({
-      "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)",
-      "class": function(d, i) {
-        var output = obj.prefix + "series " + obj.prefix + "series_" + (i);
-        if (i === obj.seriesHighlight()) {
-          output = obj.prefix + "series " + obj.prefix + "series_" + (i) + " " + obj.prefix + "highlight";
-        }
+    .enter().append('g')
+    .attrs({
+      'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
+      'class': (d, i) => {
+        let output = `${obj.prefix}series ${obj.prefix}series-${i}`;
+        if (i === obj.seriesHighlight()) { output += ` ${obj.prefix}highlight`; }
         return output;
       }
     });
 
-  var area = d3.svg.area().interpolate(obj.options.interpolation)
-    .defined(function(d) { return !isNaN(d.y0 + d.y); })
-    .x(function(d) { return xScale(d.x); })
-    .y0(function(d) { return yScale(d.y0); })
-    .y1(function(d) { return yScale(d.y0 + d.y); });
+  const a = area().curve(getCurve(obj.options.interpolation))
+    .defined(d => { return !isNaN(d[0] + d[1]); })
+    .x(d => { return xScale(d.data[obj.data.keys[0]]); })
+    .y0(d => { return yScale(d[0]); })
+    .y1(d => { return yScale(d[1]); });
 
-  var line = d3.svg.line().interpolate(obj.options.interpolation)
-    .defined(function(d) { return !isNaN(d.y0 + d.y); })
-    .x(function(d) { return xScale(d.x); })
-    .y(function(d) { return yScale(d.y0 + d.y); });
+  const l = line().curve(getCurve(obj.options.interpolation))
+    .defined(d => { return !isNaN(d[0] + d[1]); })
+    .x(d => { return xScale(d.data[obj.data.keys[0]]); })
+    .y(d => { return yScale(d[1]); });
 
-  series.append("path")
-    .attr("class", function(d, i) {
-      var output = obj.prefix + "fill " + obj.prefix + "fill-" + (i);
-      if (i === obj.seriesHighlight()) {
-        output = obj.prefix + "fill " + obj.prefix + "fill-" + (i) + " " + obj.prefix + "highlight";
-      }
+  series.append('path')
+    .attr('class', (d, i) => {
+      let output = `${obj.prefix}fill ${obj.prefix}fill-${i}`;
+      if (i === obj.seriesHighlight()) { output += ` ${obj.prefix}highlight`; }
       return output;
     })
-    .attr("d", area);
+    .attr('d', a);
 
-  series.append("path")
-    .attr("class", function(d, i) { return obj.prefix + "line " + obj.prefix + "line-" + (i); })
-    .attr("d", line);
+  series.append('path')
+    .attr('class', (d, i) => `${obj.prefix}line ${obj.prefix}line-${i}`)
+    .attr('d', l);
 
-  axisModule.addZeroLine(obj, node, yAxisObj, "yAxis");
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
     xScaleObj: xScaleObj,
@@ -87,6 +80,4 @@ function StackedAreaChart(node, obj) {
     area: area
   };
 
-};
-
-module.exports = StackedAreaChart;
+}

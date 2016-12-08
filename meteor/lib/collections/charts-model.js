@@ -337,14 +337,6 @@ Meteor.methods({
       }
     });
   },
-  updateXRescale: function (chartId, rescale) {
-    return Charts.update(chartId, {
-      $set: {
-        "x_axis.rescale": rescale,
-        lastEdited: new Date()
-      }
-    });
-  },
   updateXNice: function (chartId, nice) {
     return Charts.update(chartId, {
       $set: {
@@ -416,14 +408,6 @@ Meteor.methods({
     return Charts.update(chartId, {
       $set: {
         "y_axis.max": maxY,
-        lastEdited: new Date()
-      }
-    });
-  },
-  updateYRescale: function (chartId, rescale) {
-    return Charts.update(chartId, {
-      $set: {
-        "y_axis.rescale": rescale,
         lastEdited: new Date()
       }
     });

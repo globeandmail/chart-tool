@@ -14,9 +14,7 @@ module.exports = {
     }),
     replace({
       include: 'env.js',
-      values: {
-        s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
-      }
+      values: { s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET) }
     }),
     nodeResolve({ jsnext: true }),
     commonjs()

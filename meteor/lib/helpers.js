@@ -31,27 +31,27 @@ escapeStr = function(str) {
 cleanEmbed = function(data) {
   var arr = [];
   arr.push(
-    "_id",
-    "slug",
-    "createdAt",
-    "lastEdited",
-    "version",
-    "build",
-    "heading",
-    "qualifier",
-    "source",
-    "md5",
-    "date_format",
-    "time_format",
-    "print",
-    "img",
-    "prefix",
-    "series",
-    "annotations",
-    "range",
-    "public",
-    "users",
-    "tags"
+    '_id',
+    'slug',
+    'createdAt',
+    'lastEdited',
+    'version',
+    'build',
+    'heading',
+    'qualifier',
+    'source',
+    'md5',
+    'date_format',
+    'time_format',
+    'print',
+    'img',
+    'prefix',
+    'series',
+    'annotations',
+    'range',
+    'public',
+    'users',
+    'tags'
   );
   var chartObj = deleteProp(data, arr);
   var newData = csvFormat(data);
@@ -61,14 +61,14 @@ cleanEmbed = function(data) {
 
 embed = function(obj) {
   var data = {
-    "version": obj.version,
-    "id": obj._id,
-    "heading": escapeStr(obj.heading),
-    "qualifier": escapeStr(obj.qualifier),
-    "source": escapeStr(obj.source),
-    "tags": escapeStr(obj.tags)
+    'version': obj.version,
+    'id': obj._id,
+    'heading': escapeStr(obj.heading),
+    'qualifier': escapeStr(obj.qualifier),
+    'source': escapeStr(obj.source),
+    'tags': escapeStr(obj.tags)
   };
-  data["chart"] = cleanEmbed(obj);
+  data['chart'] = cleanEmbed(obj);
   return data;
 }
 
@@ -140,9 +140,9 @@ jsonToCSV = function(objArray, config) {
 csvFormat = function(obj) {
   if (!isEmpty(obj)) {
     var data = obj.data;
-    if (obj.x_axis.scale === "time" || obj.x_axis.scale === "ordinal-time") {
+    if (obj.x_axis.scale === 'time' || obj.x_axis.scale === 'ordinal-time') {
       var stdFormat = app_settings.chart.date_format;
-      if (obj.hasHours) { stdFormat += " " + app_settings.chart.time_format; }
+      if (obj.hasHours) { stdFormat += ' ' + app_settings.chart.time_format; }
       var currFormat = obj.date_format;
       return standardizeDates(data, currFormat, stdFormat);
     } else {
@@ -162,16 +162,16 @@ slugParse = function(slug) {
 
 dataParse = function(data) {
 
-  var newData = data.replace(/\n\n/g,"\n").trim();
+  var newData = data.replace(/\n\n/g, '\n').trim();
   // parses data into JSON, then back into a CSV for delimiter consistency
-  var headerRow = newData.split("\n")[0], //grab the first row of data - not concerned with the rest at this point.
-    tryTabs = headerRow.split("\t").length,
-    tryComma = headerRow.split(",").length,
+  var headerRow = newData.split('\n')[0], //grab the first row of data - not concerned with the rest at this point.
+    tryTabs = headerRow.split('\t').length,
+    tryComma = headerRow.split(',').length,
     parseCSVParams = {
-      delimiter: ","
+      delimiter: ','
     },
     parseTSVParams = {
-      delimiter: "\t"
+      delimiter: '\t'
     },
     parseParams,
     parsedData,
@@ -195,8 +195,8 @@ dataParse = function(data) {
   if (parseParams) {
     parsedData = cleanData(Papa.parse(newData, parseParams).data);
     var csvOptions = {
-      delimiter: ",",
-      newline: "\n"
+      delimiter: ',',
+      newline: '\n'
     };
     reformattedCSV = jsonToCSV(parsedData, csvOptions);
     output = reformattedCSV;
@@ -318,7 +318,7 @@ standardizeDates = function(data, oldFormat, newFormat) {
 
   var output = jsonToCSV(jsonData.data, csvOptions);
 
-  var op = output.replace(/\"/g, '\/\"');
+  var op = output;
 
   return op;
 

@@ -1,15 +1,13 @@
-var version = {
-  version: require('../../../package.json').version,
-  build: require('../../../package.json').buildver
-};
+import { scaleLinear } from 'd3-scale';
+import * as settings from '../../../custom/chart-tool-config.json';
+import { version, buildVer } from '../../../package.json';
 
-var settings = require('../../../custom/chart-tool-config.json');
+const chartSettings = {
 
-module.exports = {
-
+  prefix: settings.prefix,
   CUSTOM: settings.CUSTOM,
-  version: version.version,
-  build: version.build,
+  version: version,
+  build: buildVer,
   id: '',
   data: '',
   dateFormat: settings.dateFormat,
@@ -22,14 +20,7 @@ module.exports = {
   index: '',
   hasHours: false,
   social: settings.social,
-  seriesHighlight: function() {
-    if (this.data.seriesAmount && this.data.seriesAmount <= 1) {
-      return 1;
-    } else {
-      return 0;
-    }
-  },
-  baseClass: function() { return this.prefix + 'chart'; },
+  baseClass: `${settings.prefix}chart`,
   customClass: '',
 
   options: {
@@ -59,8 +50,6 @@ module.exports = {
 
   exportable: false, // this can be overwritten by the backend as needed
   editable: false,
-
-  prefix: settings.prefix,
   debounce: settings.debounce,
   tipTimeout: settings.tipTimeout,
   monthsAbr: settings.monthsAbr,
@@ -71,7 +60,7 @@ module.exports = {
       return this.width - this.margin.left - this.margin.right;
     },
     height: function() {
-      var ratioScale = d3.scale.linear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
+      const ratioScale = scaleLinear().range([300, 900]).domain([this.width * this.ratioMobile, this.width * this.ratioDesktop]);
       return Math.round(ratioScale(this.width));
     },
     computedHeight: function() {
@@ -95,6 +84,7 @@ module.exports = {
       return (this.computedWidth() - (this.labelWidth + this.yAxisPaddingRight));
     },
     barHeight: settings.barHeight,
+    barLabelOffset: settings.barLabelOffset,
     bands: {
       padding: settings.bands.padding,
       offset: settings.bands.offset,
@@ -103,3 +93,5 @@ module.exports = {
   }
 
 };
+
+export default chartSettings;

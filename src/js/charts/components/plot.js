@@ -1,51 +1,25 @@
-function plot(node, obj) {
+import line from '../types/line';
+import multiline from '../types/multiline';
+import area from '../types/area';
+import stackedArea from '../types/stacked-area';
+import column from '../types/column';
+import bar from '../types/bar';
+import stackedBar from '../types/stacked-bar';
+import stackedColumn from '../types/stacked-column';
 
-  var draw = {
-    line: require("../types/line"),
-    multiline: require("../types/multiline"),
-    area: require("../types/area"),
-    stackedArea: require("../types/stacked-area"),
-    column: require("../types/column"),
-    bar: require("../types/bar"),
-    stackedColumn: require("../types/stacked-column"),
-    streamgraph: require("../types/streamgraph")
-  };
-
-  var chartRef;
-
+export default function plot(node, obj) {
   switch(obj.options.type) {
-
-    case "line":
-      chartRef = draw.line(node, obj);
-      break;
-
-    case "multiline":
-      chartRef = draw.multiline(node, obj);
-      break;
-
-    case "area":
-      chartRef = obj.options.stacked ? draw.stackedArea(node, obj) : draw.area(node, obj);
-      break;
-
-    case "bar":
-      chartRef = draw.bar(node, obj);
-      break;
-
-    case "column":
-      chartRef = obj.options.stacked ? draw.stackedColumn(node, obj) : draw.column(node, obj);
-      break;
-
-    case "stream":
-      chartRef = draw.streamgraph(node, obj);
-      break;
-
+    case 'line':
+      return line(node, obj);
+    case 'multiline':
+      return multiline(node, obj);
+    case 'area':
+      return obj.options.stacked ? stackedArea(node, obj) : area(node, obj);
+    case 'bar':
+      return obj.options.stacked ? stackedBar(node, obj) : bar(node, obj);
+    case 'column':
+      return obj.options.stacked ? stackedColumn(node, obj) : column(node, obj);
     default:
-      chartRef = draw.line(node, obj);
-      break;
+      return line(node, obj);
   }
-
-  return chartRef;
-
 }
-
-module.exports = plot;

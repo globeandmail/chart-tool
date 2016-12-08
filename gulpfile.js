@@ -10,12 +10,15 @@ const utils = require('./gulp/utils.js');
 
 gulp.task('lib-serve', done => {
   runSequence('set-version',
+    'set-dev-node-env',
     'browsersync',
     done);
 });
 
 gulp.task('meteor-serve', done => {
   runSequence('set-version',
+    'set-dev-node-env',
+    'clean-meteor-libs',
     'meteor:dev',
     'browsersync',
     done);
@@ -23,22 +26,42 @@ gulp.task('meteor-serve', done => {
 
 gulp.task('meteor-build', done => {
   runSequence('set-version',
+    'set-prod-node-env',
+    'clean-dist:build',
+    'clean-meteor-libs',
     'js:build',
     'scss:build',
-    'clean-meteor:build',
+    'meteor-move:build',
+    'clean-dist:build',
     'meteor:build',
     done);
 });
 
 gulp.task('lib-build', done => {
-  runSequence('_set-version',
+  runSequence('set-version',
+    'set-prod-node-env',
+    'clean-dist:build',
     'js:build',
     'scss:build',
+    'size:build',
+    done);
+});
+
+gulp.task('build', done => {
+  runSequence('set-version',
+    'set-prod-node-env',
+    'clean-meteor-libs',
+    'clean-dist:build',
+    'js:build',
+    'scss:build',
+    'meteor:build',
     done);
 });
 
 gulp.task('default', done => {
   runSequence('set-version',
+    'set-dev-node-env',
+    'clean-meteor-libs',
     'browsersync',
     'meteor:dev',
     done);

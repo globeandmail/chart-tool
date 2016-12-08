@@ -5,12 +5,19 @@
   "description": "A responsive charting application",
   "main": "gulpfile.js",
   "dependencies": {
+    "core-js": "^2.4.1",
     "d3-array": "^1.0.1",
+    "d3-axis": "^1.0.3",
+    "d3-collection": "^1.0.1",
     "d3-dispatch": "^1.0.1",
+    "d3-dsv": "^1.0.3",
     "d3-format": "^1.0.2",
     "d3-scale": "^1.0.3",
     "d3-selection": "^1.0.2",
-    "d3-shape": "^1.0.3"
+    "d3-selection-multi": "^1.0.0",
+    "d3-shape": "^1.0.3",
+    "d3-time": "^1.0.4",
+    "d3-time-format": "^2.0.2"
   },
   "engines": {
     "node": "7.1.0"
@@ -19,7 +26,7 @@
     "autoprefixer": "^6.5.3",
     "browser-sync": "^2.15.0",
     "del": "^2.2.2",
-    "eslint": "^3.10.1",
+    "eslint": "^3.10.2",
     "gulp": "^3.8.11",
     "gulp-csso": "^2.0.0",
     "gulp-file": "^0.3.0",

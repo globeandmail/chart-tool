@@ -42,6 +42,10 @@
   margin-top: 2px;
 }
 
+.#{$prefix}chart_qualifier-text {
+  fill: $color-black;
+}
+
 .#{$prefix}chart_qualifier-text-bg {
   stroke: $color-white;
   stroke-width: 10px;
