@@ -1,13 +1,8 @@
-.#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect,
-.#{$prefix}alternate.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect {
+.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect {
   stroke-width: 1px;
   stroke: $color-white;
-}
-
-.#{$prefix}type_column rect {
   transition: opacity 0.3s;
 }
-
 
 @for $counter from 1 through $series-count-max {
   .#{$prefix}primary.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}series-#{$counter - 1} .#{$prefix}column-#{$counter - 1} rect {

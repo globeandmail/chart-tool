@@ -27,9 +27,7 @@ Template.chartEditAside.helpers({
     if (this.options) {
       var type = this.options["type"];
       if (value === true) {
-        if (type === "bar") { return true; };
-      } else {
-        if (type !== "bar") { return true; };
+        return type === "bar" ? true : false;
       }
     }
   },

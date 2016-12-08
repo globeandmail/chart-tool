@@ -60,7 +60,7 @@ Template.chartEditType.events({
           YMin: "",
           XScale: "linear",
           YScale: "ordinal",
-          XNice: true,
+          XNice: false,
           YNice: false,
           QualifierOption: true
         });

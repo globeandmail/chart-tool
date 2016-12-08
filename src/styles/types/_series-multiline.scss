@@ -1,12 +1,8 @@
-.#{$prefix}primary.#{$prefix}type_multiline,
-.#{$prefix}alternate.#{$prefix}type_multiline {
-  .#{$prefix}series_group .#{$prefix}multiline,
-  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: $line-stroke-width;
-  }
+.#{$prefix}type_multiline .#{$prefix}multiline {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: $line-stroke-width;
 }
 
 // Sets all other series to final colour

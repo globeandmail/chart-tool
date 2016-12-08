@@ -1,13 +1,8 @@
-.#{$prefix}primary.#{$prefix}type_area,
-.#{$prefix}alternate.#{$prefix}type_area {
-  .#{$prefix}series_group .#{$prefix}line,
-  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke: $color-white;
-    stroke-width: $line-stroke-width;
-  }
+.#{$prefix}type_area .#{$prefix}series_group .#{$prefix}line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: $line-stroke-width;
 }
 
 .#{$prefix}primary.#{$prefix}type_area .#{$prefix}line.#{$prefix}line-0 {
@@ -16,6 +11,10 @@
 
 .#{$prefix}alternate.#{$prefix}type_area .#{$prefix}line.#{$prefix}line-0 {
   stroke: $alternate-color;
+}
+
+.#{$prefix}type_area .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
+  stroke: $color-white;
 }
 
 @for $counter from 1 through $series-count-max {

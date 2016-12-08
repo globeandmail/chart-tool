@@ -1,12 +1,8 @@
-.#{$prefix}primary.#{$prefix}type_line,
-.#{$prefix}alternate.#{$prefix}type_line {
-  .#{$prefix}series_group .#{$prefix}line,
-  .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}line {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: $line-stroke-width;
-  }
+.#{$prefix}type_line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: $line-stroke-width;
 }
 
 @for $counter from 1 through $series-count-max {

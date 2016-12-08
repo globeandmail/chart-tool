@@ -104,27 +104,6 @@
           </div>
         </div>
 
-        <div class="unit-edit x-axisval-edit">
-          <h4>Custom range</h4>
-          <span>
-          {{ #if displayMin }}
-            <input type="number" name="min" placeholder="Min" class="input-min-x input-field" value="{{ x_axis.min }}">
-            <span class="axisval-to"> to </span>
-          {{ /if }}
-            <input type="number" name="max" placeholder="Max" class="input-max-x input-field" value="{{ x_axis.max }}">
-          </span>
-        </div>
-
-        <div class="unit-edit x-ticks-edit">
-          <h4>Ticks <a href="#" class="help-toggle help-x-ticks-edit">?</a></h4>
-          <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-x input-field" value="{{ x_axis.ticks }}">
-        </div>
-
-        <div class="unit-edit unit-edit-half x-nice-edit">
-          <h4>Niceify <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
-          <input class="input-checkbox-x-nice" type="checkbox" name="xNice" checked="{{ xNice }}">
-        </div>
-
       {{ /if }}
 
     </div>
