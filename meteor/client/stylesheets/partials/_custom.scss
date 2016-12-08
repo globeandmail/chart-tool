@@ -41,7 +41,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     padding: 0;
     border: none;
     line-height: 1em;
-    color: $color-black;
+    color: $black;
   }
 
   .#{$prefix}chart_qualifier {
@@ -54,7 +54,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     vertical-align: middle;
     margin: 0;
     padding-bottom: 0;
-    color: $color-black;
+    color: $black;
   }
 
   .#{$prefix}chart_qualifier-bar {
@@ -67,7 +67,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     font-size: $six-five-pt;
     padding-top: 4px;
     display: block;
-    color: $color-black;
+    color: $black;
     padding-bottom: 0;
     margin-bottom: 0;
     line-height: $six-five-pt;
@@ -100,14 +100,14 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
   }
 
   .#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text {
-    color: $color-black;
+    color: $black;
     font-size: $eight-pt;
   }
 
   // axes
 
   .#{$prefix}axis-group .#{$prefix}minor line {
-    stroke: $color-black;
+    stroke: $black;
     stroke-dasharray: 0.01, ptToPx(1.7);
     stroke-width: $point-five-pt;
     stroke-linejoin: round;
@@ -115,14 +115,14 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
   }
 
   .#{$prefix}axis-group g.tick line {
-    stroke: $color-black;
+    stroke: $black;
     stroke-width: $point-five-pt;
     fill: none;
   }
 
   .#{$prefix}zero-line {
     fill: none;
-    stroke: $color-black;
+    stroke: $black;
     stroke-width: $point-five-pt;
   }
 
@@ -132,13 +132,13 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
 
   .#{$prefix}axis-group path {
     shape-rendering: crispEdges;
-    stroke: $color-black;
+    stroke: $black;
   }
 
   .#{$prefix}axis-group text {
     font-size: $eight-pt;
-    color: $color-black;
-    fill: $color-black;
+    color: $black;
+    fill: $black;
   }
 
   .#{$prefix}series_group .#{$prefix}line, .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
@@ -150,7 +150,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
   }
 
   .major-tick line {
-    stroke: $color-black;
+    stroke: $black;
     stroke-width: $point-five-pt;
   }
 

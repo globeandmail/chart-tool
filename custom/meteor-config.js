@@ -1,56 +1,56 @@
-var config = require("json!./chart-tool-config.json");
+var config = require('json!./chart-tool-config.json');
 
-app_version = require("json!../package.json").version;
-app_build = require("json!../package.json").buildVer;
-app_name = require("json!../package.json").name;
+app_version = require('json!../package.json').version;
+app_build = require('json!../package.json').buildVer;
+app_name = require('json!../package.json').name;
 prefix = config.prefix;
 
 app_settings = {
 
   s3: config.image,
 
-  animal_api: "http://www.whimsicalwordimal.com/api/name/",
+  animal_api: 'http://www.whimsicalwordimal.com/api/name/',
   names: [
-    "Sardonic Salamander",
-    "Obstreperous Okapi",
-    "Jaundiced Jaguar",
-    "Warbling Wren",
-    "Pontificating Panther",
-    "Ceylonese Civet",
-    "Smug Sponge",
-    "Stained Seahorse",
-    "Knightly Kangaroo",
-    "Traditionalist Tortoise",
-    "Stalkless Shrimp",
-    "Colloidal Coral",
-    "Terrified Tang",
-    "Booked Baboon"
+    'Sardonic Salamander',
+    'Obstreperous Okapi',
+    'Jaundiced Jaguar',
+    'Warbling Wren',
+    'Pontificating Panther',
+    'Ceylonese Civet',
+    'Smug Sponge',
+    'Stained Seahorse',
+    'Knightly Kangaroo',
+    'Traditionalist Tortoise',
+    'Stalkless Shrimp',
+    'Colloidal Coral',
+    'Terrified Tang',
+    'Booked Baboon'
   ],
 
   source_suffix: config.source.suffix,
 
-  primary: "Primary",
-  alternate: "Alternate",
+  primary: 'Primary',
+  alternate: 'Alternate',
 
-  help: "https://github.com/globeandmail/chart-tool/tree/master/README.md",
+  help: 'https://github.com/globeandmail/chart-tool/tree/master/README.md',
 
   chart: {
     version: app_version,
     build: app_build,
     prefix: prefix,
-    slug: "",
-    heading: "",
-    qualifier: "",
-    deck: "",
-    class: "primary",
+    slug: '',
+    heading: '',
+    qualifier: '',
+    deck: '',
+    class: 'primary',
     source: config.source.prefix,
     date_format: config.dateFormat,
     time_format: config.timeFormat,
     hasHours: false,
-    data: "",
+    data: '',
     options: {
-      type: "line",
-      interpolation: "linear",
+      type: 'line',
+      interpolation: 'linear',
       stacked: false,
       expanded: false,
       head: true,
@@ -105,28 +105,28 @@ app_settings = {
     users: [],
     tags: [],
 
-    img: "",
+    img: '',
     print: {
-      columns: "2col",
+      columns: '2col',
       lines: 20
     }
 
   },
 
   empty_series: {
-    style: "",
+    style: '',
     emphasis: {},
     pointers: {}
   },
 
   empty_range: {
     //x or y
-    axis: "",
+    axis: '',
     //key to use as start location
-    start: "",
+    start: '',
     //optional - if not specified a line is shown instead
-    end: "",
-    label: ""
+    end: '',
+    label: ''
   },
 
   print: {

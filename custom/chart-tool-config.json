@@ -129,5 +129,9 @@
     "filename": "thumbnail",
     "extension": "png",
     "thumbnailWidth": 460
-  }
+  },
+
+  "embedJS": "",
+  "embedCSS": ""
+
 }
