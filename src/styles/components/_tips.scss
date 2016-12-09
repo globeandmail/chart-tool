@@ -23,6 +23,7 @@
 .#{$prefix}tip_text-date {
   @include utility-font;
   font-weight: bold;
+  fill: $color-black;
 }
 
 .#{$prefix}tip_line-x {
@@ -34,7 +35,6 @@
   }
   line {
     stroke: $axis-stroke-color;
-    stroke-dasharray: $axis-stroke-dasharray;
     stroke-width: $axis-stroke-width;
     shape-rendering: crispEdges;
   }

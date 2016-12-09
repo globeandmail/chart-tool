@@ -13,8 +13,7 @@ module.exports = {
       exclude: ['node_modules/**', '*.json']
     }),
     replace({
-      include: 'env.js',
-      values: { s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET) }
+      s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
     }),
     nodeResolve({ jsnext: true }),
     commonjs()
