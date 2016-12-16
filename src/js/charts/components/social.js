@@ -1,11 +1,6 @@
 import { getThumbnailPath } from '../../utils/utils';
 import { select } from 'd3-selection';
 
-/**
- * Social sharing button module.
- * @module charts/components/social
- */
-
 export default function social(node, obj) {
 
   const socialOptions = [];

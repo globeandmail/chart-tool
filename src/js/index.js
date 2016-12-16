@@ -5,8 +5,6 @@ import { clearDrawn, clearObj, clearChart, getBounding, svgTest, generateThumb, 
 import { ChartManager } from './charts/manager';
 import 'core-js/library/fn/object/assign';
 
-// CHECK THAT OBJECT.ASSIGN IS GETTING POLYFILLED
-
 export default (root => {
 
   'use strict';

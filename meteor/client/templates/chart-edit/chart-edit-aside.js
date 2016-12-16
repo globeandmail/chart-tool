@@ -1,4 +1,10 @@
 Template.chartEditAside.helpers({
+  escapedData: function() {
+    if (this.data) {
+      var data = this.data;
+      return 'data:text/csv;charset=utf-8,' + escape(data);
+    }
+  },
   isTimeSeries: function() {
     if (this.options) {
       var scale = this.x_axis.scale;
@@ -26,8 +32,10 @@ Template.chartEditAside.helpers({
   isBarChart: function(value) {
     if (this.options) {
       var type = this.options["type"];
-      if (value === true) {
+      if (value) {
         return type === "bar" ? true : false;
+      } else {
+        return type === "bar" ? false : true;
       }
     }
   },

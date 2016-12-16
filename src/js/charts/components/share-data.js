@@ -2,11 +2,6 @@ import { csvToTable } from '../../utils/utils';
 import { select } from 'd3-selection';
 import 'd3-selection-multi';
 
-/**
- * Data sharing button module.
- * @module charts/components/share-data
- */
-
 export default function shareData(node, obj) {
 
   const chartContainer = select(node);

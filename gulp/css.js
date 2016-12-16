@@ -31,7 +31,7 @@ gulp.task('scss-compile:dev', () => {
     .on('error', gutil.log);
 });
 
-gulp.task('scss:build', () => {
+gulp.task('scss-compile:build', () => {
   return gulp.src(sourceCss)
     .pipe(sass(sassOptions))
     .pipe(postCss([
@@ -58,6 +58,14 @@ gulp.task('scss-custom-meteor-after', () => {
   return gulp.src(`${gulpConfig.customPath}/meteor-custom.scss`)
     .pipe(rename('_custom.scss'))
     .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
+});
+
+gulp.task('scss:build', done => {
+  runSequence('scss-compile:build',
+    'scss-settings',
+    'scss-custom-meteor-before',
+    'scss-custom-meteor-after',
+    done);
 });
 
 gulp.task('scss:dev', done => {

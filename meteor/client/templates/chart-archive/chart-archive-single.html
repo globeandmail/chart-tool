@@ -1,7 +1,9 @@
 <template name="chartArchiveSingle">
   <div class="charts-archive_single">
-    <h4 class="slug">{{ slug }}</h4>
-    <div class="image-background" style="background-image: url({{ img }})"></div>
-    <div class="hover-screen"></div>
+    <div class="charts-archive_single-inner">
+      <h4 class="slug">{{ slug }}</h4>
+      {{{ imageOrFallback }}}
+      <div class="hover-screen"></div>
+    </div>
   </div>
 </template>

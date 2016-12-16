@@ -43,6 +43,7 @@ iron:location@1.0.11
 iron:middleware-stack@1.1.0
 iron:router@1.0.12
 iron:url@1.0.11
+isotope:isotope@2.1.0_1
 jeremy:selectize@0.12.1_5
 jparker:crypto-base64@0.1.0
 jparker:crypto-core@0.1.0

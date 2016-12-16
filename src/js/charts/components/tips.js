@@ -4,11 +4,6 @@ import { setTickFormatY as yFormatter } from './axis';
 import { timeDiff } from '../../utils/utils';
 import { tipRadius } from '../../../../custom/chart-tool-config.json';
 
-/**
- * Tips handling module.
- * @module charts/components/tips
- */
-
 export function bisectData(data, keyVal, stacked, xKey) {
   if (stacked) {
     const arr = [];
