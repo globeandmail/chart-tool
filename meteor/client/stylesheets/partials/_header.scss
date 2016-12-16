@@ -42,7 +42,7 @@ header {
 }
 
 .chart-slug {
-  margin-top: 0.6em;
+  margin-top: 0.7em;
   display: inline-block;
   .header-help {
     opacity: 0.2;
@@ -62,9 +62,10 @@ header {
   @include interface-font-bold;
   border: none;
   color: $color-black;
-  padding: 0.3em 0 0.4em 0;
-  border-bottom: 1px solid $color-gray-medium;
-  margin-bottom: -1px;
+  padding: 0.3em 0.3em 0.4em 0.3em;
+  border-bottom: 1px solid #e4e4e4;
+  margin-bottom: -2px;
+  background-color: $color-gray-light;
   letter-spacing: -0.02em;
   min-width: 100px;
   @include transition (width 0.1s);
@@ -114,6 +115,10 @@ header {
       @include transition (all 0.1s ease-in);
     }
   }
+}
+
+.header-new {
+  padding-right: 0;
 }
 
 .header-help {

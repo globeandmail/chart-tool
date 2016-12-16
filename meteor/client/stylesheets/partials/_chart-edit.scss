@@ -230,7 +230,7 @@ select {
   margin-bottom: 1em;
 }
 
-.selector-label, .chart-types {
+.selector-label {
   padding-bottom: 0;
   font-size: 1.6em;
   margin: 0 0 0.3em 0;
@@ -243,20 +243,26 @@ select {
 }
 
 .chart-types {
-  @include interface-font-black;
+  font-size: 1.6em;
   outline: none;
   background: transparent;
   width: auto;
-  padding: 5px;
-  border: 0;
-  border-radius: 0;
+  margin-left: 0.3em;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 8px;
   @include appearance(none);
   @include transition (all 0.1s ease-out);
+  @include interface-font-bold;
   &:hover {
     color: $primary-color;
     cursor: pointer;
     @include transition (all 0.1s ease-in);
   }
+}
+
+.chart-types option {
+  @include interface-font-bold;
 }
 
 .chart-preview {
@@ -474,5 +480,26 @@ select {
     background-color: $color-red;
     color: $color-white;
     @include transition (all 0.1s ease-in);
+  }
+}
+
+.data-download {
+  margin-top: 1.7em;
+  a {
+    @include appearance(none);
+    background: none;
+    border: 1px solid $color-black;
+    color: $color-black;
+    font-size: 1em;
+    padding: 0.4em 0.5em 0.45em 0.5em;
+    border-radius: 4px;
+    @include transition (all 0.1s ease-out);
+    text-decoration: none;
+    &:hover {
+      border-color: $primary-color;
+      // background-color: $primary-color;
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+    }
   }
 }

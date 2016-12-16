@@ -9,11 +9,6 @@ import shareData from './components/share-data';
 import social from './components/social';
 import { custom } from '../../../custom/custom';
 
-/**
- * Chart contruction manager class.
- * @module charts/manager
- */
-
 export class ChartManager {
 
   constructor(container, obj) {

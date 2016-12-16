@@ -31,7 +31,7 @@ gulp.task('meteor-build', done => {
     'clean-meteor-libs',
     'js:build',
     'scss:build',
-    'meteor-move:build',
+    'move-meteor:build',
     'clean-dist:build',
     'meteor:build',
     done);

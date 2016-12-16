@@ -7,11 +7,8 @@
 }
 
 .charts-archive_aside-wrapper {
-  position: fixed;
-  @include outer-container;
-  @include span-columns(2.15 of 12);
+  @include span-columns(3 of 12);
 }
-
 
 .charts-archive_aside {
   margin-top: 35px;
@@ -27,12 +24,12 @@
 }
 
 .charts-archive_results {
-  @include span-columns(9.5 of 12);
-  @include shift(2.5 of 12);
+  @include span-columns(9 of 12);
   margin-top: 2.5em;
 }
 
 .charts-archive_grid {
+  display: block;
   .charts-archive_empty-container {
     display: none;
     &:only-child {
@@ -99,20 +96,23 @@
 }
 
 .charts-archive_single {
-  width: 32%;
-  vertical-align: top;
-  margin-right: 2%;
-  float: left;
-  height: 250px;
-  padding: 10px;
-  border: 1px solid $color-gray-medium;
-  display: inline;
-  margin-bottom: 1.2em;
+  @include span-columns(8 of 24);
+  margin-bottom: 10px;
   position: relative;
   cursor: pointer;
+  overflow: hidden;
+  &:after {
+    content: "";
+    display: block;
+  }
+  img {
+    display: block;
+    width: 100%;
+    padding: 8px;
+  }
   h4 {
-    @include interface-font-bold;
-    margin-bottom: 0.8em;
+    padding: 8px 8px 5px 8px;
+    @include interface-font-regular;
   }
   &:nth-of-type(3n) {
     margin-right: 0;
@@ -125,10 +125,19 @@
   }
 }
 
-.image-background {
-  min-height: 200px;
-  max-height: 215px;
-  background-size: cover;
+.charts-archive_single-inner {
+  width: 100%;
+  border: 1px solid #e4e4e4;
+}
+
+.empty-image {
+  width: 100%;
+  display: block;
+  background: $color-gray-light;
+  padding: 1em;
+  p {
+    text-align: center;
+  }
 }
 
 .hover-screen {

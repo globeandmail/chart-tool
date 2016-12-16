@@ -5732,7 +5732,8 @@ function sum$1(series) {
   return s;
 }
 
-// s3_bucket is defined in rollup.config.js
+// "chartstg" is defined in rollup.config.js
+var bucket = "chartstg";
 
 function debounce$1(fn, obj, timeout, root) {
   var timeoutID = -1;
@@ -5902,7 +5903,7 @@ function svgTest(root) {
 
 function getThumbnailPath(obj) {
   var imgSettings = obj.image;
-  imgSettings.bucket = s3_bucket;
+  imgSettings.bucket = bucket;
   var id = obj.id.replace(obj.prefix, '');
 
   return ("https://s3.amazonaws.com/" + (imgSettings.bucket) + "/" + (imgSettings.base_path) + id + "/" + (imgSettings.filename) + "." + (imgSettings.extension));
@@ -6040,13 +6041,6 @@ function parse(csv, inputDateFormat, index, stacked) {
 
 }
 
-/**
- * Helpers that manipulate and check primitives. Nothing D3-specific here.
- * @module helpers/helpers
- */
-
-
-
 function isFloat(n) {
   return n === +n && n !== (n|0);
 }
@@ -6100,11 +6094,6 @@ function extend$1(from, to) {
 
   return target;
 }
-
-/**
- * Chart object factory module.
- * @module utils/factory
- */
 
 function recipe(obj) {
 
@@ -9695,11 +9684,6 @@ function qualifier(node, obj) {
 
 }
 
-/**
- * Tips handling module.
- * @module charts/components/tips
- */
-
 function bisectData(data, keyVal, stacked, xKey) {
   if (stacked) {
     var arr = [];
@@ -10489,11 +10473,6 @@ function tipDateFormatter(selection$$1, ctx, months, data) {
 
 }
 
-/**
- * Data sharing button module.
- * @module charts/components/share-data
- */
-
 function shareData(node, obj) {
 
   var chartContainer = select(node);
@@ -10561,11 +10540,6 @@ function shareData(node, obj) {
   };
 
 }
-
-/**
- * Social sharing button module.
- * @module charts/components/social
- */
 
 function social$1(node, obj) {
 
@@ -10743,11 +10717,6 @@ function custom$1(node, chartRecipe, rendered) {
   return;
 
 }
-
-/**
- * Chart contruction manager class.
- * @module charts/manager
- */
 
 var ChartManager = function ChartManager(container, obj) {
 
@@ -11167,8 +11136,6 @@ var $export = _export;
 $export($export.S + $export.F, 'Object', {assign: _objectAssign});
 
 var this$1 = undefined;
-// CHECK THAT OBJECT.ASSIGN IS GETTING POLYFILLED
-
 var index = (function (root) {
 
   'use strict';

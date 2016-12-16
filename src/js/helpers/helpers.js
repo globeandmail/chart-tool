@@ -1,8 +1,3 @@
-/**
- * Helpers that manipulate and check primitives. Nothing D3-specific here.
- * @module helpers/helpers
- */
-
 export function isInteger(x) {
   return x % 1 === 0;
 }

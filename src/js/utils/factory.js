@@ -2,11 +2,6 @@ import { inputDate, parse } from './dataparse';
 import { isUndefined as isUndef, extend } from '../helpers/helpers';
 import chartSettings from '../config/chart-settings';
 
-/**
- * Chart object factory module.
- * @module utils/factory
- */
-
 export default function recipe(obj) {
 
   const t = extend(chartSettings);

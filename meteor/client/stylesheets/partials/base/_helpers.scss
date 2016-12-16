@@ -79,7 +79,7 @@
     position: absolute;
     top: 50%;
     margin-top: -3px;
-    right: 7px;
+    right: 10px;
     @include transition (all 0.1s ease-out);
   }
   &:hover:after {
