@@ -39,6 +39,7 @@ gulp.task('scss-compile:build', () => {
     ))
     .pipe(csso({ debug: true }))
     .pipe(rename('chart-tool.min.css'))
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/lib/chart-tool/stylesheets`))
     .pipe(gulp.dest(buildCss))
     .on('error', gutil.log);
 });
