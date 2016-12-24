@@ -18,22 +18,11 @@ export default (root => {
 
       const ChartTool = (function ChartTool() {
 
-        const charts = root.__charttool || [],
-          dispatchFunctions = root.__charttooldispatcher || [];
+        let charts, dispatchFunctions;
 
         let drawn = [];
 
         const dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
-
-        for (let prop in dispatchFunctions) {
-          if (dispatchFunctions.hasOwnProperty(prop)) {
-            if (Object.keys(dispatcher._).indexOf(prop) > -1) {
-              dispatcher.on(prop, dispatchFunctions[prop]);
-            } else {
-              console.log(`Chart Tool does not offer a dispatcher of type ${prop}. For available dispatcher types, please see the ChartTool.dispatch() method.`);
-            }
-          }
-        }
 
         function createChart(cont, chart) {
 
@@ -113,7 +102,18 @@ export default (root => {
           }
         }
 
-        function initializer(charts) {
+        function initializer() {
+          charts = root.__charttool || [];
+          dispatchFunctions = root.__charttooldispatcher || [];
+          for (let prop in dispatchFunctions) {
+            if (dispatchFunctions.hasOwnProperty(prop)) {
+              if (Object.keys(dispatcher._).indexOf(prop) > -1) {
+                dispatcher.on(prop, dispatchFunctions[prop]);
+              } else {
+                console.log(`Chart Tool does not offer a dispatcher of type ${prop}. For available dispatcher types, please see the ChartTool.dispatch() method.`);
+              }
+            }
+          }
           createLoop(charts);
           const debouncer = debounceFn(createLoop, charts, chartSettings.debounce, root);
           select(root)
@@ -122,16 +122,31 @@ export default (root => {
         }
 
         return {
-          init: function init() { this.initialized = true; return initializer(charts); },
-          create: function create(container, obj) { return createChart(container, obj); },
-          read: function read(id) { return readChart(id); },
-          list: function list() { return listCharts(charts); },
-          update: function update(id, obj) { return updateChart(id, obj); },
-          destroy: function destroy(id) { return destroyChart(id); },
-          dispatch: function dispatch() { return Object.keys(dispatcher); },
+          init: function init() {
+            this.initialized = true;
+            document.addEventListener('DOMContentLoaded', initializer);
+          },
+          create: (container, obj) => {
+            return createChart(container, obj);
+          },
+          read: (id) => {
+            return readChart(id);
+          },
+          list: () => {
+            return listCharts(charts);
+          },
+          update: (id, obj) => {
+            return updateChart(id, obj);
+          },
+          destroy: (id) => {
+            return destroyChart(id);
+          },
+          dispatch: () => {
+            return Object.keys(dispatcher);
+          },
           version: chartSettings.version,
           build: chartSettings.build,
-          wat: function wat() {
+          wat: () => {
             console.log(`ChartTool v${chartSettings.version} is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool`);
           }
         };
