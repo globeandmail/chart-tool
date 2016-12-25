@@ -6,6 +6,7 @@
 }
 
 .#{$prefix}bar-label {
+  @include utility-font;
   dominant-baseline: middle;
 }
 

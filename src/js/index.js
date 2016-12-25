@@ -2,6 +2,7 @@ import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
 import chartSettings from './config/chart-settings';
 import { clearDrawn, clearObj, clearChart, getBounding, svgTest, generateThumb, debounce as debounceFn } from './utils/utils';
+import { parse } from './utils/dataparse';
 import { ChartManager } from './charts/manager';
 import 'core-js/library/fn/object/assign';
 
@@ -14,17 +15,17 @@ export default (root => {
 
   if (!isServer) {
 
-    if (root && !root.ChartTool) {
+    if (root) {
 
       const ChartTool = (function ChartTool() {
 
-        let charts, dispatchFunctions;
+        const charts = [];
 
-        let drawn = [];
+        let dispatchFunctions, drawn = [];
 
         const dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
 
-        function createChart(cont, chart) {
+        function createChart(cont, chart, callback) {
 
           dispatcher.call('start', this, chart);
 
@@ -56,6 +57,8 @@ export default (root => {
             .on('mouseout', () => dispatcher.call('mouseOut', this, chartObj));
 
           dispatcher.call('finish', this, chartObj);
+
+          if (callback) { callback(); }
 
         }
 
@@ -93,17 +96,17 @@ export default (root => {
           clearChart(container);
         }
 
-        function createLoop(charts) {
-          const chartList = listCharts(charts);
-          for (let i = 0; i < chartList.length; i++) {
-            let data = readChart(chartList[i]);
-            let container = `.${chartSettings.baseClass}[data-chartid=${chartList[i]}]`;
-            createChart(container, data);
+        function createLoop() {
+          if (root.ChartTool.length) {
+            for (let i = 0; i < root.ChartTool.length; i++) {
+              charts.push(root.ChartTool[i]);
+              const container = `.${chartSettings.baseClass}[data-chartid=${root.ChartTool[i].id}]`;
+              createChart(container, root.ChartTool[i]);
+            }
           }
         }
 
         function initializer() {
-          charts = root.__charttool || [];
           dispatchFunctions = root.__charttooldispatcher || [];
           for (let prop in dispatchFunctions) {
             if (dispatchFunctions.hasOwnProperty(prop)) {
@@ -114,22 +117,28 @@ export default (root => {
               }
             }
           }
-          createLoop(charts);
           const debouncer = debounceFn(createLoop, charts, chartSettings.debounce, root);
           select(root)
             .on(`resize.${chartSettings.prefix}debounce`, debouncer)
             .on(`resize.${chartSettings.prefix}redraw`, dispatcher.call('redraw', this, charts));
+          if (root.ChartTool) { createLoop(); }
         }
 
         return {
-          init: function init() {
-            this.initialized = true;
-            document.addEventListener('DOMContentLoaded', initializer);
+          init: function() {
+            if (!this.initialized) {
+              initializer();
+              this.initialized = true;
+            }
           },
-          create: (container, obj) => {
-            return createChart(container, obj);
+          create: (container, obj, cb) => {
+            return createChart(container, obj, cb);
           },
-          read: (id) => {
+          push: (obj, cb) => {
+            const container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
+            createChart(container, obj, cb);
+          },
+          read: id => {
             return readChart(id);
           },
           list: () => {
@@ -138,12 +147,13 @@ export default (root => {
           update: (id, obj) => {
             return updateChart(id, obj);
           },
-          destroy: (id) => {
+          destroy: id => {
             return destroyChart(id);
           },
           dispatch: () => {
             return Object.keys(dispatcher);
           },
+          parse: parse,
           version: chartSettings.version,
           build: chartSettings.build,
           wat: () => {

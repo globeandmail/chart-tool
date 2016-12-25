@@ -6,8 +6,8 @@
   <script type="text/javascript">
     (function(root) {
       var data = {{ embedJSON }};
-      root.__charttool = root.__charttool || [];
-      root.__charttool.push({id: '{{ pfx }}' + data.id, data: data});
+      root.ChartTool = root.ChartTool || [];
+      root.ChartTool.push({id: '{{ pfx }}' + data.id, data: data});
       var b = document.getElementsByTagName('body')[0];
       if (!b.classList.contains('{{ pfx }}charttool-init')) {
         b.classList.add('{{ pfx }}charttool-init');

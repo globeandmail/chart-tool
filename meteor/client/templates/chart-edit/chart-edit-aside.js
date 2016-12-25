@@ -57,9 +57,10 @@ Template.chartEditAside.helpers({
     if (this.options) {
       var type = this.options["type"];
       if (type === "area" || type === "bar" || type === "column") {
-        var ChartToolParser = ChartTool.utils.dataParse.parse,
-            cleanCSV = dataParse(this.data);
-        var dataObj = ChartToolParser(cleanCSV, app_settings.chart.date_format, this.index);
+
+        var ChartToolParser = ChartTool.parse,
+          cleanCSV = dataParse(this.data),
+          dataObj = ChartToolParser(cleanCSV, app_settings.chart.date_format, this.index);
 
         var mArr = [];
 

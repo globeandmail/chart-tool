@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const del = require('del');
 const runSequence = require('run-sequence').use(gulp);
-const rollupConfig = require('./rollup.config.js');
+const RollupConfig = require('./rollup.config.js');
 const gulpConfig = require('./gulp.config.js');
 const chartToolConfig = require('../custom/chart-tool-config.json');
 const rollup = require('rollup').rollup;
@@ -55,7 +55,7 @@ gulp.task('move-meteor:build', () => {
 let cache;
 
 gulp.task('rollup:dev', () => {
-  const rConfig = Object.assign({}, rollupConfig);
+  const rConfig = new RollupConfig();
   rConfig.cache = cache;
   const replaceObj = {};
   replaceObj[chartToolConfig.embedJS] = '../dist/dev/chart-tool.js';
@@ -79,7 +79,7 @@ gulp.task('rollup:dev', () => {
 });
 
 gulp.task('rollup-meteor:dev', () => {
-  const rConfig = Object.assign({}, rollupConfig);
+  const rConfig = new RollupConfig();
   rConfig.entry = `${gulpConfig.customPath}/meteor-config.js`;
   rConfig.cache = cache;
   const replaceObj = {};
@@ -102,7 +102,7 @@ gulp.task('rollup-meteor:dev', () => {
 });
 
 gulp.task('rollup:build', () => {
-  const rConfig = Object.assign({}, rollupConfig);
+  const rConfig = new RollupConfig();
   rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
   rConfig.plugins.push(
     strip({
@@ -127,7 +127,7 @@ gulp.task('rollup:build', () => {
 });
 
 gulp.task('rollup-meteor:build', () => {
-  const rConfig = Object.assign({}, rollupConfig);
+  const rConfig = new RollupConfig();
   rConfig.entry = `${gulpConfig.customPath}/meteor-config.js`;
   rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
   rConfig.plugins.push(

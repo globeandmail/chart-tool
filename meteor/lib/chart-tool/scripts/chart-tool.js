@@ -6306,7 +6306,7 @@ var schedule = function(node, name, id, index, group, timing) {
   var schedules = node.__transition;
   if (!schedules) node.__transition = {};
   else if (id in schedules) return;
-  create$1(node, id, {
+  create(node, id, {
     name: name,
     index: index, // For context during callback.
     group: group, // For context during callback.
@@ -6321,7 +6321,7 @@ var schedule = function(node, name, id, index, group, timing) {
   });
 };
 
-function init$1(node, id) {
+function init(node, id) {
   var schedule = node.__transition;
   if (!schedule || !(schedule = schedule[id]) || schedule.state > CREATED) throw new Error("too late");
   return schedule;
@@ -6339,7 +6339,7 @@ function get$1(node, id) {
   return schedule;
 }
 
-function create$1(node, id, self) {
+function create(node, id, self) {
   var schedules = node.__transition,
       tween;
 
@@ -6664,13 +6664,13 @@ var transition_attrTween = function(name, value) {
 
 function delayFunction(id, value) {
   return function() {
-    init$1(this, id).delay = +value.apply(this, arguments);
+    init(this, id).delay = +value.apply(this, arguments);
   };
 }
 
 function delayConstant(id, value) {
   return value = +value, function() {
-    init$1(this, id).delay = value;
+    init(this, id).delay = value;
   };
 }
 
@@ -6762,7 +6762,7 @@ function start(name) {
 }
 
 function onFunction(id, name, listener) {
-  var on0, on1, sit = start(name) ? init$1 : set$3;
+  var on0, on1, sit = start(name) ? init : set$3;
   return function() {
     var schedule = sit(this, id),
         on = schedule.on;
@@ -11145,28 +11145,17 @@ var index = (function (root) {
 
   if (!isServer) {
 
-    if (root && !root.ChartTool) {
+    if (root) {
 
       var ChartTool = (function ChartTool() {
 
-        var charts = root.__charttool || [],
-          dispatchFunctions = root.__charttooldispatcher || [];
+        var charts = [];
 
-        var drawn = [];
+        var dispatchFunctions, drawn = [];
 
         var dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
 
-        for (var prop in dispatchFunctions) {
-          if (dispatchFunctions.hasOwnProperty(prop)) {
-            if (Object.keys(dispatcher._).indexOf(prop) > -1) {
-              dispatcher.on(prop, dispatchFunctions[prop]);
-            } else {
-              console.log(("Chart Tool does not offer a dispatcher of type " + prop + ". For available dispatcher types, please see the ChartTool.dispatch() method."));
-            }
-          }
-        }
-
-        function createChart(cont, chart) {
+        function createChart(cont, chart, callback) {
           var this$1 = this;
 
 
@@ -11200,6 +11189,8 @@ var index = (function (root) {
             .on('mouseout', function () { return dispatcher.call('mouseOut', this$1, chartObj); });
 
           dispatcher.call('finish', this, chartObj);
+
+          if (callback) { callback(); }
 
         }
 
@@ -11237,34 +11228,67 @@ var index = (function (root) {
           clearChart(container);
         }
 
-        function createLoop(charts) {
-          var chartList = listCharts(charts);
-          for (var i = 0; i < chartList.length; i++) {
-            var data = readChart(chartList[i]);
-            var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (chartList[i]) + "]";
-            createChart(container, data);
+        function createLoop() {
+          if (root.ChartTool.length) {
+            for (var i = 0; i < root.ChartTool.length; i++) {
+              charts.push(root.ChartTool[i]);
+              var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (root.ChartTool[i].id) + "]";
+              createChart(container, root.ChartTool[i]);
+            }
           }
         }
 
-        function initializer(charts) {
-          createLoop(charts);
+        function initializer() {
+          dispatchFunctions = root.__charttooldispatcher || [];
+          for (var prop in dispatchFunctions) {
+            if (dispatchFunctions.hasOwnProperty(prop)) {
+              if (Object.keys(dispatcher._).indexOf(prop) > -1) {
+                dispatcher.on(prop, dispatchFunctions[prop]);
+              } else {
+                console.log(("Chart Tool does not offer a dispatcher of type " + prop + ". For available dispatcher types, please see the ChartTool.dispatch() method."));
+              }
+            }
+          }
           var debouncer = debounce$1(createLoop, charts, chartSettings.debounce, root);
           select(root)
             .on(("resize." + (chartSettings.prefix) + "debounce"), debouncer)
             .on(("resize." + (chartSettings.prefix) + "redraw"), dispatcher.call('redraw', this, charts));
+          if (root.ChartTool) { createLoop(); }
         }
 
         return {
-          init: function init() { this.initialized = true; return initializer(charts); },
-          create: function create(container, obj) { return createChart(container, obj); },
-          read: function read(id) { return readChart(id); },
-          list: function list() { return listCharts(charts); },
-          update: function update(id, obj) { return updateChart(id, obj); },
-          destroy: function destroy(id) { return destroyChart(id); },
-          dispatch: function dispatch() { return Object.keys(dispatcher); },
+          init: function() {
+            if (!this.initialized) {
+              initializer();
+              this.initialized = true;
+            }
+          },
+          create: function (container, obj, cb) {
+            return createChart(container, obj, cb);
+          },
+          push: function (obj, cb) {
+            var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
+            createChart(container, obj, cb);
+          },
+          read: function (id) {
+            return readChart(id);
+          },
+          list: function () {
+            return listCharts(charts);
+          },
+          update: function (id, obj) {
+            return updateChart(id, obj);
+          },
+          destroy: function (id) {
+            return destroyChart(id);
+          },
+          dispatch: function () {
+            return Object.keys(dispatcher);
+          },
+          parse: parse,
           version: chartSettings.version,
           build: chartSettings.build,
-          wat: function wat() {
+          wat: function () {
             console.log(("ChartTool v" + (chartSettings.version) + " is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool"));
           }
         };

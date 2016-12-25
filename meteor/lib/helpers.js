@@ -98,14 +98,6 @@ deleteProp = function(obj, del) {
   return copy;
 }
 
-// jsonToCSV = function(objArray, config) {
-//   return Papa.unparse(objArray, {
-//     quotes: false,
-//     delimiter: config.delimiter,
-//     newline: config.newline
-//   });
-// }
-
 jsonToCSV = function(objArray, config) {
   var defaults = {
     delimiter: ',',
