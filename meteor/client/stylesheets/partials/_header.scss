@@ -1,35 +1,49 @@
 // header styles
 
+@mixin centerer($horizontal: true, $vertical: true) {
+  position: absolute;
+  @if ($horizontal and $vertical) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  } @else if ($horizontal) {
+    left: 50%;
+    transform: translate(-50%, 0);
+  } @else if ($vertical) {
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+}
+
 header {
   width: 100%;
-  padding: 0.3em 0.3em 0.1em 0.3em;
-  position: fixed;
   top: 0;
+  left: 0;
   border-bottom: 1px solid #e4e4e4;
   background-color: white;
   z-index: 2000;
   .topbar {
-    @include background-image(linear-gradient(darken($color-black, 60%), lighten($color-black, 10%)));
-    position: absolute;
+    background-color: $primary-color;
     left: 0px;
     top: 0px;
-    height: 10px;
+    height: 7px;
     width: 100%;
-    &:after {
-      content: "";
-      background-color: $primary-color;
-      height: 2px;
-      width: 100%;
-      position: absolute;
-      top: 12px;
-    }
   }
 }
 
 
+@mixin vertical-align($position: relative) {
+  position: $position;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
 .header-grid {
   @include outer-container;
   @include clearfix;
+  position: relative;
 }
 
 .edit-indicator, .header-help {
@@ -41,8 +55,18 @@ header {
   cursor: pointer;
 }
 
+.chart-slug, .header-edit-nav {
+  @include span-columns(6 of 12);
+}
+
+.header-edit-nav {
+  text-align: right;
+  @include vertical-align;
+  line-height: 0;
+  margin-top: 1.4em;
+}
+
 .chart-slug {
-  margin-top: 0.7em;
   display: inline-block;
   .header-help {
     opacity: 0.2;
@@ -64,7 +88,7 @@ header {
   color: $color-black;
   padding: 0.3em 0.3em 0.4em 0.3em;
   border-bottom: 1px solid #e4e4e4;
-  margin-bottom: -2px;
+  margin-bottom: -1px;
   background-color: $color-gray-light;
   letter-spacing: -0.02em;
   min-width: 100px;
@@ -84,13 +108,8 @@ header {
 }
 
 .header-nav {
-  margin-top: 1.1em;
+  margin-top: 0.5em;
   margin-bottom: 0.5em;
-}
-
-.header-edit-nav {
-  float: right;
-  margin-top: 1.1em;
 }
 
 .save-icon {
@@ -106,7 +125,7 @@ header {
   padding-right: 0.6em;
   a {
     @include interface-font-light;
-    display: inline;
+    display: inline-block;
     color: $color-black;
     text-decoration: none;
     @include transition (all 0.1s ease-out);
