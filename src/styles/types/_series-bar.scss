@@ -8,6 +8,7 @@
 .#{$prefix}bar-label {
   @include utility-font;
   dominant-baseline: middle;
+  fill: $color-black;
 }
 
 @for $counter from 1 through $series-count-max {

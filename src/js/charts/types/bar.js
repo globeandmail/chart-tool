@@ -14,6 +14,8 @@ export default function barChart(node, obj) {
 
   let totalBarHeight;
 
+  let barLabelOffset = obj.exportable ? obj.exportable.barLabelOffset : obj.dimensions.barLabelOffset;
+
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
     let bands = obj.dimensions.bands;
@@ -104,7 +106,7 @@ export default function barChart(node, obj) {
 
   }
 
-  xScale.range([0, obj.dimensions.tickWidth() - widestText.width - obj.dimensions.barLabelOffset]);
+  xScale.range([0, obj.dimensions.tickWidth() - widestText.width - barLabelOffset]);
 
   for (let i = 0; i < series.length; i++) {
     series[i].selectAll(`.${obj.prefix}bar rect`)
@@ -116,7 +118,7 @@ export default function barChart(node, obj) {
     series[i].selectAll(`.${obj.prefix}bar-label`)
       .attrs({
         'x': d => {
-          return xScale(Math.max(0, d.series[i].val)) + obj.dimensions.barLabelOffset;
+          return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
         },
         'y': () => { return i * singleBar + Math.ceil(singleBar / 2); }
       });

@@ -9207,6 +9207,8 @@ function barChart(node, obj) {
 
   var totalBarHeight;
 
+  var barLabelOffset = obj.exportable ? obj.exportable.barLabelOffset : obj.dimensions.barLabelOffset;
+
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
     var bands = obj.dimensions.bands;
@@ -9299,7 +9301,7 @@ function barChart(node, obj) {
 
   for (var i = 0; i < obj.data.seriesAmount; i++) loop( i );
 
-  xScale.range([0, obj.dimensions.tickWidth() - widestText.width - obj.dimensions.barLabelOffset]);
+  xScale.range([0, obj.dimensions.tickWidth() - widestText.width - barLabelOffset]);
 
   var loop$1 = function ( i ) {
     series[i].selectAll(("." + (obj.prefix) + "bar rect"))
@@ -9311,7 +9313,7 @@ function barChart(node, obj) {
     series[i].selectAll(("." + (obj.prefix) + "bar-label"))
       .attrs({
         'x': function (d) {
-          return xScale(Math.max(0, d.series[i].val)) + obj.dimensions.barLabelOffset;
+          return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
         },
         'y': function () { return i * singleBar + Math.ceil(singleBar / 2); }
       });

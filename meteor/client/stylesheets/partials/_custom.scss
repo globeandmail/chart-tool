@@ -135,7 +135,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     stroke: $color-black;
   }
 
-  .#{$prefix}axis-group text {
+  .#{$prefix}axis-group text, .#{$prefix}bar-label {
     font-size: $eight-pt;
     color: $color-black;
     fill: $color-black;

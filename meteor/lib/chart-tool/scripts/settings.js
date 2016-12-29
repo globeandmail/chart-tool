@@ -216,7 +216,8 @@ app_settings = {
       right: 2,
       bottom: 0,
       left: 0
-    }
+    },
+    barLabelOffset: 3
   }
 
 };
