@@ -31,19 +31,11 @@ header {
   }
 }
 
-
-@mixin vertical-align($position: relative) {
-  position: $position;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
 .header-grid {
   @include outer-container;
   @include clearfix;
-  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .edit-indicator, .header-help {
@@ -57,13 +49,11 @@ header {
 
 .chart-slug, .header-edit-nav {
   @include span-columns(6 of 12);
+  align-self: center;
 }
 
 .header-edit-nav {
   text-align: right;
-  @include vertical-align;
-  line-height: 0;
-  margin-top: 1.4em;
 }
 
 .chart-slug {
@@ -107,9 +97,14 @@ header {
   }
 }
 
+header:not(.header-edit) .header-baseline {
+  height: 46px;
+  display: flex;
+}
+
 .header-nav {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  padding: 0.3em 0.3em 0.4em 0.3em;
+  align-self: center;
 }
 
 .save-icon {
