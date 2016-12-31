@@ -12,9 +12,13 @@ export default function barChart(node, obj) {
   const yScaleObj = new Scale(obj, 'yAxis'),
     yScale = yScaleObj.scale;
 
-  let totalBarHeight;
+  let totalBarHeight, barLabelOffset;
 
-  let barLabelOffset = obj.exportable ? obj.exportable.barLabelOffset : obj.dimensions.barLabelOffset;
+  if (obj.exportable && obj.exportable.barLabelOffset) {
+    barLabelOffset = obj.exportable.barLabelOffset;
+  } else {
+    barLabelOffset = obj.dimensions.barLabelOffset;
+  }
 
   // need this for fixed-height bars
   if (!obj.exportable || (obj.exportable && !obj.exportable.dynamicHeight)) {
@@ -42,7 +46,7 @@ export default function barChart(node, obj) {
 
   const series = [], barItems = [];
 
-  const widestText = { value: null, width: null, height: null };
+  const widestText = { width: null, height: null };
 
   for (let i = 0; i < obj.data.seriesAmount; i++) {
 
@@ -82,9 +86,8 @@ export default function barChart(node, obj) {
         }
         return val;
       })
-      .each(function(d) {
-        if (Math.abs(Number(d.series[i].val)) >= widestText.value) {
-          widestText.value = Math.abs(Number(d.series[i].val));
+      .each(function() {
+        if (Math.ceil(this.getComputedTextLength()) > widestText.width) {
           widestText.width = Math.ceil(this.getComputedTextLength());
         }
         if (this.getBBox().height > widestText.height) {
