@@ -4193,7 +4193,7 @@ var margin = {"top":10,"right":3,"bottom":0,"left":0};
 var tipOffset = {"vertical":2,"horizontal":1};
 var tipPadding = {"top":4,"right":9,"bottom":4,"left":9};
 var tipRadius = 3.5;
-var yAxis = {"display":true,"scale":"linear","ticks":"auto","orient":"right","format":"comma","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":true,"paddingRight":9,"tickLowerBound":3,"tickUpperBound":8,"tickGoal":5,"widthThreshold":420,"dy":"","textX":0,"textY":""};
+var yAxis = {"display":true,"scale":"linear","ticks":"auto","orient":"right","format":"comma","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":true,"paddingRight":9,"tickLowerBound":3,"tickUpperBound":8,"tickGoal":5,"widthThreshold":420,"dy":"","textX":0,"textY":0};
 var xAxis = {"display":true,"scale":"time","ticks":"auto","orient":"bottom","format":"auto","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":false,"rangePoints":1,"tickTarget":6,"ticksSmall":4,"widthThreshold":420,"dy":0.7,"barOffset":9,"upper":{"tickHeight":7,"textX":6,"textY":7},"lower":{"tickHeight":12,"textX":6,"textY":2}};
 var barHeight = 25;
 var barLabelOffset = 6;
@@ -8275,7 +8275,7 @@ function dropTicks(selection$$1, opts) {
 
   var tolerance = options.tolerance || 0,
     from = options.from || 0,
-    to = options.to || selection$$1._groups.length;
+    to = options.to || selection$$1._groups[0].length;
 
   for (var j = from; j < to; j++) {
 
@@ -9665,7 +9665,7 @@ function qualifier(node, obj) {
         .text(obj.qualifier)
         .attrs({
           'dy': '0.32em',
-          'y': '0',
+          'y': obj.yAxis.textY,
           'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)")
         });
 
@@ -9674,7 +9674,7 @@ function qualifier(node, obj) {
         .text(obj.qualifier)
         .attrs({
           'dy': '0.32em',
-          'y': '0',
+          'y': obj.yAxis.textY,
           'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)")
         });
 

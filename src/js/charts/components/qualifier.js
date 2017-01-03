@@ -41,7 +41,7 @@ export default function qualifier(node, obj) {
         .text(obj.qualifier)
         .attrs({
           'dy': '0.32em',
-          'y': '0',
+          'y': obj.yAxis.textY,
           'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()}, 0)`
         });
 
@@ -50,7 +50,7 @@ export default function qualifier(node, obj) {
         .text(obj.qualifier)
         .attrs({
           'dy': '0.32em',
-          'y': '0',
+          'y': obj.yAxis.textY,
           'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()}, 0)`
         });
 
