@@ -21,7 +21,7 @@ Template.chartOverlayWeb.events({
 
     this.exportable = {};
     this.exportable.type = "web";
-    this.exportable.dynamicHeight = false;
+    this.exportable.dynamicHeight = true;
     this.exportable.width = width;
     this.exportable.height = width * (ratio / 100);
 

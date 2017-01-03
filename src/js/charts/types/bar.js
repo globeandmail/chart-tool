@@ -138,7 +138,7 @@ export default function barChart(node, obj) {
       'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`
     });
 
-  if (!obj.exportable) {
+  if (!obj.exportable || !obj.exportable.height) {
 
     obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
 

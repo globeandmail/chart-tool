@@ -55,7 +55,9 @@ export default function recipe(obj) {
 
   if (t.exportable) {
     t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
-    t.dimensions.height = function() { return chart.exportable.height; };
+    if (chart.exportable.height) {
+      t.dimensions.height = function() { return chart.exportable.height; };
+    }
     t.dimensions.margin = chart.exportable.margin || t.dimensions.margin;
   }
 

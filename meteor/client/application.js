@@ -98,10 +98,13 @@ generateThumb = function(obj) {
   obj.exportable.type = "web";
   obj.exportable.dynamicHeight = false;
   obj.exportable.width = app_settings.s3.thumbnailWidth;
-  obj.exportable.height = obj.exportable.width * (ratio / 100);
-
   div.style.width = obj.exportable.width + "px";
-  div.style.height = obj.exportable.height + "px";
+
+  if (obj.options.type !== "bar") {
+    obj.exportable.height = obj.exportable.width * (ratio / 100);
+    div.style.height = obj.exportable.height + "px";
+  }
+
   div.className = className;
   document.body.appendChild(div);
 

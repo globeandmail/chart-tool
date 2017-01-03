@@ -6148,7 +6148,9 @@ function recipe(obj) {
 
   if (t.exportable) {
     t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
-    t.dimensions.height = function() { return chart.exportable.height; };
+    if (chart.exportable.height) {
+      t.dimensions.height = function() { return chart.exportable.height; };
+    }
     t.dimensions.margin = chart.exportable.margin || t.dimensions.margin;
   }
 
@@ -9335,7 +9337,7 @@ function barChart(node, obj) {
       'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)")
     });
 
-  if (!obj.exportable) {
+  if (!obj.exportable || !obj.exportable.height) {
 
     obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
 
