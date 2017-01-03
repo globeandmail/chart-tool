@@ -528,7 +528,7 @@ export function dropTicks(selection, opts) {
 
   const tolerance = options.tolerance || 0,
     from = options.from || 0,
-    to = options.to || selection._groups.length;
+    to = options.to || selection._groups[0].length;
 
   for (let j = from; j < to; j++) {
 
