@@ -9,9 +9,6 @@ Template.header.events({
       event.target.value = this.slug;
     }
   },
-  "click .edit-indicator": function(event) {
-    d3.select(".input-slug-edit").node().focus();
-  },
   "click .header-help": function(event) {
     window.open(app_settings.help || "http://www.github.com/globeandmail/chart-tool", '_blank');
   }
