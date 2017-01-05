@@ -121,7 +121,7 @@ Otherwise, these are some other tutorials you might want to check out:
 
 ## License
 
-Chart Tool © 2016 The Globe and Mail. It is free software, and may be redistributed under the terms specified in our [MIT license](https://github.com/globeandmail/chart-tool/blob/master/LICENSE.md).
+Chart Tool © 2017 The Globe and Mail. It is free software, and may be redistributed under the terms specified in our [MIT license](https://github.com/globeandmail/chart-tool/blob/master/LICENSE.md).
 
 
 ## Get in touch
