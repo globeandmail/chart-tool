@@ -219,10 +219,17 @@ cleanData = function(data) {
       return line_output;
     });
 
-    var replace_slashes = /\//g;
+    var re = /^\d*\/\d*\/\d*$/;
 
-    //add the first row back to the line
-    line.unshift(headerCol.replace(replace_slashes,'-'));
+    // if it's all digits (i.e. a date)
+
+    if (re.test(headerCol)) {
+      var replace_slashes = /\//g;
+      line.unshift(headerCol.replace(replace_slashes,'-'));
+    } else {
+      line.unshift(headerCol);
+    }
+
     return line;
   });
 
