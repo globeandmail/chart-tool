@@ -139,8 +139,8 @@ Template.chartEditAside.helpers({
       if (axis.format === val) { return "selected"; }
     }
   },
-  primaryOrAlternate: function(val) {
-    return app_settings[val] || val.toUpperCase();
+  palettes: function() {
+    return app_settings.palettes.map(function(p) { return p.toLowerCase(); });
   }
 });
 
