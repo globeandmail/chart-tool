@@ -1,4 +1,4 @@
-import { axisManager as Axis, axisCleanup, addZeroLine, dropOversetTicks } from '../components/axis';
+import { axisManager as Axis, axisCleanup, addZeroLine } from '../components/axis';
 import { scaleManager as Scale } from '../components/scale';
 import { timeInterval } from '../../utils/utils';
 import 'd3-selection-multi';
@@ -24,10 +24,7 @@ export default function stackedColumnChart(node, obj) {
       axisCleanup(node, obj, xAxisObj, yAxisObj);
       break;
     case 'ordinal-time':
-      singleColumn = xScale(obj.data.data[1].key) - xScale(obj.data.data[0].key);
-      xAxisObj.node = node.select(`.${obj.prefix}axis-group.${obj.prefix}xAxis`)
-        .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2)},${obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight})`);
-      dropOversetTicks(xAxisObj.node, obj.dimensions.tickWidth());
+      singleColumn = xScale.step();
       break;
     case 'ordinal':
       singleColumn = xScale.bandwidth();
@@ -41,13 +38,7 @@ export default function stackedColumnChart(node, obj) {
       return output;
     })
     .attr('transform', () => {
-      let xOffset;
-      if (obj.xAxis.scale === 'ordinal-time') {
-        xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth() - (singleColumn / 2);
-      } else {
-        xOffset = obj.dimensions.computedWidth() - obj.dimensions.tickWidth();
-      }
-      return `translate(${xOffset},0)`;
+      return `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`;
     });
 
   const series = seriesGroup.selectAll(`g.${obj.prefix}series`)
