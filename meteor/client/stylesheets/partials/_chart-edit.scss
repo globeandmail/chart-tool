@@ -180,6 +180,9 @@ select {
   .input-radio-alternate:checked {
     background-color: $alternate-color;
   }
+  .input-radio-grayscale:checked {
+    background-color: $grayscale-color;
+  }
 }
 
 .input-field {
