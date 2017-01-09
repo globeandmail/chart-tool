@@ -38,10 +38,10 @@ Chart Tool is made up of two parts:
 ## Features
 
 * **Searchable database:** All charts are stored in a searchable, taggable database for easy retrieval
-* **Simple, straightforward GUI:** Easy-to-use interface for editing charts. The interface is also collaborative, so multiple people can work on the same chart at once
+* **Simple, straightforward GUI:** Easy-to-use (and easy-to-teach!) collaborative interface for editing charts, so multiple people can work on the same chart at once
 * **Asset generation:** Easily generate PNGs at any size for use on social media, or PDFs for print use
-* **Fallback images:** All charts come with a fallback image in case the library is unable to draw the chart. Fallbacks can be stored either on AWS, or inline base 64 images
-* **Debounced redraws:** Charts will redraw automatically on window resize after a small period of time
+* **Fallback images:** All charts come with a fallback image in case the library is unable to draw the chart. Fallbacks can be stored on AWS, or bundled as inline Base64 images
+* **Fully responsive:** Charts will redraw automatically on window resize after a small period of time
 * **Lots of chart types:** 
   * Line charts
   * Area charts
@@ -54,8 +54,9 @@ Chart Tool is made up of two parts:
   * No pies [(sorry)](http://www.storytellingwithdata.com/blog/2011/07/death-to-pie-charts)
 * **Highly configurable:** Don't want tips to appear for a specific chart, or want to manually set the number of ticks to be displayed? No problem!
 * **"Ordinal-time" scales:** Treat time series data as if it were ordinal — this is very useful for visualizing stock price charts, or when you want to skip weekends and holidays
-* **Just one dependency:** On the front end, Chart Tool's library only dependency is [D3.js](https://github.com/mbostock/d3/)
 * **Pre- and post-render hooks:** All charts come with several basic custom events via [`d3.dispatch`](https://github.com/mbostock/d3/wiki/Internals#d3_dispatch), including pre- and post-render hooks for every chart
+* **Zero external dependencies:** The library is built using [D3.js](https://github.com/mbostock/d3/), but comes bundled with everything it'll need
+* **Lightweight libraries:** The front-end CSS and JS libraries clock in at a combined **45.536kB** minified and gzipped
 
 
 ## Examples and demo
@@ -67,9 +68,9 @@ For a demo of the back end interface used to generate charts, images and PDFs, c
 
 ## Getting started
 
-Curious to try out Chart Tool, but don't want to go through the process of setting it up? Try out our [hosted demo version]((https://chart-tool-demo.herokuapp.com/)).
+*Curious to try out Chart Tool, but don't want to go through the process of setting it up? Try out our [hosted demo version](https://chart-tool-demo.herokuapp.com/).*
 
-Ready to dive in? First, you'll need [Node.js](https://nodejs.org) >= 4.1.0 installed. We recommend using [nvm](https://github.com/creationix/nvm) to keep your Node version in sync with what Chart Tool expects. This is important: anything lower and Meteor will fail in spectacular and unexpected ways.
+First, you'll need [Node.js](https://nodejs.org) >= 7.1.0 installed. We recommend using [nvm](https://github.com/creationix/nvm) to keep your Node version in sync with what Chart Tool expects. This is important: anything lower and Meteor will fail in spectacular and unexpected ways.
 
 Next, you'll need to [install Meteor](https://www.meteor.com/install).
 
@@ -94,7 +95,7 @@ Then, all you need to do is:
 $ gulp
 ```
 
-That's it! You're running Chart Tool!  :tada: :tada: :tada:
+That's it! You're running your own development copy of Chart Tool!  :tada: :tada: :tada:
 
 
 ## Tutorials
