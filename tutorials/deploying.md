@@ -12,7 +12,7 @@ For a few different reasons, we recommend you build the project locally before t
 ----------
 
 ### Before you do anything
-Take a look at your `chart-tool-config.json` file, particularly the `embedJS` and `embedCSS` fields. You'll want to point these to the place you'll be hosting your Chart Tool static files – these are the bundled JavaScript and CSS libraries embed codes rely on to draw charts on your website. In the case of the Globe, our minified library files sit in `http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/{version}/charttool.min.{js|css}`.
+Take a look at your `chart-tool-config.json` file, particularly the `embedJS` and `embedCSS` fields. You'll want to point these to the place you'll be hosting your Chart Tool static files – these are the bundled JavaScript and CSS libraries embed codes rely on to draw charts on your website. In the case of the Globe, our minified library files sit in `http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/{version}/chart-tool.min.{js|css}`.
 
 
 ### **Step 1:** Build the interface
@@ -58,7 +58,7 @@ You're almost there! All that's left is to set up our environment variables:
 ```sh
 export PORT=80
 export MONGO_URL='mongodb://<mongodb connection string>'
-export ROOT_URL='<charttool root URL>'
+export ROOT_URL='<chart-tool root URL>'
 ```
 
 
@@ -74,9 +74,9 @@ export S3_CHARTTOOL_SECRET=<AWS secret>
 ### **Step 8:** Run the app
 Running the app is as simple as typing in the Node command below. We'll go ahead and add some basic logging to it:
 ```sh
-node main.js >> /var/log/charttool.log 2>&1
+node main.js >> /var/log/chart-tool.log 2>&1
 ```
 To make things easier in the future and ensure your app restarts if a problem causes it to go offline, you might want to wrap the process above in an [Upstart script](https://www.digitalocean.com/community/tutorials/the-upstart-event-system-what-it-is-and-how-to-use-it).
 
 ### **Step 9:** Upload your static files
-Now that your app is running, upload the `charttool.min.js` and `charttool.min.css` files you generated in Step 1 to the paths you specified in your `chart-tool-config.json`. Finally, make a chart using your app, grab the embed code, and publish it to your website. If you see a chart render on the page, you've done it! :tada:
+Now that your app is running, upload the `chart-tool.min.js` and `chart-tool.min.css` files you generated in Step 1 to the paths you specified in your `chart-tool-config.json`. Finally, make a chart using your app, grab the embed code, and publish it to your website. If you see a chart render on the page, you've done it! :tada:
