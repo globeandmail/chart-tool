@@ -51,16 +51,16 @@
 // $alternate-shade-4: #ce6dbd;
 // $alternateShades: $alternate-color, $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4;
 
-// $grayscale-color: #000000;
-// $grayscale-shade-1: #333333;
-// $grayscale-shade-2: #555555;
-// $grayscale-shade-3: #888888;
-// $grayscale-shade-4: #aaaaaa;
-// $grayscaleShades: $grayscale-color, $grayscale-shade-1, $grayscale-shade-2, $grayscale-shade-3, $grayscale-shade-4;
+$grayscale-color: #000000;
+$grayscale-shade-1: #333333;
+$grayscale-shade-2: #555555;
+$grayscale-shade-3: #888888;
+$grayscale-shade-4: #aaaaaa;
+$grayscaleShades: $grayscale-color, $grayscale-shade-1, $grayscale-shade-2, $grayscale-shade-3, $grayscale-shade-4;
 
-// $palette-count: 3;
-// $palette-names: 'primary', 'alternate', 'grayscale';
-// $palettes: $primaryShades, $alternateShades, $grayscaleShades;
+$palette-count: 3;
+$palette-names: 'primary', 'alternate', 'grayscale';
+$palettes: $primaryShades, $alternateShades, $grayscaleShades;
 
 // // Other colors
 // $black: #000;
