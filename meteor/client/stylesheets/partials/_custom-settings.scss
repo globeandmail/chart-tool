@@ -1,4 +1,4 @@
-  // // Basic settings, custom
+// // Basic settings, custom
 
 // $prefix: "ct-";
 // $width: 100%;
@@ -37,29 +37,32 @@
 // }
 
 // // Colors
-// $primary-color: #08519c;
-// $primary-shade-1: #3182bd;
-// $primary-shade-2: #6baed6;
-// $primary-shade-3: #9ecae1;
-// $primary-shade-4: #c6dbef;
-// $primary-shade-5: #eff3ff;
-// $primaryShades: $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4, $primary-shade-5;
+// $primary-color: #1f77b4;
+// $primary-shade-1: #ff7f0e;
+// $primary-shade-2: #bcbd22;
+// $primary-shade-3: #8c564b;
+// $primary-shade-4: #7f7f7f;
+// $primaryShades: $primary-color, $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4;
 
-// $alternate-color: #a50f15;
-// $alternate-shade-1: #de2d26;
-// $alternate-shade-2: #fb6a4a;
-// $alternate-shade-3: #fc9272;
-// $alternate-shade-4: #fcbba1;
-// $alternate-shade-5: #fee5d9;
-// $alternateShades: $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4, $alternate-shade-5;
+// $alternate-color: #6b6ecf;
+// $alternate-shade-1: #b5cf6b;
+// $alternate-shade-2: #e7ba52;
+// $alternate-shade-3: #d6616b;
+// $alternate-shade-4: #ce6dbd;
+// $alternateShades: $alternate-color, $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4;
 
 // $grayscale-color: #000000;
-// $grayscale-shade-1: #111111;
+// $grayscale-shade-1: #333333;
 // $grayscale-shade-2: #555555;
-// $grayscale-shade-3: #999999;
-// $grayscale-shade-4: #cccccc;
-// $grayscaleShades: $grayscale-shade-1, $grayscale-shade-2, $grayscale-shade-3, $grayscale-shade-4, $grayscale-shade-5;
+// $grayscale-shade-3: #888888;
+// $grayscale-shade-4: #aaaaaa;
+// $grayscaleShades: $grayscale-color, $grayscale-shade-1, $grayscale-shade-2, $grayscale-shade-3, $grayscale-shade-4;
 
+// $palette-count: 3;
+// $palette-names: 'primary', 'alternate', 'grayscale';
+// $palettes: $primaryShades, $alternateShades, $grayscaleShades;
+
+// // Other colors
 // $black: #000;
 // $text: #333;
 // $lightgray: #ababab;
