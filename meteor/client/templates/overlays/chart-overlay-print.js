@@ -48,41 +48,46 @@ Template.chartOverlayPrint.rendered = function() {
       return;
     }
 
-    var magicW = app_settings.print.magic.width,
-        magicH = app_settings.print.magic.height,
-        width = determineWidth(data.print.columns) * magicW,
-        height = determineHeight(data.print.lines, width) * magicH;
+    if (data) {
 
-    data.exportable = {
-      width: width,
-      height: height,
-      dynamicHeight: true,
-      x_axis: app_settings.print.x_axis,
-      y_axis: app_settings.print.y_axis,
-      margin: app_settings.print.margin,
-      type: "pdf"
-    };
+      var magicW = app_settings.print.magic.width,
+          magicH = app_settings.print.magic.height,
+          width = determineWidth(data.print.columns) * magicW,
+          height = determineHeight(data.print.lines, width) * magicH;
 
-    data.prefix = prefix;
+      data.exportable = {
+        width: width,
+        height: height,
+        dynamicHeight: true,
+        x_axis: app_settings.print.x_axis,
+        y_axis: app_settings.print.y_axis,
+        margin: app_settings.print.margin,
+        type: "pdf",
+        barLabelOffset: app_settings.print.barLabelOffset
+      };
 
-    Tracker.autorun(function(drawComp) {
-      var containerExists = d3.select(".print-export-preview-chart").node();
-      if (!containerExists) {
-        drawComp.stop();
-        return;
-      }
+      data.prefix = prefix;
 
-      d3.select(".print-export-preview-chart")
-        .style("width", width + "px");
+      Tracker.autorun(function(drawComp) {
+        var containerExists = d3.select(".print-export-preview-chart").node();
+        if (!containerExists) {
+          drawComp.stop();
+          return;
+        }
 
-      // silly hack to make sure chart isn't drawn when overlay is still display: none;
-      if (Session.get("overlay-visible")) {
-        setTimeout(function() {
-          drawChart(".print-export-preview-chart", data);
-        }, 100);
-      }
+        d3.select(".print-export-preview-chart")
+          .style("width", width + "px");
 
-    });
+        // silly hack to make sure chart isn't drawn when overlay is still display: none;
+        if (Session.get("overlay-visible")) {
+          setTimeout(function() {
+            drawChart(".print-export-preview-chart", data);
+          }, 100);
+        }
+
+      });
+
+    }
 
   });
 }

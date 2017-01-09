@@ -1,253 +1,210 @@
-/**
- * Utilities module. Functions that aren't specific to any one module.
- * @module utils/utils
- */
+import { select } from 'd3-selection';
+import { csvParseRows } from 'd3-dsv';
+import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
+import {
+  curveLinear,
+  curveCardinal,
+  curveCatmullRom,
+  curveMonotoneX,
+  curveNatural,
+  curveStepBefore,
+  curveStepAfter
+} from 'd3-shape';
+import Settings from '../config/chart-settings';
+import bucket from '../config/env';
 
-/**
- * Given a function to perform, a timeout period, a parameter to pass to the performed function, and a reference to the window, fire a specific function.
- * @param  {Function} fn      Function to perform on debounce.
- * @param  {Object} obj      Object passed to Function which is performed on debounce.
- * @param  {Integer}   timeout Timeout period in milliseconds.
- * @param  {Object}   root    Window object.
- * @return {Function}           Final debounce function.
- */
-function debounce(fn, obj, timeout, root) {
-  var timeoutID = -1;
-  return function() {
+export function debounce(fn, obj, timeout, root) {
+  let timeoutID = -1;
+  return () => {
     if (timeoutID > -1) { root.clearTimeout(timeoutID); }
-    timeoutID = root.setTimeout(function(){
-      fn(obj)
+    timeoutID = root.setTimeout(() => {
+      fn(obj);
     }, timeout);
-  }
-};
-
-/**
- * Remove chart SVG and divs inside a container from the DOM.
- * @param  {String} container
- */
-function clearChart(container) {
-
-  var cont = document.querySelector(container);
-
-  while (cont && cont.querySelectorAll("svg").length) {
-    var svg = cont.querySelectorAll("svg");
-    svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
-  }
-
-  while (cont && cont.querySelectorAll("div").length) {
-    var div = cont.querySelectorAll("div");
-    div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
-  }
-
-  return container;
+  };
 }
 
-/**
- * Clears the chart data of its post-render chartObj object.
- * @param  {Object} obj Object used to construct charts.
- * @return {Object}     The new version of the object.
- */
-function clearObj(obj) {
+export function clearChart(cont) {
+  let el = document.querySelector(cont);
+  while (el && el.querySelectorAll('svg').length) {
+    let svg = el.querySelectorAll('svg');
+    svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
+  }
+  while (el && el.querySelectorAll('div').length) {
+    let div = el.querySelectorAll('div');
+    div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+  }
+  return cont;
+}
+
+export function clearObj(obj) {
   if (obj.chartObj) { obj.chartObj = undefined; }
   return obj;
 }
 
-/**
- * Clears the drawn array.
- * @param  {Array} drawn
- * @param  {Object} obj
- * @return {Array}
- */
-function clearDrawn(drawn, obj) {
+export function clearDrawn(drawn, obj) {
   if (drawn.length) {
-    for (var i = drawn.length - 1; i >= 0; i--) {
+    for (let i = drawn.length - 1; i >= 0; i--) {
       if (drawn[i].id === obj.id) {
         drawn.splice(i, 1);
       }
-    };
+    }
   }
-
   return drawn;
 }
 
-/**
- * Get the boundingClientRect dimensions given a selector.
- * @param  {String} container
- * @return {Object}           The boundingClientRect object.
- */
-function getBounding(selector, dimension) {
+export function getBounding(selector, dimension) {
   return document.querySelector(selector).getBoundingClientRect()[dimension];
 }
 
-/**
- * Basic factory for figuring out amount of milliseconds in a given time period.
- */
-function TimeObj() {
-  this.sec = 1000;
-  this.min = this.sec * 60;
-  this.hour = this.min * 60;
-  this.day = this.hour * 24;
-  this.week = this.day * 7;
-  this.month = this.day * 30;
-  this.year = this.day * 365;
+export class TimeObj {
+  constructor() {
+    this.second = 1000;
+    this.minute = this.second * 60;
+    this.hour = this.minute * 60;
+    this.day = this.hour * 24;
+    this.week = this.day * 7;
+    this.month = this.day * 30;
+    this.year = this.day * 365;
+    this.today = new Date();
+  }
 }
 
-/**
- * Slightly altered Bostock magic to wrap SVG <text> nodes based on available width
- * @param  {Object} text    D3 text selection.
- * @param  {Integer} width
- */
-function wrapText(text, width) {
+export function wrapText(text, width) {
   text.each(function() {
-    var text = d3.select(this),
-        words = text.text().split(/\s+/).reverse(),
-        word,
-        line = [],
-        lineNumber = 0,
-        lineHeight = 1.0, // ems
-        x = 0,
-        y = text.attr("y"),
-        dy = parseFloat(text.attr("dy")),
-        tspan = text.text(null).append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", dy + "em");
+
+    const text = select(this),
+      y = text.attr('y'),
+      lineHeight = 1.0, // ems
+      x = 0,
+      dy = parseFloat(text.attr('dy'));
+
+    let words = text.text().split(/\s+/).reverse(),
+      line = [],
+      lineNumber = 0,
+      word,
+      tspan = text.text(null).append('tspan')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('dy', `${dy}em`);
 
     while (word = words.pop()) {
       line.push(word);
-      tspan.text(line.join(" "));
+      tspan.text(line.join(' '));
       if (tspan.node().getComputedTextLength() > width && line.length > 1) {
         line.pop();
-        tspan.text(line.join(" "));
+        tspan.text(line.join(' '));
         line = [word];
-        tspan = text.append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", ++lineNumber * lineHeight + dy + "em")
+        tspan = text.append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', `${++lineNumber * lineHeight + dy}em`)
           .text(word);
       }
     }
   });
 }
 
-/**
- * Given two dates date and a tolerance level, return a time "context" for the difference between the two values.
- * @param  {Object} d1     Beginning date object.
- * @param  {Object} d2     End date object.
- * @param  {Integer} tolerance
- * @return {String}           The resulting time context.
- */
-function timeDiff(d1, d2, tolerance) {
+export function timeDiff(d1, d2, tolerance) {
 
-  var diff = d2 - d1,
-      time = new TimeObj();
+  const diff = d2 - d1,
+    time = new TimeObj();
 
   // returning the context
-  if ((diff / time.year) > tolerance) { return "years"; }
-  else if ((diff / time.month) > tolerance) { return "months"; }
-  else if ((diff / time.week) > tolerance) { return "weeks"; }
-  else if ((diff / time.day) > tolerance) { return "days"; }
-  else if ((diff / time.hour) > tolerance) { return "hours"; }
-  else if ((diff / time.min) > tolerance) { return "minutes"; }
-  else { return "days"; }
+  if ((diff / time.year) > tolerance) { return 'years'; }
+  else if ((diff / time.month) > tolerance) { return 'months'; }
+  else if ((diff / time.week) > tolerance) { return 'weeks'; }
+  else if ((diff / time.day) > tolerance) { return 'days'; }
+  else if ((diff / time.hour) > tolerance) { return 'hours'; }
+  else if ((diff / time.min) > tolerance) { return 'minutes'; }
+  else { return 'days'; }
   // if none of these work i feel bad for you son
-  // i've got 99 problems but an if/else ain"t one
+  // i've got 99 problems but an if/else ain't one
 
 }
 
-/**
- * Given a dataset, figure out what the time context is and
- * what the number of time units elapsed is
- * @param  {Array} data
- * @return {Integer}
- */
-function timeInterval(data) {
+export function timeInterval(data) {
 
-  var dataLength = data.length,
-      d1 = data[0].key,
-      d2 = data[dataLength - 1].key;
+  const dataLength = data.length,
+    d1 = data[0].key,
+    d2 = data[dataLength - 1].key;
 
-  var ret;
-
-  var intervals = [
-    { type: "years", step: 1 },
-    { type: "months", step: 3 }, // quarters
-    { type: "months", step: 1 },
-    { type: "days", step: 1 },
-    { type: "hours", step: 1 },
-    { type: "minutes", step: 1 }
+  const intervals = [
+    { fn: timeYears, step: 1 },
+    { fn: timeMonths, step: 3 }, // quarters
+    { fn: timeMonths, step: 1 },
+    { fn: timeDays, step: 1 },
+    { fn: timeHours, step: 1 },
+    { fn: timeMinutes, step: 1 }
   ];
 
-  for (var i = 0; i < intervals.length; i++) {
-    var intervalCandidate = d3.time[intervals[i].type](d1, d2, intervals[i].step).length;
+  let ret;
+
+  for (let i = 0; i < intervals.length; i++) {
+    const intervalCandidate = intervals[i].fn(d1, d2, intervals[i].step).length;
     if (intervalCandidate >= dataLength - 1) {
-      var ret = intervalCandidate;
+      ret = intervalCandidate;
       break;
     }
-  };
+  }
 
   return ret;
 
 }
 
-/**
- * Returns the transform position of an element as an array
- * @param  {Object} node
- * @return {Array}
- */
-function getTranslateXY(node) {
-  return d3.transform(d3.select(node).attr("transform")).translate;
+export function getCurve(interp) {
+  switch (interp) {
+    case 'cardinal':
+      return curveCardinal;
+    case 'linear':
+      return curveLinear;
+    case 'step-before':
+      return curveStepBefore;
+    case 'step-after':
+      return curveStepAfter;
+    case 'monotone':
+      return curveMonotoneX;
+    case 'catmull-rom':
+      return curveCatmullRom;
+    case 'natural':
+      return curveNatural;
+  }
 }
 
-/**
- * Returns a translate statement because it's annoying to type out
- * @return {String}
- */
-function translate(x, y) {
-    return "translate(" + x + ", " + y + ")";
+export function getTranslate(node) {
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttributeNS(null, 'transform', node.getAttribute('transform'));
+  const matrix = g.transform.baseVal.consolidate().matrix;
+  return [matrix.e, matrix.f];
 }
 
-/**
- * Tests for SVG support, taken from https://github.com/viljamis/feature.js/
- * @param  {Object} root A reference to the browser window object.
- * @return {Boolean}
- */
-function svgTest(root) {
-  return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS("http://www.w3.org/2000/svg", "svg").createSVGRect;
+export function svgTest(root) {
+  return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 }
 
-/**
- * Constructs the AWS URL for a given chart ID.
- * @param  {Object} obj
- * @return {String}
- */
-function getThumbnailPath(obj) {
-  var imgSettings = obj.image;
+export function getThumbnailPath(obj) {
+  const imgSettings = obj.image;
+  imgSettings.bucket = bucket;
+  const id = obj.id.replace(obj.prefix, '');
 
-  imgSettings.bucket = require("../config/env");
-
-  var id = obj.id.replace(obj.prefix, "");
-
-  return "https://s3.amazonaws.com/" + imgSettings.bucket + "/" + imgSettings.base_path + id + "/" + imgSettings.filename + "." + imgSettings.extension;
+  return `https://s3.amazonaws.com/${imgSettings.bucket}/${imgSettings.base_path}${id}/${imgSettings.filename}.${imgSettings.extension}`;
 }
 
-/**
- * Given a chart object and container, generate and append a thumbnail
- */
-function generateThumb(container, obj, settings) {
+export function generateThumb(container, obj) {
 
-  var imgSettings = settings.image;
+  const settings = new Settings();
 
-  var cont = document.querySelector(container),
-      fallback = cont.querySelector("." + settings.prefix + "base64img");
+  const imgSettings = settings.image;
+
+  const cont = document.querySelector(container),
+    fallback = cont.querySelector(`.${settings.prefix}base64img`);
 
   if (imgSettings && imgSettings.enable && obj.data.id) {
 
-    var img = document.createElement('img');
+    const img = document.createElement('img');
 
     img.setAttribute('src', getThumbnailPath(obj));
     img.setAttribute('alt', obj.data.heading);
-    img.setAttribute('class', settings.prefix + "thumbnail");
+    img.setAttribute('class', `${settings.prefix}thumbnail`);
 
     cont.appendChild(img);
 
@@ -259,33 +216,12 @@ function generateThumb(container, obj, settings) {
 
 }
 
-function csvToTable(target, data) {
-  var parsedCSV = d3.csv.parseRows(data);
-
-  target.append("table").selectAll("tr")
+export function csvToTable(target, data) {
+  const parsedCSV = csvParseRows(data);
+  target.append('table').selectAll('tr')
     .data(parsedCSV).enter()
-    .append("tr").selectAll("td")
-    .data(function(d) { return d; }).enter()
-    .append("td")
-    .text(function(d) { return d; });
+    .append('tr').selectAll('td')
+    .data(d => { return d; }).enter()
+    .append('td')
+    .text(d => { return d; });
 }
-
-module.exports = {
-  debounce: debounce,
-  clearChart: clearChart,
-  clearObj: clearObj,
-  clearDrawn: clearDrawn,
-  getBounding: getBounding,
-  TimeObj: TimeObj,
-  wrapText: wrapText,
-  timeDiff: timeDiff,
-  timeInterval: timeInterval,
-  getTranslateXY: getTranslateXY,
-  translate: translate,
-  svgTest: svgTest,
-  getThumbnailPath: getThumbnailPath,
-  generateThumb: generateThumb,
-  csvToTable: csvToTable,
-  dataParse: require("./dataparse"),
-  factory: require("./factory")
-};

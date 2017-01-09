@@ -15,7 +15,7 @@ Charts.deny({
 Meteor.methods({
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
-  addChart: function (text, data) {
+  addChart: function(text, data) {
     var newChart = extend(app_settings.chart),
         now = new Date();
 
@@ -26,6 +26,10 @@ Meteor.methods({
     newChart.md5 = CryptoJS.MD5(data).toString();
 
     return Charts.insert(newChart);
+  },
+
+  deleteChart: function(chartId) {
+    return Charts.remove(chartId);
   },
 
   forkChart: function(chartId) {
@@ -333,14 +337,6 @@ Meteor.methods({
       }
     });
   },
-  updateXRescale: function (chartId, rescale) {
-    return Charts.update(chartId, {
-      $set: {
-        "x_axis.rescale": rescale,
-        lastEdited: new Date()
-      }
-    });
-  },
   updateXNice: function (chartId, nice) {
     return Charts.update(chartId, {
       $set: {
@@ -412,14 +408,6 @@ Meteor.methods({
     return Charts.update(chartId, {
       $set: {
         "y_axis.max": maxY,
-        lastEdited: new Date()
-      }
-    });
-  },
-  updateYRescale: function (chartId, rescale) {
-    return Charts.update(chartId, {
-      $set: {
-        "y_axis.rescale": rescale,
         lastEdited: new Date()
       }
     });

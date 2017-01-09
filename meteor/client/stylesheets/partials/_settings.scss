@@ -1,22 +1,21 @@
 // Basic settings
 
-$prefix: "ct-";
+$prefix: 'ct-';
 $width: 100%;
 $margin: 0 0 20px 0;
 
 // Fonts
-$heading-font-family: "Helvetica";
+$heading-font-family: 'Helvetica';
 $heading-font-weight: bold;
 $heading-font-style: normal;
-$heading-font-size: 14px;
+$heading-font-size: 15px;
 $heading-font-line-height: 17px;
 
-$utility-font-family: "Helvetica";
+$utility-font-family: 'Helvetica';
 $utility-font-weight: normal;
 $utility-font-style: normal;
-$utility-font-size: 12px;
+$utility-font-size: 13px;
 $utility-font-line-height: 16px;
-
 
 @mixin heading-font {
   font-family: $heading-font-family;
@@ -35,31 +34,37 @@ $utility-font-line-height: 16px;
 }
 
 // Colors
-$primary-color: #08519c;
-$primary-shade-1: #3182bd;
-$primary-shade-2: #6baed6;
-$primary-shade-3: #9ecae1;
-$primary-shade-4: #c6dbef;
-$primary-shade-5: #eff3ff;
-$primaryShades: $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4, $primary-shade-5;
+$primary-color: #1f77b4;
+$primary-shade-1: #ff7f0e;
+$primary-shade-2: #bcbd22;
+$primary-shade-3: #8c564b;
+$primary-shade-4: #7f7f7f;
+$primaryShades: $primary-color, $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4;
 
-$alternate-color: #a50f15;
-$alternate-shade-1: #de2d26;
-$alternate-shade-2: #fb6a4a;
-$alternate-shade-3: #fc9272;
-$alternate-shade-4: #fcbba1;
-$alternate-shade-5: #fee5d9;
-$alternateShades: $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4, $alternate-shade-5;
+$alternate-color: #6b6ecf;
+$alternate-shade-1: #b5cf6b;
+$alternate-shade-2: #e7ba52;
+$alternate-shade-3: #d6616b;
+$alternate-shade-4: #ce6dbd;
+$alternateShades: $alternate-color, $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4;
 
-$black: #000;
-$text: #333;
-$lightgray: #ababab;
-$verylightgray: #cacaca;
-$white : #fff;
+$color-black: #111111;
+$color-gray-dark: #595959;
+$color-gray-medium: #777777;
+$color-gray-light: #F9F9F9;
+$color-white: #FFFFFF;
 
-$axis-stroke-color: $black;
+$color-red: #DA161F;
+$color-orange: #FF6B00;
+$color-green: #50AA30;
+$color-blue: #29639C;
+$color-yellow: #F8E71C;
+$color-beige: #FFF8E7;
+$color-red-bright: #F90611;
+
+$axis-stroke-color: lighten($color-gray-medium, 35%);
 $axis-stroke-width: 1px;
 $axis-stroke-dasharray: 1, 3px;
-$line-stroke-width: 2px;
+$line-stroke-width: 2.5px;
 
 $series-count-max: 5;

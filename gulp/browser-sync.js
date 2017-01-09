@@ -1,33 +1,43 @@
-var gulp = require("gulp"),
-    browserSync = require("browser-sync");
+const gulp = require('gulp');
+const browserSync = require('browser-sync');
+const gulpConfig = require('./gulp.config.js');
+const script = require('./script.js');
+const css = require('./css.js');
 
-var gulpConfig = require('./gulp-config.js');
+gulp.task('scss:watch', ['scss:dev'], done => {
+  browserSync.reload();
+  done();
+});
 
-var webpack = require("./webpack.js");
-var css = require("./css.js");
+gulp.task('scripts:watch', ['js:dev'], done => {
+  browserSync.reload();
+  done();
+});
 
-gulp.task("_browserSyncWatch", ["_scss", "_webpack-build-dev"], browserSync.reload);
+gulp.task('browsersync', ['clean-dist:dev', 'js:dev', 'scss:dev'], () => {
 
-gulp.task('_browsersync', ["_browserSyncWatch"], function() {
   browserSync({
     port: gulpConfig.browserSyncPort,
     ui: { port: gulpConfig.browserSyncUIPort },
     server: {
-      baseDir: "./"
+      baseDir: './',
+      open: false
     },
-    open: false,
     ghostMode: false
   });
 
   gulp.watch(
     [
-      gulpConfig.libScripts + "/**/*.js",
-      gulpConfig.customPath + "/**/*.js",
-      gulpConfig.customPath + "/**/*.json",
-      gulpConfig.libStylesheets + "/**/*.scss",
-      gulpConfig.customPath + "/**/*.scss"
-    ],
-    ["_browserSyncWatch"]
+      `${gulpConfig.libScripts}/**/*.js`,
+      `${gulpConfig.customPath}/**/*.js`,
+      `${gulpConfig.customPath}/**/*.json`
+    ], ['scripts:watch']
+  );
+  gulp.watch(
+    [
+      `${gulpConfig.libStylesheets}/**/*.scss`,
+      `${gulpConfig.customPath}/**/*.scss`
+    ], ['scss:watch']
   );
 
 });

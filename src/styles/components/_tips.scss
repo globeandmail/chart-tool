@@ -1,7 +1,5 @@
-// temporary styles
-
 .#{$prefix}tip_overlay {
-  fill: $white;
+  fill: $color-white;
   opacity: 0;
 }
 
@@ -14,17 +12,18 @@
 }
 
 .#{$prefix}tip_rect {
-  fill: $white;
+  fill: none;
 }
 
 .#{$prefix}tip_text {
-  fill: $black;
+  fill: $color-black;
   @include utility-font;
 }
 
 .#{$prefix}tip_text-date {
   @include utility-font;
   font-weight: bold;
+  fill: $color-black;
 }
 
 .#{$prefix}tip_line-x {
@@ -36,23 +35,9 @@
   }
   line {
     stroke: $axis-stroke-color;
-    stroke-dasharray: $axis-stroke-dasharray;
     stroke-width: $axis-stroke-width;
     shape-rendering: crispEdges;
   }
-}
-
-.#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle-0, .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_path-circle-0 {
-  fill: $primary-color;
-}
-
-.#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle-0, .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-0 {
-  fill: $alternate-color;
-}
-
-.#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle-0,
-.#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle-0 {
-  fill: $white;
 }
 
 .#{$prefix}tip .#{$prefix}tip_text-group.#{$prefix}active,
@@ -67,25 +52,38 @@
   display: none;
 }
 
-.#{$prefix}tip .#{$prefix}tip_text-group {
-  opacity: 0.3;
+.#{$prefix}tip_group text {
+  text-shadow: 1px 1px 0px rgba($color-white, 0.7), -1px -1px 0px rgba($color-white, 0.7), -1px 1px 0px rgba($color-white, 0.7), 1px -1px 0px rgba($color-white, 0.7);
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    text-shadow: 2px 2px 0px rgba($color-white, 0.7), -2px -2px 0px rgba($color-white, 0.7), -2px 2px 0px rgba($color-white, 0.7), 2px -2px 0px rgba($color-white, 0.7);
+  }
+}
+
+.#{$prefix}tip .#{$prefix}tip_circle {
+  stroke: rgba($color-white, 0.7);
+  stroke-width: 1px;
 }
 
 @for $counter from 1 through $series-count-max {
 
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter},
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter} {
+  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
+  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
     fill: nth($primaryShades, $counter);
   }
 
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter},
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter} {
+  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
+  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
     fill: nth($alternateShades, $counter);
   }
 
-  .#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter},
-  .#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle.#{$prefix}tip_path-circle-#{$counter}  {
-    fill: $white;
-  }
+}
 
+.#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle,
+.#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle {
+  fill: $color-white;
+}
+
+.#{$prefix}muted {
+  transition: opacity 0.3s;
+  opacity: 0.3;
 }

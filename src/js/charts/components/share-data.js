@@ -1,79 +1,71 @@
-/**
- * Sharing Data module.
- * @module charts/components/share-data
- */
+import { csvToTable } from '../../utils/utils';
+import { select } from 'd3-selection';
+import 'd3-selection-multi';
 
-/*
-This component adds a "data" button to each chart which can be toggled to present the charts data in a tabular form along with buttons allowing the raw data to be downloaded
- */
+export default function shareData(node, obj) {
 
-function shareDataComponent(node, obj) {
+  const chartContainer = select(node);
 
- 	var chartContainer = d3.select(node);
-
-  var chartMeta = chartContainer.select('.' + obj.prefix + 'chart_meta');
+  let chartMeta = chartContainer.select(`.${obj.prefix}chart_meta`);
 
   if (chartMeta.node() === null) {
     chartMeta = chartContainer
       .append('div')
-      .attr('class', obj.prefix + 'chart_meta');
+      .attr('class', `${obj.prefix}chart_meta`);
   }
 
-	var chartDataBtn = chartMeta
-		.append('div')
-		.attr('class', obj.prefix + 'chart_meta_btn')
-		.html('data');
+  const chartDataBtn = chartMeta
+    .append('div')
+    .attr('class', `${obj.prefix}chart_meta_btn`)
+    .html('data');
 
-	var chartData = chartContainer
-		.append('div')
-		.attr('class', obj.prefix + 'chart_data');
+  const chartData = chartContainer
+    .append('div')
+    .attr('class', `${obj.prefix}chart_data`);
 
-	var chartDataCloseBtn = chartData
-		.append('div')
-		.attr('class', obj.prefix + 'chart_data_close')
-		.html('&#xd7;');
+  const chartDataCloseBtn = chartData
+    .append('div')
+    .attr('class', `${obj.prefix}chart_data_close`)
+    .html('&#xd7;');
 
-	var chartDataTable = chartData
-		.append('div')
-		.attr('class', obj.prefix + 'chart_data_inner');
+  const chartDataTable = chartData
+    .append('div')
+    .attr('class', `${obj.prefix}chart_data_inner`);
 
-	chartData
-		.append('h2')
-		.html(obj.heading);
+  chartData
+    .append('h2')
+    .html(obj.heading);
 
-	var chartDataNav = chartData
-		.append('div')
-		.attr('class', obj.prefix + 'chart_data_nav');
+  const chartDataNav = chartData
+    .append('div')
+    .attr('class', `${obj.prefix}chart_data_nav`);
 
-	var csvDLBtn = chartDataNav
-		.append('a')
-		.attr('class', obj.prefix + 'chart_data_btn csv')
-		.html('download csv');
+  const csvDLBtn = chartDataNav
+    .append('a')
+    .attr('class', `${obj.prefix}chart_data_btn csv`)
+    .html('download csv');
 
-  var csvToTable = require("../../utils/utils").csvToTable;
+  csvToTable(chartDataTable, obj.data.csv);
 
-	csvToTable(chartDataTable, obj.data.csv);
+  chartDataBtn.on('click', () => {
+    chartData.classed(`${obj.prefix}active`, true);
+  });
 
-	chartDataBtn.on('click', function() {
-		chartData.classed(obj.prefix + 'active', true);
-	});
+  chartDataCloseBtn.on('click', () => {
+    chartData.classed(`${obj.prefix}active`, false);
+  });
 
-	chartDataCloseBtn.on('click', function() {
-		chartData.classed(obj.prefix + 'active', false);
-	});
+  csvDLBtn.on('click', function() {
+    select(this)
+      .attrs({
+        'href': `data:text/plain;charset=utf-8,${encodeURIComponent(obj.data.csv)}`,
+        'download': `data_${obj.id}.csv`
+      });
+  });
 
-	csvDLBtn.on('click',function() {
-	  var dlData = 'data:text/plain;charset=utf-8,' + encodeURIComponent(obj.data.csv);
-	  d3.select(this)
-	  	.attr('href', dlData)
-	  	.attr('download','data_' + obj.id + '.csv');
-	});
-
-	return {
-		meta_nav: chartMeta,
-		data_panel: chartData
-	};
+  return {
+    meta_nav: chartMeta,
+    data_panel: chartData
+  };
 
 }
-
-module.exports = shareDataComponent;

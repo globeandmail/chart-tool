@@ -6,8 +6,18 @@
   <script type="text/javascript">
     (function(root) {
       var data = {{ embedJSON }};
-      root.__charttool = root.__charttool || [];
-      root.__charttool.push({id: '{{ pfx }}' + data.id, data: data});
+      root.ChartTool = root.ChartTool || [];
+      root.ChartTool.push({id: '{{ pfx }}' + data.id, data: data});
+      var b = document.getElementsByTagName('body')[0];
+      if (!b.classList.contains('{{ pfx }}charttool-init')) {
+        b.classList.add('{{ pfx }}charttool-init');
+        var c = document.createElement('link');
+        var j = document.createElement('script');
+        c.href = '{{ embedCSS }}'; c.rel = 'stylesheet';
+        j.src = '{{ embedJS }}'; j.async = true; j.defer = true;
+        document.getElementsByTagName('head')[0].appendChild(c);
+        document.getElementsByTagName('head')[0].appendChild(j);
+      }
     })(this);
   </script>
   {{ #if useBase64Images }}<img src="{{ img }}" class="{{ pfx }}base64img {{ pfx }}thumbnail">{{ /if }}

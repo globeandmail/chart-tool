@@ -73,7 +73,6 @@ Click on a heading to expand the options within.
 	* **Custom range**: Chart Tool sets the range based on your data - with a little added for breathing room up top. You can change the Y-axis maximum value by entering a number in the **Custom range** field.
 	* **Ticks**: Change the number of ticks that appear on the y-axis. Chart Tool may override or round up your setting for better display.
 	* **Niceify**: Adjusts the Y-axis to start and end on nice round numbers.
-	* **Rescale**: Extends the Y-axis maximum for a little breathing room at the top of the chart. 
 
 * Tags let Chart Tool filter charts within the admin interface. Use them if your team lives for taxonomy. 
 * Set chart styling to primary (default) or alternate. This depends on what's defined in your [Chart Tool configuration](https://github.com/globeandmail/chart-tool/blob/master/tutorials/customizing.md). 

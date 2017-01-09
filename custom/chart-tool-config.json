@@ -21,7 +21,7 @@
   },
 
   "tipOffset": {
-    "vertical": 4,
+    "vertical": 2,
     "horizontal": 1
   },
 
@@ -31,6 +31,8 @@
     "bottom": 4,
     "left": 9
   },
+
+  "tipRadius": 3.5,
 
   "yAxis": {
     "display": true,
@@ -52,7 +54,7 @@
     "widthThreshold": 420,
     "dy": "",
     "textX": 0,
-    "textY": ""
+    "textY": 0
   },
 
   "xAxis": {
@@ -86,12 +88,13 @@
     }
   },
 
-  "barHeight": 30,
+  "barHeight": 25,
+  "barLabelOffset": 6,
 
   "bands": {
-    "padding": 0.06,
-    "offset": 0.12,
-    "outerPadding": 0.03
+    "padding": 0.12,
+    "offset": 0.06,
+    "outerPadding": 0.06
   },
 
   "source": {
@@ -129,5 +132,9 @@
     "filename": "thumbnail",
     "extension": "png",
     "thumbnailWidth": 460
-  }
+  },
+
+  "embedJS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.js",
+  "embedCSS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.css"
+
 }

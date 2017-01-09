@@ -43,10 +43,14 @@
 
         <div class="unit-edit index-edit">
           <h4>Index <a href="#" class="help-toggle help-index-edit">?</a></h4>
-          <input type="number" name="index" placeholder="100" class="input-index input-field" value="{{ index }}">
+          <input type="number" name="index" placeholder="100" class="input-index input-field" value="{{ indexSelected }}">
         </div>
 
       {{ /if }}
+
+      <div class="unit-edit data-download">
+        <a href="{{ escapedData }}" download="{{ slug }}.csv">Download data</a>
+      </div>
 
     </div>
 
@@ -81,6 +85,7 @@
       {{ /if }}
 
       {{ #if isBarChart true }}
+
         <div class="unit-edit">
           <h4>Formatting</h4>
           <div class="x-prefix-edit">
@@ -102,32 +107,6 @@
           <div class="x-suffix-edit">
             <input type="text" name="suffix" placeholder="%" class="input-suffix-x input-field" value="{{ x_axis.suffix }}">
           </div>
-        </div>
-
-        <div class="unit-edit x-axisval-edit">
-          <h4>Custom range</h4>
-          <span>
-          {{ #if displayMin }}
-            <input type="number" name="min" placeholder="Min" class="input-min-x input-field" value="{{ x_axis.min }}">
-            <span class="axisval-to"> to </span>
-          {{ /if }}
-            <input type="number" name="max" placeholder="Max" class="input-max-x input-field" value="{{ x_axis.max }}">
-          </span>
-        </div>
-
-        <div class="unit-edit x-ticks-edit">
-          <h4>Ticks <a href="#" class="help-toggle help-x-ticks-edit">?</a></h4>
-          <input type="number" name="ticks" placeholder="Ticks" class="input-ticks-x input-field" value="{{ x_axis.ticks }}">
-        </div>
-
-        <div class="unit-edit unit-edit-half x-nice-edit">
-          <h4>Niceify <a href="#" class="help-toggle help-x-nice-edit">?</a></h4>
-          <input class="input-checkbox-x-nice" type="checkbox" name="xNice" checked="{{ xNice }}">
-        </div>
-
-        <div class="unit-edit unit-edit-half x-rescale-edit">
-          <h4>Rescale <a href="#" class="help-toggle help-x-rescale-edit">?</a></h4>
-          <input class="input-checkbox-x-rescale" type="checkbox" name="xRescale" checked="{{ xRescale }}">
         </div>
 
       {{ /if }}
@@ -186,11 +165,6 @@
         <input class="input-checkbox-y-nice" type="checkbox" name="yNice" checked="{{ yNice }}">
       </div>
 
-      <div class="unit-edit unit-edit-half y-rescale-edit">
-        <h4>Rescale <a href="#" class="help-toggle help-y-rescale-edit">?</a></h4>
-        <input class="input-checkbox-y-rescale" type="checkbox" name="yRescale" checked="{{ yRescale }}">
-      </div>
-
     </div>
   </div>
 
@@ -204,14 +178,12 @@
         <h4>Pick a colour palette</h4>
         <form action="" class="radio-buttons">
           <ul>
-            <li>
-              <input id="colorPrimary" type="radio" name="color" value="primary" class="input-radio input-radio-class input-radio-primary" checked="{{ classChecked 'primary' }}">
-              <label for="colorPrimary">{{ primaryOrAlternate "primary" }}</label>
-            </li>
-            <li>
-              <input id="colorAlternate" type="radio" name="color" value="alternate" class="input-radio input-radio-class input-radio-alternate" checked="{{ classChecked 'alternate' }}">
-              <label for="colorAlternate">{{ primaryOrAlternate "alternate" }}</label>
-            </li>
+            {{ #each palette in palettes }}
+              <li>
+                <input id="color-{{ palette }}" type="radio" name="color" value="{{ palette }}" class="input-radio input-radio-class input-radio-{{ palette }}" checked="{{ classChecked palette }}">
+                <label for="color-{{ palette }}">{{ palette }}</label>
+              </li>
+            {{ /each }}
           </ul>
         </form>
       </div>
@@ -257,6 +229,7 @@
         <h4>Show tips <a href="#" class="help-toggle help-tips">?</a></h4>
         <input class="input-checkbox-tips" type="checkbox" name="Tips" checked="{{ options.tips }}">
       </div>
+      <button class="unit-edit unit-delete">Delete chart</button>
     </div>
   </div>
 

@@ -1,16 +1,27 @@
-function scaleManager(obj, axisType) {
+import { scaleTime, scaleBand, scalePoint, scaleLinear } from 'd3-scale';
+import { min, max, extent } from 'd3-array';
+import { timeDiff, timeInterval } from '../../utils/utils';
+import { map } from 'd3-collection';
 
-  var axis = obj[axisType],
-      scaleObj = new ScaleObj(obj, axis, axisType);
+export function scaleManager(obj, axisType) {
 
-  var scale = setScaleType(scaleObj.type);
+  const axis = obj[axisType],
+    scaleObj = new ScaleObj(obj, axis, axisType);
+
+  const scale = setScaleType(scaleObj.type);
 
   scale.domain(scaleObj.domain);
 
   setRangeArgs(scale, scaleObj);
 
   if (axis.nice) { niceify(scale, axisType, scaleObj); }
-  if (axis.rescale) { rescale(scale, axisType, axis); }
+
+  if (scaleObj.type === 'ordinal') {
+    scale
+      .align(0.5)
+      .paddingInner(scaleObj.bands.padding)
+      .paddingOuter(scaleObj.bands.outerPadding);
+  }
 
   return {
     obj: scaleObj,
@@ -19,92 +30,34 @@ function scaleManager(obj, axisType) {
 
 }
 
-function ScaleObj(obj, axis, axisType) {
-  this.type = axis.scale;
-  this.domain = setDomain(obj, axis);
-  this.rangeType = setRangeType(axis);
-  this.range = setRange(obj, axisType);
-  this.bands = obj.dimensions.bands;
-  this.rangePoints = axis.rangePoints || 1.0;
+export class ScaleObj {
+  constructor(obj, axis, axisType) {
+    this.type = axis.scale;
+    this.domain = setDomain(obj, axis);
+    this.rangeType = 'range';
+    this.range = setRange(obj, axisType);
+    this.bands = obj.dimensions.bands;
+    this.rangePoints = axis.rangePoints || 1.0;
+  }
 }
 
-function setScaleType(type) {
-
-  var scaleType;
-
+export function setScaleType(type) {
   switch (type) {
-    case "time":
-      scaleType = d3.time.scale();
-      break;
-    case "ordinal":
-    case "ordinal-time":
-      scaleType = d3.scale.ordinal();
-      break;
-    case "linear":
-      scaleType = d3.scale.linear();
-      break;
-    case "identity":
-      scaleType = d3.scale.identity();
-      break;
-    case "pow":
-      scaleType = d3.scale.pow();
-      break;
-    case "sqrt":
-      scaleType = d3.scale.sqrt();
-      break;
-    case "log":
-      scaleType = d3.scale.log();
-      break;
-    case "quantize":
-      scaleType = d3.scale.quantize();
-      break;
-    case "quantile":
-      scaleType = d3.scale.quantile();
-      break;
-    case "threshold":
-      scaleType = d3.scale.threshold();
-      break;
-    default:
-      scaleType = d3.scale.linear();
-      break;
+    case 'time': return scaleTime();
+    case 'ordinal': return scaleBand();
+    case 'ordinal-time': return scalePoint();
+    case 'linear': return scaleLinear();
+    default: return scaleLinear();
   }
-
-  return scaleType;
-
 }
 
-function setRangeType(axis) {
+export function setRange(obj, axisType) {
 
-  var type;
+  let range;
 
-  switch(axis.scale) {
-    case "time":
-    case "linear":
-      type = "range";
-      break;
-    case "ordinal":
-    case "discrete":
-      type = "rangeRoundBands";
-      break;
-    case "ordinal-time":
-      type = "rangePoints";
-      break;
-    default:
-      type = "range";
-      break;
-  }
-
-  return type;
-
-}
-
-function setRange(obj, axisType) {
-
-  var range;
-
-  if (axisType === "xAxis") {
+  if (axisType === 'xAxis') {
     range = [0, obj.dimensions.tickWidth()]; // operating on width
-  } else if (axisType === "yAxis") {
+  } else if (axisType === 'yAxis') {
     range = [obj.dimensions.yAxisHeight(), 0]; // operating on height
   }
 
@@ -112,39 +65,34 @@ function setRange(obj, axisType) {
 
 }
 
-function setRangeArgs(scale, scaleObj) {
-
-  switch (scaleObj.rangeType) {
-    case "range":
+export function setRangeArgs(scale, scaleObj) {
+  if (scaleObj.rangeType === 'range') {
+    if (scaleObj.type === 'ordinal-time') {
+      return scale[scaleObj.rangeType](scaleObj.range).padding(0.5).align(0);
+    } else {
       return scale[scaleObj.rangeType](scaleObj.range);
-    case "rangeRoundBands":
-      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.bands.padding, scaleObj.bands.outerPadding);
-    case "rangePoints":
-      return scale[scaleObj.rangeType](scaleObj.range, scaleObj.rangePoints);
+    }
   }
-
 }
 
-function setDomain(obj, axis) {
+export function setDomain(obj, axis) {
 
-  var data = obj.data;
-  var domain;
+  const data = obj.data;
+  let domain;
 
-  // included fallbacks just in case
   switch(axis.scale) {
-    case "time":
+    case 'time':
       domain = setDateDomain(data, axis.min, axis.max);
       break;
-    case "linear":
-      var chartType = obj.options.type,
-          forceMaxVal;
-      if (chartType === "area" || chartType === "column" || chartType === "bar") {
-        forceMaxVal = true;
+    case 'linear':
+      if (obj.options.type === 'area' || obj.options.type === 'column' || obj.options.type === 'bar') {
+        domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked, true);
+      } else {
+        domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked);
       }
-      domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked, forceMaxVal);
       break;
-    case "ordinal":
-    case "ordinal-time":
+    case 'ordinal':
+    case 'ordinal-time':
       domain = setDiscreteDomain(data);
       break;
   }
@@ -153,46 +101,49 @@ function setDomain(obj, axis) {
 
 }
 
-function setDateDomain(data, min, max) {
+export function setDateDomain(data, min, max) {
+  let startDate, endDate;
   if (min && max) {
-    var startDate = min, endDate = max;
+    startDate = min;
+    endDate = max;
   } else {
-    var dateRange = d3.extent(data.data, function(d) { return d.key; });
-    var startDate = min || new Date(dateRange[0]),
-        endDate = max || new Date(dateRange[1]);
+    const dateRange = extent(data.data, d => { return d.key; });
+    startDate = min || new Date(dateRange[0]);
+    endDate = max || new Date(dateRange[1]);
   }
   return [startDate, endDate];
 }
 
-function setNumericalDomain(data, min, max, stacked, forceMaxVal) {
+export function setNumericalDomain(data, vmin, vmax, stacked, forceMaxVal) {
 
-  var minVal, maxVal;
-  var mArr = [];
+  let minVal, maxVal;
 
-  d3.map(data.data, function(d) {
-    for (var j = 0; j < d.series.length; j++) {
+  const mArr = [];
+
+  map(data.data, d => {
+    for (let j = 0; j < d.series.length; j++) {
       mArr.push(Number(d.series[j].val));
     }
   });
 
   if (stacked) {
-    maxVal = d3.max(data.stackedData[data.stackedData.length - 1], function(d) {
-      return (d.y0 + d.y);
+    maxVal = max(data.stackedData, layer => {
+      return max(layer, d => { return d[1]; });
     });
   } else {
-    maxVal = d3.max(mArr);
+    maxVal = max(mArr);
   }
 
-  minVal = d3.min(mArr);
+  minVal = min(mArr);
 
-  if (min) {
-    minVal = min;
+  if (vmin) {
+    minVal = vmin;
   } else if (minVal > 0) {
     minVal = 0;
   }
 
-  if (max) {
-    maxVal = max;
+  if (vmax) {
+    maxVal = vmax;
   } else if (maxVal < 0 && forceMaxVal) {
     maxVal = 0;
   }
@@ -201,70 +152,26 @@ function setNumericalDomain(data, min, max, stacked, forceMaxVal) {
 
 }
 
-function setDiscreteDomain(data) {
-  return data.data.map(function(d) { return d.key; });
+export function setDiscreteDomain(data) {
+  return data.data.map(d => { return d.key; });
 }
 
-function rescale(scale, axisType, axisObj) {
-
-  switch(axisObj.scale) {
-    case "linear":
-      if (!axisObj.max) { rescaleNumerical(scale, axisObj); }
-      break;
-  }
-}
-
-function rescaleNumerical(scale, axisObj) {
-
-  // rescales the "top" end of the domain
-  var ticks = scale.ticks(10).slice(),
-      tickIncr = Math.abs(ticks[ticks.length - 1]) - Math.abs(ticks[ticks.length - 2]);
-
-  var newMax = ticks[ticks.length - 1] + tickIncr;
-
-  scale.domain([scale.domain()[0], newMax]);
-
-}
-
-function niceify(scale, axisType, scaleObj) {
-
+export function niceify(scale, axisType, scaleObj) {
   switch(scaleObj.type) {
-    case "time":
-      var timeDiff = require("../../utils/utils").timeDiff;
-      var context = timeDiff(scale.domain()[0], scale.domain()[1], 3);
-      niceifyTime(scale, context);
+    case 'time':
+      niceifyTime(scale, timeDiff(scale.domain()[0], scale.domain()[1], 3));
       break;
-    case "linear":
+    case 'linear':
       niceifyNumerical(scale);
       break;
   }
-
 }
 
-function niceifyTime(scale, context) {
-  var getTimeInterval = require("../../utils/utils").timeInterval;
-  var timeInterval = getTimeInterval(context);
-  scale.domain(scale.domain()).nice(timeInterval);
+export function niceifyTime(scale, context) {
+  const interval = timeInterval(context);
+  scale.domain(scale.domain()).nice(interval);
 }
 
-function niceifyNumerical(scale) {
+export function niceifyNumerical(scale) {
   scale.domain(scale.domain()).nice();
 }
-
-module.exports = {
-  scaleManager: scaleManager,
-  ScaleObj: ScaleObj,
-  setScaleType: setScaleType,
-  setRangeType: setRangeType,
-  setRangeArgs: setRangeArgs,
-  setRange: setRange,
-  setDomain: setDomain,
-  setDateDomain: setDateDomain,
-  setNumericalDomain: setNumericalDomain,
-  setDiscreteDomain: setDiscreteDomain,
-  rescale: rescale,
-  rescaleNumerical: rescaleNumerical,
-  niceify: niceify,
-  niceifyTime: niceifyTime,
-  niceifyNumerical: niceifyNumerical
-};

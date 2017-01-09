@@ -30,18 +30,10 @@
   margin-right: 4px;
 }
 
-.#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
-  background: $primary-color;
-}
-
-.#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
-  background: $alternate-color;
-}
-
 // qualifier
 .#{$prefix}chart_qualifier {
   margin: 0;
-  background: $white;
+  background: $color-white;
   height: auto;
   @include utility-font;
 }
@@ -50,12 +42,16 @@
   margin-top: 2px;
 }
 
+.#{$prefix}chart_qualifier-text {
+  fill: $color-black;
+}
+
 .#{$prefix}chart_qualifier-text-bg {
-  stroke: $white;
+  stroke: $color-white;
   stroke-width: 10px;
   stroke-linecap: round;
   stroke-linejoin: round;
-  fill: $white;
+  fill: $color-white;
 }
 
 .#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {
@@ -68,11 +64,11 @@
 
 @for $counter from 1 through $series-count-max {
 
-  .#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon {
+  .#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter - 1} .#{$prefix}legend_item_icon {
     background: nth($primaryShades, $counter);
   }
 
-  .#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter} .#{$prefix}legend_item_icon{
+  .#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter - 1} .#{$prefix}legend_item_icon{
     background: nth($alternateShades, $counter);
   }
 

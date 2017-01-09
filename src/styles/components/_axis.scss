@@ -4,13 +4,15 @@
 
 .#{$prefix}yAxis .#{$prefix}minor line {
   stroke: $axis-stroke-color;
-  stroke-dasharray: $axis-stroke-dasharray;
   shape-rendering: crispEdges;
+}
+
+.#{$prefix}yAxis .tick:not(.#{$prefix}minor) line {
+  display: none;
 }
 
 .#{$prefix}type_bar .#{$prefix}xAxis .#{$prefix}minor line {
   stroke: $axis-stroke-color;
-  stroke-dasharray: $axis-stroke-dasharray;
   shape-rendering: crispEdges;
 }
 
@@ -23,6 +25,10 @@
   text-anchor: end !important;
 }
 
+.#{$prefix}xAxis g.tick line {
+  stroke: $color-black;
+}
+
 .#{$prefix}axis-group path {
   shape-rendering: crispEdges;
   stroke: $axis-stroke-color;
@@ -31,6 +37,7 @@
 
 .#{$prefix}axis-group text {
   @include utility-font;
+  fill: $color-black;
 }
 
 .#{$prefix}axis-group path {
@@ -55,6 +62,6 @@
 
 .#{$prefix}zero-line {
   stroke-width: $axis-stroke-width;
-  stroke: $axis-stroke-color;
+  stroke: $color-black;
   stroke-linecap: square;
 }

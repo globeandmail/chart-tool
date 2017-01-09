@@ -1,53 +1,57 @@
-function qualifierComponent(node, obj) {
+import 'd3-selection-multi';
 
-  if (obj.options.type !== "bar") {
+export default function qualifier(node, obj) {
 
-    var yAxisNode = node.select("." + obj.prefix + "yAxis");
+  let qualifierBg, qualifierText;
+
+  if (obj.options.type !== 'bar') {
+
+    const yAxisNode = node.select(`.${obj.prefix}yAxis`);
 
     if (obj.editable) {
 
-      var foreignObject = yAxisNode.append("foreignObject")
-        .attr({
-          "class": obj.prefix + "fo " + obj.prefix + "qualifier",
-          "width": "100%"
+      const foreignObject = yAxisNode.append('foreignObject')
+        .attrs({
+          'class': `${obj.prefix}fo ${obj.prefix}qualifier`,
+          'width': '100%'
         });
 
-      var foreignObjectGroup = foreignObject.append("xhtml:div")
-        .attr("xmlns", "http://www.w3.org/1999/xhtml");
+      const foreignObjectGroup = foreignObject.append('xhtml:div')
+        .attr('xmlns', 'http://www.w3.org/1999/xhtml');
 
-      var qualifierField = foreignObjectGroup.append("div")
-        .attr({
-          "class": obj.prefix + "chart_qualifier editable-chart_qualifier",
-          "contentEditable": true,
-          "xmlns": "http://www.w3.org/1999/xhtml"
+      const qualifierField = foreignObjectGroup.append('div')
+        .attrs({
+          'class': `${obj.prefix}chart_qualifier editable-chart_qualifier`,
+          'contentEditable': true,
+          'xmlns': 'http://www.w3.org/1999/xhtml'
         })
         .text(obj.qualifier);
 
       foreignObject
-        .attr({
-          "width": qualifierField.node().getBoundingClientRect().width + 15,
-          "height": qualifierField.node().getBoundingClientRect().height,
-          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + "," + ( - (qualifierField.node().getBoundingClientRect().height) / 2 ) + ")"
+        .attrs({
+          'width': qualifierField.node().getBoundingClientRect().width + 15,
+          'height': qualifierField.node().getBoundingClientRect().height,
+          'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()}, ${- (qualifierField.node().getBoundingClientRect().height) / 2})`
         });
 
     } else {
 
-      var qualifierBg = yAxisNode.append("text")
-        .attr("class", obj.prefix + "chart_qualifier-text-bg")
+      qualifierBg = yAxisNode.append('text')
+        .attr('class', `${obj.prefix}chart_qualifier-text-bg`)
         .text(obj.qualifier)
-        .attr({
-          "dy": "0.32em",
-          "y": "0",
-          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)"
+        .attrs({
+          'dy': '0.32em',
+          'y': obj.yAxis.textY,
+          'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()}, 0)`
         });
 
-      var qualifierText = yAxisNode.append("text")
-        .attr("class", obj.prefix + "chart_qualifier-text")
+      qualifierText = yAxisNode.append('text')
+        .attr('class', `${obj.prefix}chart_qualifier-text`)
         .text(obj.qualifier)
-        .attr({
-          "dy": "0.32em",
-          "y": "0",
-          "transform": "translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)"
+        .attrs({
+          'dy': '0.32em',
+          'y': obj.yAxis.textY,
+          'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()}, 0)`
         });
 
     }
@@ -60,5 +64,3 @@ function qualifierComponent(node, obj) {
   };
 
 }
-
-module.exports = qualifierComponent;

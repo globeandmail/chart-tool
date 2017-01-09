@@ -6,7 +6,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  background: rgba(255,255,255,1);
+  background-color: rgba($color-white, 0.975);
   z-index: 1000;
 }
 
@@ -22,14 +22,14 @@
   top: 0;
   z-index: 1000;
   h3 {
-    border-bottom: 1px solid $text;
+    border-bottom: 1px solid $color-black;
   }
 }
 
 .overlay-header {
   @include row();
   @include clearfix;
-  border-bottom: 3px solid $text;
+  border-bottom: 3px solid $color-black;
   margin-bottom: 2em;
   h3, .overlay-close {
     display: inline-block;
@@ -43,7 +43,7 @@
   .overlay-close {
     float: right;
     font-size: 2.4em;
-    color: $text;
+    color: $color-black;
     cursor: pointer;
     opacity: 0.3;
     @include interface-font-light;
@@ -83,8 +83,8 @@
   display: block;
   background: none;
   outline: none;
-  border: 1px solid $text;
-  color: $text;
+  border: 1px solid $color-black;
+  color: $color-black;
   margin-bottom: 0.8em;
   font-size: 1.2em;
   &:hover {
@@ -137,7 +137,7 @@
   ul {
     margin-bottom: 1.6em;
     padding-bottom: 1.2em;
-    border-bottom: 1px solid $verylightgray;
+    border-bottom: 1px solid $color-gray-medium;
   }
   li {
     margin-bottom: 0.3em;

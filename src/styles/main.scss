@@ -1,24 +1,24 @@
-@import "./settings/settings";
+@import './settings/settings';
 
-@import "../../custom/base";
+@import '../../custom/base';
 
-@import "./components/header";
-@import "./components/axis";
-@import "./components/credit";
-@import "./components/tips";
-@import "./components/share_data";
-@import "./components/social";
+@import './components/header';
+@import './components/axis';
+@import './components/credit';
+@import './components/tips';
+@import './components/share_data';
+@import './components/social';
 
-@import "./types/series-line";
-@import "./types/series-multiline";
-@import "./types/series-area";
-@import "./types/series-bar";
-@import "./types/series-stream";
-@import "./types/series-column";
-// @import "debug";
+@import './types/series-line';
+@import './types/series-multiline';
+@import './types/series-area';
+@import './types/series-bar';
+@import './types/series-column';
+
+// @import 'debug';
 
 .#{$prefix}bg {
-	fill: $white;
+	fill: $color-white;
 }
 
 .#{$prefix}chart_svg {
@@ -28,7 +28,7 @@
 .#{$prefix}chart {
   width: $width;
   height: auto;
-  background-color: $white;
+  background-color: $color-white;
   margin: $margin;
   position: relative;
   overflow: hidden;
@@ -43,4 +43,4 @@
   display: none;
 }
 
-@import "../../custom/custom.scss";
+@import '../../custom/custom.scss';

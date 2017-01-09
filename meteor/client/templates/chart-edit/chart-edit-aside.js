@@ -1,4 +1,10 @@
 Template.chartEditAside.helpers({
+  escapedData: function() {
+    if (this.data) {
+      var data = this.data;
+      return 'data:text/csv;charset=utf-8,' + escape(data);
+    }
+  },
   isTimeSeries: function() {
     if (this.options) {
       var scale = this.x_axis.scale;
@@ -26,11 +32,17 @@ Template.chartEditAside.helpers({
   isBarChart: function(value) {
     if (this.options) {
       var type = this.options["type"];
-      if (value === true) {
-        if (type === "bar") { return true; };
+      if (value) {
+        return type === "bar" ? true : false;
       } else {
-        if (type !== "bar") { return true; };
+        return type === "bar" ? false : true;
       }
+    }
+  },
+  indexSelected: function(value) {
+    if (this.options) {
+      var index = this.options.indexed;
+      return (index === false || index === undefined) ? "" : Number(index);
     }
   },
   isStackableExpandable: function() {
@@ -45,9 +57,10 @@ Template.chartEditAside.helpers({
     if (this.options) {
       var type = this.options["type"];
       if (type === "area" || type === "bar" || type === "column") {
-        var ChartToolParser = ChartTool.utils.dataParse.parse,
-            cleanCSV = dataParse(this.data);
-        var dataObj = ChartToolParser(cleanCSV, app_settings.chart.date_format, this.index);
+
+        var ChartToolParser = ChartTool.parse,
+          cleanCSV = dataParse(this.data),
+          dataObj = ChartToolParser(cleanCSV, app_settings.chart.date_format, this.index);
 
         var mArr = [];
 
@@ -98,19 +111,9 @@ Template.chartEditAside.helpers({
       return (this.x_axis.nice ? true : false);
     }
   },
-  xRescale: function() {
-    if (this.x_axis) {
-      return (this.x_axis.rescale ? true : false);
-    }
-  },
   yNice: function() {
     if (this.y_axis) {
       return (this.y_axis.nice ? true : false);
-    }
-  },
-  yRescale: function() {
-    if (this.y_axis) {
-      return (this.y_axis.rescale ? true : false);
     }
   },
   dateCalc: function() {
@@ -127,33 +130,17 @@ Template.chartEditAside.helpers({
       if (Object.keys(axis.format)[0] === val) { return "selected"; }
     }
   },
-  xAxFormatCustom: function() {
-    if (this.x_axis) {
-      if (this.x_axis.format.custom) { return true; }
-    }
-  },
-  xAxCustom: function() {
-    var axis = this.x_axis;
-    if (axis) {
-      var format = axis.format.custom;
-      if (format === "custom" ) {
-        return "";
-      } else {
-        return format;
-      }
-    }
-  },
   interpSelected: function(val) {
     if (this.options && this.options.interpolation === val) { return "selected"; }
   },
   yAxisFormatSelected: function(val) {
     var axis = this.y_axis;
     if (axis) {
-      if (axis.format.number === val) { return "selected"; }
+      if (axis.format === val) { return "selected"; }
     }
   },
-  primaryOrAlternate: function(val) {
-    return app_settings[val] || val.toUpperCase();
+  palettes: function() {
+    return app_settings.palettes.map(function(p) { return p.toLowerCase(); });
   }
 });
 
@@ -360,11 +347,6 @@ Template.chartEditAside.events({
     var val = !this.x_axis.nice;
     updateAndSave("updateXNice", this, val);
   },
-  "change .input-checkbox-x-rescale": function(event) {
-    var val = !this.x_axis.rescale;
-    updateAndSave("updateXRescale", this, val);
-  },
-
 
   "blur .input-custom-x": function(event) {
     var format = event.target.value,
@@ -505,18 +487,6 @@ Template.chartEditAside.events({
       confirmButtonColor: "#fff"
     });
   },
-  "change .input-checkbox-y-rescale": function(event) {
-    var val = !this.y_axis.rescale;
-    updateAndSave("updateYRescale", this, val);
-  },
-  "click .help-y-rescale-edit": function(event) {
-    sweetAlert({
-      title: "Rescale?",
-      text: "Rescale the Y-axis to add more whitespace at the top of the chart.",
-      type: "info",
-      confirmButtonColor: "#fff"
-    });
-  },
 
   "change .select-interpolation": function(event) {
     var interp = event.target.value;
@@ -601,6 +571,27 @@ Template.chartEditAside.events({
       text: "Check off this box if you want to treat your data points as discrete values, as you might with a set of names or categories.",
       type: "info",
       confirmButtonColor: "#fff"
+    });
+  },
+  "click .unit-delete": function(event) {
+    var chartId = this._id;
+    sweetAlert({
+      title: "Are you sure you want to delete this chart?",
+      text: "Deleted charts can't be recovered. Do you really want to do this?",
+      type: "warning",
+      confirmButtonColor: "#fff",
+      confirmButtonText: "Delete chart",
+      cancelButtonText: "Cancel",
+      showCancelButton: true
+    },
+    function(isConfirm) {
+      if (isConfirm) {
+        Meteor.call("deleteChart", chartId, function(err, result) {
+          if (!err) {
+            Router.go('chart.archive');
+          }
+        });
+      }
     });
   }
 });

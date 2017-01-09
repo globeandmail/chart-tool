@@ -13,21 +13,22 @@
 .input-slug {
   font-size: 5em;
   border: none;
-  color: $text;
-  padding: 0.05em 0;
-  border-bottom: 2px solid $verylightgray;
+  color: $color-black;
+  background-color: $color-gray-light;
+  padding: 0.05em 0.05em;
+  border-bottom: 2px solid $color-gray-medium;
   margin-bottom: 0.4em;
   @include transition (all 0.1s ease-out);
   @include placeholder {
-    color: $verylightgray;
+    color: $color-gray-medium;
     @include interface-font-light;
     letter-spacing: -0.03em;
   }
   &:focus {
     outline: none;
-    border-color: $text;
+    border-color: $color-black;
     @include placeholder {
-      color: lighten($verylightgray, 18%);
+      color: $color-gray-medium;
     }
     @include transition (all 0.1s ease-in);
   }
@@ -35,21 +36,21 @@
 
 .input-data {
   font-family: "Monaco", "Lucida Console", monospace;
-  background-color: lighten($lightgray, 27%);
+  background-color: $color-gray-light;
   height: 20em;
   padding: 0.3em;
   resize: none;
   font-size: 1.2em;
-  border: 2px solid lighten($lightgray, 27%);
+  border: 2px solid $color-gray-light;
   margin-bottom: 2em;
   box-sizing: border-box;
   @include transition (all 0.1s ease-out);
   @include placeholder {
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
   &:focus {
     outline: none;
-    border: 2px solid $text;
+    border: 2px solid $color-black;
     @include transition (all 0.1s ease-in);
   }
 }

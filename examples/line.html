@@ -13,7 +13,6 @@
     }
   </style>
 
-  <link rel="stylesheet" type="text/css" href="../src/styles/build/main.css">
 </head>
 
 <body>
@@ -65,12 +64,19 @@
           };
           root.__charttool = root.__charttool || [];
           root.__charttool.push({id: 'ct-kfbRDcFmrvszyrRtM', data: data});
+          var b = document.getElementsByTagName('body')[0];
+          if (!b.classList.contains('ct-charttool-init')) {
+            b.classList.add('ct-charttool-init');
+            var c = document.createElement('link');
+            var j = document.createElement('script');
+            c.href = '../dist/dev/chart-tool.css'; c.rel = 'stylesheet';
+            j.src = '../dist/dev/chart-tool.js'; j.async = true; j.defer = true;
+            document.getElementsByTagName('head')[0].appendChild(c);
+            document.getElementsByTagName('head')[0].appendChild(j);
+          }
         })(this);
       </script>
     </div>
-
-    <script src="../lib/d3/d3.js"></script>
-    <script src="../dist/dev/bundle.js" async></script>
 
   </div>
 

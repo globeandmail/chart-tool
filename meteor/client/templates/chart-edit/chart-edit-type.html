@@ -5,14 +5,15 @@
 
     <span class="selector-button">
 
-      <select class="chart-types">
-        <option value="line" selected="{{ typeSelected 'line' }}">Line</option>
-        <option value="multiline" selected="{{ typeSelected 'multiline' }}">Multiline</option>
-        <option value="area" selected="{{ typeSelected 'area' }}">Area</option>
-        <option value="column" selected="{{ typeSelected 'column' }}">Column</option>
-        <option value="bar" selected="{{ typeSelected 'bar' }}">Bar</option>
-        <option value="stream" selected="{{ typeSelected 'stream' }}">Streamgraph</option>
-      </select>
+      <div class="select-wrapper">
+        <select class="chart-types">
+          <option value="line" selected="{{ typeSelected 'line' }}">Line</option>
+          <option value="multiline" selected="{{ typeSelected 'multiline' }}">Multiline</option>
+          <option value="area" selected="{{ typeSelected 'area' }}">Area</option>
+          <option value="column" selected="{{ typeSelected 'column' }}">Column</option>
+          <option value="bar" selected="{{ typeSelected 'bar' }}">Bar</option>
+        </select>
+      </div>
 
     </span>
   </div>

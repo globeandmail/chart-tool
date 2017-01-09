@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Chart Tool — chart tests</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <style type="text/css">
+    .wrapper {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+
+    <!-- GLOBE CHART v1.0.2-18 -->
+    <!-- edited: Sun Jun 28 2015 16:07:29 GMT-0400 (EDT) -->
+    <!-- slug: rb-b1-stuff-0628-2 -->
+    <!-- md5: 4ada4680932ac3bd7e5e23ab7abaf0b9 -->
+    <div class="ct-chart" data-chartid="ct-bar1">
+      <script>
+        (function(root) {
+          var data = {
+            "version": "1.0.2",
+            "heading": "Canada's top sources of visitors",
+            "qualifier": "In billions",
+            "source": "THE GLOBE AND MAIL » SOURCE: Statistics Canada",
+            "chart": {
+              // "exportable": {
+              //   "dynamicHeight": true,
+              //   "width": 460,
+              //   "height": 300
+              // },
+              "class": "primary",
+              "data": "Country,Change,Other change\nUnited States,16.7, 10.0\nCanada,0,2\nUnited Kingdom,10,8\nGermany,45.5,30\nFrance,46.7,23.5\nItaly,50,67\nJapan,64.3,55",
+              "x_axis": {
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "nice": false,
+                "suffix": "%"
+              },
+              "y_axis": {
+                "scale": "ordinal",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "round1",
+                "prefix": "€"
+              },
+              "options": {
+                "type": "bar",
+                "interpolation": false,
+                "stacked": true,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": true,
+                "annotations": false,
+                "range": false,
+                "series": false,
+                "qualifier": false,
+                "social": true
+              }
+            }
+          };
+          root.__charttool = root.__charttool || [];
+          root.__charttool.push({id: 'ct-bar1', data: data});
+          var b = document.getElementsByTagName('body')[0];
+          if (!b.classList.contains('ct-charttool-init')) {
+            b.classList.add('ct-charttool-init');
+            var j = document.createElement('script');
+            var c = document.createElement('link');
+            j.src = '../dist/dev/chart-tool.js'; j.async = true; j.defer = true;
+            c.href = '../dist/dev/chart-tool.css'; c.rel = 'stylesheet';
+            document.getElementsByTagName('head')[0].appendChild(j);
+            document.getElementsByTagName('head')[0].appendChild(c);
+          }
+        })(this);
+      </script>
+    </div>
+
+  </div>
+
+</body>
+
+</html>

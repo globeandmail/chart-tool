@@ -14,7 +14,8 @@ Template.chartPdf.rendered = function() {
       x_axis: app_settings.print.x_axis,
       y_axis: app_settings.print.y_axis,
       margin: app_settings.print.margin,
-      type: "pdf"
+      type: "pdf",
+      barLabelOffset: app_settings.print.barLabelOffset
     };
 
     data.prefix = prefix;

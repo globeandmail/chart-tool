@@ -1,48 +1,62 @@
 // header styles
 
+@mixin centerer($horizontal: true, $vertical: true) {
+  position: absolute;
+  @if ($horizontal and $vertical) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  } @else if ($horizontal) {
+    left: 50%;
+    transform: translate(-50%, 0);
+  } @else if ($vertical) {
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+}
+
 header {
   width: 100%;
-  padding: 0.3em 0.3em 0.1em 0.3em;
-  position: fixed;
   top: 0;
+  left: 0;
   border-bottom: 1px solid #e4e4e4;
   background-color: white;
   z-index: 2000;
   .topbar {
-    @include background-image(linear-gradient(darken($text, 60%), lighten($text, 10%)));
-    position: absolute;
+    background-color: $primary-color;
     left: 0px;
     top: 0px;
-    height: 10px;
+    height: 7px;
     width: 100%;
-    &:after {
-      content: "";
-      background-color: $primary-color;
-      height: 2px;
-      width: 100%;
-      position: absolute;
-      top: 12px;
-    }
   }
 }
-
 
 .header-grid {
   @include outer-container;
   @include clearfix;
+  display: flex;
+  justify-content: center;
 }
 
 .edit-indicator, .header-help {
   padding-left: 0.3em;
-  color: $text;
+  color: $color-black;
   @include interface-font-light;
   opacity: 0.2;
   @include transition (all 0.1s ease-out);
   cursor: pointer;
 }
 
+.chart-slug, .header-edit-nav {
+  @include span-columns(6 of 12);
+  align-self: center;
+}
+
+.header-edit-nav {
+  text-align: right;
+}
+
 .chart-slug {
-  margin-top: 0.6em;
   display: inline-block;
   .header-help {
     opacity: 0.2;
@@ -61,35 +75,36 @@ header {
   font-size: 1.5em;
   @include interface-font-bold;
   border: none;
-  color: $text;
-  padding: 0.3em 0 0.4em 0;
-  border-bottom: 1px solid lighten($verylightgray, 10%);
+  color: $color-black;
+  padding: 0.3em 0.3em 0.4em 0.3em;
+  border-bottom: 1px solid #e4e4e4;
   margin-bottom: -1px;
+  background-color: $color-gray-light;
   letter-spacing: -0.02em;
   min-width: 100px;
   @include transition (width 0.1s);
   @include transition (all 0.1s ease-out);
   @include placeholder {
-    color: $verylightgray;
+    color: $color-gray-medium;
   }
   &:focus {
     outline: none;
-    border-color: $text;
+    border-color: $color-black;
     @include placeholder {
-      color: lighten($verylightgray, 18%);
+      color: $color-gray-medium;
     }
     @include transition (all 0.1s ease-in);
   }
 }
 
-.header-nav {
-  margin-top: 1.1em;
-  margin-bottom: 0.5em;
+header:not(.header-edit) .header-baseline {
+  height: 46px;
+  display: flex;
 }
 
-.header-edit-nav {
-  float: right;
-  margin-top: 1.1em;
+.header-nav {
+  padding: 0.3em 0.3em 0.4em 0.3em;
+  align-self: center;
 }
 
 .save-icon {
@@ -105,8 +120,8 @@ header {
   padding-right: 0.6em;
   a {
     @include interface-font-light;
-    display: inline;
-    color: $text;
+    display: inline-block;
+    color: $color-black;
     text-decoration: none;
     @include transition (all 0.1s ease-out);
     &:hover {
@@ -116,8 +131,12 @@ header {
   }
 }
 
+.header-new {
+  padding-right: 0;
+}
+
 .header-help {
-  color: $text;
+  color: $color-black;
   @include transition (all 0.1s ease-out);
   &:hover {
     color: $primary-color;
