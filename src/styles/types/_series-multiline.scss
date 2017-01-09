@@ -5,54 +5,39 @@
   stroke-width: $line-stroke-width;
 }
 
-// Sets all other series to final colour
 
-.#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline {
-  stroke: $primary-shade-4;
-}
+@for $pcounter from 1 through $palette-count {
+  $palette: nth( $palettes, $pcounter );
+  $palette-name: nth( $palette-names, $pcounter );
 
-.#{$prefix}primary .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_icon {
-  background: $primary-shade-4;
-}
+  // Sets all other series to final colour
 
-.#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle {
-  fill: $primary-shade-4;
-}
+  .#{$prefix + $palette-name}.#{$prefix}type_multiline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline {
+    stroke: nth( $palette, $series-count-max );
+  }
 
-.#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}series_group.#{$prefix}multiple .#{$prefix}multiline {
-  stroke: $alternate-shade-4;
-}
+  .#{$prefix + $palette-name} .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_icon {
+    background: nth( $palette, $series-count-max );
+  }
 
-.#{$prefix}alternate .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_icon {
-  background: $alternate-shade-4;
-}
+  .#{$prefix + $palette-name}.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle {
+    fill: nth( $palette, $series-count-max );
+  }
 
-.#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle {
-  fill: $alternate-shade-4;
-}
 
-// Sets first series to primary colour
+  // Sets first series to primary colour
 
-.#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}series_group .#{$prefix}multiline.#{$prefix}multiline-0 {
-  stroke: $primary-color;
-}
+  .#{$prefix + $palette-name}.#{$prefix}type_multiline .#{$prefix}series_group .#{$prefix}multiline.#{$prefix}multiline-0 {
+    stroke: nth( $palette, 1 );
+  }
 
-.#{$prefix}primary .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
-  background: $primary-color;
-}
+  .#{$prefix + $palette-name} .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
+    background: nth( $palette, 1 );
+  }
 
-.#{$prefix}primary.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0 {
-  fill: $primary-color;
-}
+  .#{$prefix + $palette-name}.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0 {
+    fill: nth( $palette, 1 );
+  }
 
-.#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}series_group .#{$prefix}multiline.#{$prefix}multiline-0 {
-  stroke: $alternate-color;
-}
 
-.#{$prefix}alternate .#{$prefix}chart_legend.#{$prefix}chart_legend-multiline .#{$prefix}legend_item_0 .#{$prefix}legend_item_icon {
-  background: $alternate-color;
-}
-
-.#{$prefix}alternate.#{$prefix}type_multiline .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-0 {
-  fill: $alternate-color;
 }
