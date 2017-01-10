@@ -176,11 +176,11 @@ select {
   }
 
   @for $pcounter from 1 through $palette-count {
-    $palette: nth( $palettes, $pcounter );
-    $palette-name: nth( $palette-names, $pcounter );
+    $palette: nth($palettes, $pcounter);
+    $palette-name: nth($palette-names, $pcounter);
 
     .input-radio-#{$palette-name}:checked {
-      background-color: nth( $palette, 1 );
+      background-color: nth($palette, 1);
     }
   }
 }

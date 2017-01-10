@@ -48,9 +48,16 @@ $alternate-shade-3: #d6616b;
 $alternate-shade-4: #ce6dbd;
 $alternateShades: $alternate-color, $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4;
 
-$palette-count: 2;
-$palette-names: 'primary', 'alternate';
-$palettes: $primaryShades, $alternateShades;
+$grayscale-color: #000000;
+$grayscale-shade-1: #383838;
+$grayscale-shade-2: #6F6F6F;
+$grayscale-shade-3: #A7A7A7;
+$grayscale-shade-4: #dedede;
+$grayscaleShades: $grayscale-color, $grayscale-shade-1, $grayscale-shade-2, $grayscale-shade-3, $grayscale-shade-4;
+
+$palette-count: 3;
+$palette-names: 'primary', 'alternate', 'grayscale';
+$palettes: $primaryShades, $alternateShades, $grayscaleShades;
 
 // Other colors
 $color-black: #111111;
@@ -73,4 +80,3 @@ $axis-stroke-dasharray: 1, 3px;
 $line-stroke-width: 2.5px;
 
 $series-count-max: 5;
-
