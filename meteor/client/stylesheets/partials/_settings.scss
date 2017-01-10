@@ -33,7 +33,7 @@ $utility-font-line-height: 16px;
   line-height: $utility-font-line-height;
 }
 
-// Colors
+// Color palettes
 $primary-color: #1f77b4;
 $primary-shade-1: #ff7f0e;
 $primary-shade-2: #bcbd22;
@@ -48,6 +48,11 @@ $alternate-shade-3: #d6616b;
 $alternate-shade-4: #ce6dbd;
 $alternateShades: $alternate-color, $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4;
 
+$palette-count: 2;
+$palette-names: 'primary', 'alternate';
+$palettes: $primaryShades, $alternateShades;
+
+// Other colors
 $color-black: #111111;
 $color-gray-dark: #595959;
 $color-gray-medium: #777777;
@@ -68,3 +73,4 @@ $axis-stroke-dasharray: 1, 3px;
 $line-stroke-width: 2.5px;
 
 $series-count-max: 5;
+

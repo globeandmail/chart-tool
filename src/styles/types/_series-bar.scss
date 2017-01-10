@@ -11,14 +11,13 @@
   fill: $color-black;
 }
 
-@for $counter from 1 through $series-count-max {
+@for $pcounter from 1 through $palette-count {
+  $palette: nth( $palettes, $pcounter );
+  $palette-name: nth( $palette-names, $pcounter );
 
-  .#{$prefix}primary.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-#{$counter - 1} rect {
-    fill: nth($primaryShades, $counter);
+  @for $counter from 1 through $series-count-max {
+    .#{$prefix + $palette-name}.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-#{$counter - 1} rect {
+      fill: nth( $palette, $counter );
+    }
   }
-
-  .#{$prefix}alternate.#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar-#{$counter - 1} rect {
-    fill: nth($alternateShades, $counter);
-  }
-
 }
