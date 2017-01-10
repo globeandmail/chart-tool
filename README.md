@@ -55,7 +55,7 @@ Chart Tool is made up of two parts:
 * **Highly configurable:** Don't want tips to appear for a specific chart, or want to manually set the number of ticks to be displayed? No problem!
 * **"Ordinal-time" scales:** Treat time series data as if it were ordinal — this is very useful for visualizing stock price charts, or when you want to skip weekends and holidays
 * **Pre- and post-render hooks:** All charts come with several basic custom events via [`d3.dispatch`](https://github.com/mbostock/d3/wiki/Internals#d3_dispatch), including pre- and post-render hooks for every chart
-* **Zero external dependencies:** The library is built using [D3.js](https://github.com/mbostock/d3/), but comes bundled with everything it'll need
+* **Zero external dependencies:** The Chart Tool librart comes bundled with everything it'll need right out of the box
 * **Lightweight libraries:** The front-end CSS and JS libraries clock in at a combined **45.536kB** minified and gzipped
 
 
