@@ -85,7 +85,7 @@ app_settings = {
 
   // if you want to add more colour palettes, just add their
   // name to this array and charts will be classed using this name
-  palettes: ['Primary', 'Alternate'],
+  palettes: ['Primary', 'Alternate', 'Grayscale'],
 
   help: 'https://github.com/globeandmail/chart-tool/tree/master/README.md',
 
