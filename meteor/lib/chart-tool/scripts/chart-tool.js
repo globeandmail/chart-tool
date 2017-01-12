@@ -9437,7 +9437,7 @@ function stackedBarChart(node, obj) {
         return {
           key: d,
           value: data.series.reduce(function (a, b) {
-            return Number(a.val) + Number(b.val);
+            return (typeof a === 'number' ? a : Number(a.val)) + Number(b.val);
           })
         };
       });
