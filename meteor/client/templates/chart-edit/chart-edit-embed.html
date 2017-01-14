@@ -5,7 +5,7 @@
 <div class="{{ pfx }}chart" data-chartid="{{ pfx }}{{ _id }}">
   <script type="text/javascript">
     (function(root) {
-      var data = {{ embedJSON }};
+      var data = {{{ embedJSON }}};
       root.ChartTool = root.ChartTool || [];
       root.ChartTool.push({id: '{{ pfx }}' + data.id, data: data});
       var b = document.getElementsByTagName('body')[0];
