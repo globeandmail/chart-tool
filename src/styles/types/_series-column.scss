@@ -9,7 +9,7 @@
   $palette-name: nth( $palette-names, $pcounter );
 
   @for $counter from 1 through $series-count-max {
-    .#{$prefix + $palette-name}primary.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}series-#{$counter - 1} .#{$prefix}column-#{$counter - 1} rect {
+    .#{$prefix + $palette-name}.#{$prefix}type_column .#{$prefix}series_group .#{$prefix}series-#{$counter - 1} .#{$prefix}column-#{$counter - 1} rect {
       fill: nth( $palette, $counter );
     }
   }

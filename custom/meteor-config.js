@@ -37,7 +37,7 @@ app_settings = {
   // name to this array and charts will be classed using this name
   palettes: ['Primary', 'Alternate', 'Grayscale'],
 
-  help: 'https://github.com/globeandmail/chart-tool/tree/master/README.md',
+  help: 'http://staging.graphics.stltoday.com/apps/docs-charttool/',
 
   chart: {
     version: app_version,
