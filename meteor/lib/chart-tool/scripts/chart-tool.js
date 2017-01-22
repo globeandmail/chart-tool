@@ -5732,8 +5732,8 @@ function sum$1(series) {
   return s;
 }
 
-// "chartstg" is defined in rollup.config.js
-var bucket = "chartstg";
+// defined in rollup.config.js
+var bucket = "chartprod";
 
 function debounce$1(fn, obj, timeout, root) {
   var timeoutID = -1;
@@ -11159,6 +11159,8 @@ var index = (function (root) {
 
           dispatcher.call('start', this, chart);
 
+          if (chart.data.chart.drawStart) { chart.data.chart.drawStart(); }
+
           drawn = clearDrawn(drawn, chart);
 
           var obj = clearObj(chart);
@@ -11187,6 +11189,7 @@ var index = (function (root) {
             .on('mouseout', function () { return dispatcher.call('mouseOut', this$1, chartObj); });
 
           dispatcher.call('finish', this, chartObj);
+          if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
 
           if (callback) { callback(); }
 

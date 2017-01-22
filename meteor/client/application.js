@@ -33,19 +33,14 @@ updateAndSave = function(method, obj, data) {
   });
 }
 
-drawPreviews = function(obj) {
-  drawChart(".desktop-preview-container", obj);
-  drawChart(".mobile-preview-container", obj);
-}
-
-drawChart = function(container, obj) {
+drawChart = function(container, obj, cb) {
   d3.select(container).selectAll(".chart-error-container").remove();
   var error;
   try {
     var chartObj = {};
     chartObj.id = obj._id;
     chartObj.data = embed(obj);
-    ChartTool.create(container, chartObj);
+    ChartTool.create(container, chartObj, cb);
   } catch (e) {
     error = e;
     console.log(error);
