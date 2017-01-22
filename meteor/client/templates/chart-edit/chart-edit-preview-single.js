@@ -47,7 +47,7 @@ Template.chartEditPreviewSingle.rendered = function() {
 
       data.editable = true;
 
-      data.drawStart = () => { el.classList.remove('preview-inactive'); };
+      data.drawStart = () => { el.classList.add('preview-inactive'); };
       data.drawFinished = () => { el.classList.remove('preview-inactive'); };
 
       Tracker.afterFlush(function() {
