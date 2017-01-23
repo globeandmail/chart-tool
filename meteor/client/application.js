@@ -1,32 +1,8 @@
-savePulse = function() {
-  var time = 600;
-  function start() {
-    d3.select(".save-icon").transition()
-      .duration(time)
-      .style("opacity", 1)
-      .transition()
-      .duration(time)
-      .style('opacity', 0.1)
-      .ease('sine')
-      .each("end", start);
-  }
-  function stop() {
-    d3.select(".save-icon").transition()
-      .style("opacity", "");
-  }
-  return {
-    start: start,
-    stop: stop
-  }
-}
-
 updateAndSave = function(method, obj, data) {
-  savePulse().start();
   Meteor.call(method, obj._id, data, function(err, result) {
     if (!err) {
       var newObj = Charts.findOne(Session.get("chartId"));
       generateThumb(newObj);
-      savePulse().stop();
     } else {
       console.log(err);
     }
