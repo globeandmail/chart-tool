@@ -47,8 +47,12 @@ Template.chartEditPreviewSingle.rendered = function() {
 
       data.editable = true;
 
-      data.drawStart = () => { el.classList.add('preview-inactive'); };
-      data.drawFinished = () => { el.classList.remove('preview-inactive'); };
+      data.drawStart = function() {
+        el.classList.add('preview-inactive');
+      };
+      data.drawFinished = function() {
+        el.classList.remove('preview-inactive');
+      };
 
       Tracker.afterFlush(function() {
         drawChart('.' + el.classList[1], data);
