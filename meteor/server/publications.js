@@ -27,6 +27,7 @@ Meteor.publish("tags", function () {
     "tagName": true,
     "tagged": true
   };
+  delete parameters.options.limit;
   var data = Tags.find(parameters.find, parameters.options);
   if (data) { return data; }
   return this.ready();
