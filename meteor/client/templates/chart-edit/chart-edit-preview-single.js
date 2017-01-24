@@ -1,23 +1,14 @@
-function setInactive() {
-  var containers = document.querySelectorAll('.preview-container');
-  for (var i = 0; i < containers.length; i++) {
-    containers[i].classList.add('preview-inactive');
-  }
-}
-
 Template.chartEditPreviewSingle.events({
   "blur .editable-chart_title": function(event) {
     event.preventDefault();
     var input = event.target.innerText;
     var text = removeNbsp(input).trim();
-    setInactive();
     updateAndSave("updateHed", this.data, text);
   },
   "blur .editable-chart_qualifier": function(event) {
     event.preventDefault();
     var input = event.target.innerText;
     var text = removeNbsp(input).trim();
-    setInactive();
     updateAndSave("updateQual", this.data, text);
   },
   "click .editable-chart_source": function(event) {
@@ -38,7 +29,6 @@ Template.chartEditPreviewSingle.events({
     } else {
       text = removeNbsp(currText).trim();
     }
-    setInactive();
     updateAndSave("updateSource", this.data, text);
   }
 });
@@ -59,7 +49,7 @@ Template.chartEditPreviewSingle.rendered = function() {
 
       Tracker.afterFlush(function() {
         data.drawFinished = function(chart) {
-          var el = document.querySelector('.' + dataContext.type + '-preview-container');
+          var el = document.querySelector('.' + dataContext.type + '-preview-outer-container');
           el.classList.remove('preview-inactive');
         };
         drawChart('.' + dataContext.type + '-preview-container', data);

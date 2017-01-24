@@ -1,4 +1,12 @@
+function setInactive() {
+  var containers = document.querySelectorAll('.preview-outer-container');
+  for (var i = 0; i < containers.length; i++) {
+    containers[i].classList.add('preview-inactive');
+  }
+}
+
 updateAndSave = function(method, obj, data) {
+  setInactive();
   Meteor.call(method, obj._id, data, function(err, result) {
     if (!err) {
       var newObj = Charts.findOne(Session.get("chartId"));
@@ -21,6 +29,7 @@ drawChart = function(container, obj, cb) {
     error = e;
     console.log(error);
     drawError(container, error);
+    if (obj.drawFinished) { obj.drawFinished(); }
   } finally {
     return error;
   }
