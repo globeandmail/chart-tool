@@ -1,55 +1,35 @@
-savePulse = function() {
-  var time = 600;
-  function start() {
-    d3.select(".save-icon").transition()
-      .duration(time)
-      .style("opacity", 1)
-      .transition()
-      .duration(time)
-      .style('opacity', 0.1)
-      .ease('sine')
-      .each("end", start);
-  }
-  function stop() {
-    d3.select(".save-icon").transition()
-      .style("opacity", "");
-  }
-  return {
-    start: start,
-    stop: stop
+function setInactive() {
+  var containers = document.querySelectorAll('.preview-outer-container');
+  for (var i = 0; i < containers.length; i++) {
+    containers[i].classList.add('preview-inactive');
   }
 }
 
 updateAndSave = function(method, obj, data) {
-  savePulse().start();
+  setInactive();
   Meteor.call(method, obj._id, data, function(err, result) {
     if (!err) {
       var newObj = Charts.findOne(Session.get("chartId"));
       generateThumb(newObj);
-      savePulse().stop();
     } else {
       console.log(err);
     }
   });
 }
 
-drawPreviews = function(obj) {
-  drawChart(".desktop-preview-container", obj);
-  drawChart(".mobile-preview-container", obj);
-}
-
-drawChart = function(container, obj) {
+drawChart = function(container, obj, cb) {
   d3.select(container).selectAll(".chart-error-container").remove();
   var error;
   try {
     var chartObj = {};
     chartObj.id = obj._id;
     chartObj.data = embed(obj);
-    ChartTool.create(container, chartObj);
+    ChartTool.create(container, chartObj, cb);
   } catch (e) {
     error = e;
     console.log(error);
     drawError(container, error);
+    if (obj.drawFinished) { obj.drawFinished(); }
   } finally {
     return error;
   }

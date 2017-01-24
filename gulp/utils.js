@@ -48,7 +48,7 @@ gulp.task('set-version', () => {
 
 gulp.task('buildver', () => {
   if (args.set) {
-    var val = args.set;
+    const val = args.set;
     return gulp.src('./package.json')
       .pipe(jeditor(pkg => {
         pkg.buildVer = val.toString();

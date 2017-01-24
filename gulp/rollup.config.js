@@ -14,7 +14,7 @@ class RollupConfig {
         exclude: ['node_modules/**', '*.json']
       }),
       replace({
-        s3_bucket: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
+        S3_BUCKET: JSON.stringify(process.env.S3_CHARTTOOL_BUCKET)
       }),
       nodeResolve({ jsnext: true }),
       commonjs()

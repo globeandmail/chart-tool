@@ -29,6 +29,8 @@ export default (root => {
 
           dispatcher.call('start', this, chart);
 
+          if (chart.data.chart.drawStart) { chart.data.chart.drawStart(); }
+
           drawn = clearDrawn(drawn, chart);
 
           const obj = clearObj(chart);
@@ -57,6 +59,7 @@ export default (root => {
             .on('mouseout', () => dispatcher.call('mouseOut', this, chartObj));
 
           dispatcher.call('finish', this, chartObj);
+          if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
 
           if (callback) { callback(); }
 
