@@ -48,10 +48,6 @@ Template.chartEditPreviewSingle.rendered = function() {
       data.editable = true;
 
       Tracker.afterFlush(function() {
-        data.drawFinished = function(chart) {
-          var el = document.querySelector('.' + dataContext.type + '-preview-outer-container');
-          el.classList.remove('preview-inactive');
-        };
         drawChart('.' + dataContext.type + '-preview-container', data);
       });
 

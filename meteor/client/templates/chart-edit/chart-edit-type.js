@@ -13,8 +13,7 @@ Template.chartEditType.events({
           XScale: "time",
           YScale: "linear",
           XNice: false,
-          YNice: true,
-          QualifierOption: true
+          YNice: true
         });
         break;
       case "multiline":
@@ -25,8 +24,7 @@ Template.chartEditType.events({
           XScale: "time",
           YScale: "linear",
           XNice: false,
-          YNice: true,
-          QualifierOption: true
+          YNice: true
         });
         break;
       case "area":
@@ -37,8 +35,7 @@ Template.chartEditType.events({
           XScale: "time",
           YScale: "linear",
           XNice: false,
-          YNice: true,
-          QualifierOption: true
+          YNice: true
         });
         break;
       case "column":
@@ -49,8 +46,7 @@ Template.chartEditType.events({
           XScale: "ordinal",
           YScale: "linear",
           XNice: false,
-          YNice: true,
-          QualifierOption: true
+          YNice: true
         });
         break;
       case "bar":
@@ -61,8 +57,7 @@ Template.chartEditType.events({
           XScale: "linear",
           YScale: "ordinal",
           XNice: false,
-          YNice: false,
-          QualifierOption: true
+          YNice: false
         });
         break;
       default:
@@ -73,8 +68,7 @@ Template.chartEditType.events({
           XScale: "time",
           YScale: "linear",
           XNice: false,
-          YNice: true,
-          QualifierOption: true
+          YNice: true
         });
         updateAndSave("resetXAxis", this);
         updateAndSave("resetYAxis", this);

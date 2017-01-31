@@ -5,6 +5,13 @@ function setInactive() {
   }
 }
 
+function setActive() {
+  var containers = document.querySelectorAll('.preview-outer-container');
+  for (var i = 0; i < containers.length; i++) {
+    containers[i].classList.remove('preview-inactive');
+  }
+}
+
 updateAndSave = function(method, obj, data) {
   setInactive();
   Meteor.call(method, obj._id, data, function(err, result) {
@@ -14,6 +21,7 @@ updateAndSave = function(method, obj, data) {
     } else {
       console.log(err);
     }
+    setActive();
   });
 }
 
