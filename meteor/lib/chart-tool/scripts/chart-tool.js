@@ -1010,43 +1010,6 @@ var number = function(x) {
   return x === null ? NaN : +x;
 };
 
-var variance = function(array, f) {
-  var n = array.length,
-      m = 0,
-      a,
-      d,
-      s = 0,
-      i = -1,
-      j = 0;
-
-  if (f == null) {
-    while (++i < n) {
-      if (!isNaN(a = number(array[i]))) {
-        d = a - m;
-        m += d / ++j;
-        s += d * (a - m);
-      }
-    }
-  }
-
-  else {
-    while (++i < n) {
-      if (!isNaN(a = number(f(array[i], i, array)))) {
-        d = a - m;
-        m += d / ++j;
-        s += d * (a - m);
-      }
-    }
-  }
-
-  if (j > 1) return s / (j - 1);
-};
-
-var deviation = function(array, f) {
-  var v = variance(array, f);
-  return v ? Math.sqrt(v) : v;
-};
-
 var extent = function(array, f) {
   var i = -1,
       n = array.length,
@@ -1178,16 +1141,6 @@ var min = function(array, f) {
   }
 
   return a;
-};
-
-var transpose = function(matrix) {
-  if (!(n = matrix.length)) return [];
-  for (var i = -1, m = min(matrix, length), transpose = new Array(m); ++i < m;) {
-    for (var j = -1, n, row = transpose[i] = new Array(n); ++j < n;) {
-      row[j] = matrix[j][i];
-    }
-  }
-  return transpose;
 };
 
 function length(d) {
@@ -2023,7 +1976,7 @@ var interpolateRgb = (function rgbGamma(y) {
     var r = color$$1((start = rgb(start)).r, (end = rgb(end)).r),
         g = color$$1(start.g, end.g),
         b = color$$1(start.b, end.b),
-        opacity = color$$1(start.opacity, end.opacity);
+        opacity = nogamma(start.opacity, end.opacity);
     return function(t) {
       start.r = r(t);
       start.g = g(t);
@@ -4200,7 +4153,7 @@ var barLabelOffset = 6;
 var bands = {"padding":0.12,"offset":0.06,"outerPadding":0.06};
 
 var social = {"facebook":{"label":"Facebook","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg","redirect":"","appID":""},"twitter":{"label":"Twitter","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg","via":"","hashtag":""},"email":{"label":"Email","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"},"sms":{"label":"SMS","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"}};
-var image = {"enable":false,"base_path":"","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
+var image = {"enable":false,"base_path":"charts/thumbnails","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
 
 var version = "1.2.0";
 var buildVer = "0";
@@ -4447,7 +4400,7 @@ var tauEpsilon = tau - epsilon;
 function Path() {
   this._x0 = this._y0 = // start of current subpath
   this._x1 = this._y1 = null; // end of current subpath
-  this._ = [];
+  this._ = "";
 }
 
 function path() {
@@ -4457,22 +4410,22 @@ function path() {
 Path.prototype = path.prototype = {
   constructor: Path,
   moveTo: function(x, y) {
-    this._.push("M", this._x0 = this._x1 = +x, ",", this._y0 = this._y1 = +y);
+    this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y);
   },
   closePath: function() {
     if (this._x1 !== null) {
       this._x1 = this._x0, this._y1 = this._y0;
-      this._.push("Z");
+      this._ += "Z";
     }
   },
   lineTo: function(x, y) {
-    this._.push("L", this._x1 = +x, ",", this._y1 = +y);
+    this._ += "L" + (this._x1 = +x) + "," + (this._y1 = +y);
   },
   quadraticCurveTo: function(x1, y1, x, y) {
-    this._.push("Q", +x1, ",", +y1, ",", this._x1 = +x, ",", this._y1 = +y);
+    this._ += "Q" + (+x1) + "," + (+y1) + "," + (this._x1 = +x) + "," + (this._y1 = +y);
   },
   bezierCurveTo: function(x1, y1, x2, y2, x, y) {
-    this._.push("C", +x1, ",", +y1, ",", +x2, ",", +y2, ",", this._x1 = +x, ",", this._y1 = +y);
+    this._ += "C" + (+x1) + "," + (+y1) + "," + (+x2) + "," + (+y2) + "," + (this._x1 = +x) + "," + (this._y1 = +y);
   },
   arcTo: function(x1, y1, x2, y2, r) {
     x1 = +x1, y1 = +y1, x2 = +x2, y2 = +y2, r = +r;
@@ -4489,9 +4442,7 @@ Path.prototype = path.prototype = {
 
     // Is this path empty? Move to (x1,y1).
     if (this._x1 === null) {
-      this._.push(
-        "M", this._x1 = x1, ",", this._y1 = y1
-      );
+      this._ += "M" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
 
     // Or, is (x1,y1) coincident with (x0,y0)? Do nothing.
@@ -4501,9 +4452,7 @@ Path.prototype = path.prototype = {
     // Equivalently, is (x1,y1) coincident with (x2,y2)?
     // Or, is the radius zero? Line to (x1,y1).
     else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon) || !r) {
-      this._.push(
-        "L", this._x1 = x1, ",", this._y1 = y1
-      );
+      this._ += "L" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
 
     // Otherwise, draw an arc!
@@ -4520,14 +4469,10 @@ Path.prototype = path.prototype = {
 
       // If the start tangent is not coincident with (x0,y0), line to.
       if (Math.abs(t01 - 1) > epsilon) {
-        this._.push(
-          "L", x1 + t01 * x01, ",", y1 + t01 * y01
-        );
+        this._ += "L" + (x1 + t01 * x01) + "," + (y1 + t01 * y01);
       }
 
-      this._.push(
-        "A", r, ",", r, ",0,0,", +(y01 * x20 > x01 * y20), ",", this._x1 = x1 + t21 * x21, ",", this._y1 = y1 + t21 * y21
-      );
+      this._ += "A" + r + "," + r + ",0,0," + (+(y01 * x20 > x01 * y20)) + "," + (this._x1 = x1 + t21 * x21) + "," + (this._y1 = y1 + t21 * y21);
     }
   },
   arc: function(x, y, r, a0, a1, ccw) {
@@ -4544,16 +4489,12 @@ Path.prototype = path.prototype = {
 
     // Is this path empty? Move to (x0,y0).
     if (this._x1 === null) {
-      this._.push(
-        "M", x0, ",", y0
-      );
+      this._ += "M" + x0 + "," + y0;
     }
 
     // Or, is (x0,y0) not coincident with the previous point? Line to (x0,y0).
     else if (Math.abs(this._x1 - x0) > epsilon || Math.abs(this._y1 - y0) > epsilon) {
-      this._.push(
-        "L", x0, ",", y0
-      );
+      this._ += "L" + x0 + "," + y0;
     }
 
     // Is this arc empty? We’re done.
@@ -4561,25 +4502,20 @@ Path.prototype = path.prototype = {
 
     // Is this a complete circle? Draw two arcs to complete the circle.
     if (da > tauEpsilon) {
-      this._.push(
-        "A", r, ",", r, ",0,1,", cw, ",", x - dx, ",", y - dy,
-        "A", r, ",", r, ",0,1,", cw, ",", this._x1 = x0, ",", this._y1 = y0
-      );
+      this._ += "A" + r + "," + r + ",0,1," + cw + "," + (x - dx) + "," + (y - dy) + "A" + r + "," + r + ",0,1," + cw + "," + (this._x1 = x0) + "," + (this._y1 = y0);
     }
 
     // Otherwise, draw an arc!
     else {
       if (da < 0) da = da % tau + tau;
-      this._.push(
-        "A", r, ",", r, ",0,", +(da >= pi), ",", cw, ",", this._x1 = x + r * Math.cos(a1), ",", this._y1 = y + r * Math.sin(a1)
-      );
+      this._ += "A" + r + "," + r + ",0," + (+(da >= pi)) + "," + cw + "," + (this._x1 = x + r * Math.cos(a1)) + "," + (this._y1 = y + r * Math.sin(a1));
     }
   },
   rect: function(x, y, w, h) {
-    this._.push("M", this._x0 = this._x1 = +x, ",", this._y0 = this._y1 = +y, "h", +w, "v", +h, "h", -w, "Z");
+    this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y) + "h" + (+w) + "v" + (+h) + "h" + (-w) + "Z";
   },
   toString: function() {
-    return this._.join("");
+    return this._;
   }
 };
 
@@ -4926,21 +4862,6 @@ var circle = {
     context.arc(0, 0, r, 0, tau$1);
   }
 };
-
-var tan30 = Math.sqrt(1 / 3);
-var tan30_2 = tan30 * 2;
-
-var ka = 0.89081309152928522810;
-var kr = Math.sin(pi$1 / 10) / Math.sin(7 * pi$1 / 10);
-var kx = Math.sin(tau$1 / 10) * kr;
-var ky = -Math.cos(tau$1 / 10) * kr;
-
-var sqrt3 = Math.sqrt(3);
-
-var c = -0.5;
-var s = Math.sqrt(3) / 2;
-var k = 1 / Math.sqrt(12);
-var a = (k / 2 + 1) * 3;
 
 var noop$1 = function() {};
 
@@ -5721,11 +5642,6 @@ var stack = function() {
   return stack;
 };
 
-var ascending$2 = function(series) {
-  var sums = series.map(sum$1);
-  return none$2(series).sort(function(a, b) { return sums[a] - sums[b]; });
-};
-
 function sum$1(series) {
   var s = 0, i = -1, n = series.length, v;
   while (++i < n) if (v = +series[i][1]) s += v;
@@ -5733,7 +5649,7 @@ function sum$1(series) {
 }
 
 // defined in rollup.config.js
-var bucket = "chartprod";
+var bucket = "projects.buffalonews.com";
 
 function debounce$1(fn, obj, timeout, root) {
   var timeoutID = -1;
@@ -6051,24 +5967,9 @@ function isUndefined(val) {
   return val === undefined ? true : false;
 }
 
-function arrayDiff(a1, a2) {
-  var o1 = {}, o2 = {}, diff = [];
-  for (var i = 0; i < a1.length; i++) { o1[a1[i]] = true; }
-  for (var i$1 = 0; i$1 < a2.length; i$1++) { o2[a2[i$1]] = true; }
-  for (var k in o1) { if (!(k in o2)) { diff.push(k); } }
-  for (var k$1 in o2) { if (!(k$1 in o1)) { diff.push(k$1); } }
-  return diff;
-}
 
-function arraySame(a1, a2) {
-  var ret = [];
-  for (var i in a1) {
-    if (a2.indexOf(a1[i]) > -1){
-      ret.push(a1[i]);
-    }
-  }
-  return ret;
-}
+
+
 
 
 
@@ -6278,7 +6179,7 @@ function sleep(time) {
     if (time < Infinity) timeout = setTimeout(wake, delay);
     if (interval) interval = clearInterval(interval);
   } else {
-    if (!interval) interval = setInterval(poke, pokeDelay);
+    if (!interval) clockLast = clockNow, interval = setInterval(poke, pokeDelay);
     frame = 1, setFrame(wake);
   }
 }
@@ -7240,30 +7141,6 @@ function propertiesObject(selection$$1, map) {
 var selection_properties = function(map) {
   return (typeof map === "function" ? propertiesFunction : propertiesObject)(this, map);
 };
-
-function attrsFunction$1(transition, map) {
-  return transition.each(function() {
-    var x = map.apply(this, arguments), t = select(this).transition(transition);
-    for (var name in x) t.attr(name, x[name]);
-  });
-}
-
-function attrsObject$1(transition, map) {
-  for (var name in map) transition.attr(name, map[name]);
-  return transition;
-}
-
-function stylesFunction$1(transition, map, priority) {
-  return transition.each(function() {
-    var x = map.apply(this, arguments), t = select(this).transition(transition);
-    for (var name in x) t.style(name, x[name], priority);
-  });
-}
-
-function stylesObject$1(transition, map, priority) {
-  for (var name in map) transition.style(name, map[name], priority);
-  return transition;
-}
 
 selection.prototype.attrs = selection_attrs;
 selection.prototype.styles = selection_styles;
@@ -10857,7 +10734,7 @@ var IE8_DOM_DEFINE = _ie8DomDefine;
 var toPrimitive    = _toPrimitive;
 var dP$1             = Object.defineProperty;
 
-var f$1 = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes){
+var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes){
   anObject(O);
   P = toPrimitive(P, true);
   anObject(Attributes);
@@ -10870,7 +10747,7 @@ var f$1 = _descriptors ? Object.defineProperty : function defineProperty(O, P, A
 };
 
 var _objectDp = {
-	f: f$1
+	f: f
 };
 
 var _propertyDesc = function(bitmap, value){
@@ -11077,16 +10954,16 @@ var _objectKeys = Object.keys || function keys(O){
   return $keys(O, enumBugKeys);
 };
 
-var f$2 = Object.getOwnPropertySymbols;
+var f$1 = Object.getOwnPropertySymbols;
 
 var _objectGops = {
-	f: f$2
+	f: f$1
 };
 
-var f$3 = {}.propertyIsEnumerable;
+var f$2 = {}.propertyIsEnumerable;
 
 var _objectPie = {
-	f: f$3
+	f: f$2
 };
 
 // 7.1.13 ToObject(argument)

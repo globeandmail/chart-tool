@@ -5,39 +5,42 @@
 // $margin: 0 0 20px 0;
 //
 // // Fonts
-// $heading-font-family: 'Helvetica';
-// $heading-font-weight: bold;
+ $heading-font-family: 'Lora';
+ $heading-font-weight: bold;
 // $heading-font-style: normal;
 // $heading-font-size: 15px;
 // $heading-font-line-height: 17px;
+$heading-letter-spacing: 0.75px;
 //
-// $utility-font-family: 'Helvetica';
+ $utility-font-family: 'Lato';
 // $utility-font-weight: normal;
 // $utility-font-style: normal;
 // $utility-font-size: 13px;
 // $utility-font-line-height: 16px;
 //
-// @mixin heading-font {
-//   font-family: $heading-font-family;
-//   font-weight: $heading-font-weight;
-//   font-style: $heading-font-style;
-//   font-size: $heading-font-size;
-//   line-height: $heading-font-line-height;
-// }
+ @mixin heading-font {
+   font-family: $heading-font-family;
+   font-weight: $heading-font-weight;
+   font-style: $heading-font-style;
+   font-size: $heading-font-size;
+   line-height: $heading-font-line-height;
+   letter-spacing: $heading-letter-spacing;
+ }
 //
-// @mixin utility-font {
-//   font-family: $utility-font-family;
-//   font-weight: $utility-font-weight;
-//   font-style: $utility-font-style;
-//   font-size: $utility-font-size;
-//   line-height: $utility-font-line-height;
-// }
+ @mixin utility-font {
+   font-family: $utility-font-family;
+   font-weight: $utility-font-weight;
+   font-style: $utility-font-style;
+   font-size: $utility-font-size;
+   line-height: $utility-font-line-height;
+   letter-spacing: normal;
+ }
 //
 // // Color palettes
-// $primary-color: #1f77b4;
-// $primary-shade-1: #ff7f0e;
-// $primary-shade-2: #bcbd22;
-// $primary-shade-3: #8c564b;
+ $primary-color: #17807E;
+ $primary-shade-1: #E38D2C;
+ $primary-shade-2: #28556F;
+ $primary-shade-3: #EFC637;
 // $primary-shade-4: #7f7f7f;
 // $primaryShades: $primary-color, $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4;
 //
@@ -60,7 +63,7 @@
 // $palettes: $primaryShades, $alternateShades, $grayscaleShades;
 //
 // // Other colors
-// $color-black: #111111;
+ $color-black: #666666;
 // $color-gray-dark: #595959;
 // $color-gray-medium: #777777;
 // $color-gray-light: #F9F9F9;
@@ -74,7 +77,7 @@
 // $color-beige: #FFF8E7;
 // $color-red-bright: #F90611;
 //
-// $axis-stroke-color: lighten($color-gray-medium, 35%);
+ $axis-stroke-color: #ccc;
 // $axis-stroke-width: 1px;
 // $axis-stroke-dasharray: 1, 3px;
 // $line-stroke-width: 2.5px;

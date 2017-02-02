@@ -98,7 +98,7 @@
   },
 
   "source": {
-    "prefix": "CHART TOOL",
+    "prefix": "The Buffalo News",
     "suffix": " » SOURCE:"
   },
 
@@ -127,7 +127,7 @@
 
   "image": {
     "enable": false,
-    "base_path": "",
+    "base_path": "charts/thumbnails",
     "expiration": 30000,
     "filename": "thumbnail",
     "extension": "png",

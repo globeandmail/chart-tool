@@ -62,6 +62,6 @@
 
 .#{$prefix}zero-line {
   stroke-width: $axis-stroke-width;
-  stroke: $color-black;
+  stroke: $axis-stroke-color;
   stroke-linecap: square;
 }
