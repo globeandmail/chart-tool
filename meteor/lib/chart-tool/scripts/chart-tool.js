@@ -7209,7 +7209,7 @@ function header(container, obj) {
 
   var qualifier;
 
-  if (obj.options.type === 'bar' || obj.options.type === 'column') {
+  if (obj.options.type === 'bar') {
     qualifier = headerGroup
       .append('div')
       .attrs({

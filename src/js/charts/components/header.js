@@ -28,7 +28,7 @@ export default function header(container, obj) {
 
   let qualifier;
 
-  if (obj.options.type === 'bar' || obj.options.type === 'column') {
+  if (obj.options.type === 'bar') {
     qualifier = headerGroup
       .append('div')
       .attrs({

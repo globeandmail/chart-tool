@@ -1,3 +1,30 @@
 .ct-yAxis .tick line {
   display: none;
 }
+.ct-primary .ct-tip .ct-tip_path-circle-0, .ct-primary .ct-tip .ct-tip_circle.ct-tip_circle-0 {
+  fill: $primary-color;
+}
+.ct-primary.ct-type_line .ct-series_group .ct-line.ct-line-0 {
+  stroke: $primary-color;
+}
+.ct-primary.ct-type_column .ct-series_group .ct-series-0 .ct-column-0 rect {
+  fill: $primary-color;
+}
+.ct-primary.ct-type_bar .ct-series_group .ct-bar-0 rect {
+  fill: $primary-color;
+}
+.ct-primary .ct-chart_legend .ct-legend_item_0 .ct-legend_item_icon {
+  background: $primary-color;
+}
+.ct-primary.ct-type_area .ct-series_group .ct-fill.ct-fill-0 {
+  fill: $primary-color;
+}
+.ct-primary.ct-type_multiline .ct-series_group .ct-multiline.ct-multiline-0 {
+  stroke: $primary-color;
+}
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_0 .ct-legend_item_icon {
+  background: $primary-color;
+}
+.ct-primary .ct-chart_legend.ct-chart_legend-multiline .ct-legend_item_0 .ct-legend_item_icon {
+  fill: $primary-color;
+}
