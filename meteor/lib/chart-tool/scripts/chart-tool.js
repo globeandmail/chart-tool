@@ -7209,7 +7209,7 @@ function header(container, obj) {
 
   var qualifier;
 
-  if (obj.options.type === 'bar') {
+  if (obj.options.type === 'bar' || obj.options.type === 'column') {
     qualifier = headerGroup
       .append('div')
       .attrs({
@@ -7773,12 +7773,11 @@ function drawYAxis(obj, axis, axisNode, axisSettings) {
     .attr('transform', 'translate(0,0)')
     .call(updateTextY, axisNode, obj, axis, axisSettings)
     .call(repositionTextY, obj.dimensions, axisSettings.textX);
-
-  axisNode.selectAll('.tick line')
+  /*axisNode.selectAll('.tick line')
     .attrs({
       'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
       'x2': obj.dimensions.computedWidth()
-    });
+    });*/
 
 }
 
