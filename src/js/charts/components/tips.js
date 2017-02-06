@@ -346,10 +346,8 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
   }
 
   if (!isUndefined) {
-
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
-
     tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
       .data(tipData.series)
       .text(d => {
