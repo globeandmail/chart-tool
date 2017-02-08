@@ -120,7 +120,10 @@ generateThumb = function(obj) {
 
     drawnChartContainer.select("." + prefix + "chart_source")
       .classed("target", true);
-
+    console.log('container');
+    console.log(container);
+    console.log('obj');
+    console.log(obj);
     multiSVGtoPNG.convertToSVG({
       input: '.chart-thumbnail',
       selector: "." + prefix + "chart_title.target, ." + prefix + "chart_svg.target, ." + prefix + "chart_source.target",
@@ -212,7 +215,8 @@ downloadImg = function(_obj, _options) {
     multiSVGtoPNG.convertToSVG({
       input: '.chart-export',
       selector: "." + prefix + "chart_title.target, ." + prefix + "chart_svg.target, ." + prefix + "chart_source.target",
-      output: '.svg-container'
+      output: '.svg-container',
+      descriptor: _obj.exportable.type,
     });
 
     multiSVGtoPNG.downloadPNG({
