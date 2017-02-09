@@ -11,7 +11,6 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
   var canvasWidth = 0;
 
   obj.convertToSVG = function(options) {
-    console.log(options);
 
     var targetContainer = options.input,
       targetChild = options.selector,
@@ -103,8 +102,6 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
 
     var imageCounter = 0;
 
-    console.log(svgs.length);
-
     for (var i = 0; i < svgs.length; i++) {
       (function(arr, k) {
 
@@ -129,12 +126,7 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
           currentHeight += currSvgHeight;
 
           if (arr.length === imageCounter) {
-            if(options.descriptor == "web") {
-              var canvasData = canvas.toDataURL("image/png");
-            } else {
-              var canvasData = canvas.toDataURL("image/png");
-            }
-
+            var canvasData = canvas.toDataURL("image/png");
             if (cb) {
               cb(canvasData);
             } else {
