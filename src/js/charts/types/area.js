@@ -129,4 +129,3 @@ export default function sreaChart(node, obj) {
   };
 
 }
-"<link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>"
