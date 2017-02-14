@@ -4,6 +4,8 @@
   ul {
     li {
       padding-bottom: 0.3em;
+      display: inline-block;
+      margin-bottom: 10px;
     }
     span {
       @include interface-font-bold;
