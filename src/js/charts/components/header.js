@@ -29,17 +29,19 @@ export default function header(container, obj) {
   let qualifier;
 
   if (obj.options.type === 'bar') {
-    qualifier = headerGroup
-      .append('div')
-      .attrs({
-        'class': () => {
-          let str = `${obj.prefix}chart_qualifier ${obj.prefix}chart_qualifier-bar`;
-          if (obj.editable) { str += ' editable-chart_qualifier'; }
-          return str;
-        },
-        'contentEditable': () => { return obj.editable ? true : false; }
-      })
-      .text(obj.qualifier);
+    if (obj.qualifier !== '') {
+      qualifier = headerGroup
+        .append('div')
+        .attrs({
+          'class': () => {
+            let str = `${obj.prefix}chart_qualifier ${obj.prefix}chart_qualifier-bar`;
+            if (obj.editable) { str += ' editable-chart_qualifier'; }
+            return str;
+          },
+          'contentEditable': () => { return obj.editable ? true : false; }
+        })
+        .text(obj.qualifier);
+    }
   }
 
   let legend;
