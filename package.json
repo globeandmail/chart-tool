@@ -1,6 +1,6 @@
 {
   "name": "chart-tool",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "buildVer": "0",
   "description": "A responsive charting application",
   "main": "gulpfile.js",
