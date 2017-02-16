@@ -48,7 +48,7 @@ var config = {
 };
 
 var name = "chart-tool";
-var version = "1.2.0";
+var version = "1.2.1";
 var buildVer = "0";
 
 app_version = version;
