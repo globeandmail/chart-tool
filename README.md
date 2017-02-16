@@ -117,7 +117,7 @@ Otherwise, these are some other tutorials you might want to check out:
 
 ## Version
 
-1.2.1
+1.2.2
 
 
 ## License
