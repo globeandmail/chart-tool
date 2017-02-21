@@ -4,7 +4,7 @@ import { line, area } from 'd3-shape';
 import { getCurve } from '../../utils/utils';
 import 'd3-selection-multi';
 
-export default function sreaChart(node, obj) {
+export default function areaChart(node, obj) {
 
   const xScaleObj = new Scale(obj, 'xAxis'),
     yScaleObj = new Scale(obj, 'yAxis'),
@@ -16,7 +16,9 @@ export default function sreaChart(node, obj) {
   axisCleanup(node, obj, xAxisObj, yAxisObj);
 
   if (xScaleObj.obj.type === 'ordinal') {
-    xScale.rangeRound([0, obj.dimensions.tickWidth()], 1.0);
+    xScale
+      .range([0, obj.dimensions.tickWidth()])
+      .padding(0);
   }
 
   if (obj.data.seriesAmount === 1) {
@@ -24,13 +26,20 @@ export default function sreaChart(node, obj) {
   }
 
   const seriesGroup = node.append('g')
-    .attr('class', () => {
-      let output = `${obj.prefix}series_group`;
-      if (obj.data.seriesAmount > 1) {
-        // If more than one series append a 'muliple' class so we can target
-        output += ` ${obj.prefix}multiple`;
+    .attrs({
+      'class': () => {
+        let output = `${obj.prefix}series_group`;
+        if (obj.data.seriesAmount > 1) {
+          // If more than one series append a 'muliple' class so we can target
+          output += ` ${obj.prefix}multiple`;
+        }
+        return output;
+      },
+      'transform': () => {
+        if (xScaleObj.obj.type === 'ordinal') {
+          return `translate(${xScale.bandwidth() / 2},0)`;
+        }
       }
-      return output;
     });
 
   // Secondary array is used to store a reference to all series except for the highlighted item
