@@ -6025,7 +6025,11 @@ function parse(csv, inputDateFormat, index, stacked) {
       var o = {};
       o[headers[0]] = data[i].key;
       for (var j = 0; j < data[i].series.length; j++) {
-        o[data[i].series[j].key] = data[i].series[j].val;
+        if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
+          o[data[i].series[j].key] = '0';
+        } else {
+          o[data[i].series[j].key] = data[i].series[j].val;
+        }
       }
       return o;
     }));
@@ -9137,12 +9141,12 @@ function columnChart(node, obj) {
           }
         },
         'y': function (d) {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return yScale(Math.max(0, d.series[i].val));
           }
         },
         'height': function (d) {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return Math.abs(yScale(d.series[i].val) - yScale(0));
           }
         },
@@ -9263,9 +9267,21 @@ function barChart(node, obj) {
 
     barItem.append('rect')
       .attrs({
-        'class': function (d) { return d.series[i].val < 0 ? 'negative' : 'positive'; },
-        'width': function (d) { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
-        'x': function (d) { return xScale(Math.min(0, d.series[i].val)); },
+        'class': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return d.series[i].val < 0 ? 'negative' : 'positive';
+          }
+        },
+        'width': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return Math.abs(xScale(d.series[i].val) - xScale(0));
+          }
+        },
+        'x': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.min(0, d.series[i].val));
+          }
+        },
         'y': i * singleBar,
         'height': singleBar
       });
@@ -9277,11 +9293,13 @@ function barChart(node, obj) {
         'class': ((obj.prefix) + "bar-label")
       })
       .text(function (d, j) {
-        var val = setTickFormatY(obj.xAxis.format, d.series[i].val);
-        if (i === 0 && j === obj.data.data.length - 1) {
-          val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+        if (d.series[i].val && d.series[i].val !== '__undefined__') {
+          var val = setTickFormatY(obj.xAxis.format, d.series[i].val);
+          if (i === 0 && j === obj.data.data.length - 1) {
+            val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+          }
+          return val;
         }
-        return val;
       })
       .each(function() {
         if (Math.ceil(this.getComputedTextLength()) > widestText.width) {
@@ -9313,14 +9331,24 @@ function barChart(node, obj) {
   var loop$1 = function ( i ) {
     series[i].selectAll(("." + (obj.prefix) + "bar rect"))
       .attrs({
-        'width': function (d) { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
-        'x': function (d) { return xScale(Math.min(0, d.series[i].val)); }
+        'width': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return Math.abs(xScale(d.series[i].val) - xScale(0));
+          }
+        },
+        'x': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.min(0, d.series[i].val));
+          }
+        }
       });
 
     series[i].selectAll(("." + (obj.prefix) + "bar-label"))
       .attrs({
         'x': function (d) {
-          return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
+          }
         },
         'y': function () { return i * singleBar + Math.ceil(singleBar / 2); }
       });
@@ -9448,9 +9476,7 @@ function stackedBarChart(node, obj) {
     .attrs({
       'class': function (d, i) { return ((obj.prefix) + "bar-label " + (obj.prefix) + "bar-label-" + i); },
       'data-legend': function (d) { return d.key; },
-      'x': function (d, i) {
-        return xScale(Math.max(0, lastStack[i][1]));
-      },
+      'x': function (d, i) { return xScale(Math.max(0, lastStack[i][1])); },
       'y': function (d) { return yScale(d.key) + Math.ceil(singleBar / 2); }
     })
     .text(function (d, i) {
@@ -10035,11 +10061,14 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
       .text(function (d) {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-        if (d.val) {
+        if (d.val && d.val !== '__undefined__') {
           return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
         } else {
           return 'n/a';
         }
+      })
+      .classed(((obj.prefix) + "muted"), function (d) {
+        return (!d.val || d.val === '__undefined__');
       });
 
     tipNodes.tipTextDate
@@ -10072,7 +10101,9 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
         .attrs({
           'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
           'cy': function (d) {
-            if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
+            if (d.val && d.val !== '__undefined__') {
+              return obj.rendered.plot.yScaleObj.scale(d.val);
+            }
           }
         });
 
@@ -10274,11 +10305,14 @@ function columnChartTips(tipNodes, innerTipEls, obj) {
     .text(function (d) {
       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-      if (d.val) {
+      if (d.val && d.val !== '__undefined__') {
         return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
       } else {
         return 'n/a';
       }
+    })
+    .classed(((obj.prefix) + "muted"), function (d) {
+      return (!d.val || d.val === '__undefined__');
     });
 
   obj.rendered.plot.seriesGroup.selectAll('rect')

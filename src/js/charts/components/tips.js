@@ -355,11 +355,14 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
       .text(d => {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-        if (d.val) {
+        if (d.val && d.val !== '__undefined__') {
           return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
         } else {
           return 'n/a';
         }
+      })
+      .classed(`${obj.prefix}muted`, d => {
+        return (!d.val || d.val === '__undefined__');
       });
 
     tipNodes.tipTextDate
@@ -392,7 +395,9 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
         .attrs({
           'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
           'cy': d => {
-            if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
+            if (d.val && d.val !== '__undefined__') {
+              return obj.rendered.plot.yScaleObj.scale(d.val);
+            }
           }
         });
 
@@ -594,11 +599,14 @@ export function columnChartTips(tipNodes, innerTipEls, obj) {
     .text(d => {
       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-      if (d.val) {
+      if (d.val && d.val !== '__undefined__') {
         return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
       } else {
         return 'n/a';
       }
+    })
+    .classed(`${obj.prefix}muted`, d => {
+      return (!d.val || d.val === '__undefined__');
     });
 
   obj.rendered.plot.seriesGroup.selectAll('rect')
