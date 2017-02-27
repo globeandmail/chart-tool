@@ -29,7 +29,7 @@ export default function header(container, obj) {
   let qualifier;
 
   if (obj.options.type === 'bar') {
-    if (obj.qualifier !== '') {
+    if (obj.qualifier !== '' || obj.editable) {
       qualifier = headerGroup
         .append('div')
         .attrs({
