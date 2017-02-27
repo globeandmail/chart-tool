@@ -134,7 +134,7 @@
     "thumbnailWidth": 460
   },
 
-  "embedJS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.js",
-  "embedCSS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.css"
+  "embedJS": "http://projects.buffalonews.com/charts/js/chart-tool.min.js",
+  "embedCSS": "http://projects.buffalonews.com/charts/css/chart-tool.min.css"
 
 }
