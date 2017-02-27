@@ -1,4 +1,4 @@
-/* Chart Tool v1.2.0-0 | https://github.com/globeandmail/chart-tool | MIT */
+/* Chart Tool v1.2.1-0 | https://github.com/globeandmail/chart-tool | MIT */
 var ChartToolInit = (function () {
 'use strict';
 
@@ -4155,7 +4155,7 @@ var bands = {"padding":0.12,"offset":0.06,"outerPadding":0.06};
 var social = {"facebook":{"label":"Facebook","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg","redirect":"","appID":""},"twitter":{"label":"Twitter","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg","via":"","hashtag":""},"email":{"label":"Email","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"},"sms":{"label":"SMS","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"}};
 var image = {"enable":false,"base_path":"charts/thumbnails","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
 
-var version = "1.2.0";
+var version = "1.2.1";
 var buildVer = "0";
 
 var chartSettings = {
@@ -7210,17 +7210,19 @@ function header(container, obj) {
   var qualifier;
 
   if (obj.options.type === 'bar') {
-    qualifier = headerGroup
-      .append('div')
-      .attrs({
-        'class': function () {
-          var str = (obj.prefix) + "chart_qualifier " + (obj.prefix) + "chart_qualifier-bar";
-          if (obj.editable) { str += ' editable-chart_qualifier'; }
-          return str;
-        },
-        'contentEditable': function () { return obj.editable ? true : false; }
-      })
-      .text(obj.qualifier);
+    if (obj.qualifier !== '') {
+      qualifier = headerGroup
+        .append('div')
+        .attrs({
+          'class': function () {
+            var str = (obj.prefix) + "chart_qualifier " + (obj.prefix) + "chart_qualifier-bar";
+            if (obj.editable) { str += ' editable-chart_qualifier'; }
+            return str;
+          },
+          'contentEditable': function () { return obj.editable ? true : false; }
+        })
+        .text(obj.qualifier);
+    }
   }
 
   var legend;

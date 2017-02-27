@@ -81,6 +81,7 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
 
     d3.selectAll('.canvas-output').remove();
     var svgs = d3.select(outputTarget).select('div').selectAll("svg")[0];
+    console.log(svgs);
     var canvasHeight = 0;
     var currentHeight = 0;
 
@@ -107,14 +108,80 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
 
         var currSvg = d3.select(arr[k]),
             currSvgHeight = currSvg.node().getBoundingClientRect().height;
-
         var item = currSvg.attr("version", 1.1).node().outerHTML;
         var imgsrc = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(item)));
         var image = new Image;
         image.src = imgsrc;
-
+        //console.log(image.src);
         image.onload = function() {
 
+          if (!imageCounter) {
+            context.fillRect(0, 0, canvasWidth, canvasHeight);
+            context.fill();
+          }
+
+          imageCounter++;
+
+          context.drawImage(image, 0, currentHeight);
+          currentHeight += currSvgHeight;
+
+          if (arr.length === imageCounter) {
+            var canvasData = canvas.toDataURL("image/png");
+            if (cb) {
+              cb(canvasData);
+            } else {
+              return canvasData;
+            }
+          }
+        }
+      })(svgs, i);
+    }
+
+  }
+
+  obj.svgencode = function(options, cb) {
+    var outputTarget = options.input,
+        canvasTarget = options.output,
+        scale = options.scale || 1;
+
+    d3.selectAll('.canvas-output').remove();
+    var svgs = d3.select(outputTarget).select('div').selectAll("svg")[0];
+    console.log(svgs);
+    var canvasHeight = 0;
+    var currentHeight = 0;
+
+    for (var i = 0; i < svgs.length; i++) {
+      canvasHeight += d3.select(svgs[i]).node().getBoundingClientRect().height;
+    }
+
+    var canvasSelection = d3.select(canvasTarget).append('canvas')
+      .attr('class', 'canvas-output')
+      .attr('width', canvasWidth * scale)
+      .attr('height', canvasHeight * scale);
+
+    var canvas = canvasSelection.node(),
+        context = canvas.getContext("2d");
+
+    context.scale(scale, scale);
+
+    context.fillStyle = d3.select(canvasTarget).style("background-color");
+
+    var imageCounter = 0;
+
+    for (var i = 0; i < svgs.length; i++) {
+      (function(arr, k) {
+
+        var currSvg = d3.select(arr[k]),
+            currSvgHeight = currSvg.node().getBoundingClientRect().height;
+        var item = currSvg.attr("version", 1.1).node().outerHTML;
+        var imgsrc = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(item)));
+        var image = new Image;
+        image.src = imgsrc;
+        console.log('return vale')
+        return image.src;
+        //console.log(image.src);
+        image.onload = function() {
+          console.log('start svg image on load')
           if (!imageCounter) {
             context.fillRect(0, 0, canvasWidth, canvasHeight);
             context.fill();
@@ -147,6 +214,26 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
     obj.encode(options, function(data) {
       var a = document.createElement('a');
       a.download = options.filename + ".png";
+      a.href = data;
+      document.body.appendChild(a);
+      a.addEventListener("click", function(e) {
+        a.parentNode.removeChild(a);
+      });
+      a.click();
+      d3.selectAll('.canvas-output').remove();
+    })
+
+  }
+
+  obj.downloadSVG = function(options) {
+    console.log('start svg download');
+    options = options || {},
+    options.scale = options.scale || 1;
+
+    obj.svgencode(options, function(data) {
+      console.log(data);
+      var a = document.createElement('a');
+      a.download = options.filename + ".svg";
       a.href = data;
       document.body.appendChild(a);
       a.addEventListener("click", function(e) {
