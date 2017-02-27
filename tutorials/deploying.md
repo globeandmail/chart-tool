@@ -33,7 +33,7 @@ tar -xvzf meteor.tar.gz && cd bundle
 ### **Step 4:** Install npm dependencies
 Meteor compiles down into a node project with a few npm dependencies, so let's install those:
 ```sh
-cd programs/sever && npm install
+cd programs/server && npm install
 ```
 
 
