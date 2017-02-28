@@ -1,4 +1,4 @@
-/* Chart Tool v1.2.1-0 | https://github.com/globeandmail/chart-tool | MIT */
+/* Chart Tool v1.2.2-0 | https://github.com/globeandmail/chart-tool | MIT */
 var ChartToolInit = (function () {
 'use strict';
 
