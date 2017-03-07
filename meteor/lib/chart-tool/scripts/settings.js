@@ -86,7 +86,7 @@ app_settings = {
   // if you want to add more colour palettes, just add their
   // name to this array and charts will be classed using this name
   palettes: ['Primary', 'Alternate', 'Grayscale'],
-
+  slack: "https://the-buffalo-news.slack.com/services/hooks/incoming-webhook?token=" + Slack.config.token,
   help: 'https://github.com/globeandmail/chart-tool/tree/master/README.md',
 
   chart: {

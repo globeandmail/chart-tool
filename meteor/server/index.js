@@ -13,6 +13,9 @@ if (app_settings.s3.enable) {
     region: process.env.S3_CHARTTOOL_REGION
   };
 }
+Slack.config = {
+  token: process.env.SLACK_TOKEN
+}
 
 Charts._ensureIndex({
   "slug": "text",
