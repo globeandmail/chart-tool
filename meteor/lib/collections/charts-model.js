@@ -24,12 +24,6 @@ Meteor.methods({
     newChart.slug = text;
     newChart.data = data;
     newChart.md5 = CryptoJS.MD5(data).toString();
-    slack.send({
-channel: '#testing',
-text: 'Here is my notification',
-unfurl_links: 1,
-username: 'Jimmy'
-});
 
     return Charts.insert(newChart);
   },

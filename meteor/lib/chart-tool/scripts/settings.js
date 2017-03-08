@@ -18,7 +18,7 @@ var barLabelOffset = 6;
 var bands = {"padding":0.12,"offset":0.06,"outerPadding":0.06};
 var source = {"prefix":"The Buffalo News","suffix":" » SOURCE:"};
 var social = {"facebook":{"label":"Facebook","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg","redirect":"","appID":""},"twitter":{"label":"Twitter","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg","via":"","hashtag":""},"email":{"label":"Email","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"},"sms":{"label":"SMS","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"}};
-var image = {"enable":false,"base_path":"charts/thumbnails","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
+var image = {"enable":true,"base_path":"charts/thumbnails","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
 var embedJS = "http://projects.buffalonews.com/charts/js/chart-tool.min.js";
 var embedCSS = "http://projects.buffalonews.com/charts/css/chart-tool.min.css";
 var config = {
@@ -86,7 +86,6 @@ app_settings = {
   // if you want to add more colour palettes, just add their
   // name to this array and charts will be classed using this name
   palettes: ['Primary', 'Alternate', 'Grayscale'],
-  slack: "https://the-buffalo-news.slack.com/services/hooks/incoming-webhook?token=" + Slack.config.token,
   help: 'https://github.com/globeandmail/chart-tool/tree/master/README.md',
 
   chart: {

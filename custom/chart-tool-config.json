@@ -126,7 +126,7 @@
   },
 
   "image": {
-    "enable": false,
+    "enable": true,
     "base_path": "charts/thumbnails",
     "expiration": 30000,
     "filename": "thumbnail",
