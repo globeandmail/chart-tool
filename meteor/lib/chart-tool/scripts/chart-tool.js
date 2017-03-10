@@ -10647,7 +10647,7 @@ function windowPopup(url, width, height) {
 function constructFacebookURL(obj){
   var base = 'https://www.facebook.com/dialog/share?',
     redirect = obj.social.facebook.redirect;
-  var url = "app_id=" + (obj.social.facebook.appID) + "&amp;display=popup&amp;title=" + (obj.heading) + "&amp;description=From%20article" + (document.title) + "&amp;href=" + (window.location.href) + "&amp;redirect_uri=" + redirect;
+  var url = "display=popup&amp;title=" + (obj.heading) + "&amp;description=From%20article" + (document.title) + "&amp;href=" + (window.location.href) + "&amp;redirect_uri=" + redirect;
   if (obj.image && obj.image.enable) { url += "&amp;picture=" + (getThumbnailPath(obj)); }
   return ("" + base + url);
 }

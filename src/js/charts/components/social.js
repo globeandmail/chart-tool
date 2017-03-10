@@ -126,7 +126,7 @@ function windowPopup(url, width, height) {
 function constructFacebookURL(obj){
   const base = 'https://www.facebook.com/dialog/share?',
     redirect = obj.social.facebook.redirect;
-  let url = `app_id=${obj.social.facebook.appID}&amp;display=popup&amp;title=${obj.heading}&amp;description=From%20article${document.title}&amp;href=${window.location.href}&amp;redirect_uri=${redirect}`;
+  let url = `display=popup&amp;title=${obj.heading}&amp;description=From%20article${document.title}&amp;href=${window.location.href}&amp;redirect_uri=${redirect}`;
   if (obj.image && obj.image.enable) { url += `&amp;picture=${getThumbnailPath(obj)}`; }
   return `${base}${url}`;
 }
