@@ -4152,8 +4152,8 @@ var barHeight = 25;
 var barLabelOffset = 6;
 var bands = {"padding":0.12,"offset":0.06,"outerPadding":0.06};
 
-var social = {"facebook":{"label":"Facebook","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg","redirect":"","appID":""},"twitter":{"label":"Twitter","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg","via":"","hashtag":""},"email":{"label":"Email","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"},"sms":{"label":"SMS","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"}};
-var image = {"enable":true,"base_path":"charts/thumbnails","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
+var social = {"facebook":{"label":"Facebook","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg","redirect":"","appID":""},"twitter":{"label":"Twitter","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg","via":"","hashtag":""},"email":{"label":"Email","icon":"https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"}};
+var image = {"enable":false,"base_path":"charts/thumbnails","expiration":30000,"filename":"thumbnail","extension":"png","thumbnailWidth":460};
 
 var version = "1.2.2";
 var buildVer = "0";
@@ -10541,10 +10541,6 @@ function social$1(node, obj) {
           obj.social[prop].url = constructMailURL(obj);
           obj.social[prop].popup = false;
           break;
-        case 'SMS':
-          obj.social[prop].url = constructSMSURL(obj);
-          obj.social[prop].popup = false;
-          break;
         default:
           console.log('Incorrect social item definition.');
       }
@@ -10660,13 +10656,6 @@ function constructMailURL(obj){
   var base = 'mailto:?';
   var thumbnail = (obj.image && obj.image.enable) ? ("%0A" + (getThumbnailPath(obj))) : '';
   return (base + "subject=" + (obj.heading) + "&amp;body=" + (obj.heading) + thumbnail + "%0Afrom article: " + (document.title) + "%0A" + (window.location.href));
-}
-
-function constructSMSURL(obj){
-  var base = 'sms:';
-  var url = "&body=Check%20out%20this%20chart: " + (obj.heading);
-  if (obj.image && obj.image.enable) {  url += "%20" + (getThumbnailPath(obj)); }
-  return ("" + base + url);
 }
 
 function constructTwitterURL(obj){

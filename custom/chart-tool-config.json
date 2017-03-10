@@ -118,15 +118,11 @@
     "email": {
       "label": "Email",
       "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
-    },
-    "sms": {
-      "label": "SMS",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
     }
   },
 
   "image": {
-    "enable": true,
+    "enable": false,
     "base_path": "charts/thumbnails",
     "expiration": 30000,
     "filename": "thumbnail",

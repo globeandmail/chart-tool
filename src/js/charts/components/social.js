@@ -20,10 +20,6 @@ export default function social(node, obj) {
           obj.social[prop].url = constructMailURL(obj);
           obj.social[prop].popup = false;
           break;
-        case 'SMS':
-          obj.social[prop].url = constructSMSURL(obj);
-          obj.social[prop].popup = false;
-          break;
         default:
           console.log('Incorrect social item definition.');
       }
@@ -139,13 +135,6 @@ function constructMailURL(obj){
   const base = 'mailto:?';
   const thumbnail = (obj.image && obj.image.enable) ? `%0A${getThumbnailPath(obj)}` : '';
   return `${base}subject=${obj.heading}&amp;body=${obj.heading}${thumbnail}%0Afrom article: ${document.title}%0A${window.location.href}`;
-}
-
-function constructSMSURL(obj){
-  const base = 'sms:';
-  let url = `&body=Check%20out%20this%20chart: ${obj.heading}`;
-  if (obj.image && obj.image.enable) {  url += `%20${getThumbnailPath(obj)}`; }
-  return `${base}${url}`;
 }
 
 function constructTwitterURL(obj){
