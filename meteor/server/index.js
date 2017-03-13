@@ -2,6 +2,10 @@ Meteor.methods({
   getAnimalName: function() {
     this.unblock();
     return Meteor.http.get(app_settings.animal_api);
+  },
+  postSlack: function (slug, chartId) {
+    this.unblock();
+    return Meteor.http.post(process.env.SLACK_WEBHOOK, {data: {'text': 'New chart alert, ' + slug + ' http://charttool.buffalonews.com/chart/edit/' + chartId, 'username': 'Gerald the graphics bot'}})
   }
 });
 

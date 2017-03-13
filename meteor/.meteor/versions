@@ -29,7 +29,6 @@ ejson@1.0.11
 fastclick@1.0.11
 fourseven:scss@3.4.3
 geojson-utils@1.0.8
-georgediab:slack-notify@0.1.0
 harrison:papa-parse@1.1.1
 hot-code-push@1.0.4
 html-tools@1.0.9
