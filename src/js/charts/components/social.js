@@ -141,7 +141,7 @@ function constructTwitterURL(obj){
   const base = 'https://twitter.com/intent/tweet?',
     hashtag = (obj.social.twitter.hashtag) ? `&amp;hashtags=${obj.social.twitter.hashtag}` : '',
     via = (obj.social.twitter.via) ? `&amp;via=${obj.social.twitter.via}` : '';
-  let url = `url=${window.location.href}${via}&amp;text=${encodeURI(obj.heading)}${hashtag}`;
+  let url = `url=${window.location.href}${via}&amp;text=${encodeURI(obj.heading).replace(/'/g, "%27")}${hashtag}`;
   if (obj.image && obj.image.enable) {  url += `%20${getThumbnailPath(obj)}`; }
   return `${base}${url}`;
 }

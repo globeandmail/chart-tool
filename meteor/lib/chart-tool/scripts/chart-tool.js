@@ -7209,20 +7209,18 @@ function header(container, obj) {
 
   var qualifier;
 
-  if (obj.options.type === 'bar') {
-    if (obj.qualifier !== '' || obj.editable) {
-      qualifier = headerGroup
-        .append('div')
-        .attrs({
-          'class': function () {
-            var str = (obj.prefix) + "chart_qualifier " + (obj.prefix) + "chart_qualifier-bar";
-            if (obj.editable) { str += ' editable-chart_qualifier'; }
-            return str;
-          },
-          'contentEditable': function () { return obj.editable ? true : false; }
-        })
-        .text(obj.qualifier);
-    }
+  if (obj.qualifier !== '' || obj.editable) {
+    qualifier = headerGroup
+      .append('div')
+      .attrs({
+        'class': function () {
+          var str = (obj.prefix) + "chart_qualifier " + (obj.prefix) + "chart_qualifier-bar";
+          if (obj.editable) { str += ' editable-chart_qualifier'; }
+          return str;
+        },
+        'contentEditable': function () { return obj.editable ? true : false; }
+      })
+      .text(obj.qualifier);
   }
 
   var legend;
@@ -9538,60 +9536,6 @@ function qualifier(node, obj) {
 
   var qualifierBg, qualifierText;
 
-  if (obj.options.type !== 'bar') {
-
-    var yAxisNode = node.select(("." + (obj.prefix) + "yAxis"));
-
-    if (obj.editable) {
-
-      var foreignObject = yAxisNode.append('foreignObject')
-        .attrs({
-          'class': ((obj.prefix) + "fo " + (obj.prefix) + "qualifier"),
-          'width': '100%'
-        });
-
-      var foreignObjectGroup = foreignObject.append('xhtml:div')
-        .attr('xmlns', 'http://www.w3.org/1999/xhtml');
-
-      var qualifierField = foreignObjectGroup.append('div')
-        .attrs({
-          'class': ((obj.prefix) + "chart_qualifier editable-chart_qualifier"),
-          'contentEditable': true,
-          'xmlns': 'http://www.w3.org/1999/xhtml'
-        })
-        .text(obj.qualifier);
-
-      foreignObject
-        .attrs({
-          'width': qualifierField.node().getBoundingClientRect().width + 15,
-          'height': qualifierField.node().getBoundingClientRect().height,
-          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", " + (- (qualifierField.node().getBoundingClientRect().height) / 2) + ")")
-        });
-
-    } else {
-
-      qualifierBg = yAxisNode.append('text')
-        .attr('class', ((obj.prefix) + "chart_qualifier-text-bg"))
-        .text(obj.qualifier)
-        .attrs({
-          'dy': '0.32em',
-          'y': obj.yAxis.textY,
-          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)")
-        });
-
-      qualifierText = yAxisNode.append('text')
-        .attr('class', ((obj.prefix) + "chart_qualifier-text"))
-        .text(obj.qualifier)
-        .attrs({
-          'dy': '0.32em',
-          'y': obj.yAxis.textY,
-          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)")
-        });
-
-    }
-
-  }
-
   return {
     qualifierBg: qualifierBg,
     qualifierText: qualifierText
@@ -10662,7 +10606,7 @@ function constructTwitterURL(obj){
   var base = 'https://twitter.com/intent/tweet?',
     hashtag = (obj.social.twitter.hashtag) ? ("&amp;hashtags=" + (obj.social.twitter.hashtag)) : '',
     via = (obj.social.twitter.via) ? ("&amp;via=" + (obj.social.twitter.via)) : '';
-  var url = "url=" + (window.location.href) + via + "&amp;text=" + (encodeURI(obj.heading)) + hashtag;
+  var url = "url=" + (window.location.href) + via + "&amp;text=" + (encodeURI(obj.heading).replace(/'/g, "%27")) + hashtag;
   if (obj.image && obj.image.enable) {  url += "%20" + (getThumbnailPath(obj)); }
   return ("" + base + url);
 }
