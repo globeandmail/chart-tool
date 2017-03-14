@@ -39,3 +39,4 @@ standard-minifier-css
 standard-minifier-js
 accounts-ui
 acemtp:accounts-slack
+useraccounts:iron-routing

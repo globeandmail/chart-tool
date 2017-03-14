@@ -5,5 +5,9 @@
     <h2 class="header-list"><a href="/list">Archive</a></h2>
     <h2 class="header-new"><a href="/new">New chart</a></h2>
   </div>
-
+  <div class='login-nav'>
+    {{#if currentUser}}
+    <h2 class='header-welcome'>Hi, {{currentUser.profile.name}}</h2>
+    {{/if}}
+  </div>
 </template>

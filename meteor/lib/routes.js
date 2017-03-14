@@ -3,10 +3,30 @@ Router.configure({
   loadingTemplate: 'loading'
 });
 
-Router.route('/', function() {
-  this.redirect('/new');
+AccountsTemplates.configure({
+    defaultLayout: 'introLayout',
 });
 
+AccountsTemplates.configureRoute('signIn', {
+    name: 'signin',
+    path: '/',
+    template: 'chartLogin',
+    layoutTemplate: 'introLayout',
+    onAfterAction: function () {
+      return document.title = "Login to Slack – Chart Tool";
+    },
+    redirect: '/new',
+});
+
+// Protect all Routes
+Router.plugin('ensureSignedIn');
+// If you are using other plugins, pay attention to their load order.
+// Use *after* so you don't get 404's on your protected routes.
+Router.onBeforeAction('dataNotFound');
+AccountsTemplates.configureRoute('ensureSignedIn', {
+    template: 'chartLogin',
+    layoutTemplate: 'introLayout',
+});
 Router.route('/new', {
   name: 'chart.new',
   layoutTemplate: 'introLayout',
