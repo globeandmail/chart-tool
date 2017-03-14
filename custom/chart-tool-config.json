@@ -130,7 +130,7 @@
     "thumbnailWidth": 460
   },
 
-  "embedJS": "http://projects.buffalonews.com/charts/js/chart-tool.min.js",
-  "embedCSS": "http://projects.buffalonews.com/charts/css/chart-tool.min.css"
+  "embedJS": "http://projects.buffalonews.com/charts/1.2.3/chart-tool.min.js",
+  "embedCSS": "http://projects.buffalonews.com/charts/1.2.3/chart-tool.min.css"
 
 }
