@@ -846,7 +846,9 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
   // resets ranges and dimensions, redraws yAxis, redraws xAxis
   // …then redraws yAxis again if tick wrapping has changed xAxis height
 
-  axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
+  let newXAxisObj, newYAxisObj;
+
+  newYAxisObj = axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
 
   const scaleObj = {
     rangeType: 'range',
@@ -859,7 +861,7 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
   const prevXAxisHeight = obj.dimensions.xAxisHeight;
 
-  const newXAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), 'xAxis');
+  newXAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), 'xAxis');
 
   newXAxisObj.node
     .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()}, ${obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight})`);
@@ -869,8 +871,16 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
   }
 
   if (prevXAxisHeight !== obj.dimensions.xAxisHeight) {
-    axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
+    newYAxisObj = axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
   }
+
+  // reset x-axis object values
+  xAxisObj.node = newXAxisObj.node;
+  xAxisObj.axis = newXAxisObj.axis;
+
+  // reset y-axis object values
+  yAxisObj.node = newYAxisObj.node;
+  yAxisObj.axis = newYAxisObj.axis;
 
 }
 
