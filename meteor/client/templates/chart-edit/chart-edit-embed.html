@@ -1,9 +1,9 @@
 <template name="chartEditEmbed">
-{{{ angleBracket }}}!-- CHART TOOL v{{ version }}-{{ build }} -->
-{{{ angleBracket }}}!-- edited: {{ lastEdited }} -->
-{{{ angleBracket }}}!-- slug: {{ slug }} -->
 <div class="{{ pfx }}chart" data-chartid="{{ pfx }}{{ _id }}">
   <script type="text/javascript">
+  /*!-- CHART TOOL v{{ version }}-{{ build }} -->
+  !-- edited: {{ lastEdited }} -->
+  !-- slug: {{ slug }} */
     (function(root) {
       var data = {{{ embedJSON }}};
       root.ChartTool = root.ChartTool || [];
