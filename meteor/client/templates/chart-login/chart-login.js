@@ -1,5 +1,5 @@
 // Simply 'inherites' helpers from AccountsTemplates
-Template.atSigninLink.helpers(AccountsTemplates.atSigninLinkHelpers);
+Template.chartLogin.helpers(AccountsTemplates.atSigninLinkHelpers);
 
 // Simply 'inherites' events from AccountsTemplates
-Template.atSigninLink.events(AccountsTemplates.atSigninLinkEvents);
+Template.chartLogin.events(AccountsTemplates.atSigninLinkEvents);
