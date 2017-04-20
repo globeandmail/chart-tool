@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Utilized qualifier as subhead
 - Add Slack webhook notification for new chart
 - Add Slack login system
+- Enforce dated slug
 
 ## [1.2.0] - 2016-12-08
 ### Changed
