@@ -172,7 +172,7 @@ generateThumb = function(obj) {
 
 // downloads a web image to certain specifications
 downloadImg = function(_obj, _options) {
-
+  console.log(_obj);
   var scale = _options.scale,
       className = "chart-export",
       container = "." + className,
@@ -216,6 +216,13 @@ downloadImg = function(_obj, _options) {
     });
 
     multiSVGtoPNG.downloadPNG({
+      filename: filename,
+      input: '.svg-container',
+      output: '.canvas-container',
+      scale: scale || 2
+    });
+
+    multiSVGtoPNG.downloadSVG({
       filename: filename,
       input: '.svg-container',
       output: '.canvas-container',

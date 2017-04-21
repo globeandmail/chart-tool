@@ -1,12 +1,12 @@
 # Chart Tool
 
-Chart Tool is a platform for creating, storing and displaying beautiful, responsive embeddable charts. Designed to fit the needs of a fast-paced mobile and print newsroom, Chart Tool generates charts in several formats: 
+Chart Tool is a platform for creating, storing and displaying beautiful, responsive embeddable charts. Designed to fit the needs of a fast-paced mobile and print newsroom, Chart Tool generates charts in several formats:
 
 * **SVGs** that are both responsive and interactive, via an embed code
 * **JPGs and PNGs** for use as thumbnails and sharing on social media
 * **PDFs** that can be almost immediately dropped into a print content management system   
 
-   
+
 ![Chart Tool interface GIF](http://i.imgur.com/yKVKVPD.gif)
 
 
@@ -42,7 +42,7 @@ Chart Tool is made up of two parts:
 * **Asset generation:** Easily generate PNGs at any size for use on social media, or PDFs for print use
 * **Fallback images:** All charts come with a fallback image in case the library is unable to draw the chart. Fallbacks can be stored on AWS, or bundled as inline Base64 images
 * **Fully responsive:** Charts will redraw automatically on window resize after a small period of time
-* **Lots of chart types:** 
+* **Lots of chart types:**
   * Line charts
   * Area charts
   * Stacked area charts
@@ -104,7 +104,7 @@ Now that you've got Chart Tool up and running, here are some tips on how to get 
 
 For starters, you might want to read up on how to make your first chart. A full tutorial, including how to embed it on the web or generate a static image at multiple sizes is [available here](https://github.com/globeandmail/chart-tool/blob/master/tutorials/first-chart.md).
 
-Otherwise, these are some other tutorials you might want to check out: 
+Otherwise, these are some other tutorials you might want to check out:
 
 * [Customize your Chart Tool with fonts, colours, etc.](https://github.com/globeandmail/chart-tool/blob/master/tutorials/customizing.md)
 * [Hook up your Chart Tool to AWS for automatic fallback image generation](https://github.com/globeandmail/chart-tool/blob/master/tutorials/thumbnails.md)
@@ -117,7 +117,7 @@ Otherwise, these are some other tutorials you might want to check out:
 
 ## Version
 
-1.2.2
+1.2.3
 
 
 ## License

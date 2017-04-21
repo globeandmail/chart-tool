@@ -106,6 +106,11 @@ header:not(.header-edit) .header-baseline {
   padding: 0.3em 0.3em 0.4em 0.3em;
   align-self: center;
 }
+.login-nav {
+  padding: 0.3em 0.3em 0.4em 0.3em;
+  align-self: center;
+  float: right;
+}
 
 .save-icon {
   display: inline-block;
@@ -113,7 +118,7 @@ header:not(.header-edit) .header-baseline {
   width: auto;
 }
 
-.header-new, .header-list, .header-help {
+.header-new, .header-list, .header-help, .header-welcome {
   @extend .edit-indicator;
   opacity: 1;
   text-align: right;

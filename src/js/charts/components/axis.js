@@ -136,12 +136,11 @@ export function drawYAxis(obj, axis, axisNode, axisSettings) {
     .attr('transform', 'translate(0,0)')
     .call(updateTextY, axisNode, obj, axis, axisSettings)
     .call(repositionTextY, obj.dimensions, axisSettings.textX);
-
-  axisNode.selectAll('.tick line')
+  /*axisNode.selectAll('.tick line')
     .attrs({
       'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
       'x2': obj.dimensions.computedWidth()
-    });
+    });*/
 
 }
 

@@ -98,7 +98,7 @@
   },
 
   "source": {
-    "prefix": "CHART TOOL",
+    "prefix": "The Buffalo News",
     "suffix": " » SOURCE:"
   },
 
@@ -118,23 +118,19 @@
     "email": {
       "label": "Email",
       "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
-    },
-    "sms": {
-      "label": "SMS",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
     }
   },
 
   "image": {
     "enable": false,
-    "base_path": "",
+    "base_path": "charts/thumbnails",
     "expiration": 30000,
     "filename": "thumbnail",
     "extension": "png",
     "thumbnailWidth": 460
   },
 
-  "embedJS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.js",
-  "embedCSS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.css"
+  "embedJS": "http://projects.buffalonews.com/charts/1.2.3/chart-tool.min.js",
+  "embedCSS": "http://projects.buffalonews.com/charts/1.2.3/chart-tool.min.css"
 
 }

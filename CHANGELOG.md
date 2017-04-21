@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.3] - 2017-03-14
+### Changed
+- Social [export styling tweaks](https://github.com/thebuffalonews/chart-tool/commit/d18eb7271fa2396feabd1c38aad3e36e35fcd2d9)
+- Utilized qualifier as subhead
+- Add Slack webhook notification for new chart
+- Add Slack login system
+- Enforce dated slug
+
 ## [1.2.0] - 2016-12-08
 ### Changed
 - Rewrites main library to [use ES6](https://github.com/globeandmail/chart-tool/issues/89)

@@ -107,12 +107,10 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
 
         var currSvg = d3.select(arr[k]),
             currSvgHeight = currSvg.node().getBoundingClientRect().height;
-
         var item = currSvg.attr("version", 1.1).node().outerHTML;
         var imgsrc = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(item)));
         var image = new Image;
         image.src = imgsrc;
-
         image.onload = function() {
 
           if (!imageCounter) {
