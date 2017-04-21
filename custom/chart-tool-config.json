@@ -134,6 +134,12 @@
     "thumbnailWidth": 460
   },
 
+  "slack": {
+    "enable": false,
+    "username": "Chart tool",
+    "edit_address": "https://chart-tool-demo.herokuapp.com/chart/edit/"
+  },
+
   "embedJS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.js",
   "embedCSS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.css"
 

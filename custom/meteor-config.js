@@ -10,6 +10,8 @@ app_settings = {
 
   s3: config.image,
 
+  slack: config.slack,
+
   embedJS: config.embedJS,
   embedCSS: config.embedCSS,
 
