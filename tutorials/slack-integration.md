@@ -26,7 +26,7 @@ This is what `chart-tool-config.json` will look like by default:
 
 ```javascript
 "slack": {
-  "enable": false,
+  "enable_webhooks": false,
   "username": "Chart tool",
   "edit_address": "https://chart-tool-demo.herokuapp.com/chart/edit/",
 }
@@ -34,6 +34,6 @@ This is what `chart-tool-config.json` will look like by default:
 
 You'll need to tweak those options based on your Slack app.
 
-* `enable`: Whether or not Slack notifications should be used. Change this to `true`
+* `enable_webhooks`: Whether or not Slack notifications should be used. Change this to `true`
 * `username`: Choose the username of the bot that posts the message. It should be the same name as the Slack app you created.
 * `edit_address`: This is the base of the edit address so you need to customize it to your domain.

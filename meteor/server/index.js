@@ -4,7 +4,7 @@ Meteor.methods({
     return Meteor.http.get(app_settings.animal_api);
   },
   postSlackMessage: function (slug, chartId) {
-    if (app_settings.slack.enable) {
+    if (app_settings.slack.enable_webhooks) {
       this.unblock();
       return Meteor.http.post(process.env.SLACK_WEBHOOK, {data: {'text': 'New chart alert, ' + slug + ' ' + app_settings.slack.edit_address + chartId, 'username': app_settings.slack.username}})
     }

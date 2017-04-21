@@ -135,7 +135,7 @@
   },
 
   "slack": {
-    "enable": false,
+    "enable_webhooks": false,
     "username": "Chart tool",
     "edit_address": "https://chart-tool-demo.herokuapp.com/chart/edit/"
   },
