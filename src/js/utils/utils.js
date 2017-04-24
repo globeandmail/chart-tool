@@ -13,14 +13,14 @@ import {
 import Settings from '../config/chart-settings';
 import bucket from '../config/env';
 
-export function debounce(fn, obj, timeout, root) {
+export function debounce(fn, params, timeout, root) {
   let timeoutID = -1;
-  return () => {
+  return (() => {
     if (timeoutID > -1) { root.clearTimeout(timeoutID); }
     timeoutID = root.setTimeout(() => {
-      fn(obj);
+      fn(params);
     }, timeout);
-  };
+  });
 }
 
 export function clearChart(cont) {
