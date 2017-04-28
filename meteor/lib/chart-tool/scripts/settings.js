@@ -1,6 +1,7 @@
 var CUSTOM = false;
 var prefix$1 = "ct-";
 var monthsAbr = ["Jan.","Feb.","Mar.","Apr.","May","June","July","Aug.","Sept.","Oct.","Nov.","Dec.","Jan."];
+var fonts = [];
 var debounce = 500;
 var tipTimeout = 5000;
 var ratioMobile = 1.15;
@@ -25,6 +26,7 @@ var config = {
 	CUSTOM: CUSTOM,
 	prefix: prefix$1,
 	monthsAbr: monthsAbr,
+	fonts: fonts,
 	debounce: debounce,
 	tipTimeout: tipTimeout,
 	ratioMobile: ratioMobile,
