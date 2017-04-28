@@ -230,8 +230,7 @@ export function csvToTable(target, data) {
 export function waitForFonts(fonts) {
   return new Promise((resolve, reject) => {
     if (fonts && fonts.length) {
-      const arr = fonts.map(f => new FontFaceObserver(f));
-      Promise.all(arr.map(f => f.load()))
+      Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
         .then(() => resolve())
         .catch(() => reject());
     } else {

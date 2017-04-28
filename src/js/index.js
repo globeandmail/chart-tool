@@ -139,8 +139,10 @@ export default (root => {
           }
           const debouncer = debounceFn(createLoop, chartSettings.debounce, root);
           select(root)
-            .on(`resize.${chartSettings.prefix}debounce`, debouncer)
-            .on(`resize.${chartSettings.prefix}redraw`, dispatcher.call('redraw', this, charts));
+            .on(`resize.${chartSettings.prefix}debounce`, () => {
+              dispatcher.call('redraw', this, charts);
+              debouncer();
+            });
           createLoop();
         }
 
@@ -161,6 +163,7 @@ export default (root => {
           // push is basically the same as the create method, except for embed-based charts only
           push: (obj, cb) => {
             if (listCharts().indexOf(obj.id) === -1) {
+              charts.push(obj);
               const container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
               if (!fontsLoaded) {
                 waitForFonts(chartSettings.fonts).then(() => createChart(container, obj, cb));
