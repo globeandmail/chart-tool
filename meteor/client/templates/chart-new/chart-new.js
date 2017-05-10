@@ -15,6 +15,7 @@ Template.chartNew.events({
             console.log(err);
           } else {
             console.log("Chart added with id: " + result);
+            Meteor.call('postSlackMessage', slug, result);
             Session.set("chartId", result);
             Router.go('chart.edit', {_id: Session.get("chartId")});
           }
