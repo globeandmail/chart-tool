@@ -153,6 +153,8 @@ export default (root => {
                 fontsLoaded = true;
                 initializer();
                 this.initialized = true;
+              }, err => {
+                console.log(err);
               });
             }
           },
