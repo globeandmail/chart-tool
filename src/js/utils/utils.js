@@ -1,3 +1,4 @@
+import FontFaceObserver from 'fontfaceobserver';
 import { select } from 'd3-selection';
 import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
@@ -221,7 +222,19 @@ export function csvToTable(target, data) {
   target.append('table').selectAll('tr')
     .data(parsedCSV).enter()
     .append('tr').selectAll('td')
-    .data(d => { return d; }).enter()
+    .data(d => d).enter()
     .append('td')
-    .text(d => { return d; });
+    .text(d => d);
+}
+
+export function waitForFonts(fonts) {
+  return new Promise((resolve, reject) => {
+    if (fonts && fonts.length) {
+      Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
+        .then(() => resolve())
+        .catch(() => reject());
+    } else {
+      resolve();
+    }
+  });
 }
