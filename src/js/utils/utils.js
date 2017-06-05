@@ -1,3 +1,4 @@
+import FontFaceObserver from 'fontfaceobserver';
 import { select } from 'd3-selection';
 import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
@@ -13,14 +14,14 @@ import {
 import Settings from '../config/chart-settings';
 import bucket from '../config/env';
 
-export function debounce(fn, obj, timeout, root) {
+export function debounce(fn, timeout, root) {
   let timeoutID = -1;
-  return () => {
+  return (() => {
     if (timeoutID > -1) { root.clearTimeout(timeoutID); }
     timeoutID = root.setTimeout(() => {
-      fn(obj);
+      fn();
     }, timeout);
-  };
+  });
 }
 
 export function clearChart(cont) {
@@ -221,7 +222,19 @@ export function csvToTable(target, data) {
   target.append('table').selectAll('tr')
     .data(parsedCSV).enter()
     .append('tr').selectAll('td')
-    .data(d => { return d; }).enter()
+    .data(d => d).enter()
     .append('td')
-    .text(d => { return d; });
+    .text(d => d);
+}
+
+export function waitForFonts(fonts) {
+  return new Promise((resolve, reject) => {
+    if (fonts && fonts.length) {
+      Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
+        .then(() => resolve())
+        .catch(() => reject());
+    } else {
+      resolve();
+    }
+  });
 }
