@@ -1006,45 +1006,12 @@ function ascendingComparator(f) {
 var ascendingBisect = bisector(ascending$1);
 var bisectRight = ascendingBisect.right;
 
+function pair(a, b) {
+  return [a, b];
+}
+
 var number = function(x) {
   return x === null ? NaN : +x;
-};
-
-var variance = function(array, f) {
-  var n = array.length,
-      m = 0,
-      a,
-      d,
-      s = 0,
-      i = -1,
-      j = 0;
-
-  if (f == null) {
-    while (++i < n) {
-      if (!isNaN(a = number(array[i]))) {
-        d = a - m;
-        m += d / ++j;
-        s += d * (a - m);
-      }
-    }
-  }
-
-  else {
-    while (++i < n) {
-      if (!isNaN(a = number(f(array[i], i, array)))) {
-        d = a - m;
-        m += d / ++j;
-        s += d * (a - m);
-      }
-    }
-  }
-
-  if (j > 1) return s / (j - 1);
-};
-
-var deviation = function(array, f) {
-  var v = variance(array, f);
-  return v ? Math.sqrt(v) : v;
 };
 
 var extent = function(array, f) {
@@ -1178,16 +1145,6 @@ var min = function(array, f) {
   }
 
   return a;
-};
-
-var transpose = function(matrix) {
-  if (!(n = matrix.length)) return [];
-  for (var i = -1, m = min(matrix, length), transpose = new Array(m); ++i < m;) {
-    for (var j = -1, n, row = transpose[i] = new Array(n); ++j < n;) {
-      row[j] = matrix[j][i];
-    }
-  }
-  return transpose;
 };
 
 function length(d) {
@@ -2023,7 +1980,7 @@ var interpolateRgb = (function rgbGamma(y) {
     var r = color$$1((start = rgb(start)).r, (end = rgb(end)).r),
         g = color$$1(start.g, end.g),
         b = color$$1(start.b, end.b),
-        opacity = color$$1(start.opacity, end.opacity);
+        opacity = nogamma(start.opacity, end.opacity);
     return function(t) {
       start.r = r(t);
       start.g = g(t);
@@ -2485,6 +2442,14 @@ var formatGroup = function(grouping, thousands) {
   };
 };
 
+var formatNumerals = function(numerals) {
+  return function(value) {
+    return value.replace(/[0-9]/g, function(i) {
+      return numerals[+i];
+    });
+  };
+};
+
 var formatDefault = function(x, p) {
   x = x.toPrecision(p);
 
@@ -2545,9 +2510,11 @@ var formatTypes = {
 // [[fill]align][sign][symbol][0][width][,][.precision][type]
 var re = /^(?:(.)?([<>=^]))?([+\-\( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?([a-z%])?$/i;
 
-var formatSpecifier = function(specifier) {
+function formatSpecifier(specifier) {
   return new FormatSpecifier(specifier);
-};
+}
+
+formatSpecifier.prototype = FormatSpecifier.prototype; // instanceof
 
 function FormatSpecifier(specifier) {
   if (!(match = re.exec(specifier))) throw new Error("invalid format: " + specifier);
@@ -2595,16 +2562,17 @@ FormatSpecifier.prototype.toString = function() {
       + this.type;
 };
 
-var prefixes = ["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];
-
-function identity$3(x) {
+var identity$3 = function(x) {
   return x;
-}
+};
+
+var prefixes = ["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];
 
 var formatLocale = function(locale) {
   var group = locale.grouping && locale.thousands ? formatGroup(locale.grouping, locale.thousands) : identity$3,
       currency = locale.currency,
-      decimal = locale.decimal;
+      decimal = locale.decimal,
+      numerals = locale.numerals ? formatNumerals(locale.numerals) : identity$3;
 
   function newFormat(specifier) {
     specifier = formatSpecifier(specifier);
@@ -2649,27 +2617,12 @@ var formatLocale = function(locale) {
       } else {
         value = +value;
 
-        // Convert negative to positive, and compute the prefix.
-        // Note that -0 is not less than 0, but 1 / -0 is!
-        var valueNegative = (value < 0 || 1 / value < 0) && (value *= -1, true);
-
         // Perform the initial formatting.
-        value = formatType(value, precision);
+        var valueNegative = value < 0;
+        value = formatType(Math.abs(value), precision);
 
-        // If the original value was negative, it may be rounded to zero during
-        // formatting; treat this as (positive) zero.
-        if (valueNegative) {
-          i = -1, n = value.length;
-          valueNegative = false;
-          while (++i < n) {
-            if (c = value.charCodeAt(i), (48 < c && c < 58)
-                || (type === "x" && 96 < c && c < 103)
-                || (type === "X" && 64 < c && c < 71)) {
-              valueNegative = true;
-              break;
-            }
-          }
-        }
+        // If a negative value rounds to zero during formatting, treat as positive.
+        if (valueNegative && +value === 0) valueNegative = false;
 
         // Compute the prefix and suffix.
         valuePrefix = (valueNegative ? (sign === "(" ? sign : "-") : sign === "-" || sign === "(" ? "" : sign) + valuePrefix;
@@ -2701,11 +2654,13 @@ var formatLocale = function(locale) {
 
       // Reconstruct the final output based on the desired alignment.
       switch (align) {
-        case "<": return valuePrefix + value + valueSuffix + padding;
-        case "=": return valuePrefix + padding + value + valueSuffix;
-        case "^": return padding.slice(0, length = padding.length >> 1) + valuePrefix + value + valueSuffix + padding.slice(length);
+        case "<": value = valuePrefix + value + valueSuffix + padding; break;
+        case "=": value = valuePrefix + padding + value + valueSuffix; break;
+        case "^": value = padding.slice(0, length = padding.length >> 1) + valuePrefix + value + valueSuffix + padding.slice(length); break;
+        default: value = padding + valuePrefix + value + valueSuffix; break;
       }
-      return padding + valuePrefix + value + valueSuffix;
+
+      return numerals(value);
     }
 
     format.toString = function() {
@@ -4327,7 +4282,7 @@ function inferColumns(rows) {
 }
 
 var dsv = function(delimiter) {
-  var reFormat = new RegExp("[\"" + delimiter + "\n]"),
+  var reFormat = new RegExp("[\"" + delimiter + "\n\r]"),
       delimiterCode = delimiter.charCodeAt(0);
 
   function parse(text, f) {
@@ -4447,7 +4402,7 @@ var tauEpsilon = tau - epsilon;
 function Path() {
   this._x0 = this._y0 = // start of current subpath
   this._x1 = this._y1 = null; // end of current subpath
-  this._ = [];
+  this._ = "";
 }
 
 function path() {
@@ -4457,22 +4412,22 @@ function path() {
 Path.prototype = path.prototype = {
   constructor: Path,
   moveTo: function(x, y) {
-    this._.push("M", this._x0 = this._x1 = +x, ",", this._y0 = this._y1 = +y);
+    this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y);
   },
   closePath: function() {
     if (this._x1 !== null) {
       this._x1 = this._x0, this._y1 = this._y0;
-      this._.push("Z");
+      this._ += "Z";
     }
   },
   lineTo: function(x, y) {
-    this._.push("L", this._x1 = +x, ",", this._y1 = +y);
+    this._ += "L" + (this._x1 = +x) + "," + (this._y1 = +y);
   },
   quadraticCurveTo: function(x1, y1, x, y) {
-    this._.push("Q", +x1, ",", +y1, ",", this._x1 = +x, ",", this._y1 = +y);
+    this._ += "Q" + (+x1) + "," + (+y1) + "," + (this._x1 = +x) + "," + (this._y1 = +y);
   },
   bezierCurveTo: function(x1, y1, x2, y2, x, y) {
-    this._.push("C", +x1, ",", +y1, ",", +x2, ",", +y2, ",", this._x1 = +x, ",", this._y1 = +y);
+    this._ += "C" + (+x1) + "," + (+y1) + "," + (+x2) + "," + (+y2) + "," + (this._x1 = +x) + "," + (this._y1 = +y);
   },
   arcTo: function(x1, y1, x2, y2, r) {
     x1 = +x1, y1 = +y1, x2 = +x2, y2 = +y2, r = +r;
@@ -4489,9 +4444,7 @@ Path.prototype = path.prototype = {
 
     // Is this path empty? Move to (x1,y1).
     if (this._x1 === null) {
-      this._.push(
-        "M", this._x1 = x1, ",", this._y1 = y1
-      );
+      this._ += "M" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
 
     // Or, is (x1,y1) coincident with (x0,y0)? Do nothing.
@@ -4501,9 +4454,7 @@ Path.prototype = path.prototype = {
     // Equivalently, is (x1,y1) coincident with (x2,y2)?
     // Or, is the radius zero? Line to (x1,y1).
     else if (!(Math.abs(y01 * x21 - y21 * x01) > epsilon) || !r) {
-      this._.push(
-        "L", this._x1 = x1, ",", this._y1 = y1
-      );
+      this._ += "L" + (this._x1 = x1) + "," + (this._y1 = y1);
     }
 
     // Otherwise, draw an arc!
@@ -4520,14 +4471,10 @@ Path.prototype = path.prototype = {
 
       // If the start tangent is not coincident with (x0,y0), line to.
       if (Math.abs(t01 - 1) > epsilon) {
-        this._.push(
-          "L", x1 + t01 * x01, ",", y1 + t01 * y01
-        );
+        this._ += "L" + (x1 + t01 * x01) + "," + (y1 + t01 * y01);
       }
 
-      this._.push(
-        "A", r, ",", r, ",0,0,", +(y01 * x20 > x01 * y20), ",", this._x1 = x1 + t21 * x21, ",", this._y1 = y1 + t21 * y21
-      );
+      this._ += "A" + r + "," + r + ",0,0," + (+(y01 * x20 > x01 * y20)) + "," + (this._x1 = x1 + t21 * x21) + "," + (this._y1 = y1 + t21 * y21);
     }
   },
   arc: function(x, y, r, a0, a1, ccw) {
@@ -4544,42 +4491,35 @@ Path.prototype = path.prototype = {
 
     // Is this path empty? Move to (x0,y0).
     if (this._x1 === null) {
-      this._.push(
-        "M", x0, ",", y0
-      );
+      this._ += "M" + x0 + "," + y0;
     }
 
     // Or, is (x0,y0) not coincident with the previous point? Line to (x0,y0).
     else if (Math.abs(this._x1 - x0) > epsilon || Math.abs(this._y1 - y0) > epsilon) {
-      this._.push(
-        "L", x0, ",", y0
-      );
+      this._ += "L" + x0 + "," + y0;
     }
 
     // Is this arc empty? We’re done.
     if (!r) return;
 
+    // Does the angle go the wrong way? Flip the direction.
+    if (da < 0) da = da % tau + tau;
+
     // Is this a complete circle? Draw two arcs to complete the circle.
     if (da > tauEpsilon) {
-      this._.push(
-        "A", r, ",", r, ",0,1,", cw, ",", x - dx, ",", y - dy,
-        "A", r, ",", r, ",0,1,", cw, ",", this._x1 = x0, ",", this._y1 = y0
-      );
+      this._ += "A" + r + "," + r + ",0,1," + cw + "," + (x - dx) + "," + (y - dy) + "A" + r + "," + r + ",0,1," + cw + "," + (this._x1 = x0) + "," + (this._y1 = y0);
     }
 
-    // Otherwise, draw an arc!
-    else {
-      if (da < 0) da = da % tau + tau;
-      this._.push(
-        "A", r, ",", r, ",0,", +(da >= pi), ",", cw, ",", this._x1 = x + r * Math.cos(a1), ",", this._y1 = y + r * Math.sin(a1)
-      );
+    // Is this arc non-empty? Draw an arc!
+    else if (da > epsilon) {
+      this._ += "A" + r + "," + r + ",0," + (+(da >= pi)) + "," + cw + "," + (this._x1 = x + r * Math.cos(a1)) + "," + (this._y1 = y + r * Math.sin(a1));
     }
   },
   rect: function(x, y, w, h) {
-    this._.push("M", this._x0 = this._x1 = +x, ",", this._y0 = this._y1 = +y, "h", +w, "v", +h, "h", -w, "Z");
+    this._ += "M" + (this._x0 = this._x1 = +x) + "," + (this._y0 = this._y1 = +y) + "h" + (+w) + "v" + (+h) + "h" + (-w) + "Z";
   },
   toString: function() {
-    return this._.join("");
+    return this._;
   }
 };
 
@@ -4589,10 +4529,26 @@ var constant$5 = function(x) {
   };
 };
 
+var abs = Math.abs;
+var atan2 = Math.atan2;
+var cos = Math.cos;
+var max$1 = Math.max;
+var min$1 = Math.min;
+var sin = Math.sin;
+var sqrt$1 = Math.sqrt;
+
 var epsilon$1 = 1e-12;
 var pi$1 = Math.PI;
 var halfPi = pi$1 / 2;
 var tau$1 = 2 * pi$1;
+
+function acos(x) {
+  return x > 1 ? 0 : x < -1 ? pi$1 : Math.acos(x);
+}
+
+function asin(x) {
+  return x >= 1 ? halfPi : x <= -1 ? -halfPi : Math.asin(x);
+}
 
 function arcInnerRadius(d) {
   return d.innerRadius;
@@ -4614,10 +4570,6 @@ function arcPadAngle(d) {
   return d && d.padAngle; // Note: optional!
 }
 
-function asin(x) {
-  return x >= 1 ? halfPi : x <= -1 ? -halfPi : Math.asin(x);
-}
-
 function intersect(x0, y0, x1, y1, x2, y2, x3, y3) {
   var x10 = x1 - x0, y10 = y1 - y0,
       x32 = x3 - x2, y32 = y3 - y2,
@@ -4630,7 +4582,7 @@ function intersect(x0, y0, x1, y1, x2, y2, x3, y3) {
 function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
   var x01 = x0 - x1,
       y01 = y0 - y1,
-      lo = (cw ? rc : -rc) / Math.sqrt(x01 * x01 + y01 * y01),
+      lo = (cw ? rc : -rc) / sqrt$1(x01 * x01 + y01 * y01),
       ox = lo * y01,
       oy = -lo * x01,
       x11 = x0 + ox,
@@ -4644,7 +4596,7 @@ function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
       d2 = dx * dx + dy * dy,
       r = r1 - rc,
       D = x11 * y10 - x10 * y11,
-      d = (dy < 0 ? -1 : 1) * Math.sqrt(Math.max(0, r * r * d2 - D * D)),
+      d = (dy < 0 ? -1 : 1) * sqrt$1(max$1(0, r * r * d2 - D * D)),
       cx0 = (D * dy - dx * d) / d2,
       cy0 = (-D * dx - dy * d) / d2,
       cx1 = (D * dy + dx * d) / d2,
@@ -4926,21 +4878,6 @@ var circle = {
     context.arc(0, 0, r, 0, tau$1);
   }
 };
-
-var tan30 = Math.sqrt(1 / 3);
-var tan30_2 = tan30 * 2;
-
-var ka = 0.89081309152928522810;
-var kr = Math.sin(pi$1 / 10) / Math.sin(7 * pi$1 / 10);
-var kx = Math.sin(tau$1 / 10) * kr;
-var ky = -Math.cos(tau$1 / 10) * kr;
-
-var sqrt3 = Math.sqrt(3);
-
-var c = -0.5;
-var s = Math.sqrt(3) / 2;
-var k = 1 / Math.sqrt(12);
-var a = (k / 2 + 1) * 3;
 
 var noop$1 = function() {};
 
@@ -5721,11 +5658,6 @@ var stack = function() {
   return stack;
 };
 
-var ascending$2 = function(series) {
-  var sums = series.map(sum$1);
-  return none$2(series).sort(function(a, b) { return sums[a] - sums[b]; });
-};
-
 function sum$1(series) {
   var s = 0, i = -1, n = series.length, v;
   while (++i < n) if (v = +series[i][1]) s += v;
@@ -6025,7 +5957,11 @@ function parse(csv, inputDateFormat, index, stacked) {
       var o = {};
       o[headers[0]] = data[i].key;
       for (var j = 0; j < data[i].series.length; j++) {
-        o[data[i].series[j].key] = data[i].series[j].val;
+        if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
+          o[data[i].series[j].key] = '0';
+        } else {
+          o[data[i].series[j].key] = data[i].series[j].val;
+        }
       }
       return o;
     }));
@@ -6051,24 +5987,9 @@ function isUndefined(val) {
   return val === undefined ? true : false;
 }
 
-function arrayDiff(a1, a2) {
-  var o1 = {}, o2 = {}, diff = [];
-  for (var i = 0; i < a1.length; i++) { o1[a1[i]] = true; }
-  for (var i$1 = 0; i$1 < a2.length; i$1++) { o2[a2[i$1]] = true; }
-  for (var k in o1) { if (!(k in o2)) { diff.push(k); } }
-  for (var k$1 in o2) { if (!(k$1 in o1)) { diff.push(k$1); } }
-  return diff;
-}
 
-function arraySame(a1, a2) {
-  var ret = [];
-  for (var i in a1) {
-    if (a2.indexOf(a1[i]) > -1){
-      ret.push(a1[i]);
-    }
-  }
-  return ret;
-}
+
+
 
 
 
@@ -6278,7 +6199,7 @@ function sleep(time) {
     if (time < Infinity) timeout = setTimeout(wake, delay);
     if (interval) interval = clearInterval(interval);
   } else {
-    if (!interval) interval = setInterval(poke, pokeDelay);
+    if (!interval) clockLast = clockNow, interval = setInterval(poke, pokeDelay);
     frame = 1, setFrame(wake);
   }
 }
@@ -7241,30 +7162,6 @@ var selection_properties = function(map) {
   return (typeof map === "function" ? propertiesFunction : propertiesObject)(this, map);
 };
 
-function attrsFunction$1(transition, map) {
-  return transition.each(function() {
-    var x = map.apply(this, arguments), t = select(this).transition(transition);
-    for (var name in x) t.attr(name, x[name]);
-  });
-}
-
-function attrsObject$1(transition, map) {
-  for (var name in map) transition.attr(name, map[name]);
-  return transition;
-}
-
-function stylesFunction$1(transition, map, priority) {
-  return transition.each(function() {
-    var x = map.apply(this, arguments), t = select(this).transition(transition);
-    for (var name in x) t.style(name, x[name], priority);
-  });
-}
-
-function stylesObject$1(transition, map, priority) {
-  for (var name in map) transition.style(name, map[name], priority);
-  return transition;
-}
-
 selection.prototype.attrs = selection_attrs;
 selection.prototype.styles = selection_styles;
 selection.prototype.properties = selection_properties;
@@ -7437,14 +7334,12 @@ var bottom = 3;
 var left = 4;
 var epsilon$2 = 1e-6;
 
-function translateX(scale0, scale1, d) {
-  var x = scale0(d);
-  return "translate(" + (isFinite(x) ? x : scale1(d)) + ",0)";
+function translateX(x) {
+  return "translate(" + x + ",0)";
 }
 
-function translateY(scale0, scale1, d) {
-  var y = scale0(d);
-  return "translate(0," + (isFinite(y) ? y : scale1(d)) + ")";
+function translateY(y) {
+  return "translate(0," + y + ")";
 }
 
 function center(scale) {
@@ -7465,13 +7360,15 @@ function axis(orient, scale) {
       tickFormat = null,
       tickSizeInner = 6,
       tickSizeOuter = 6,
-      tickPadding = 3;
+      tickPadding = 3,
+      k = orient === top || orient === left ? -1 : 1,
+      x, y = orient === left || orient === right ? (x = "x", "y") : (x = "y", "x"),
+      transform = orient === top || orient === bottom ? translateX : translateY;
 
   function axis(context) {
     var values = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues,
         format = tickFormat == null ? (scale.tickFormat ? scale.tickFormat.apply(scale, tickArguments) : identity$5) : tickFormat,
         spacing = Math.max(tickSizeInner, 0) + tickPadding,
-        transform = orient === top || orient === bottom ? translateX : translateY,
         range = scale.range(),
         range0 = range[0] + 0.5,
         range1 = range[range.length - 1] + 0.5,
@@ -7482,9 +7379,7 @@ function axis(orient, scale) {
         tickExit = tick.exit(),
         tickEnter = tick.enter().append("g").attr("class", "tick"),
         line = tick.select("line"),
-        text = tick.select("text"),
-        k = orient === top || orient === left ? -1 : 1,
-        x, y = orient === left || orient === right ? (x = "x", "y") : (x = "y", "x");
+        text = tick.select("text");
 
     path = path.merge(path.enter().insert("path", ".tick")
         .attr("class", "domain")
@@ -7512,11 +7407,11 @@ function axis(orient, scale) {
 
       tickExit = tickExit.transition(context)
           .attr("opacity", epsilon$2)
-          .attr("transform", function(d) { return transform(position, this.parentNode.__axis || position, d); });
+          .attr("transform", function(d) { return isFinite(d = position(d)) ? transform(d) : this.getAttribute("transform"); });
 
       tickEnter
           .attr("opacity", epsilon$2)
-          .attr("transform", function(d) { return transform(this.parentNode.__axis || position, position, d); });
+          .attr("transform", function(d) { var p = this.parentNode.__axis; return transform(p && isFinite(p = p(d)) ? p : position(d)); });
     }
 
     tickExit.remove();
@@ -7528,7 +7423,7 @@ function axis(orient, scale) {
 
     tick
         .attr("opacity", 1)
-        .attr("transform", function(d) { return transform(position, position, d); });
+        .attr("transform", function(d) { return transform(position(d)); });
 
     line
         .attr(x + "2", k * tickSizeInner);
@@ -9176,12 +9071,12 @@ function columnChart(node, obj) {
           }
         },
         'y': function (d) {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return yScale(Math.max(0, d.series[i].val));
           }
         },
         'height': function (d) {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return Math.abs(yScale(d.series[i].val) - yScale(0));
           }
         },
@@ -9302,9 +9197,21 @@ function barChart(node, obj) {
 
     barItem.append('rect')
       .attrs({
-        'class': function (d) { return d.series[i].val < 0 ? 'negative' : 'positive'; },
-        'width': function (d) { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
-        'x': function (d) { return xScale(Math.min(0, d.series[i].val)); },
+        'class': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return d.series[i].val < 0 ? 'negative' : 'positive';
+          }
+        },
+        'width': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return Math.abs(xScale(d.series[i].val) - xScale(0));
+          }
+        },
+        'x': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.min(0, d.series[i].val));
+          }
+        },
         'y': i * singleBar,
         'height': singleBar
       });
@@ -9316,11 +9223,13 @@ function barChart(node, obj) {
         'class': ((obj.prefix) + "bar-label")
       })
       .text(function (d, j) {
-        var val = setTickFormatY(obj.xAxis.format, d.series[i].val);
-        if (i === 0 && j === obj.data.data.length - 1) {
-          val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+        if (d.series[i].val && d.series[i].val !== '__undefined__') {
+          var val = setTickFormatY(obj.xAxis.format, d.series[i].val);
+          if (i === 0 && j === obj.data.data.length - 1) {
+            val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+          }
+          return val;
         }
-        return val;
       })
       .each(function() {
         if (Math.ceil(this.getComputedTextLength()) > widestText.width) {
@@ -9352,14 +9261,24 @@ function barChart(node, obj) {
   var loop$1 = function ( i ) {
     series[i].selectAll(("." + (obj.prefix) + "bar rect"))
       .attrs({
-        'width': function (d) { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
-        'x': function (d) { return xScale(Math.min(0, d.series[i].val)); }
+        'width': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return Math.abs(xScale(d.series[i].val) - xScale(0));
+          }
+        },
+        'x': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.min(0, d.series[i].val));
+          }
+        }
       });
 
     series[i].selectAll(("." + (obj.prefix) + "bar-label"))
       .attrs({
         'x': function (d) {
-          return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
+          }
         },
         'y': function () { return i * singleBar + Math.ceil(singleBar / 2); }
       });
@@ -9487,9 +9406,7 @@ function stackedBarChart(node, obj) {
     .attrs({
       'class': function (d, i) { return ((obj.prefix) + "bar-label " + (obj.prefix) + "bar-label-" + i); },
       'data-legend': function (d) { return d.key; },
-      'x': function (d, i) {
-        return xScale(Math.max(0, lastStack[i][1]));
-      },
+      'x': function (d, i) { return xScale(Math.max(0, lastStack[i][1])); },
       'y': function (d) { return yScale(d.key) + Math.ceil(singleBar / 2); }
     })
     .text(function (d, i) {
@@ -10074,11 +9991,14 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
       .text(function (d) {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-        if (d.val) {
+        if (d.val && d.val !== '__undefined__') {
           return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
         } else {
           return 'n/a';
         }
+      })
+      .classed(((obj.prefix) + "muted"), function (d) {
+        return (!d.val || d.val === '__undefined__');
       });
 
     var bandwidth = 0;
@@ -10117,7 +10037,9 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
         .attrs({
           'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
           'cy': function (d) {
-            if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
+            if (d.val && d.val !== '__undefined__') {
+              return obj.rendered.plot.yScaleObj.scale(d.val);
+            }
           }
         });
 
@@ -10381,11 +10303,14 @@ function columnChartTips(tipNodes, innerTipEls, obj) {
     .text(function (d) {
       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-      if (d.val) {
+      if (d.val && d.val !== '__undefined__') {
         return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
       } else {
         return 'n/a';
       }
+    })
+    .classed(((obj.prefix) + "muted"), function (d) {
+      return (!d.val || d.val === '__undefined__');
     });
 
   obj.rendered.plot.seriesGroup.selectAll('rect')
@@ -10966,7 +10891,7 @@ var IE8_DOM_DEFINE = _ie8DomDefine;
 var toPrimitive    = _toPrimitive;
 var dP$1             = Object.defineProperty;
 
-var f$1 = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes){
+var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes){
   anObject(O);
   P = toPrimitive(P, true);
   anObject(Attributes);
@@ -10979,7 +10904,7 @@ var f$1 = _descriptors ? Object.defineProperty : function defineProperty(O, P, A
 };
 
 var _objectDp = {
-	f: f$1
+	f: f
 };
 
 var _propertyDesc = function(bitmap, value){
@@ -11101,17 +11026,17 @@ var _toInteger = function(it){
 
 // 7.1.15 ToLength
 var toInteger = _toInteger;
-var min$1       = Math.min;
+var min$2       = Math.min;
 var _toLength = function(it){
-  return it > 0 ? min$1(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+  return it > 0 ? min$2(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
 
 var toInteger$1 = _toInteger;
-var max$1       = Math.max;
-var min$2       = Math.min;
+var max$2       = Math.max;
+var min$3       = Math.min;
 var _toIndex = function(index, length){
   index = toInteger$1(index);
-  return index < 0 ? max$1(index + length, 0) : min$2(index, length);
+  return index < 0 ? max$2(index + length, 0) : min$3(index, length);
 };
 
 // false -> Array#indexOf
@@ -11186,16 +11111,16 @@ var _objectKeys = Object.keys || function keys(O){
   return $keys(O, enumBugKeys);
 };
 
-var f$2 = Object.getOwnPropertySymbols;
+var f$1 = Object.getOwnPropertySymbols;
 
 var _objectGops = {
-	f: f$2
+	f: f$1
 };
 
-var f$3 = {}.propertyIsEnumerable;
+var f$2 = {}.propertyIsEnumerable;
 
 var _objectPie = {
-	f: f$3
+	f: f$2
 };
 
 // 7.1.13 ToObject(argument)

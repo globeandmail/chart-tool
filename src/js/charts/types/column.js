@@ -73,12 +73,12 @@ export default function columnChart(node, obj) {
           }
         },
         'y': d => {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return yScale(Math.max(0, d.series[i].val));
           }
         },
         'height': d => {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return Math.abs(yScale(d.series[i].val) - yScale(0));
           }
         },
