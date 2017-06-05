@@ -396,40 +396,23 @@ export function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
 export function setTickFormatY(fmt, d) {
   // checking for a format and formatting y-axis values accordingly
-
-  let currentFormat;
-
   switch (fmt) {
     case 'general':
-      currentFormat = format('')(d);
-      break;
+      return format('')(d);
     case 'si':
     case 'comma':
-      if (isFloat(parseFloat(d))) {
-        currentFormat = format(',.2f')(d);
-      } else {
-        currentFormat = format(',')(d);
-      }
-      break;
+      return isFloat(parseFloat(d)) ? format(',.2f')(d) : format(',')(d);
     case 'round1':
-      currentFormat = format(',.1f')(d);
-      break;
+      return format(',.1f')(d);
     case 'round2':
-      currentFormat = format(',.2f')(d);
-      break;
+      return format(',.2f')(d);
     case 'round3':
-      currentFormat = format(',.3f')(d);
-      break;
+      return format(',.3f')(d);
     case 'round4':
-      currentFormat = format(',.4f')(d);
-      break;
+      return format(',.4f')(d);
     default:
-      currentFormat = format(',')(d);
-      break;
+      return format(',')(d);
   }
-
-  return currentFormat;
-
 }
 
 export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {

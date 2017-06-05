@@ -222,9 +222,9 @@ export function csvToTable(target, data) {
   target.append('table').selectAll('tr')
     .data(parsedCSV).enter()
     .append('tr').selectAll('td')
-    .data(d => { return d; }).enter()
+    .data(d => d).enter()
     .append('td')
-    .text(d => { return d; });
+    .text(d => d);
 }
 
 export function waitForFonts(fonts) {
