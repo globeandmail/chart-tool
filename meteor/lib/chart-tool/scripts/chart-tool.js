@@ -5682,12 +5682,12 @@ function sum$1(series) {
 // defined in rollup.config.js
 var bucket = "chartprod";
 
-function debounce$1(fn, timeout, root) {
+function debounce$1(fn, params, timeout, root) {
   var timeoutID = -1;
   return (function () {
     if (timeoutID > -1) { root.clearTimeout(timeoutID); }
     timeoutID = root.setTimeout(function () {
-      fn();
+      fn(params);
     }, timeout);
   });
 }
@@ -11267,13 +11267,23 @@ var index = (function (root) {
           clearChart(container);
         }
 
-        function createLoop() {
-          if (root.ChartTool.length) {
-            for (var i = 0; i < root.ChartTool.length; i++) {
-              charts.push(root.ChartTool[i]);
-              var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (root.ChartTool[i].id) + "]";
-              createChart(container, root.ChartTool[i]);
-            }
+        function createLoop(resizeEvent) {
+          if (root.ChartTool.length || resizeEvent) {
+            var chartList = root.ChartTool.length ? root.ChartTool : charts;
+            var loop = function ( i ) {
+              var chart = chartList[i];
+              var matchedCharts = (void 0);
+              if (charts.length) {
+                matchedCharts = charts.filter(function (c) { return c.id === chart.id; });
+              }
+              if (!matchedCharts || !matchedCharts.length) {
+                charts.push(chart);
+              }
+              var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (chart.id) + "]";
+              createChart(container, chart);
+            };
+
+            for (var i = 0; i < chartList.length; i++) loop( i );
           }
         }
 
@@ -11288,7 +11298,7 @@ var index = (function (root) {
               }
             }
           }
-          var debouncer = debounce$1(createLoop, charts, chartSettings.debounce, root);
+          var debouncer = debounce$1(createLoop, true, chartSettings.debounce, root);
           select(root)
             .on(("resize." + (chartSettings.prefix) + "debounce"), debouncer)
             .on(("resize." + (chartSettings.prefix) + "redraw"), dispatcher.call('redraw', this, charts));
@@ -11302,9 +11312,11 @@ var index = (function (root) {
               this.initialized = true;
             }
           },
+          // similar to the push method, except this is explicitly invoked by the user
           create: function (container, obj, cb) {
             return createChart(container, obj, cb);
           },
+          // push is basically the same as the create method, except for embed-based charts only
           push: function (obj, cb) {
             var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
             createChart(container, obj, cb);

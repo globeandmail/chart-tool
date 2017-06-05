@@ -99,12 +99,20 @@ export default (root => {
           clearChart(container);
         }
 
-        function createLoop() {
-          if (root.ChartTool.length) {
-            for (let i = 0; i < root.ChartTool.length; i++) {
-              charts.push(root.ChartTool[i]);
-              const container = `.${chartSettings.baseClass}[data-chartid=${root.ChartTool[i].id}]`;
-              createChart(container, root.ChartTool[i]);
+        function createLoop(resizeEvent) {
+          if (root.ChartTool.length || resizeEvent) {
+            const chartList = root.ChartTool.length ? root.ChartTool : charts;
+            for (let i = 0; i < chartList.length; i++) {
+              const chart = chartList[i];
+              let matchedCharts;
+              if (charts.length) {
+                matchedCharts = charts.filter(c => c.id === chart.id);
+              }
+              if (!matchedCharts || !matchedCharts.length) {
+                charts.push(chart);
+              }
+              const container = `.${chartSettings.baseClass}[data-chartid=${chart.id}]`;
+              createChart(container, chart);
             }
           }
         }
@@ -120,7 +128,7 @@ export default (root => {
               }
             }
           }
-          const debouncer = debounceFn(createLoop, charts, chartSettings.debounce, root);
+          const debouncer = debounceFn(createLoop, true, chartSettings.debounce, root);
           select(root)
             .on(`resize.${chartSettings.prefix}debounce`, debouncer)
             .on(`resize.${chartSettings.prefix}redraw`, dispatcher.call('redraw', this, charts));
@@ -134,9 +142,11 @@ export default (root => {
               this.initialized = true;
             }
           },
+          // similar to the push method, except this is explicitly invoked by the user
           create: (container, obj, cb) => {
             return createChart(container, obj, cb);
           },
+          // push is basically the same as the create method, except for embed-based charts only
           push: (obj, cb) => {
             const container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
             createChart(container, obj, cb);
