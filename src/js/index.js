@@ -1,4 +1,5 @@
 import 'core-js/library/fn/object/assign';
+import isMobile from 'ismobilejs';
 import chartSettings from './config/chart-settings';
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
@@ -138,8 +139,9 @@ export default (root => {
             }
           }
           const debouncer = debounceFn(createLoop, chartSettings.debounce, root);
+          const eventListener = (isMobile.phone || isMobile.tablet) ? 'orientationchange' : 'resize';
           select(root)
-            .on(`resize.${chartSettings.prefix}debounce`, () => {
+            .on(`${eventListener}.${chartSettings.prefix}debounce`, () => {
               dispatcher.call('redraw', this, charts);
               debouncer();
             });

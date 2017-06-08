@@ -18,7 +18,8 @@
     "d3-shape": "^1.0.3",
     "d3-time": "^1.0.4",
     "d3-time-format": "^2.0.2",
-    "fontfaceobserver": "^2.0.9"
+    "fontfaceobserver": "^2.0.9",
+    "ismobilejs": "^0.4.1"
   },
   "engines": {
     "node": "7.1.0"
