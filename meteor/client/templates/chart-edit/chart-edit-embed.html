@@ -13,8 +13,8 @@
         b.classList.add('{{ pfx }}charttool-init');
         var c = document.createElement('link');
         var j = document.createElement('script');
-        c.href = '{{ embedCSS }}'; c.rel = 'stylesheet';
-        j.src = '{{ embedJS }}'; j.async = true; j.defer = true;
+        c.href = '{{ embedCSS }}?token={{ app_build }}'; c.rel = 'stylesheet';
+        j.src = '{{ embedJS }}?token={{ app_build }}'; j.async = true; j.defer = true;
         document.getElementsByTagName('head')[0].appendChild(c);
         document.getElementsByTagName('head')[0].appendChild(j);
       }

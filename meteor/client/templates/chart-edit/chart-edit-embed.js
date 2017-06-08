@@ -18,6 +18,9 @@ Template.chartEditEmbed.helpers({
   embedJS: function() {
     if (app_settings) { return app_settings.embedJS; }
   },
+  app_build: function() {
+    if (app_build) { return app_build; }
+  },
   embedJSON: function() {
     if (!isEmpty(this)) {
       return JSON.stringify(embed(this), null, 2);
