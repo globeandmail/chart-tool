@@ -19,7 +19,7 @@ Template.chartEditEmbed.helpers({
     if (app_settings) { return app_settings.embedJS; }
   },
   app_build: function() {
-    if (app_build) { return app_build; }
+    if (app_build && app_version) { return app_version + '-' + app_build; }
   },
   embedJSON: function() {
     if (!isEmpty(this)) {
