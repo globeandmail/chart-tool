@@ -13,6 +13,7 @@ import {
 } from 'd3-shape';
 import Settings from '../config/chart-settings';
 import bucket from '../config/env';
+import 'es6-promise/auto';
 
 export function debounce(fn, timeout, root) {
   let timeoutID = -1;
@@ -227,14 +228,15 @@ export function csvToTable(target, data) {
     .text(d => d);
 }
 
-export function waitForFonts(fonts) {
-  return new Promise((resolve, reject) => {
-    if (fonts && fonts.length) {
-      Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
-        .then(() => resolve())
-        .catch(() => reject());
-    } else {
-      resolve();
-    }
-  });
+export function waitForFonts(fonts, cb) {
+  if (fonts && fonts.length) {
+    const fontList = fonts.map(f => new FontFaceObserver(`${f}`));
+    Promise.all(fontList.map(f => f.load('$12.34%')))
+      .then(values => {
+        document.documentElement.classList.add(`${Settings.prefix}fonts-loaded`);
+        return cb(values);
+      }, reason => cb(null, reason));
+  } else {
+    return cb([], null);
+  }
 }

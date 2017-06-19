@@ -31,15 +31,8 @@ export default (root => {
 
         const charts = [];
 
-        if (root.ChartTool && root.ChartTool.length) {
-          for (let i = 0; i < root.ChartTool.length; i++) {
-            charts.push(root.ChartTool[i]);
-          }
-        }
-
         let dispatchFunctions,
-          drawn = [],
-          fontsLoaded = false;
+          drawn = [];
 
         const dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
 
@@ -118,13 +111,11 @@ export default (root => {
         }
 
         function createLoop() {
-          if (charts.length) {
-            for (let i = 0; i < charts.length; i++) {
-              const chart = charts[i];
-              const container = `.${chartSettings.baseClass}[data-chartid=${chart.id}]`;
-              createChart(container, chart);
-            }
-          }
+          const chartList = root.ChartTool.initialized ? listCharts().map(c => c.obj) : charts;
+          chartList.map(chart => {
+            const container = `.${chartSettings.baseClass}[data-chartid=${chart.id}]`;
+            createChart(container, chart);
+          });
         }
 
         function initializer() {
@@ -149,48 +140,32 @@ export default (root => {
         }
 
         return {
-          init: function() {
+          initialized: false,
+          init: function(preloadedCharts) {
             if (!this.initialized) {
-              waitForFonts(chartSettings.fonts).then(() => {
-                fontsLoaded = true;
+              if (preloadedCharts && preloadedCharts.length) {
+                preloadedCharts.map(p => charts.push(p));
+              }
+              waitForFonts(chartSettings.fonts, (data, err) => {
+                if (err) throw new Error(err.toString());
                 initializer();
                 this.initialized = true;
-              }, err => {
-                console.log(err);
               });
             }
           },
-          // similar to the push method, except this is explicitly invoked by the user
-          create: (container, obj, cb) => {
-            return createChart(container, obj, cb);
-          },
           // push is basically the same as the create method, except for embed-based charts only
-          push: (obj, cb) => {
-            if (listCharts().indexOf(obj.id) === -1) {
-              charts.push(obj);
-              const container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
-              if (!fontsLoaded) {
-                waitForFonts(chartSettings.fonts).then(() => createChart(container, obj, cb));
-              } else {
-                createChart(container, obj, cb);
-              }
-            }
+          push: function(obj, cb) {
+            const sel = `.${chartSettings.baseClass}[data-chartid="${obj.id}"]`;
+            charts.push(obj);
+            if (this.initialized) createChart(sel, obj, cb);
           },
-          read: id => {
-            return readChart(id);
-          },
-          list: () => {
-            return listCharts();
-          },
-          update: (id, obj) => {
-            return updateChart(id, obj);
-          },
-          destroy: id => {
-            return destroyChart(id);
-          },
-          dispatch: () => {
-            return Object.keys(dispatcher);
-          },
+          // similar to the push method, except this is explicitly invoked by the user
+          create: (container, obj, cb) => createChart(container, obj, cb),
+          read: id => readChart(id),
+          list: () => listCharts(),
+          update: (id, obj) => updateChart(id, obj),
+          destroy: id => destroyChart(id),
+          dispatch: () => Object.keys(dispatcher),
           parse: parse,
           version: chartSettings.version,
           build: chartSettings.build,
@@ -201,7 +176,7 @@ export default (root => {
 
       })();
 
-      if (!root.Meteor) { ChartTool.init(); }
+      if (!root.Meteor) { ChartTool.init(root.ChartTool); }
       root.ChartTool = ChartTool;
 
     }
