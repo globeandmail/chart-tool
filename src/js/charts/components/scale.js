@@ -2,6 +2,7 @@ import { scaleTime, scaleBand, scalePoint, scaleLinear } from 'd3-scale';
 import { min, max, extent } from 'd3-array';
 import { timeDiff, timeInterval } from '../../utils/utils';
 import { map } from 'd3-collection';
+import { csvParse } from 'd3-dsv';
 
 export function scaleManager(obj, axisType) {
 
@@ -33,7 +34,7 @@ export function scaleManager(obj, axisType) {
 export class ScaleObj {
   constructor(obj, axis, axisType) {
     this.type = axis.scale;
-    this.domain = setDomain(obj, axis);
+    this.domain = setDomain(obj, axis, axisType);
     this.rangeType = 'range';
     this.range = setRange(obj, axisType);
     this.bands = obj.dimensions.bands;
@@ -75,8 +76,7 @@ export function setRangeArgs(scale, scaleObj) {
   }
 }
 
-export function setDomain(obj, axis) {
-
+export function setDomain(obj, axis, axisType) {
   const data = obj.data;
   let domain;
 
@@ -87,6 +87,14 @@ export function setDomain(obj, axis) {
     case 'linear':
       if (obj.options.type === 'area' || obj.options.type === 'column' || obj.options.type === 'bar') {
         domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked, true);
+      } else if (obj.options.type === 'scatterplot') {
+        // Murat's note:
+        // For the scatterplot, min and max must be set separately for each axis. 
+        // Best to determine min and max here. 
+        const column = (axisType == 'xAxis') ? data.data.columns[0] : data.data.columns[1];
+        const d = csvParse(data.csv, function(d){ return Number(d[column]); });
+        let minv = min(d), maxv = max(d);
+        domain = setNumericalDomain(data, minv, maxv, obj.options.stacked);
       } else {
         domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked);
       }

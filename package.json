@@ -5,6 +5,7 @@
   "description": "A responsive charting application",
   "main": "gulpfile.js",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "core-js": "^2.4.1",
     "d3-array": "^1.0.1",
     "d3-axis": "^1.0.3",
@@ -17,7 +18,8 @@
     "d3-selection-multi": "^1.0.0",
     "d3-shape": "^1.0.3",
     "d3-time": "^1.0.4",
-    "d3-time-format": "^2.0.2"
+    "d3-time-format": "^2.0.2",
+    "d3-voronoi": "^1.1.2"
   },
   "engines": {
     "node": "7.1.0"
@@ -40,7 +42,7 @@
     "gulp-shell": "^0.5.2",
     "gulp-size": "^2.1.0",
     "gulp-sourcemaps": "^2.2.0",
-    "gulp-util": "^3.0.7",
+    "gulp-util": "^3.0.8",
     "rollup": "^0.36.3",
     "rollup-plugin-buble": "^0.14.0",
     "rollup-plugin-commonjs": "^5.0.5",

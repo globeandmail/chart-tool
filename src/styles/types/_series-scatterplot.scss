@@ -1,0 +1,26 @@
+.#{$prefix}type_scatterplot .scatterplot-voronoi path.scatterplot-voronoi-polygon {
+	fill:#FFFFFF;
+	stroke:#d3d3d3;
+	opacity:0;
+}
+
+.#{$prefix}type_scatterplot .#{$prefix}series_group.scatterplot circle.#{$prefix}scatterplot.muted{
+	transition: 0.3s;
+	opacity:0.3;
+}
+.#{$prefix}type_scatterplot .#{$prefix}series_group.scatterplot circle{
+	r:3;
+}
+
+
+
+@for $pcounter from 1 through $palette-count {
+  $palette: nth( $palettes, $pcounter );
+  $palette-name: nth( $palette-names, $pcounter );
+
+  @for $counter from 1 through $series-count-max {
+    .#{$prefix + $palette-name}.#{$prefix}type_scatterplot /* .#{$prefix}series_group */ .#{$prefix}scatterplot-#{$counter - 1} {
+      fill: nth( $palette, $counter );
+    }
+  }
+}

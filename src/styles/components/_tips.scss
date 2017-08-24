@@ -40,6 +40,34 @@
   }
 }
 
+.#{$prefix}tip_line-y {
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  &.#{$prefix}active {
+    opacity: 1;
+  }
+  line {
+    stroke: $axis-stroke-color;
+    stroke-width: $axis-stroke-width;
+    shape-rendering: crispEdges;
+  }
+}
+
+.#{$prefix}tip_xy {
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  &.#{$prefix}active {
+    opacity: 1;
+  }
+  circle {
+    stroke: $color-white;
+    stroke-width: 2;
+    r:6;
+  }
+}
+
 .#{$prefix}tip .#{$prefix}tip_text-group.#{$prefix}active,
 .#{$prefix}tip .#{$prefix}tip_path-circle-group.#{$prefix}active,
 .#{$prefix}tip .#{$prefix}tip_path-circle.#{$prefix}active {

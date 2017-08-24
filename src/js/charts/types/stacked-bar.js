@@ -84,7 +84,9 @@ export default function stackedBarChart(node, obj) {
     .attrs({
       'class': (d, i) => { return `${obj.prefix}bar-label ${obj.prefix}bar-label-${i}`; },
       'data-legend': d => d.key,
-      'x': (d, i) => { return xScale(Math.max(0, lastStack[i][1])); },
+      'x': (d, i) => {
+        return xScale(Math.max(0, lastStack[i][1]));
+      },
       'y': d => yScale(d.key) + Math.ceil(singleBar / 2)
     })
     .text((d, i) => {

@@ -83,6 +83,26 @@ export function appendXAxis(axisGroup, obj, scale, axis, axisType) {
     case 'ordinal-time':
       ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
+    case 'linear':
+      drawXLinear(obj, axis, axisNode, axisSettings);
+      break;
+  }
+
+   // Murat's note: Add X axis label.
+  switch(obj.options.type){
+    case 'scatterplot' : 
+      const xAxisLabel = axisNode.append("text")
+      .style("text-anchor", "middle")
+      .attrs({
+        'y': obj.dimensions.xAxisHeight + 20,
+        'class' : '.x-axis-label'
+      })
+      .text(obj.xAxis.label.toUpperCase());
+      
+      const yAxisWidth = obj.rendered.container.select("." + obj.prefix + "y-axis").node().getBBox().width;
+      
+      xAxisLabel.attr('x', (obj.dimensions.width)/2 - yAxisWidth )
+    break;
   }
 
   obj.dimensions.xAxisHeight = axisNode.node().getBBox().height;
@@ -98,7 +118,24 @@ export function appendYAxis(axisGroup, obj, scale, axis, axisType) {
   const axisObj = obj[axisType];
 
   let axisSettings;
+// Murat's note: add Y axis label
+  switch(obj.options.type){
+    case 'scatterplot' : 
+      const yAxisLabel = axisNode.append("text")
+      .text(obj.yAxis.label.toUpperCase())
+      .style('text-anchor', 'middle');
+      const xAxisNode = obj.rendered.container.select("." + obj.prefix + "x-axis").node();
+      const xAxisHeight = (xAxisNode) ? xAxisNode.getBBox().height : 0;
 
+      yAxisLabel.attrs({
+        'transform' : 'translate('+
+        (yAxisLabel.node().getBBox().height-5) +','+
+        (obj.dimensions.computedHeight() - xAxisHeight)/2
+        +') rotate (-90)',
+        'class':'y-axis-label'
+      });
+    break;
+  }
   if (obj.exportable && obj.exportable.y_axis) {
     axisSettings = Object.assign(axisObj, obj.exportable.y_axis);
   } else {
@@ -119,7 +156,24 @@ export function appendYAxis(axisGroup, obj, scale, axis, axisType) {
   }
 
 }
+export function drawXLinear(obj, axis, axisNode, axisSettings) {
+  axis.scale().range([0, obj.dimensions.tickWidth()]);
+  //perhaps write a tickFinderX function?
+  axis.tickValues(tickFinderY(axis.scale(), axisSettings));
 
+  axisNode.call(axis);
+  axisNode.selectAll('g')
+    .filter(function (d) { return d; })
+    .classed(((obj.prefix) + "minor"), true);
+
+  const tickArr = axisNode.selectAll('.tick')._groups[0];
+  //Get last tick width and subtract from range.
+  const lastTick = tickArr[tickArr.length - 1];
+  const lastTickWidth = lastTick.getBoundingClientRect().width
+
+  axis.scale().range([0, obj.dimensions.tickWidth() - (lastTickWidth/2)]);
+  axisNode.call(axis);
+}
 export function drawYAxis(obj, axis, axisNode, axisSettings) {
 
   axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
@@ -141,6 +195,31 @@ export function drawYAxis(obj, axis, axisNode, axisSettings) {
     .attrs({
       'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
       'x2': obj.dimensions.computedWidth()
+    });
+  //Murat's addition
+  let scatterplotTickPadding = 0;
+
+  axisNode.selectAll('.' + (obj.prefix) + "minor line")
+    .attrs({
+      'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+      'x2': 
+      function(){
+        // Short ticks for scatterplot.
+        switch(obj.options.type){
+          case 'scatterplot' : 
+            scatterplotTickPadding = 4;
+          return (obj.dimensions.labelWidth + scatterplotTickPadding);
+          break;
+          default:
+            return obj.dimensions.computedWidth();
+          break;
+        }
+      }
+    });
+    axisNode.selectAll(".tick:not(." + (obj.prefix) + "minor) line")
+      .attrs({
+        'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - scatterplotTickPadding,
+        'x2': obj.dimensions.computedWidth()
     });
 
 }
@@ -396,23 +475,40 @@ export function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
 export function setTickFormatY(fmt, d) {
   // checking for a format and formatting y-axis values accordingly
+
+  let currentFormat;
+
   switch (fmt) {
     case 'general':
-      return format('')(d);
+      currentFormat = format('')(d);
+      break;
     case 'si':
     case 'comma':
-      return isFloat(parseFloat(d)) ? format(',.2f')(d) : format(',')(d);
+      if (isFloat(parseFloat(d))) {
+        currentFormat = format(',.2f')(d);
+      } else {
+        currentFormat = format(',')(d);
+      }
+      break;
     case 'round1':
-      return format(',.1f')(d);
+      currentFormat = format(',.1f')(d);
+      break;
     case 'round2':
-      return format(',.2f')(d);
+      currentFormat = format(',.2f')(d);
+      break;
     case 'round3':
-      return format(',.3f')(d);
+      currentFormat = format(',.3f')(d);
+      break;
     case 'round4':
-      return format(',.4f')(d);
+      currentFormat = format(',.4f')(d);
+      break;
     default:
-      return format(',')(d);
+      currentFormat = format(',')(d);
+      break;
   }
+
+  return currentFormat;
+
 }
 
 export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
@@ -431,6 +527,9 @@ export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
 export function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
   const arr = [];
+  // Murat
+  const yAxisLabel = axisNode.select('.y-axis-label').node();
+  const yAxisLabelPadding = (yAxisLabel) ? yAxisLabel.getBBox().height + 5 : 0;
 
   textNodes
     .attr('transform', 'translate(0,0)')
@@ -443,7 +542,7 @@ export function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
     })
     .text(function() {
       const sel = select(this);
-      const textChar = sel.node().getBoundingClientRect().width;
+      const textChar = sel.node().getBoundingClientRect().width + yAxisLabelPadding;
       arr.push(textChar);
       return sel.text();
     })
@@ -868,7 +967,6 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 }
 
 export function addZeroLine(obj, node, Axis, axisType) {
-
   const ticks = Axis.axis.tickValues(),
     tickMin = ticks[0],
     tickMax = ticks[ticks.length - 1];
@@ -890,10 +988,9 @@ export function addZeroLine(obj, node, Axis, axisType) {
     transform[1] += getTranslate(refGroup.node())[1];
 
     if (axisType === 'xAxis') {
-
       zeroLine.attrs({
-        'y1': refLine.attr('y1'),
-        'y2': refLine.attr('y2'),
+        'y1': 0,
+        'y2': -(obj.dimensions.yAxisHeight()),
         'x1': 0,
         'x2': 0,
         'transform': `translate(${transform[0]},${transform[1]})`

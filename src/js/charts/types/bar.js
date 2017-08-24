@@ -66,21 +66,9 @@ export default function barChart(node, obj) {
 
     barItem.append('rect')
       .attrs({
-        'class': d => {
-          if (d.series[i].val && d.series[i].val !== '__undefined__') {
-            return d.series[i].val < 0 ? 'negative' : 'positive';
-          }
-        },
-        'width': d => {
-          if (d.series[i].val && d.series[i].val !== '__undefined__') {
-            return Math.abs(xScale(d.series[i].val) - xScale(0));
-          }
-        },
-        'x': d => {
-          if (d.series[i].val && d.series[i].val !== '__undefined__') {
-            return xScale(Math.min(0, d.series[i].val));
-          }
-        },
+        'class': d => { return d.series[i].val < 0 ? 'negative' : 'positive'; },
+        'width': d => { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
+        'x': d => { return xScale(Math.min(0, d.series[i].val)); },
         'y': i * singleBar,
         'height': singleBar
       });
@@ -92,13 +80,11 @@ export default function barChart(node, obj) {
         'class': `${obj.prefix}bar-label`
       })
       .text((d, j) => {
-        if (d.series[i].val && d.series[i].val !== '__undefined__') {
-          let val = setLabelFormat(obj.xAxis.format, d.series[i].val);
-          if (i === 0 && j === obj.data.data.length - 1) {
-            val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
-          }
-          return val;
+        let val = setLabelFormat(obj.xAxis.format, d.series[i].val);
+        if (i === 0 && j === obj.data.data.length - 1) {
+          val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
         }
+        return val;
       })
       .each(function() {
         if (Math.ceil(this.getComputedTextLength()) > widestText.width) {
@@ -128,24 +114,14 @@ export default function barChart(node, obj) {
   for (let i = 0; i < series.length; i++) {
     series[i].selectAll(`.${obj.prefix}bar rect`)
       .attrs({
-        'width': d => {
-          if (d.series[i].val && d.series[i].val !== '__undefined__') {
-            return Math.abs(xScale(d.series[i].val) - xScale(0));
-          }
-        },
-        'x': d => {
-          if (d.series[i].val && d.series[i].val !== '__undefined__') {
-            return xScale(Math.min(0, d.series[i].val));
-          }
-        }
+        'width': d => { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
+        'x': d => { return xScale(Math.min(0, d.series[i].val)); }
       });
 
     series[i].selectAll(`.${obj.prefix}bar-label`)
       .attrs({
         'x': d => {
-          if (d.series[i].val && d.series[i].val !== '__undefined__') {
-            return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
-          }
+          return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
         },
         'y': () => { return i * singleBar + Math.ceil(singleBar / 2); }
       });

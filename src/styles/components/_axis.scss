@@ -16,6 +16,11 @@
   shape-rendering: crispEdges;
 }
 
+.#{$prefix}type_scatterplot .#{$prefix}yAxis .#{$prefix}minor line {
+  stroke: $color-black;
+  shape-rendering: crispEdges;
+}
+
 .#{$prefix}axis-group g.tick line {
   stroke: $axis-stroke-color;
   stroke-width: $axis-stroke-width;

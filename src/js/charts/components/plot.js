@@ -6,6 +6,7 @@ import column from '../types/column';
 import bar from '../types/bar';
 import stackedBar from '../types/stacked-bar';
 import stackedColumn from '../types/stacked-column';
+import scatterplot from '../types/scatterplot';
 
 export default function plot(node, obj) {
   switch(obj.options.type) {
@@ -19,6 +20,8 @@ export default function plot(node, obj) {
       return obj.options.stacked ? stackedBar(node, obj) : bar(node, obj);
     case 'column':
       return obj.options.stacked ? stackedColumn(node, obj) : column(node, obj);
+    case 'scatterplot':
+      return scatterplot(node, obj);
     default:
       return line(node, obj);
   }
