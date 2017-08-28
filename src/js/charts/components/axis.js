@@ -1,6 +1,5 @@
 import { axisRight, axisBottom, axisLeft } from 'd3-axis';
 import { select } from 'd3-selection';
-import { max } from 'd3-array';
 import { timeFormat } from 'd3-time-format';
 import { format } from 'd3-format';
 import { timeYears, timeMonths, timeWeeks, timeDays, timeHours, timeMinutes } from 'd3-time';
@@ -430,7 +429,13 @@ export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
 
 export function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
-  const arr = [];
+  function computeTextWidth(text, font) {
+    const canvas = computeTextWidth.canvas || (computeTextWidth.canvas = document.createElement('canvas'));
+    const context = canvas.getContext('2d');
+    context.font = font;
+    const metrics = context.measureText(text);
+    return (Math.round(metrics.width * 100) / 100);
+  }
 
   textNodes
     .attr('transform', 'translate(0,0)')
@@ -442,36 +447,23 @@ export function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
       return val;
     })
     .text(function() {
-      const sel = select(this);
-      const textChar = sel.node().getBoundingClientRect().width;
-      arr.push(textChar);
-      return sel.text();
+      const fontFamily = window.getComputedStyle(this, null).getPropertyValue('font-family').split(', ')[0];
+      const fontSize = window.getComputedStyle(this, null).getPropertyValue('font-size');
+      const w = computeTextWidth(this.textContent, `${fontSize} ${fontFamily}`);
+      if (w > obj.dimensions.labelWidth) obj.dimensions.labelWidth = w;
+      return this.textContent;
     })
     .attrs({
       'dy': function() {
-        if (axisObj.dy !== '') {
-          return `${axisObj.dy}em`;
-        } else {
-          return select(this).attr('dy');
-        }
+        return (axisObj.dy !== '') ? `${axisObj.dy}em` : select(this).attr('dy');
       },
       'x': function() {
-        if (axisObj.textX !== '') {
-          return axisObj.textX;
-        } else {
-          return select(this).attr('x');
-        }
+        return (axisObj.textX !== '') ? axisObj.textX : select(this).attr('x');
       },
       'y': function() {
-        if (axisObj.textY !== '') {
-          return axisObj.textY;
-        } else {
-          return select(this).attr('y');
-        }
+        return (axisObj.textY !== '') ? axisObj.textY : select(this).attr('y');
       }
     });
-
-  obj.dimensions.labelWidth = max(arr);
 
 }
 

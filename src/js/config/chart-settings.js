@@ -6,6 +6,7 @@ const chartSettings = {
 
   prefix: settings.prefix,
   CUSTOM: settings.CUSTOM,
+  fonts: settings.fonts,
   version: version,
   build: buildVer,
   id: '',

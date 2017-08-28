@@ -1,10 +1,20 @@
+import 'core-js/library/fn/object/assign';
+import isMobile from 'ismobilejs';
+import chartSettings from './config/chart-settings';
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
-import chartSettings from './config/chart-settings';
-import { clearDrawn, clearObj, clearChart, getBounding, svgTest, generateThumb, debounce as debounceFn } from './utils/utils';
 import { parse } from './utils/dataparse';
 import { ChartManager } from './charts/manager';
-import 'core-js/library/fn/object/assign';
+import {
+  clearDrawn,
+  clearObj,
+  clearChart,
+  getBounding,
+  svgTest,
+  generateThumb,
+  waitForFonts,
+  debounce as debounceFn
+} from './utils/utils';
 
 export default (root => {
 
@@ -21,7 +31,8 @@ export default (root => {
 
         const charts = [];
 
-        let dispatchFunctions, drawn = [];
+        let dispatchFunctions,
+          drawn = [];
 
         const dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
 
@@ -73,7 +84,7 @@ export default (root => {
           }
         }
 
-        function listCharts(charts) {
+        function listCharts() {
           const chartsArr = [];
           for (let i = 0; i < charts.length; i++) {
             chartsArr.push(charts[i].id);
@@ -99,22 +110,12 @@ export default (root => {
           clearChart(container);
         }
 
-        function createLoop(resizeEvent) {
-          if (root.ChartTool.length || resizeEvent) {
-            const chartList = root.ChartTool.length ? root.ChartTool : charts;
-            for (let i = 0; i < chartList.length; i++) {
-              const chart = chartList[i];
-              let matchedCharts;
-              if (charts.length) {
-                matchedCharts = charts.filter(c => c.id === chart.id);
-              }
-              if (!matchedCharts || !matchedCharts.length) {
-                charts.push(chart);
-              }
-              const container = `.${chartSettings.baseClass}[data-chartid=${chart.id}]`;
-              createChart(container, chart);
-            }
-          }
+        function createLoop() {
+          const chartList = root.ChartTool.initialized ? listCharts().map(c => c.obj) : charts;
+          chartList.map(chart => {
+            const container = `.${chartSettings.baseClass}[data-chartid=${chart.id}]`;
+            createChart(container, chart);
+          });
         }
 
         function initializer() {
@@ -128,44 +129,43 @@ export default (root => {
               }
             }
           }
-          const debouncer = debounceFn(createLoop, true, chartSettings.debounce, root);
+          const debouncer = debounceFn(createLoop, chartSettings.debounce, root);
+          const eventListener = (isMobile.phone || isMobile.tablet) ? 'orientationchange' : 'resize';
           select(root)
-            .on(`resize.${chartSettings.prefix}debounce`, debouncer)
-            .on(`resize.${chartSettings.prefix}redraw`, dispatcher.call('redraw', this, charts));
-          if (root.ChartTool) { createLoop(); }
+            .on(`${eventListener}.${chartSettings.prefix}debounce`, () => {
+              dispatcher.call('redraw', this, charts);
+              debouncer();
+            });
+          createLoop();
         }
 
         return {
-          init: function() {
+          initialized: false,
+          init: function(preloadedCharts) {
             if (!this.initialized) {
-              initializer();
-              this.initialized = true;
+              if (preloadedCharts && preloadedCharts.length) {
+                preloadedCharts.map(p => charts.push(p));
+              }
+              waitForFonts(chartSettings.fonts, (data, err) => {
+                if (err) throw new Error(err.toString());
+                initializer();
+                this.initialized = true;
+              });
             }
           },
-          // similar to the push method, except this is explicitly invoked by the user
-          create: (container, obj, cb) => {
-            return createChart(container, obj, cb);
-          },
           // push is basically the same as the create method, except for embed-based charts only
-          push: (obj, cb) => {
-            const container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
-            createChart(container, obj, cb);
+          push: function(obj, cb) {
+            const sel = `.${chartSettings.baseClass}[data-chartid="${obj.id}"]`;
+            charts.push(obj);
+            if (this.initialized) createChart(sel, obj, cb);
           },
-          read: id => {
-            return readChart(id);
-          },
-          list: () => {
-            return listCharts(charts);
-          },
-          update: (id, obj) => {
-            return updateChart(id, obj);
-          },
-          destroy: id => {
-            return destroyChart(id);
-          },
-          dispatch: () => {
-            return Object.keys(dispatcher);
-          },
+          // similar to the push method, except this is explicitly invoked by the user
+          create: (container, obj, cb) => createChart(container, obj, cb),
+          read: id => readChart(id),
+          list: () => listCharts(),
+          update: (id, obj) => updateChart(id, obj),
+          destroy: id => destroyChart(id),
+          dispatch: () => Object.keys(dispatcher),
           parse: parse,
           version: chartSettings.version,
           build: chartSettings.build,
@@ -176,7 +176,7 @@ export default (root => {
 
       })();
 
-      if (!root.Meteor) { ChartTool.init(); }
+      if (!root.Meteor) { ChartTool.init(root.ChartTool); }
       root.ChartTool = ChartTool;
 
     }
