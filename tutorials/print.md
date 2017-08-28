@@ -10,7 +10,7 @@ PDF export can be **very finicky**. As it turns out, taking an HTML file and tur
 
 ### **Step 1:** Install wkhtmltopdf locally
 
-The only reason PDF export in Chart Tool works at all is because of the [wkhtmltopdf library](http://wkhtmltopdf.org/), so let's go ahead and install that. You'll want version 0.12.2.1 or greater (with patched Qt). We recommend downloading a release straight from the [wkhtmltopdf website](wkhtmltopdf.org/downloads.html).
+The only reason PDF export in Chart Tool works at all is because of the [wkhtmltopdf library](http://wkhtmltopdf.org/), so let's go ahead and install that. You'll want version 0.12.2.1 or greater (with patched Qt). We recommend downloading a release straight from the [wkhtmltopdf website](http://wkhtmltopdf.org/downloads.html).
 
 
 ### **Step 2:** Base64 your fonts
