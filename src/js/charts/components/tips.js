@@ -347,8 +347,23 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
 
   if (!isUndefined) {
 
-    const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+    const domain = obj.rendered.plot.xScaleObj.scale.domain();
+    let ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+
+    // Grab all the x-axis values and build lists of unique day and month values.
+    const data = obj.data.data;
+    const uniqueDayValues = Array.from( new Set( data.map( item => item.key.getDate() ) ) );
+    const uniqueMonthValues = Array.from( new Set( data.map( item => item.key.getMonth() ) ) );
+
+    // If there is only one unique day value, but multiple unique month values, this is probably monthly data
+    if (ctx == 'years' && uniqueDayValues.length == 1 && uniqueMonthValues.length > 1) {
+      ctx = 'monthly';
+    }
+    // If there is only one unique day value, and only one unique month values, this is probably annual data
+    else if (ctx == 'months' && uniqueDayValues.length == 1 && uniqueMonthValues.length == 1) {
+      ctx = 'years';
+    }
+
 
     tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
       .data(tipData.series)
@@ -811,6 +826,11 @@ export function tipDateFormatter(selection, ctx, months, data) {
     switch (ctx) {
       case 'years':
         dStr = d.getFullYear();
+        break;
+      case 'monthly':
+        dMonth = months[d.getMonth()];
+        dYear = d.getFullYear();
+        dStr = `${dMonth} ${dYear}`;
         break;
       case 'months':
         dMonth = months[d.getMonth()];
