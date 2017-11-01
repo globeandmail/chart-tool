@@ -9646,7 +9646,11 @@ function getTipData(obj, cursor) {
   xVal = scale.invert(cursorVal);
 
   if (obj.options.stacked) {
-    var data = obj.data.stackedData;
+    var data = obj.data.stackedData.map(function (item) {
+      return item.sort(function (a, b) {
+        return a.data[obj.data.keys[0]] - b.data[obj.data.keys[0]];
+      });
+    });
     var i$1 = bisectData(data, xVal, obj.options.stacked, obj.data.keys[0]);
 
     var arr = [];
@@ -9658,7 +9662,7 @@ function getTipData(obj, cursor) {
       } else {
         var d0 = data[k][i$1[k] - 1],
           d1 = data[k][i$1[k]];
-        refIndex = xVal - d0.x > d1.x - xVal ? i$1[k] : (i$1[k] - 1);
+        refIndex = xVal - d0.data[obj.data.keys[0]] > d1.data[obj.data.keys[0]] - xVal ? i$1[k] : (i$1[k] - 1);
         arr.push(data[k][refIndex]);
       }
     }
@@ -9666,7 +9670,7 @@ function getTipData(obj, cursor) {
     tipData = arr;
 
   } else {
-    var data$1 = obj.data.data,
+    var data$1 = obj.data.data.sort(function (a, b) { return a.key - b.key; }),
       i$2 = bisectData(data$1, xVal),
       d0$1 = data$1[i$2 - 1],
       d1$1 = data$1[i$2];
