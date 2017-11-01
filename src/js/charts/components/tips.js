@@ -359,14 +359,14 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
       .text(d => {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-        if (d.val && d.val !== '__undefined__') {
+        if ((d.val || d.val === 0) && d.val !== '__undefined__') {
           return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
         } else {
           return 'n/a';
         }
       })
       .classed(`${obj.prefix}muted`, d => {
-        return (!d.val || d.val === '__undefined__');
+        return (!(d.val || d.val === 0) || d.val === '__undefined__');
       });
 
     let bandwidth = 0;
@@ -479,7 +479,7 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
         if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-          if (d.val) {
+          if (d.val || d.val === 0) {
             return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
           } else {
             return 'n/a';
@@ -671,14 +671,14 @@ export function columnChartTips(tipNodes, innerTipEls, obj) {
     .text(d => {
       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-      if (d.val && d.val !== '__undefined__') {
+      if ((d.val || d.val === 0) && d.val !== '__undefined__') {
         return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
       } else {
         return 'n/a';
       }
     })
     .classed(`${obj.prefix}muted`, d => {
-      return (!d.val || d.val === '__undefined__');
+      return (!(d.val || d.val === 0) || d.val === '__undefined__');
     });
 
   obj.rendered.plot.seriesGroup.selectAll('rect')
