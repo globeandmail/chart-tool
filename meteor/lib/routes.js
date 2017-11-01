@@ -256,7 +256,12 @@ Router.route('pdf', {
       // zoom: 0.78125
     };
 
-    var url = this.request.headers.origin + "/chart/pdf/" + data._id;
+    var reqHeaders = this.request.headers;
+
+    // hack for browsers (i.e. Firefox) where origin header not always returned
+    var origin = reqHeaders.origin || ("http://" + reqHeaders.host);
+
+    var url = origin + "/chart/pdf/" + data._id;
 
     var r = wkhtmltopdf(url, options).pipe(this.response);
 
