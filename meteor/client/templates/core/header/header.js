@@ -1,3 +1,11 @@
+Template.header.helpers({
+  helpLink: function() {
+    if (app_settings) {
+      return app_settings.help || "http://www.github.com/globeandmail/chart-tool";
+    }
+  }
+});
+
 Template.header.events({
   "blur .input-slug-edit": function(event) {
     var slugData = event.target.value;
@@ -8,9 +16,6 @@ Template.header.events({
     } else {
       event.target.value = this.slug;
     }
-  },
-  "click .header-help": function(event) {
-    window.open(app_settings.help || "http://www.github.com/globeandmail/chart-tool", '_blank');
   }
 });
 
