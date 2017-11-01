@@ -7244,20 +7244,18 @@ function header(container, obj) {
 
   var qualifier;
 
-  if (obj.options.type === 'bar') {
-    if (obj.qualifier !== '' || obj.editable) {
-      qualifier = headerGroup
-        .append('div')
-        .attrs({
-          'class': function () {
-            var str = (obj.prefix) + "chart_qualifier " + (obj.prefix) + "chart_qualifier-bar";
-            if (obj.editable) { str += ' editable-chart_qualifier'; }
-            return str;
-          },
-          'contentEditable': function () { return obj.editable ? true : false; }
-        })
-        .text(obj.qualifier);
-    }
+  if (obj.qualifier !== '' || obj.editable) {
+    qualifier = headerGroup
+      .append('div')
+      .attrs({
+        'class': function () {
+          var str = (obj.prefix) + "chart_qualifier " + (obj.prefix) + "chart_qualifier-bar";
+          if (obj.editable) { str += ' editable-chart_qualifier'; }
+          return str;
+        },
+        'contentEditable': function () { return obj.editable ? true : false; }
+      })
+      .text(obj.qualifier);
   }
 
   var legend;
@@ -9583,71 +9581,6 @@ function plot(node, obj) {
   }
 }
 
-function qualifier(node, obj) {
-
-  var qualifierBg, qualifierText;
-
-  if (obj.options.type !== 'bar') {
-
-    var yAxisNode = node.select(("." + (obj.prefix) + "yAxis"));
-
-    if (obj.editable) {
-
-      var foreignObject = yAxisNode.append('foreignObject')
-        .attrs({
-          'class': ((obj.prefix) + "fo " + (obj.prefix) + "qualifier"),
-          'width': '100%'
-        });
-
-      var foreignObjectGroup = foreignObject.append('xhtml:div')
-        .attr('xmlns', 'http://www.w3.org/1999/xhtml');
-
-      var qualifierField = foreignObjectGroup.append('div')
-        .attrs({
-          'class': ((obj.prefix) + "chart_qualifier editable-chart_qualifier"),
-          'contentEditable': true,
-          'xmlns': 'http://www.w3.org/1999/xhtml'
-        })
-        .text(obj.qualifier);
-
-      foreignObject
-        .attrs({
-          'width': qualifierField.node().getBoundingClientRect().width + 15,
-          'height': qualifierField.node().getBoundingClientRect().height,
-          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", " + (- (qualifierField.node().getBoundingClientRect().height) / 2) + ")")
-        });
-
-    } else {
-
-      qualifierBg = yAxisNode.append('text')
-        .attr('class', ((obj.prefix) + "chart_qualifier-text-bg"))
-        .text(obj.qualifier)
-        .attrs({
-          'dy': '0.32em',
-          'y': obj.yAxis.textY,
-          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)")
-        });
-
-      qualifierText = yAxisNode.append('text')
-        .attr('class', ((obj.prefix) + "chart_qualifier-text"))
-        .text(obj.qualifier)
-        .attrs({
-          'dy': '0.32em',
-          'y': obj.yAxis.textY,
-          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ", 0)")
-        });
-
-    }
-
-  }
-
-  return {
-    qualifierBg: qualifierBg,
-    qualifierText: qualifierText
-  };
-
-}
-
 function bisectData(data, keyVal, stacked, xKey) {
   if (stacked) {
     var arr = [];
@@ -10781,10 +10714,6 @@ var ChartManager = function ChartManager(container, obj) {
   rendered.container = node;
 
   rendered.plot = plot(node, this.recipe);
-
-  if (this.recipe.options.qualifier) {
-    rendered.qualifier = qualifier(node, this.recipe);
-  }
 
   if (this.recipe.options.tips) {
     rendered.tips = tipsManager(node, this.recipe);

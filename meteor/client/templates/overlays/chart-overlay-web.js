@@ -19,6 +19,7 @@ Template.chartOverlayWeb.events({
           descriptor: "web"
         };
 
+    this.editable = false;
     this.exportable = {};
     this.exportable.type = "web";
     this.exportable.dynamicHeight = true;
@@ -40,6 +41,7 @@ Template.chartOverlayWeb.events({
 
     if (!ratio) { ratio = 67; }
 
+    this.editable = false;
     this.exportable = {};
     this.exportable.type = "web";
     this.exportable.dynamicHeight = true;
@@ -80,6 +82,7 @@ Template.chartOverlayWeb.events({
 
     } else {
 
+      this.editable = false;
       this.exportable = {};
       this.exportable.type = "web";
       this.exportable.dynamicHeight = true;
