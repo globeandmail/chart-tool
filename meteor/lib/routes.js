@@ -191,53 +191,36 @@ Router.route('/chart/pdf/:_id', {
   }
 });
 
-// Router.route('png', {
-//   where: 'server',
-//   name: "chart.download.png",
-//   path: "/chart/png/download/:_id/:width/:height/:scale?",
-//   action: function() {
-//     var data = Charts.findOne({ _id: this.params._id });
-
-//     var options = {
-//       scale: this.params.scale || 1,
-//       descriptor: "web"
-//     };
-
-//     data.exportable = {};
-//     data.exportable.width = this.params.width;
-//     data.exportable.height = this.params.height;
-//     data.exportable.type = "png";
-
-//     var headers = {
-//       'Content-Type': 'image/png',
-//       'Content-Disposition': "attachment; filename=" + data.slug + "-web-" + data.exportable.width + "x" + data.exportable.height + ".png"
-//     };
-
-//     var url = this.request.headers.origin + "/chart/png/" + data._id + "/" + this.params.width + "/" + this.params.height + "/" + (this.params.scale || 1);
-
-//     this.response.writeHead(200, headers);
-
-//     // return this.response;
-
-//   }
-// });
-
 // wkhtmltopdf implementation
 Router.route('pdf', {
   where: 'server',
   name: "chart.download.pdf",
   path: '/chart/pdf/download/:_id',
-  action: function() {
+  action: function(postData) {
 
     var data = Charts.findOne({ _id: this.params._id }),
         slug = data.slug,
-        width = determineWidth(data.print.columns),
-        height = determineHeight(data.print.lines, width),
         dpi = app_settings.print.dpi;
+
+    var post = postData.body;
+
+    var width, height;
+
+    var filename = slug + "-print-";
+
+    if (data.print.mode === 'columns') {
+      width = determineWidth(data.print.columns);
+      height = determineHeight(data.print.lines, width);
+      filename += data.print.columns + "-" + data.print.lines + "lin";
+    } else {
+      width = data.print.width;
+      height = data.print.height;
+      filename += width + "mm-" + height + "mm";
+    }
 
     var headers = {
       'Content-Type': 'application/pdf',
-      'Content-Disposition': "attachment; filename=" + slug + "-print-" + data.print.columns + ".pdf"
+      'Content-Disposition': "attachment; filename=" + filename + ".pdf"
     };
 
     this.response.writeHead(200, headers);

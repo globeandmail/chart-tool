@@ -442,6 +442,24 @@ Meteor.methods({
 
   // Print methods
 
+  updatePrintMode: function (chartId, mode) {
+    var obj = {
+      "print.mode": mode,
+      lastEdited: new Date()
+    };
+    if (mode === 'millimetres') {
+      var chart = Charts.findOne(chartId);
+      if (!chart.print.height) {
+        obj["print.height"] = Number(app_settings.print.column_width);
+      }
+      if (!chart.print.width) {
+        obj["print.width"] = Number(app_settings.print.column_width);
+      }
+    }
+    return Charts.update(chartId, {
+      $set: obj
+    });
+  },
   updatePrintCols: function (chartId, cols) {
     return Charts.update(chartId, {
       $set: {
@@ -454,6 +472,22 @@ Meteor.methods({
     return Charts.update(chartId, {
       $set: {
         "print.lines": lines,
+        lastEdited: new Date()
+      }
+    });
+  },
+  updatePrintMMWidth: function (chartId, width) {
+    return Charts.update(chartId, {
+      $set: {
+        "print.width": Number(width),
+        lastEdited: new Date()
+      }
+    });
+  },
+  updatePrintMMHeight: function (chartId, height) {
+    return Charts.update(chartId, {
+      $set: {
+        "print.height": Number(height),
         lastEdited: new Date()
       }
     });

@@ -70,6 +70,10 @@
     font-size: 1.4em;
     @include interface-font-bold;
   }
+  h4 {
+    font-size: 1em;
+    @include interface-font-bold;
+  }
   p, select {
     font-size: 1.2em;
   }
@@ -78,7 +82,7 @@
   }
 }
 
-.web-export-button, .web-export-submit, .print-export-button_pdf, .print-export-button_jpg {
+.web-export-button, .web-export-submit, .print-export-button_pdf, .print-export-button_jpg, .print-export-mode-button {
   @extend %button;
   display: block;
   background: none;
@@ -92,21 +96,33 @@
   }
 }
 
-// .web-export-picker {
-//   @include clearfix;
-//   .select-wrapper {
-//     width: 49%;
-//     margin-bottom: 1em;
-//     &:last-of-type {
-//       float: right;
-//     }
-//   }
-//   select {
-//     width: 100%;
-//     padding: 0.4em 0.8em;
-//     line-height: 1.2;
-//   }
-// }
+.print-export-mode {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  @include row();
+}
+
+.print-export-mode-button {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 0.3em 0.45em;
+  text-align: center;
+  margin-right: 0.2em;
+  font-size: 1em;
+  text-transform: uppercase;
+  opacity: 0.2;
+  &.active {
+    pointer-events: none;
+    opacity: 1;
+  }
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.input-width, .input-height {
+  width: 4em;
+}
 
 .web-export-submit {
   width: 100%;
@@ -155,6 +171,7 @@
     box-shadow: inset 0px 0px 0px 3px white;
   }
   .input-lines {
+    margin-top: 0.3em;
     width: 3em;
   }
   h4 {

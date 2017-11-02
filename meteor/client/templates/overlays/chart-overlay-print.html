@@ -16,44 +16,64 @@
     <div class="print-export-options">
       <h3>Export</h3>
 
-      <p>Print charts can be exported at 1col, 2col, 3col and 4col sizes. Select a width (and optionally a line depth), then download your print-ready editable PDF.</p>
+      <p>Print charts can be exported in columns-and-lines mode (at 1col, 2col, 3col and 4col widths, and then selecting a number of lines) and millimetre mode (using exact width and height values).</p>
+
+      <h4>Sizing mode</h4>
 
       {{ #with print_data }}
 
-        <form class="print-export-form" action="/chart/pdf/download/{{ _id }}" method="post" enctype="multipart/form-data">
+        <div class="print-export-mode">
+          <div class="print-export-mode-button print-export-mode-columns {{ activeMode 'columns' }}">Columns</div>
+          <div class="print-export-mode-button print-export-mode-millimetres {{ activeMode 'millimetres' }}">Millimetres</div>
+        </div>
 
-          <ul>
-            <li>
-              <input name="columns" id="print-1col" type="radio" value="1col" class="input-radio" checked="{{ isChecked '1col' }}">
-              <label for="print-1col">1 column</label>
-            </li>
-            <li>
-              <input name="columns" id="print-2col" type="radio" value="2col" class="input-radio" checked="{{ isChecked '2col' }}">
-              <label for="print-2col">2 columns</label>
-            </li>
-            <li>
-              <input name="columns" id="print-3col" type="radio" value="3col" class="input-radio" checked="{{ isChecked '3col' }}">
-              <label for="print-3col">3 columns</label>
-            </li>
-            <li>
-              <input name="columns" id="print-4col" type="radio" value="4col" class="input-radio" checked="{{ isChecked '4col' }}">
-              <label for="print-4col">4 columns</label>
-            </li>
+        {{ #if modeIsActive "columns" }}
 
-            <li>
-              <h4>Optional</h4>
-            </li>
+          <form class="print-export-form print-export-form-columns" action="/chart/pdf/download/{{ _id }}" method="post" enctype="x-www-form-urlencoded">
+            <ul>
+              <li>
+                <input name="columns" id="print-1col" type="radio" value="1col" class="input-radio" checked="{{ isChecked '1col' }}">
+                <label for="print-1col">1 column</label>
+              </li>
+              <li>
+                <input name="columns" id="print-2col" type="radio" value="2col" class="input-radio" checked="{{ isChecked '2col' }}">
+                <label for="print-2col">2 columns</label>
+              </li>
+              <li>
+                <input name="columns" id="print-3col" type="radio" value="3col" class="input-radio" checked="{{ isChecked '3col' }}">
+                <label for="print-3col">3 columns</label>
+              </li>
+              <li>
+                <input name="columns" id="print-4col" type="radio" value="4col" class="input-radio" checked="{{ isChecked '4col' }}">
+                <label for="print-4col">4 columns</label>
+              </li>
+              <li>
+                <input name="lines" id="print-lines" type="number" value="{{ print.lines }}" class="input-field input-lines" placeholder="20">
+                <label for="print-lines">Lines</label>
+              </li>
+            </ul>
+            <input class="print-export-button_pdf" value="Generate editable PDF" type="button">
+          </form>
 
-            <li>
-              <input name="lines" id="print-lines" type="number" value="{{ print.lines }}" class="input-field input-lines" placeholder="20">
-              <label for="print-lines">Lines</label>
-            </li>
+          {{ /if }}
 
-          </ul>
+          {{ #if modeIsActive "millimetres" }}
 
-          <input class="print-export-button_pdf" value="Generate editable PDF" type="button">
+            <form class="print-export-form print-export-form-millimetres" action="/chart/pdf/download/{{ _id }}" method="post" enctype="x-www-form-urlencoded">
+              <ul>
+                <li>
+                  <input step="0.01" min="1" max="150" name="width" id="print-width" type="number" value="{{ defaultMM 'width' }}" class="input-field input-width">
+                  <label for="print-width">mm wide</label>
+                </li>
+                <li>
+                  <input step="0.01" min="1" max="150" name="height" id="print-height" type="number" value="{{ defaultMM 'height' }}" class="input-field input-height">
+                  <label for="print-height">mm tall</label>
+                </li>
+              </ul>
+              <input class="print-export-button_pdf" value="Generate editable PDF" type="button">
+            </form>
 
-        </form>
+        {{ /if }}
 
       {{ /with }}
 
