@@ -126,7 +126,7 @@ export function timeDiff(d1, d2, tolerance, data) {
   // i've got 99 problems but an if/else ain't one
 
   // data passed in, looking at drawing tips
-  if (data && ctx === 'years' || ctx === 'months') {
+  if (data && (ctx === 'years' || ctx === 'months')) {
     const uniqueDayValues = data.uniqueDayValues;
     const uniqueMonthValues = data.uniqueMonthValues;
 
