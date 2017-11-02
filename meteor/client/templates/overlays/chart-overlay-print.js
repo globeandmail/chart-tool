@@ -16,25 +16,30 @@ Template.chartOverlayPrint.helpers({
     if (this.print) {
       if (this.print.mode) {
         return type === this.print.mode;
-      // } else {
-        // return type === 'columns';
+      } else {
+        return type === 'columns';
       }
     }
   },
-  // activeMode: function(type) {
-  //   if (this.print) {
-  //     if (this.print.mode) {
-  //       return type === this.print.mode ? 'active' : '';
-  //     } else {
-  //       return type === 'columns' ? 'active' : '';
-  //     }
-  //   }
-  // },
-  defaultMM: function() {
-    if (this.print.mode === 'millimetres') {
-      if (!this.print.width || !this.print.height) return app_settings.print.column_width;
+  activeMode: function(type) {
+    if (this.print) {
+      if (this.print.mode) {
+        return type === this.print.mode ? 'active' : '';
+      } else {
+        return type === 'columns' ? 'active' : '';
+      }
     }
-  }
+  },
+  defaultMM: function(type) {
+    if (this.print.mode === 'millimetres') {
+      if (!this.print[type]) {
+        return app_settings.print.column_width;
+      } else {
+        return this.print[type];
+      }
+    }
+  },
+
 });
 
 Template.chartOverlayPrint.events({
@@ -66,6 +71,12 @@ Template.chartOverlayPrint.events({
   },
   "click .print-export-mode-button": function(event) {
     updateAndSave("updatePrintMode", this, event.target.textContent.toLowerCase());
+  },
+  "change .input-width": function(event) {
+    updateAndSave("updatePrintMMWidth", this, Number(event.target.value));
+  },
+  "change .input-height": function(event) {
+    updateAndSave("updatePrintMMHeight", this, Number(event.target.value));
   }
 });
 
@@ -81,10 +92,18 @@ Template.chartOverlayPrint.rendered = function() {
 
     if (data) {
 
+      var width, height;
+
       var magicW = app_settings.print.magic.width,
-          magicH = app_settings.print.magic.height,
-          width = determineWidth(data.print.columns) * magicW,
-          height = determineHeight(data.print.lines, width) * magicH;
+          magicH = app_settings.print.magic.height;
+
+      if (data.print.mode === 'columns') {
+        width = determineWidth(data.print.columns) * magicW;
+        height = determineHeight(data.print.lines, width) * magicH;
+      } else {
+        width = data.print.width * magicW;
+        height = data.print.height * magicH;
+      }
 
       data.exportable = {
         width: width,

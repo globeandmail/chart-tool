@@ -111,7 +111,8 @@
   font-size: 1em;
   text-transform: uppercase;
   opacity: 0.2;
-  &.true {
+  &.active {
+    pointer-events: none;
     opacity: 1;
   }
   &:hover {
@@ -119,21 +120,9 @@
   }
 }
 
-// .web-export-picker {
-//   @include clearfix;
-//   .select-wrapper {
-//     width: 49%;
-//     margin-bottom: 1em;
-//     &:last-of-type {
-//       float: right;
-//     }
-//   }
-//   select {
-//     width: 100%;
-//     padding: 0.4em 0.8em;
-//     line-height: 1.2;
-//   }
-// }
+.input-width, .input-height {
+  width: 4em;
+}
 
 .web-export-submit {
   width: 100%;
@@ -182,6 +171,7 @@
     box-shadow: inset 0px 0px 0px 3px white;
   }
   .input-lines {
+    margin-top: 0.3em;
     width: 3em;
   }
   h4 {
