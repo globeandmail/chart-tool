@@ -132,7 +132,7 @@ export function timeDiff(d1, d2, tolerance, data) {
 
     if (ctx === 'years') {
       // if only one unique day value, but multiple unique month values, probably monthly data
-      if (uniqueDayValues.length === 1 && uniqueMonthValues.length > 1) ctx == 'monthly';
+      if (uniqueDayValues.length === 1 && uniqueMonthValues.length > 1) ctx = 'monthly';
       // if many unique day values and multiple unique month values, probably months data
       if (uniqueDayValues.length > 1 && uniqueMonthValues.length > 1) ctx = 'months';
     }
