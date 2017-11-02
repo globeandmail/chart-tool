@@ -9624,7 +9624,7 @@ function getTipData(obj, cursor) {
     var step = scale.step(),
       domainPosition = Math.floor(cursorVal / step);
 
-    if (domainPosition > scale.domain().length) {
+    if (domainPosition >= scale.domain().length) {
       xVal = scale.domain()[scale.domain().length - 1];
     } else {
       xVal = scale.domain()[domainPosition];

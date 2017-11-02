@@ -6,6 +6,34 @@ Template.chartOverlayPrint.helpers({
   },
   print_data: function() {
     return Charts.findOne(this._id);
+  },
+  printDefaults: function() {
+    if (app_settings) {
+      return app_settings.print;
+    }
+  },
+  modeIsActive: function(type) {
+    if (this.print) {
+      if (this.print.mode) {
+        return type === this.print.mode;
+      // } else {
+        // return type === 'columns';
+      }
+    }
+  },
+  // activeMode: function(type) {
+  //   if (this.print) {
+  //     if (this.print.mode) {
+  //       return type === this.print.mode ? 'active' : '';
+  //     } else {
+  //       return type === 'columns' ? 'active' : '';
+  //     }
+  //   }
+  // },
+  defaultMM: function() {
+    if (this.print.mode === 'millimetres') {
+      if (!this.print.width || !this.print.height) return app_settings.print.column_width;
+    }
   }
 });
 
@@ -35,6 +63,9 @@ Template.chartOverlayPrint.events({
   },
   "click .print-export-button_pdf": function(event) {
     event.target.parentElement.submit();
+  },
+  "click .print-export-mode-button": function(event) {
+    updateAndSave("updatePrintMode", this, event.target.textContent.toLowerCase());
   }
 });
 

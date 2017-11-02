@@ -442,6 +442,14 @@ Meteor.methods({
 
   // Print methods
 
+  updatePrintMode: function (chartId, mode) {
+    return Charts.update(chartId, {
+      $set: {
+        "print.mode": mode,
+        lastEdited: new Date()
+      }
+    });
+  },
   updatePrintCols: function (chartId, cols) {
     return Charts.update(chartId, {
       $set: {
@@ -454,6 +462,22 @@ Meteor.methods({
     return Charts.update(chartId, {
       $set: {
         "print.lines": lines,
+        lastEdited: new Date()
+      }
+    });
+  },
+  updatePrintMMWidth: function (chartId, width) {
+    return Charts.update(chartId, {
+      $set: {
+        "print.width": width,
+        lastEdited: new Date()
+      }
+    });
+  },
+  updatePrintMMHeight: function (chartId, height) {
+    return Charts.update(chartId, {
+      $set: {
+        "print.height": height,
         lastEdited: new Date()
       }
     });
