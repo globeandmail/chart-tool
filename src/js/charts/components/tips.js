@@ -352,7 +352,7 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
     tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
       .data(tipData.series)
@@ -465,7 +465,7 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
   if (!isUndefined) {
 
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
     tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
       .data(() => {
@@ -701,7 +701,7 @@ export function columnChartTips(tipNodes, innerTipEls, obj) {
     tipNodes.tipTextDate.text(tipData.key);
   } else {
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
     tipNodes.tipTextDate
     .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
@@ -815,6 +815,11 @@ export function tipDateFormatter(selection, ctx, months, data) {
     switch (ctx) {
       case 'years':
         dStr = d.getFullYear();
+        break;
+      case 'monthly':
+        dMonth = months[d.getMonth()];
+        dYear = d.getFullYear();
+        dStr = `${dMonth} ${dYear}`;
         break;
       case 'months':
         dMonth = months[d.getMonth()];
