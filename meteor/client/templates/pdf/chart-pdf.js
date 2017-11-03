@@ -7,12 +7,12 @@ Template.chartPdf.rendered = function() {
     var magicW = app_settings.print.magic.width,
         magicH = app_settings.print.magic.height;
 
-    if (data.print.mode === 'columns') {
-      width = determineWidth(data.print.columns) * magicW;
-      height = determineHeight(data.print.lines, width) * magicH;
-    } else {
+    if (data.print.mode === 'millimetres') {
       width = data.print.width * magicW;
       height = data.print.height * magicH;
+    } else {
+      width = determineWidth(data.print.columns) * magicW;
+      height = determineHeight(data.print.lines, width) * magicH;
     }
 
     data.exportable = {

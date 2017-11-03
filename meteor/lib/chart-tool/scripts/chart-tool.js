@@ -6972,13 +6972,13 @@ function timeDiff(d1, d2, tolerance, data) {
   // i've got 99 problems but an if/else ain't one
 
   // data passed in, looking at drawing tips
-  if (data && ctx === 'years' || ctx === 'months') {
+  if (data && (ctx === 'years' || ctx === 'months')) {
     var uniqueDayValues = data.uniqueDayValues;
     var uniqueMonthValues = data.uniqueMonthValues;
 
     if (ctx === 'years') {
       // if only one unique day value, but multiple unique month values, probably monthly data
-      if (uniqueDayValues.length === 1 && uniqueMonthValues.length > 1) { ctx == 'monthly'; }
+      if (uniqueDayValues.length === 1 && uniqueMonthValues.length > 1) { ctx = 'monthly'; }
       // if many unique day values and multiple unique month values, probably months data
       if (uniqueDayValues.length > 1 && uniqueMonthValues.length > 1) { ctx = 'months'; }
     }
@@ -11154,8 +11154,8 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
 
   if (!isUndefined) {
 
-    var domain = obj.rendered.plot.xScaleObj.scale.domain();
-    var ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
+    var domain = obj.rendered.plot.xScaleObj.scale.domain(),
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
     tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
       .data(tipData.series)
