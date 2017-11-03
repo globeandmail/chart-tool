@@ -58,9 +58,11 @@ Template.chartEditAside.helpers({
       var type = this.options["type"];
       if (type === "area" || type === "bar" || type === "column") {
 
+        var dateFormat = this.x_axis.scale === 'ordinal' ? undefined : app_settings.chart.date_format;
+
         var ChartToolParser = ChartTool.parse,
           cleanCSV = dataParse(this.data),
-          dataObj = ChartToolParser(cleanCSV, app_settings.chart.date_format, this.index);
+          dataObj = ChartToolParser(cleanCSV, dateFormat, this.index);
 
         var mArr = [];
 
