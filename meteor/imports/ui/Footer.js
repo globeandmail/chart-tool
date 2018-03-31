@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { app_version, app_build } from '';
+import { app_version, app_build } from '../modules/settings';
 
 class Footer extends Component {
   render() {

@@ -1,9 +1,11 @@
-import { Meteor, Session } from 'meteor/meteor';
-import Charts from '../api/Charts/Charts';
+import { Meteor } from 'meteor/meteor';
+// import Charts from '../api/Charts/Charts';
 import Swal from 'sweetalert2';
 import Papa from 'papaparse';
 import { app_settings } from './settings';
 import { timeFormat } from 'd3-time-format';
+// import multiSVGtoPNG from './multiSVGtoPNG';
+// import ChartTool from './chart-tool';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -471,227 +473,228 @@ function setActive() {
   }
 }
 
-export function updateAndSave(method, obj, data) {
-  setInactive();
-  Meteor.call(method, obj._id, data, (err) => {
-    if (!err) {
-      const newObj = Charts.findOne(Session.get('chartId'));
-      generateThumb(newObj);
-    } else {
-      console.log(err);
-    }
-    setActive();
-  });
-}
+// export function updateAndSave(method, obj, data) {
+//   setInactive();
+//   Meteor.call(method, obj._id, data, (err) => {
+//     if (!err) {
+//       const newObj = Charts.findOne(Session.get('chartId'));
+//       generateThumb(newObj);
+//     } else {
+//       console.log(err);
+//     }
+//     setActive();
+//   });
+// }
 
-export function drawChart(container, obj, cb) {
-  d3.select(container).selectAll('.chart-error-container').remove();
-  let error;
-  try {
-    const chartObj = {};
-    chartObj.id = obj._id;
-    chartObj.data = embed(obj);
-    ChartTool.create(container, chartObj, cb);
-  } catch (e) {
-    error = e;
-    console.log(error);
-    drawError(container, error);
-    if (obj.drawFinished) { obj.drawFinished(); }
-  } finally {
-    return error;
-  }
-}
+// export function drawChart(container, obj, cb) {
+//   document
+//     .querySelector(container)
+//     .querySelectorAll('.chart-error-container')
+//     .forEach(e => e.parentNode.removeChild(e));
+//
+//   let error;
+//   try {
+//     const chartObj = {};
+//     chartObj.id = obj._id;
+//     chartObj.data = embed(obj);
+//     ChartTool.create(container, chartObj, cb);
+//   } catch (e) {
+//     error = e;
+//     console.log(error);
+//     drawError(container, error);
+//     if (obj.drawFinished) { obj.drawFinished(); }
+//   } finally {
+//     return error;
+//   }
+// }
 
-export function drawError(container, error) {
+// export function drawError(container, error) {
+//
+//   document
+//     .querySelector(container)
+//     .querySelectorAll('svg')
+//     .forEach(e => e.parentNode.removeChild(e));
+//
+//   document
+//     .querySelector(container)
+//     .querySelectorAll('div')
+//     .forEach(e => e.parentNode.removeChild(e));
+//
+//   const errorContainer = select(container).append('div')
+//     .attr('class', 'chart-error-container');
+//
+//   const errorGroup = errorContainer.append('div')
+//     .attr('class', 'chart-error');
+//
+//   errorGroup.append('img')
+//     .attr({
+//       'class': 'chart-error_img',
+//       'src': '/images/error.svg'
+//     });
+//
+//   errorGroup.append('h2')
+//     .attr('class', 'chart-error_warning')
+//     .text('Chart error');
+//
+//   errorGroup.append('p')
+//     .attr('class', 'chart-error_text')
+//     .text(error.error);
+//
+//   errorGroup.append('p')
+//     .attr('class', 'chart-error_reason')
+//     .text(error.reason);
+//
+// }
 
-  d3.select(container).selectAll('svg').remove();
-  d3.select(container).selectAll('div').remove();
-
-  const errorContainer = d3.select(container).append('div')
-    .attr('class', 'chart-error-container');
-
-  const errorGroup = errorContainer.append('div')
-    .attr('class', 'chart-error');
-
-  errorGroup.append('img')
-    .attr({
-      'class': 'chart-error_img',
-      'src': '/images/error.svg'
-    });
-
-  errorGroup.append('h2')
-    .attr('class', 'chart-error_warning')
-    .text('Chart error');
-
-  errorGroup.append('p')
-    .attr('class', 'chart-error_text')
-    .text(error.error);
-
-  errorGroup.append('p')
-    .attr('class', 'chart-error_reason')
-    .text(error.reason);
-
-}
-
-export function generateThumb(obj) {
-
-  const scale = 2,
-    ratio = 67,
-    className = 'chart-thumbnail',
-    container = `.${className}`;
-
-  let div = document.createElement('div');
-
-  obj.exportable = {};
-  obj.exportable.type = 'web';
-  obj.exportable.dynamicHeight = false;
-  obj.exportable.width = app_settings.s3.thumbnailWidth;
-  div.style.width = `${obj.exportable.width}px`;
-
-  if (obj.options.type !== 'bar') {
-    obj.exportable.height = obj.exportable.width * (ratio / 100);
-    div.style.height = `${obj.exportable.height}px`;
-  }
-
-  div.className = className;
-  document.body.appendChild(div);
-
-  const chartError = drawChart(container, obj);
-
-  if (!chartError) {
-
-    let svgContainer = document.createElement('div');
-    svgContainer.className = 'svg-container';
-    document.body.appendChild(svgContainer);
-
-    let outputCanvas = document.createElement('div');
-    outputCanvas.className = 'canvas-container';
-    document.body.appendChild(outputCanvas);
-
-    const drawnChartContainer = d3.select(container);
-
-    const prefix = app_settings.chart.prefix;
-
-    drawnChartContainer.select(`.${prefix}chart_title`)
-      .classed('target', true);
-
-    drawnChartContainer.select(`.${prefix}chart_svg`)
-      .classed('target', true);
-
-    drawnChartContainer.select(`.${prefix}chart_source`)
-      .classed('target', true);
-
-    multiSVGtoPNG.convertToSVG({
-      input: '.chart-thumbnail',
-      selector: `.${prefix}chart_title.target, .${prefix}chart_svg.target, .${prefix}chart_source.target`,
-      output: '.svg-container'
-    });
-
-    multiSVGtoPNG.encode({
-      input: '.svg-container',
-      output: '.canvas-container',
-      scale: scale || 2
-    }, data => {
-
-      if (app_settings.s3 && app_settings.s3.enable) {
-
-        const file = dataURLtoBlob(data);
-        file.name = `${app_settings.s3.filename}.${app_settings.s3.extension}`;
-
-        S3.upload({
-          files: [file],
-          path: app_settings.s3.base_path + obj._id,
-          expiration: app_settings.s3.expiration || 30000,
-          unique_name: false
-        }, (err, result) => {
-          if (err) {
-            console.error('S3 thumbnail upload error!');
-          } else {
-            Meteor.call('updateImg', obj._id, result.secure_url);
-          }
-        });
-      } else {
-        Meteor.call('updateImg', obj._id, data);
-      }
-
-    });
-
-    svgContainer.parentNode.removeChild(svgContainer);
-    svgContainer = null;
-
-    outputCanvas.parentNode.removeChild(outputCanvas);
-    outputCanvas = null;
-
-  }
-
-  div.parentNode.removeChild(div);
-  div = null;
-
-}
+// export function generateThumb(obj) {
+//
+//   const scale = 2,
+//     ratio = 67,
+//     className = 'chart-thumbnail',
+//     container = `.${className}`;
+//
+//   let div = document.createElement('div');
+//
+//   obj.exportable = {};
+//   obj.exportable.type = 'web';
+//   obj.exportable.dynamicHeight = false;
+//   obj.exportable.width = app_settings.s3.thumbnailWidth;
+//   div.style.width = `${obj.exportable.width}px`;
+//
+//   if (obj.options.type !== 'bar') {
+//     obj.exportable.height = obj.exportable.width * (ratio / 100);
+//     div.style.height = `${obj.exportable.height}px`;
+//   }
+//
+//   div.className = className;
+//   document.body.appendChild(div);
+//
+//   const chartError = drawChart(container, obj);
+//
+//   if (!chartError) {
+//
+//     let svgContainer = document.createElement('div');
+//     svgContainer.className = 'svg-container';
+//     document.body.appendChild(svgContainer);
+//
+//     let outputCanvas = document.createElement('div');
+//     outputCanvas.className = 'canvas-container';
+//     document.body.appendChild(outputCanvas);
+//
+//     const drawnChartContainer = document.querySelector(container);
+//
+//     const prefix = app_settings.chart.prefix;
+//
+//     drawnChartContainer.querySelector(`.${prefix}chart_title`).classList.add('target');
+//     drawnChartContainer.querySelector(`.${prefix}chart_svg`).classList.add('target');
+//     drawnChartContainer.querySelector(`.${prefix}chart_source`).classList.add('target');
+//
+//     multiSVGtoPNG.convertToSVG({
+//       input: '.chart-thumbnail',
+//       selector: `.${prefix}chart_title.target, .${prefix}chart_svg.target, .${prefix}chart_source.target`,
+//       output: '.svg-container'
+//     });
+//
+//     multiSVGtoPNG.encode({
+//       input: '.svg-container',
+//       output: '.canvas-container',
+//       scale: scale || 2
+//     }, data => {
+//
+//       if (app_settings.s3 && app_settings.s3.enable) {
+//
+//         const file = dataURLtoBlob(data);
+//         file.name = `${app_settings.s3.filename}.${app_settings.s3.extension}`;
+//
+//         S3.upload({
+//           files: [file],
+//           path: app_settings.s3.base_path + obj._id,
+//           expiration: app_settings.s3.expiration || 30000,
+//           unique_name: false
+//         }, (err, result) => {
+//           if (err) {
+//             console.error('S3 thumbnail upload error!');
+//           } else {
+//             Meteor.call('updateImg', obj._id, result.secure_url);
+//           }
+//         });
+//       } else {
+//         Meteor.call('updateImg', obj._id, data);
+//       }
+//
+//     });
+//
+//     svgContainer.parentNode.removeChild(svgContainer);
+//     svgContainer = null;
+//
+//     outputCanvas.parentNode.removeChild(outputCanvas);
+//     outputCanvas = null;
+//
+//   }
+//
+//   div.parentNode.removeChild(div);
+//   div = null;
+//
+// }
 
 
 // downloads a web image to certain specifications
-export function downloadImg(obj, options) {
-
-  const scale = options.scale,
-    className = 'chart-export',
-    container = `.${className}`,
-    filename = `${obj.slug}-${  options.descriptor}-${  obj.exportable.width}`;
-
-  let div = document.createElement('div');
-
-  div.style.width = `${obj.exportable.width}px`;
-  div.style.height = `${obj.exportable.height}px`;
-  div.className = className;
-  document.body.appendChild(div);
-
-  const chartError = drawChart(container, obj);
-
-  if (!chartError) {
-
-    let svgContainer = document.createElement('div');
-    svgContainer.className = 'svg-container';
-    document.body.appendChild(svgContainer);
-
-    let outputCanvas = document.createElement('div');
-    outputCanvas.className = 'canvas-container';
-    document.body.appendChild(outputCanvas);
-
-    const drawnChartContainer = d3.select(`.${className}`);
-
-    const prefix = app_settings.chart.prefix;
-
-    drawnChartContainer.select(`.${prefix}chart_title`)
-      .classed('target', true);
-
-    drawnChartContainer.select(`.${prefix}chart_svg`)
-      .classed('target', true);
-
-    drawnChartContainer.select(`.${prefix}chart_source`)
-      .classed('target', true);
-
-    multiSVGtoPNG.convertToSVG({
-      input: '.chart-export',
-      selector: `.${prefix}chart_title.target, .${prefix}chart_svg.target, .${prefix}chart_source.target`,
-      output: '.svg-container'
-    });
-
-    multiSVGtoPNG.downloadPNG({
-      filename: filename,
-      input: '.svg-container',
-      output: '.canvas-container',
-      scale: scale || 2
-    });
-
-    svgContainer.parentNode.removeChild(svgContainer);
-    svgContainer = null;
-
-    outputCanvas.parentNode.removeChild(outputCanvas);
-    outputCanvas = null;
-
-  }
-
-  div.parentNode.removeChild(div);
-  div = null;
-
-}
+// export function downloadImg(obj, options) {
+//
+//   const scale = options.scale,
+//     className = 'chart-export',
+//     container = `.${className}`,
+//     filename = `${obj.slug}-${  options.descriptor}-${  obj.exportable.width}`;
+//
+//   let div = document.createElement('div');
+//
+//   div.style.width = `${obj.exportable.width}px`;
+//   div.style.height = `${obj.exportable.height}px`;
+//   div.className = className;
+//   document.body.appendChild(div);
+//
+//   const chartError = drawChart(container, obj);
+//
+//   if (!chartError) {
+//
+//     let svgContainer = document.createElement('div');
+//     svgContainer.className = 'svg-container';
+//     document.body.appendChild(svgContainer);
+//
+//     let outputCanvas = document.createElement('div');
+//     outputCanvas.className = 'canvas-container';
+//     document.body.appendChild(outputCanvas);
+//
+//     const drawnChartContainer = document.querySelector(`.${className}`);
+//
+//     const prefix = app_settings.chart.prefix;
+//
+//     drawnChartContainer.querySelector(`.${prefix}chart_title`).classList.add('target');
+//     drawnChartContainer.querySelector(`.${prefix}chart_svg`).classList.add('target');
+//     drawnChartContainer.querySelector(`.${prefix}chart_source`).classList.add('target');
+//
+//     multiSVGtoPNG.convertToSVG({
+//       input: '.chart-export',
+//       selector: `.${prefix}chart_title.target, .${prefix}chart_svg.target, .${prefix}chart_source.target`,
+//       output: '.svg-container'
+//     });
+//
+//     multiSVGtoPNG.downloadPNG({
+//       filename: filename,
+//       input: '.svg-container',
+//       output: '.canvas-container',
+//       scale: scale || 2
+//     });
+//
+//     svgContainer.parentNode.removeChild(svgContainer);
+//     svgContainer = null;
+//
+//     outputCanvas.parentNode.removeChild(outputCanvas);
+//     outputCanvas = null;
+//
+//   }
+//
+//   div.parentNode.removeChild(div);
+//   div = null;
+//
+// }

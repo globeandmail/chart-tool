@@ -51,12 +51,12 @@ var name = "chart-tool";
 var version = "1.2.3";
 var buildVer = "0";
 
-app_version = version;
-app_build = buildVer;
-app_name = name;
-prefix = config.prefix;
+var app_version = version;
+var app_build = buildVer;
+var app_name = name;
+var prefix$$1 = config.prefix;
 
-app_settings = {
+var app_settings = {
 
   s3: config.image,
 
@@ -92,7 +92,7 @@ app_settings = {
   chart: {
     version: app_version,
     build: app_build,
-    prefix: prefix,
+    prefix: prefix$$1,
     slug: '',
     heading: '',
     qualifier: '',
@@ -225,3 +225,5 @@ app_settings = {
   }
 
 };
+
+export { app_version, app_build, app_name, prefix$$1 as prefix, app_settings };
