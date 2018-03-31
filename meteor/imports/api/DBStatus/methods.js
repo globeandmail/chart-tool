@@ -1,10 +1,11 @@
-DBStatus = new Meteor.Collection("database-status");
+import { Meteor } from 'meteor/meteor';
+import DBStatus from './DBStatus';
 
 Meteor.methods({
-  clearDBStatus: function() {
+  clearDBStatus: () => {
     return DBStatus.remove({});
   },
-  checkDBStatus: function() {
+  checkDBStatus: () => {
     return DBStatus.insert({
       createdAt: new Date(),
       lastEdited: new Date(),

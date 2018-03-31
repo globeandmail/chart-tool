@@ -1,40 +1,32 @@
-Charts = new Mongo.Collection("charts");
-
-Charts.allow({
-  insert: function() { return false; },
-  update: function() { return false; },
-  remove: function() { return false; }
-});
-
-Charts.deny({
-  insert: function() { return true; },
-  update: function() { return true; },
-  remove: function() { return true; }
-});
+import { Meteor } from 'meteor/meteor';
+import MD5 from 'crypto-js/md5';
+import Charts from './Charts';
+import queryConstructor from '../modules/queries';
+import { extend } from '../modules/utils';
 
 Meteor.methods({
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
-  addChart: function(text, data) {
-    var newChart = extend(app_settings.chart),
-        now = new Date();
+  addChart: (text, data) => {
+    const newChart = extend(app_settings.chart),
+      now = new Date();
 
     newChart.createdAt = now;
     newChart.lastEdited = now;
     newChart.slug = text;
     newChart.data = data;
-    newChart.md5 = CryptoJS.MD5(data).toString();
+    newChart.md5 = MD5(data).toString();
 
     return Charts.insert(newChart);
   },
 
-  deleteChart: function(chartId) {
+  deleteChart: chartId => {
     return Charts.remove(chartId);
   },
 
-  forkChart: function(chartId) {
-    var newChart = Charts.findOne(chartId),
-        now = new Date();
+  forkChart: chartId => {
+    const newChart = Charts.findOne(chartId),
+      now = new Date();
 
     newChart.createdAt = now;
     newChart.lastEdited = now;
@@ -46,7 +38,7 @@ Meteor.methods({
 
   // Update methods
 
-  updateSlug: function (chartId, text) {
+  updateSlug: (chartId, text) => {
     return Charts.update(chartId, {
       $set: {
         slug: text,
@@ -54,16 +46,16 @@ Meteor.methods({
       }
     });
   },
-  updateData: function (chartId, data) {
+  updateData: (chartId, data) => {
     return Charts.update(chartId, {
       $set: {
         data: data,
-        md5: CryptoJS.MD5(data).toString(),
+        md5: MD5(data).toString(),
         lastEdited: new Date()
       }
     });
   },
-  updateDateFormat: function (chartId, format) {
+  updateDateFormat: (chartId, format) => {
     return Charts.update(chartId, {
       $set: {
         date_format: format,
@@ -71,7 +63,7 @@ Meteor.methods({
       }
     });
   },
-  updateHasHours: function (chartId, hasHours) {
+  updateHasHours: (chartId, hasHours) => {
     return Charts.update(chartId, {
       $set: {
         hasHours: hasHours,
@@ -79,7 +71,7 @@ Meteor.methods({
       }
     });
   },
-  updateHed: function (chartId, hed) {
+  updateHed: (chartId, hed) => {
     return Charts.update(chartId, {
       $set: {
         heading: hed,
@@ -87,7 +79,7 @@ Meteor.methods({
       }
     });
   },
-  updateQual: function (chartId, qual) {
+  updateQual: (chartId, qual) => {
     return Charts.update(chartId, {
       $set: {
         qualifier: qual,
@@ -95,7 +87,7 @@ Meteor.methods({
       }
     });
   },
-  updateSource: function (chartId, src) {
+  updateSource: (chartId, src) => {
     return Charts.update(chartId, {
       $set: {
         source: src,
@@ -103,7 +95,7 @@ Meteor.methods({
       }
     });
   },
-  updateClass: function (chartId, customClass) {
+  updateClass: (chartId, customClass) => {
     return Charts.update(chartId, {
       $set: {
         class: customClass,
@@ -111,7 +103,7 @@ Meteor.methods({
       }
     });
   },
-  updateImg: function (chartId, src) {
+  updateImg: (chartId, src) => {
     return Charts.update(chartId, {
       $set: {
         img: src,
@@ -119,10 +111,10 @@ Meteor.methods({
       }
     });
   },
-  updateTags: function(chartId, tagName) {
+  updateTags: (chartId, tagName) => {
 
-    var taggedArr = Charts.findOne(chartId).tags,
-        index = taggedArr.indexOf(tagName);
+    const taggedArr = Charts.findOne(chartId).tags,
+      index = taggedArr.indexOf(tagName);
 
     if (index > -1) {
       // tag is already in chart, remove it
@@ -140,132 +132,132 @@ Meteor.methods({
     });
   },
 
-  // "Options" methods
+  // 'Options' methods
 
-  updateType: function (chartId, type) {
+  updateType: (chartId, type) => {
     return Charts.update(chartId, {
       $set: {
-        "options.type": type,
+        'options.type': type,
         lastEdited: new Date()
       }
     });
   },
-  updateInterpolation: function (chartId, interpolation) {
+  updateInterpolation: (chartId, interpolation) => {
     return Charts.update(chartId, {
       $set: {
-        "options.interpolation": interpolation,
+        'options.interpolation': interpolation,
         lastEdited: new Date()
       }
     });
   },
-  updateStacked: function(chartId, stacked) {
+  updateStacked: (chartId, stacked) => {
     return Charts.update(chartId, {
       $set: {
-        "options.stacked": stacked,
+        'options.stacked': stacked,
         lastEdited: new Date()
       }
     });
   },
-  updateExpanded: function(chartId, expanded) {
+  updateExpanded: (chartId, expanded) => {
     return Charts.update(chartId, {
       $set: {
-        "options.expanded": expanded,
+        'options.expanded': expanded,
         lastEdited: new Date()
       }
     });
   },
-  updateHead: function(chartId, head) {
+  updateHead: (chartId, head) => {
     return Charts.update(chartId, {
       $set: {
-        "options.head": head,
+        'options.head': head,
         lastEdited: new Date()
       }
     });
   },
-  updateDeck: function(chartId, deck) {
+  updateDeck: (chartId, deck) => {
     return Charts.update(chartId, {
       $set: {
-        "options.deck": deck,
+        'options.deck': deck,
         lastEdited: new Date()
       }
     });
   },
-  updateLegend: function(chartId, legend) {
+  updateLegend: (chartId, legend) => {
     return Charts.update(chartId, {
       $set: {
-        "options.legend": legend,
+        'options.legend': legend,
         lastEdited: new Date()
       }
     });
   },
-  updateFooter: function(chartId, footer) {
+  updateFooter: (chartId, footer) => {
     return Charts.update(chartId, {
       $set: {
-        "options.footer": footer,
+        'options.footer': footer,
         lastEdited: new Date()
       }
     });
   },
-  updateXAxis: function(chartId, x_axis) {
+  updateXAxis: (chartId, x_axis) => {
     return Charts.update(chartId, {
       $set: {
-        "options.x_axis": x_axis,
+        'options.x_axis': x_axis,
         lastEdited: new Date()
       }
     });
   },
-  updateYAxis: function(chartId, y_axis) {
+  updateYAxis: (chartId, y_axis) => {
     return Charts.update(chartId, {
       $set: {
-        "options.y_axis": y_axis,
+        'options.y_axis': y_axis,
         lastEdited: new Date()
       }
     });
   },
-  updateTips: function(chartId, tips) {
+  updateTips: (chartId, tips) => {
     return Charts.update(chartId, {
       $set: {
-        "options.tips": tips,
+        'options.tips': tips,
         lastEdited: new Date()
       }
     });
   },
-  updateAnnotations: function(chartId, annotations) {
+  updateAnnotations: (chartId, annotations) => {
     return Charts.update(chartId, {
       $set: {
-        "options.annotations": annotations,
+        'options.annotations': annotations,
         lastEdited: new Date()
       }
     });
   },
-  updateQualifierOption: function(chartId, qualifier) {
+  updateQualifierOption: (chartId, qualifier) => {
     return Charts.update(chartId, {
       $set: {
-        "options.qualifier": qualifier,
+        'options.qualifier': qualifier,
         lastEdited: new Date()
       }
     });
   },
-  updateShareData: function(chartId, shareData) {
+  updateShareData: (chartId, shareData) => {
     return Charts.update(chartId, {
       $set: {
-        "options.share_data": shareData,
+        'options.share_data': shareData,
         lastEdited: new Date()
       }
     });
   },
-  updateSocial: function(chartId, social) {
+  updateSocial: (chartId, social) => {
     return Charts.update(chartId, {
       $set: {
-        "options.social": social,
+        'options.social': social,
         lastEdited: new Date()
       }
     });
   },
-  updateIndex: function(chartId, index) {
+  updateIndex: (chartId, index) => {
     return Charts.update(chartId, {
       $set: {
-        "options.indexed": index,
+        'options.indexed': index,
         lastEdited: new Date()
       }
     });
@@ -273,74 +265,74 @@ Meteor.methods({
 
   // X Axis methods
 
-  updateXScale: function (chartId, scale) {
+  updateXScale: (chartId, scale) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.scale": scale,
+        'x_axis.scale': scale,
         lastEdited: new Date()
       }
     });
   },
-  updateXTicks: function (chartId, ticks) {
+  updateXTicks: (chartId, ticks) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.ticks": ticks,
+        'x_axis.ticks': ticks,
         lastEdited: new Date()
       }
     });
   },
-  updateXOrient: function (chartId, orient) {
+  updateXOrient: (chartId, orient) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.orient": orient,
+        'x_axis.orient': orient,
         lastEdited: new Date()
       }
     });
   },
-  updateXFormat: function (chartId, format) {
+  updateXFormat: (chartId, format) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.format": format,
+        'x_axis.format': format,
         lastEdited: new Date()
       }
     });
   },
-  updateXPrefix: function (chartId, pfx) {
+  updateXPrefix: (chartId, pfx) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.prefix": pfx,
+        'x_axis.prefix': pfx,
         lastEdited: new Date()
       }
     });
   },
-  updateXSuffix: function (chartId, sfx) {
+  updateXSuffix: (chartId, sfx) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.suffix": sfx,
+        'x_axis.suffix': sfx,
         lastEdited: new Date()
       }
     });
   },
-  updateXMin: function (chartId, minY) {
+  updateXMin: (chartId, minY) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.min": minY,
+        'x_axis.min': minY,
         lastEdited: new Date()
       }
     });
   },
-  updateXMax: function (chartId, maxY) {
+  updateXMax: (chartId, maxY) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.max": maxY,
+        'x_axis.max': maxY,
         lastEdited: new Date()
       }
     });
   },
-  updateXNice: function (chartId, nice) {
+  updateXNice: (chartId, nice) => {
     return Charts.update(chartId, {
       $set: {
-        "x_axis.nice": nice,
+        'x_axis.nice': nice,
         lastEdited: new Date()
       }
     });
@@ -348,74 +340,74 @@ Meteor.methods({
 
   // Y Axis methods
 
-  updateYScale: function (chartId, scale) {
+  updateYScale: (chartId, scale) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.scale": scale,
+        'y_axis.scale': scale,
         lastEdited: new Date()
       }
     });
   },
-  updateYTicks: function (chartId, ticks) {
+  updateYTicks: (chartId, ticks) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.ticks": ticks,
+        'y_axis.ticks': ticks,
         lastEdited: new Date()
       }
     });
   },
-  updateYOrient: function (chartId, orient) {
+  updateYOrient: (chartId, orient) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.orient": orient,
+        'y_axis.orient': orient,
         lastEdited: new Date()
       }
     });
   },
-  updateYFormat: function (chartId, format) {
+  updateYFormat: (chartId, format) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.format": format,
+        'y_axis.format': format,
         lastEdited: new Date()
       }
     });
   },
-  updateYPrefix: function (chartId, pfx) {
+  updateYPrefix: (chartId, pfx) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.prefix": pfx,
+        'y_axis.prefix': pfx,
         lastEdited: new Date()
       }
     });
   },
-  updateYSuffix: function (chartId, sfx) {
+  updateYSuffix: (chartId, sfx) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.suffix": sfx,
+        'y_axis.suffix': sfx,
         lastEdited: new Date()
       }
     });
   },
-  updateYMin: function (chartId, minY) {
+  updateYMin: (chartId, minY) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.min": minY,
+        'y_axis.min': minY,
         lastEdited: new Date()
       }
     });
   },
-  updateYMax: function (chartId, maxY) {
+  updateYMax: (chartId, maxY) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.max": maxY,
+        'y_axis.max': maxY,
         lastEdited: new Date()
       }
     });
   },
-  updateYNice: function (chartId, nice) {
+  updateYNice: (chartId, nice) => {
     return Charts.update(chartId, {
       $set: {
-        "y_axis.nice": nice,
+        'y_axis.nice': nice,
         lastEdited: new Date()
       }
     });
@@ -423,7 +415,7 @@ Meteor.methods({
 
   // Other methods
 
-  resetXAxis: function (chartId) {
+  resetXAxis: chartId => {
     return Charts.update(chartId, {
       $set: {
         x_axis: app_settings.chart.x_axis,
@@ -431,7 +423,7 @@ Meteor.methods({
       }
     });
   },
-  resetYAxis: function (chartId) {
+  resetYAxis: chartId => {
     return Charts.update(chartId, {
       $set: {
         y_axis: app_settings.chart.y_axis,
@@ -442,52 +434,52 @@ Meteor.methods({
 
   // Print methods
 
-  updatePrintMode: function (chartId, mode) {
-    var obj = {
-      "print.mode": mode,
+  updatePrintMode: (chartId, mode) => {
+    const obj = {
+      'print.mode': mode,
       lastEdited: new Date()
     };
     if (mode === 'millimetres') {
-      var chart = Charts.findOne(chartId);
+      const chart = Charts.findOne(chartId);
       if (!chart.print.height) {
-        obj["print.height"] = Number(app_settings.print.column_width);
+        obj['print.height'] = Number(app_settings.print.column_width);
       }
       if (!chart.print.width) {
-        obj["print.width"] = Number(app_settings.print.column_width);
+        obj['print.width'] = Number(app_settings.print.column_width);
       }
     }
     return Charts.update(chartId, {
       $set: obj
     });
   },
-  updatePrintCols: function (chartId, cols) {
+  updatePrintCols: (chartId, cols) => {
     return Charts.update(chartId, {
       $set: {
-        "print.columns": cols,
+        'print.columns': cols,
         lastEdited: new Date()
       }
     });
   },
-  updatePrintLines: function (chartId, lines) {
+  updatePrintLines: (chartId, lines) => {
     return Charts.update(chartId, {
       $set: {
-        "print.lines": lines,
+        'print.lines': lines,
         lastEdited: new Date()
       }
     });
   },
-  updatePrintMMWidth: function (chartId, width) {
+  updatePrintMMWidth: (chartId, width) => {
     return Charts.update(chartId, {
       $set: {
-        "print.width": Number(width),
+        'print.width': Number(width),
         lastEdited: new Date()
       }
     });
   },
-  updatePrintMMHeight: function (chartId, height) {
+  updatePrintMMHeight: (chartId, height) => {
     return Charts.update(chartId, {
       $set: {
-        "print.height": Number(height),
+        'print.height': Number(height),
         lastEdited: new Date()
       }
     });
@@ -495,8 +487,8 @@ Meteor.methods({
 
   // Stats methods
 
-  matchedCharts: function(params) {
-    var parameters = queryConstructor(params);
+  matchedCharts: params => {
+    const parameters = queryConstructor(params);
     delete parameters.options.limit;
     return Charts.find(parameters.find, parameters.options).count();
   }

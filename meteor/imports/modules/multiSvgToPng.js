@@ -111,7 +111,7 @@ multiSVGtoPNG = (function multiSVGtoPNG() {
         var item = currSvg.attr("version", 1.1).node().outerHTML;
         var imgsrc = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(item)));
         var image = new Image;
-        
+
         image.custProps = {};
         image.custProps.targetHeight = currentHeight;
         image.src = imgsrc;
