@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { app_version, app_build } from '../modules/settings';
+import { app_version, app_build } from '../../modules/settings';
 
-class Footer extends Component {
+export default class Footer extends Component {
   render() {
     return (
       <footer>
@@ -10,5 +10,3 @@ class Footer extends Component {
     );
   }
 }
-
-export default Footer;

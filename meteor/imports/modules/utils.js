@@ -159,7 +159,7 @@ export function csvFormat(obj) {
 export function slugParse(slug) {
   const re = /^[a-zA-Z0-9-]*$/;
   if (!re.test(slug)) {
-    return slug.replace(/[ +.,!@#$%^&*();:\/|<>_ =]/g,'-').toLowerCase();
+    return slug.replace(/[ +.,!@#$%^&*();:\/|<>'" =]/g,'-').toLowerCase();
   } else {
     return slug.toLowerCase();
   }
