@@ -1,16 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import Charts from '../Charts';
-import queryConstructor from '../../modules/queries';
+import { queryConstructor } from '../../../modules/utils';
 
-Meteor.publish('chart', chartId => {
+Meteor.publish('chart', function(chartId) {
   check(chartId, String);
   const data = Charts.find({ _id: chartId });
   if (data) { return data; }
   return this.ready();
 });
 
-Meteor.publish('chartArchive', params => {
+Meteor.publish('chartArchive', function(params) {
   const parameters = queryConstructor(params);
 
   parameters.options.fields = parameters.options.fields || {};
@@ -34,7 +34,7 @@ Meteor.publish('chartArchive', params => {
 //   return this.ready();
 // });
 
-Meteor.publish('chartCount', () => {
+Meteor.publish('chartCount', function() {
   const data = Charts.find({}, {
     fields: {
       '_id': true,

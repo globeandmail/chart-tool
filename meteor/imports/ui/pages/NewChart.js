@@ -35,7 +35,8 @@ export default class NewChart extends Component {
         if (err) {
           console.log(err);
         } else {
-          history.push('/home', { some: result })
+          // need to figure out how to handle history stuff
+          // history.push('/home', { some: result })
           // console.log('Chart added with id: ' + result);
           // Session.set('chartId', result);
           // Router.go('chart.edit', {_id: Session.get('chartId')});
@@ -76,7 +77,11 @@ export default class NewChart extends Component {
                 onChange={this.updateData.bind(this)}
               >
               </textarea>
-              <input type='submit' value='Create chart' className='input-submit' />
+              <input
+                type='submit'
+                value='Create chart'
+                className='input-submit'
+              />
             </form>
           </article>
         </section>

@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import Tags from '../Tags';
-import queryConstructor from '../../modules/queries';
+import { queryConstructor } from '../../../modules/utils';
 
-Meteor.publish('tags', () => {
+Meteor.publish('tags', function() {
   const parameters = queryConstructor();
   parameters.options.fields = {
     'tagName': true,

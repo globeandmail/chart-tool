@@ -2,10 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import DBStatus from './DBStatus';
 
 Meteor.methods({
-  clearDBStatus: () => {
+  'dbstatus.clear'() {
     return DBStatus.remove({});
   },
-  checkDBStatus: () => {
+  'dbstatus.check'() {
     return DBStatus.insert({
       createdAt: new Date(),
       lastEdited: new Date(),
