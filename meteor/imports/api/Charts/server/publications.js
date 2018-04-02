@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Presences } from 'meteor/tmeasday:presence';
 import { check } from 'meteor/check';
 import Charts from '../Charts';
 import { queryConstructor } from '../../../modules/utils';
@@ -10,7 +11,7 @@ Meteor.publish('chart', function(chartId) {
   return this.ready();
 });
 
-Meteor.publish('chartArchive', function(params) {
+Meteor.publish('chart.archive', function(params) {
   const parameters = queryConstructor(params);
 
   parameters.options.fields = parameters.options.fields || {};
@@ -20,21 +21,22 @@ Meteor.publish('chartArchive', function(params) {
   fields.img = true;
   fields.slug = true;
   fields.lastEdited = true;
+  fields.createdAt = true;
 
   const data = Charts.find(parameters.find, parameters.options);
   if (data) { return data; }
   return this.ready();
 });
 
-// Meteor.publish('chartUsers', function (chartId) {
-//   check(chartId, String);
-//   const filter = { 'state.currentChartId': chartId };
-//   const data = Presences.find(filter, { fields: { 'state': true, 'userId': true }});
-//   if (data) { return data; }
-//   return this.ready();
-// });
+Meteor.publish('chart.users', function(chartId) {
+  check(chartId, String);
+  const filter = { 'state.currentChartId': chartId };
+  const data = Presences.find(filter, { fields: { 'state': true, 'userId': true }});
+  if (data) { return data; }
+  return this.ready();
+});
 
-Meteor.publish('chartCount', function() {
+Meteor.publish('chart.count', function() {
   const data = Charts.find({}, {
     fields: {
       '_id': true,
@@ -46,8 +48,8 @@ Meteor.publish('chartCount', function() {
   return this.ready();
 });
 
-// Meteor.publish('chartUserCount', function() {
-//   const data = Presences.find({}, { fields: { 'state': true, 'userId': true } });
-//   if (data) { return data; }
-//   return this.ready();
-// });
+Meteor.publish('chart.usercount', function() {
+  const data = Presences.find({}, { fields: { 'state': true, 'userId': true } });
+  if (data) { return data; }
+  return this.ready();
+});

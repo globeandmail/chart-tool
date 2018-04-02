@@ -77,7 +77,7 @@ class Header extends Component {
 }
 
 export default withTracker(() => {
-  // Meteor.subscribe('tasks');
+  // Meteor.subscribe('chart', ID);
 
   return {
     // tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),

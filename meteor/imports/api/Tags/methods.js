@@ -6,7 +6,7 @@ export function chartTags(chartId) {
 }
 
 Meteor.methods({
-  createTag: (tagName, chartId) => {
+  'tags.create'(tagName, chartId) {
     const tagExists = Tags.find({ tagName: tagName }).count();
     if (!tagExists) {
       const now = new Date();
@@ -18,7 +18,7 @@ Meteor.methods({
       });
     }
   },
-  addTag: (tagId, chartId) => {
+  'tags.add'(tagId, chartId) {
     const currTag = Tags.findOne(tagId),
       arr = currTag.tagged.slice();
     // if chart doesn't already exist within array
@@ -32,7 +32,7 @@ Meteor.methods({
       });
     }
   },
-  removeTag: (tagId, chartId) => {
+  'tags.remove'(tagId, chartId) {
     const currTag = Tags.findOne(tagId),
       taggedArr = currTag.tagged,
       index = taggedArr.indexOf(chartId);

@@ -386,7 +386,7 @@ export const queries = {
       }
     };
   },
-  chartArchive: params => {
+  'chart.archive': params => {
 
     const types = params.filters.types,
       tags = params.filters.tags,
@@ -429,7 +429,7 @@ export const queries = {
       };
     }
   },
-  chartTags: params => {
+  'chart.tags': params => {
     return {
       find: { tagged: params.chartId }
     };

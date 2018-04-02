@@ -15,11 +15,44 @@
     @include interface-font-bold;
     margin-bottom: 0.4em;
   }
+  label {
+    position: relative;
+    top: 1px;
+    padding-left: 0.3em;
+  }
+  .expanded {
+    height: auto;
+    opacity: 1;
+  }
+  .collapsed {
+    height: 0;
+    opacity: 0;
+  }
 }
 
 .charts-archive_search-field {
   width: 100%;
   @extend %input;
+}
+
+.charts-archive_sort {
+  @include clearfix;
+  .select-wrapper {
+    &:after {
+      right: 8px;
+    }
+    &:first-of-type {
+      float: left;
+    }
+    &:last-of-type {
+      float: right;
+    }
+  }
+  select {
+    @include interface-font-regular;
+    font-size: 1em;
+    padding-right: 1.4em;
+  }
 }
 
 .charts-archive_results {
@@ -56,6 +89,7 @@
     border: none;
     font-size: 0.9em;
     padding: 0;
+    margin-left: 0.2em;
     padding-bottom: 1px;
     border-radius: 0;
     border-bottom: 1px solid $color-black;

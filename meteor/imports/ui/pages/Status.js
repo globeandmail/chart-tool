@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Presences } from 'meteor/tmeasday:presence';
 import Charts from '../../api/Charts/Charts';
 import '../../api/DBStatus/methods';
 import Header from '../components/Header';
@@ -12,14 +13,12 @@ class Status extends Component {
     super(props);
     this.state = {
       totalCharts: Number(props.chartCount).toLocaleString('en'),
-      // totalActiveUsers: Number(props.chartUserCount).toLocaleString('en'),
-      totalActiveUsers: 12,
       databaseStatus: 'status-inactive'
     };
   }
 
   componentDidMount() {
-    Meteor.call('dbstatus.check', (err, result) => {
+    Meteor.call('dbstatus.check', err => {
       const databaseStatus = err ? 'status-inactive' : 'status-active';
       this.setState({ databaseStatus });
     });
@@ -52,15 +51,15 @@ class Status extends Component {
           <div className='status-numbers'>
 
             <div className='status-number'>
-              <div className='big-number'>{ this.state.totalCharts }</div>
+              <div className='big-number'>{ Number(this.props.chartCount).toLocaleString('en') }</div>
               <h3>charts in database</h3>
             </div>
             <div className='status-number'>
-              <div className='big-number'>{ this.state.totalActiveUsers }</div>
+              <div className='big-number'>{ Number(this.props.chartUserCount).toLocaleString('en') }</div>
               <h3>active users</h3>
             </div>
             <div className='status-number'>
-              <div className='big-number'>{ this.state.totalChartsThisMonth }</div>
+              <div className='big-number'>{ Number(this.props.chartsThisMonth).toLocaleString('en') }</div>
               <h3>charts this month</h3>
             </div>
 
@@ -75,8 +74,8 @@ class Status extends Component {
 }
 
 export default withTracker(() => {
-  Meteor.subscribe('chartCount');
-  Meteor.subscribe('chartUserCount');
+  Meteor.subscribe('chart.count');
+  Meteor.subscribe('chart.usercount');
 
   const now = new Date(),
     m = now.getMonth() + 1,
@@ -84,7 +83,7 @@ export default withTracker(() => {
 
   return {
     chartCount: Charts.find().fetch().length,
-    // chartUserCount = Presences.find().fetch().length,
+    chartUserCount: Presences.find().fetch().length,
     chartsThisMonth: Charts.find({ createdAt: { $gte: new Date(`${y}-${m}-01`) } }).fetch().length,
     serverStatus: Meteor.status().connected ? 'status-active' : 'status-inactive'
   };

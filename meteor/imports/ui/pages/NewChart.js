@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import createBrowserHistory from 'history/createBrowserHistory';
 import { slugParse, dataParse } from '../../modules/utils';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
@@ -35,11 +36,8 @@ export default class NewChart extends Component {
         if (err) {
           console.log(err);
         } else {
-          // need to figure out how to handle history stuff
-          // history.push('/home', { some: result })
-          // console.log('Chart added with id: ' + result);
-          // Session.set('chartId', result);
-          // Router.go('chart.edit', {_id: Session.get('chartId')});
+          const history = createBrowserHistory();
+          history.push({ pathname: `/chart/${result}/edit` });
         }
       });
     } else {
