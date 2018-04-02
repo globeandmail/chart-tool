@@ -1,10 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import Tags from './Tags';
 
-export function chartTags(chartId) {
-  return Tags.find({ tagged: chartId });
-}
-
 Meteor.methods({
   'tags.create'(tagName, chartId) {
     const tagExists = Tags.find({ tagName: tagName }).count();

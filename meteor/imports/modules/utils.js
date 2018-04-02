@@ -459,18 +459,48 @@ export function queryConstructor(args) {
 
 }
 
-function setInactive() {
+export function setInactive() {
   const containers = document.querySelectorAll('.preview-outer-container');
   for (let i = 0; i < containers.length; i++) {
     containers[i].classList.add('preview-inactive');
   }
 }
 
-function setActive() {
+export function setActive() {
   const containers = document.querySelectorAll('.preview-outer-container');
   for (let i = 0; i < containers.length; i++) {
     containers[i].classList.remove('preview-inactive');
   }
+}
+
+export function timeSince(timeStamp) {
+  const now = new Date(),
+    secondsPast = (now.getTime() - timeStamp.getTime()) / 1000;
+
+  if (secondsPast < 60) {
+    return `${parseInt(secondsPast)} seconds ago`;
+  }
+  if (secondsPast < 3600) {
+    return `${parseInt(secondsPast / 60)} minutes ago`;
+  }
+  if (secondsPast <= 86400) {
+    return `${parseInt(secondsPast / 3600)} hours ago`;
+  }
+  if (secondsPast > 86400) {
+    const day = timeStamp.getDate(),
+      month = timeStamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(' ', ''),
+      year = timeStamp.getFullYear() === now.getFullYear() ? '' : `, ${timeStamp.getFullYear()}`;
+    return `${month} ${day} ${year}`;
+  }
+}
+
+export function prettyCreatedAt(createdAt) {
+  const now = new Date(),
+    timeStamp = createdAt,
+    day = timeStamp.getDate(),
+    month = timeStamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(' ', ''),
+    year = timeStamp.getFullYear() === now.getFullYear() ? '' : ` ${timeStamp.getFullYear()}`;
+  return `${month} ${day} ${year}`;
 }
 
 // export function updateAndSave(method, obj, data) {
