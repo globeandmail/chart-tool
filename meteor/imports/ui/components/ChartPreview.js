@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import Charts from '../../api/Charts/Charts';
 import Chart from './Chart';
-import { withTracker } from 'meteor/react-meteor-data';
 
-class ChartPreview extends Component {
+export default class ChartPreview extends Component {
 
   constructor(props) {
     super(props);
@@ -52,11 +50,3 @@ class ChartPreview extends Component {
   }
 
 }
-
-export default withTracker(props => {
-  const subscription = Meteor.subscribe('chart', props.match.params._id);
-  return {
-    loading: !subscription.ready(),
-    chart: Charts.findOne({ _id: props.match.params._id })
-  };
-})(ChartPreview);

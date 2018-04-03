@@ -17,6 +17,16 @@ export default class ChartEmbed extends Component {
     event.target.select();
   }
 
+  getEmbed() {
+    let embedCode, error;
+    try {
+      embedCode = embed(this.props.chart);
+    } catch (e) {
+      error = e;
+    }
+    return !error ? embedCode : '';
+  }
+
   embedCode() {
     return `<!-- CHART TOOL v${app_version}-${app_build} -->
 <!-- edited: ${this.props.chart.lastEdited} -->
@@ -24,7 +34,7 @@ export default class ChartEmbed extends Component {
 <div class='${prefix}chart' data-chartid="${prefix}${this.props.chart._id}">
   <script type='text/javascript'>
     (function(root) {
-      var data = ${JSON.stringify(embed(this.props.chart), null, 2)};
+      var data = ${JSON.stringify(this.getEmbed(), null, 2)};
       root.ChartTool = root.ChartTool || [];
       root.ChartTool.push({id: '${prefix}' + data.id, data: data});
       var b = document.getElementsByTagName('body')[0];

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import Charts from '../../api/Charts/Charts';
-import { withTracker } from 'meteor/react-meteor-data';
 import { chartTypeFieldReset } from '../../modules/utils';
 
-class ChartType extends Component {
+export default class ChartType extends Component {
 
   constructor(props) {
     super(props);
@@ -40,11 +38,3 @@ class ChartType extends Component {
   }
 
 }
-
-export default withTracker(props => {
-  const subscription = Meteor.subscribe('chart', props.match.params._id);
-  return {
-    loading: !subscription.ready(),
-    chart: Charts.findOne({ _id: props.match.params._id })
-  };
-})(ChartType);

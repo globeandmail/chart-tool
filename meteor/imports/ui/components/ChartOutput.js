@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import Charts from '../../api/Charts/Charts';
 import ChartEmbed from './ChartEmbed';
 import { withTracker } from 'meteor/react-meteor-data';
 
-class ChartOutput extends Component {
+export default class ChartOutput extends Component {
 
   constructor(props) {
     super(props);
@@ -46,11 +45,3 @@ class ChartOutput extends Component {
     );
   }
 }
-
-export default withTracker(props => {
-  const subscription = Meteor.subscribe('chart', props.match.params._id);
-  return {
-    loading: !subscription.ready(),
-    chart: Charts.findOne({ _id: props.match.params._id })
-  };
-})(ChartOutput);

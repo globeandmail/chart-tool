@@ -3,10 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import { Link } from 'react-router-dom';
 import { app_settings } from '../../modules/settings';
 import { slugParse, debounce } from '../../modules/utils';
-import { withTracker } from 'meteor/react-meteor-data';
-import Charts from '../../api/Charts/Charts';
 
-class Header extends Component {
+export default class Header extends Component {
 
   constructor(props) {
     super(props);
@@ -71,19 +69,9 @@ class Header extends Component {
       <header className={this.props.edit ? 'header-edit' : ''}>
         <div className='topbar'></div>
         <div className='header-baseline'>
-          {this.props.edit && !this.props.loading ? this.renderEditSlug() : this.renderNav()}
+          {this.props.edit ? this.renderEditSlug() : this.renderNav()}
         </div>
       </header>
     );
   }
 }
-
-export default withTracker(props => {
-  const ret = { props };
-  if (props.edit) {
-    const subscription = Meteor.subscribe('chart', props.match.params._id);
-    ret.loading = !subscription.ready();
-    ret.chart = Charts.findOne({ _id: props.match.params._id });
-  }
-  return ret;
-})(Header);

@@ -105,7 +105,7 @@ Template.chartEditAside.helpers({
       }
     }
   },
-  xScaleChecked: function(val) {
+  xScaleChecked: function(val) {\
     if (this.x_axis && this.x_axis.scale === val) { return "checked"; }
   },
   xNice: function() {

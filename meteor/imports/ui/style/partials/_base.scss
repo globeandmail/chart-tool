@@ -78,3 +78,13 @@ section {
   margin-top: 1.3em;
   margin-bottom: 4em;
 }
+
+.expanded {
+  height: auto;
+  opacity: 1;
+}
+
+.collapsed {
+  height: 0px;
+  opacity: 0;
+}

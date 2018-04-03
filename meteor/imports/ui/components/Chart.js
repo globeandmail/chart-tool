@@ -18,6 +18,16 @@ export default class Chart extends Component {
     };
   }
 
+  drawError(error) {
+    return `<div class='chart-error-container'>
+        <div class='chart-error'>
+          <img src='/images/error.svg' class='chart-error_img' />
+          <p class='chart-error_text'>${error.error}</p>
+          <p class='chart-error_reason'>${error.reason}</p>
+        </div>
+      </div>`;
+  }
+
   titleBlur(event) {
     event.preventDefault();
     const text = removeNbsp(event.target.innerText).trim();
@@ -57,9 +67,10 @@ export default class Chart extends Component {
     if (this.props.editable || this.props.editable === false) chart.editable = this.props.editable;
     if (this.props.share_data || this.props.share_data === false) chart.options.share_data = this.props.share_data;
     if (this.props.social || this.props.social === false) chart.options.social = this.props.social;
-    drawChart(this.chartRef.current, chart);
 
-    if (this.props.editable) {
+    const errors = drawChart(this.chartRef.current, chart);
+
+    if (!errors && this.props.editable) {
       const title = this.chartRef.current.querySelector('.editable-chart_title'),
         qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
         source = this.chartRef.current.querySelector('.editable-chart_source');
@@ -68,7 +79,8 @@ export default class Chart extends Component {
       qualifier.addEventListener('blur', this.qualifierBlur);
       source.addEventListener('click', this.sourceClick);
       source.addEventListener('blur', this.sourceBlur);
-
+    } else {
+      this.chartRef.current.innerHTML = this.drawError(errors);
     }
   }
 

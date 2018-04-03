@@ -1,12 +1,10 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-// import Charts from '../api/Charts/Charts';
 import Swal from 'sweetalert2';
 import Papa from 'papaparse';
 import { app_settings } from './settings';
-import { timeFormat } from 'd3-time-format';
+import { timeFormat, timeParse } from 'd3-time-format';
 // import multiSVGtoPNG from './multiSVGtoPNG';
-// import './chart-tool';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -74,16 +72,15 @@ export function cleanEmbed(data) {
 }
 
 export function embed(obj) {
-  const data = {
+  return {
     'version': obj.version,
     'id': obj._id,
     'heading': escapeStr(obj.heading),
     'qualifier': escapeStr(obj.qualifier),
     'source': escapeStr(obj.source),
-    'tags': escapeStr(obj.tags)
+    'tags': escapeStr(obj.tags),
+    'chart': cleanEmbed(obj)
   };
-  data.chart = cleanEmbed(obj);
-  return data;
 }
 
 export function deleteNullProps(obj) {
@@ -312,12 +309,12 @@ export function determineHeight(lines, width) {
 export function standardizeDates(data, oldFormat, newFormat) {
 
   const stdFormat = timeFormat(newFormat),
-    currFormat = timeFormat(oldFormat);
+    currFormat = timeParse(oldFormat);
 
   const jsonData = Papa.parse(data, { delimiter: ',' });
 
   for (let i = 1; i < jsonData.data.length; i++) {
-    const date = currFormat.parse(jsonData.data[i][0]);
+    const date = currFormat(jsonData.data[i][0]);
     if (date !== null) {
       jsonData.data[i][0] = stdFormat(date);
     } else {
@@ -508,18 +505,6 @@ export function renderLoading() {
   return <div className='loading'><p>Loading…</p></div>;
 }
 
-export function drawError(error) {
-  return (
-    <div className='chart-error-container'>
-      <div className='chart-error'>
-        <img src='/images/error.svg' className='chart-error_img' />
-        <p className='chart-error_text'>{error.error}</p>
-        <p className='chart-error_reason'>{error.reason}</p>
-      </div>
-    </div>
-  );
-}
-
 // export function updateAndSave(method, obj, data) {
 //   setInactive();
 //   Meteor.call(method, obj._id, data, (err) => {
@@ -543,9 +528,9 @@ export function drawChart(container, obj, cb) {
   } catch (e) {
     error = e;
     console.log(error);
-    drawError(container, error);
     if (obj.drawFinished) { obj.drawFinished(); }
   }
+  return error;
 }
 
 export function chartTypeFieldReset(type) {

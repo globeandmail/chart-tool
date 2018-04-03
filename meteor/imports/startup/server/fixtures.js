@@ -1,14 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import DBStatus from '../../api/DBStatus/DBStatus';
 import Charts from '../../api/Charts/Charts';
-import { app_settings } from '../../modules/settings';
-
-Meteor.methods({
-  getAnimalName: function() {
-    this.unblock();
-    return Meteor.http.get(app_settings.animal_api);
-  }
-});
 
 // if (app_settings.s3.enable) {
 //   S3.config = {
