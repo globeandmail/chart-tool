@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Meteor } from 'meteor/meteor';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import ChartType from '../components/ChartType';
+import ChartPreview from '../components/ChartPreview';
 
-export default class App extends Component {
+export default class EditChart extends Component {
 
   constructor(props) {
     super(props);
@@ -12,23 +13,18 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Header />  {/* Needs to have header-edit class */}
-
+        <Header edit={true} />
         <section>
-
-          <article class='main-area'>
-            {/* {{ > yield 'type' }}
-            {{ > yield 'preview' }}
-            {{ > yield 'output' }}
+          <article className='main-area'>
+            <ChartType />
+            <ChartPreview />
+            {/* {{ > yield 'output' }}
             {{ > yield 'overlay' }} */}
           </article>
-
-          <aside class='options-area'>
+          <aside className='options-area'>
             {/* {{ > yield 'aside'}} */}
           </aside>
-
         </section>
-
         <Footer />
       </div>
     );

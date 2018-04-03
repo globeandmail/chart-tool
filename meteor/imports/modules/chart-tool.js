@@ -6965,7 +6965,7 @@ function debounce$1(fn, params, timeout, root) {
 }
 
 function clearChart(cont) {
-  var el = document.querySelector(cont);
+  var el = isElement(cont) ? cont : document.querySelector(cont);
   while (el && el.querySelectorAll('svg').length) {
     var svg = el.querySelectorAll('svg');
     svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
@@ -6994,7 +6994,12 @@ function clearDrawn(drawn, obj) {
 }
 
 function getBounding(selector$$1, dimension) {
-  return document.querySelector(selector$$1).getBoundingClientRect()[dimension];
+  if (isElement(selector$$1)) {
+    return selector$$1.getBoundingClientRect()[dimension];
+  } else {
+    return document.querySelector(selector$$1).getBoundingClientRect()[dimension];
+  }
+
 }
 
 var TimeObj = function TimeObj() {
@@ -7210,6 +7215,11 @@ function getUniqueDateValues(data, type) {
     }
   });
   return Array.from(new Set(allDates));
+}
+
+function isElement(el) {
+  var isString = typeof cont === 'string';
+  return !isString && el.nodeName;
 }
 
 /**
@@ -12519,15 +12529,20 @@ var index = (function (root) {
         }
 
         function destroyChart(id) {
-          var container, obj;
-          for (var i = 0; i < charts.length; i++) {
-            if (charts[i].id === id) {
-              obj = charts[i];
+          var container;
+          if (!isElement(id)) {
+            var obj;
+            for (var i = 0; i < charts.length; i++) {
+              if (charts[i].id === id) {
+                obj = charts[i];
+              }
             }
+            container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
+            clearDrawn(drawn, obj);
+            clearObj(obj);
+          } else {
+            container = id;
           }
-          container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
-          clearDrawn(drawn, obj);
-          clearObj(obj);
           clearChart(container);
         }
 

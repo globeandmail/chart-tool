@@ -27,7 +27,7 @@ export function debounce(fn, params, timeout, root) {
 }
 
 export function clearChart(cont) {
-  let el = document.querySelector(cont);
+  let el = isElement(cont) ? cont : document.querySelector(cont);
   while (el && el.querySelectorAll('svg').length) {
     let svg = el.querySelectorAll('svg');
     svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
@@ -56,7 +56,12 @@ export function clearDrawn(drawn, obj) {
 }
 
 export function getBounding(selector, dimension) {
-  return document.querySelector(selector).getBoundingClientRect()[dimension];
+  if (isElement(selector)) {
+    return selector.getBoundingClientRect()[dimension];
+  } else {
+    return document.querySelector(selector).getBoundingClientRect()[dimension];
+  }
+
 }
 
 export class TimeObj {
@@ -274,4 +279,9 @@ export function getUniqueDateValues(data, type) {
     }
   });
   return Array.from(new Set(allDates));
+}
+
+export function isElement(el) {
+  const isString = typeof cont === 'string';
+  return !isString && el.nodeName;
 }

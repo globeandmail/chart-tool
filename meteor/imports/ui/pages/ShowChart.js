@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { matchPath } from 'react-router';
 import Tags from '../../api/Tags/Tags';
 import Charts from '../../api/Charts/Charts';
 import Header from '../components/Header';
-import ChartPreview from '../components/ChartPreview';
+import Chart from '../components/Chart';
 import Footer from '../components/Footer';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -19,13 +20,16 @@ class ShowChart extends Component {
   }
 
   forkChart() {
-    Meteor.call('forkChart', this.props._id, (err, result) => {
+    Meteor.call('forkChart', this.props.id, (err, result) => {
       if (err) {
         console.log(err);
       } else {
         const history = createBrowserHistory();
         history.push({
           pathname: `/chart/${result}/edit`,
+          state: {
+            id: result
+          }
         });
       }
     });
@@ -38,18 +42,28 @@ class ShowChart extends Component {
     }
   }
 
+  goToChart() {
+    const history = createBrowserHistory();
+    history.push({
+      pathname: `/chart/${ this.props.id }/edit`,
+      state: {
+        id: this.props.id
+      }
+    });
+  }
+
   renderChart() {
     return (
       <div>
         <div className='top-line'>
           <h3 className='slug'>{ this.state.chart.slug }</h3>
           <div className='chart-links'>
-            <h3 className='edit'><a href={`/chart/${ this.state.chart._id }/edit`}>Edit</a></h3>
+            <h3 className='edit'><a onClick={this.goToChart}>Edit</a></h3>
           </div>
         </div>
-        <ChartPreview
+        <Chart
           editable={false}
-          share={false}
+          share_data={false}
           social={false}
           exportable={false}
           data={this.state.chart}
@@ -75,7 +89,7 @@ class ShowChart extends Component {
         <Header />
         <section>
           <div className='chart-show'>
-            {this.state.chart ? this.renderChart() : renderLoading()}
+            {this.props.loading ? renderLoading() : this.renderChart()}
           </div>
         </section>
         <Footer />
@@ -87,11 +101,17 @@ class ShowChart extends Component {
 
 export default withTracker(() => {
   const history = createBrowserHistory(),
-    chartId = history.location.pathname.replace('/chart/', '');
-  Meteor.subscribe('chart.tags', chartId);
-  Meteor.subscribe('chart', chartId);
+    match = matchPath(history.location.pathname, {
+      path: '/chart/:id',
+      exact: true,
+      strict: false
+    }),
+    subscription = Meteor.subscribe('chart', match.params.id);
+  Meteor.subscribe('chart.tags', match.params.id);
   return {
+    loading: !subscription.ready(),
     tags: Tags.find().fetch().map(t => t.tagName),
-    chart: Charts.findOne({ _id: chartId })
+    chart: Charts.findOne({ _id: match.params.id }),
+    id: match.params.id
   };
 })(ShowChart);

@@ -1,0 +1,157 @@
+// PDF debugging style
+// Uncomment below to see container bounding boxes
+// .chart-pdf * {
+//   border: cyan 1px solid;
+//   stroke: orange;
+//   stroke-width: 1px;
+// }
+
+@function ptToPx($pt) {
+  $magic: 1.30522;
+  $val: ($pt * $magic) * 1px;
+  @return ($val);
+}
+
+$point-five-pt: ptToPx(0.5);
+$one-pt: ptToPx(1.0);
+$one-five-pt: ptToPx(1.5);
+$two-pt: ptToPx(2.0);
+
+$six-five-pt: 8px; // actually renders at 6.15pt
+$eight-pt: 10px; // actually renders at 7.69pt
+$nine-pt: 12.0px; // actually renders at 9.22pt
+
+// base64 fonts go here
+
+.chart-pdf,
+.print-export-preview-chart,
+.chart-print-export {
+
+  .#{$prefix}chart_title {
+    font-size: $nine-pt;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+    margin-bottom: 2px;
+  }
+
+  .#{$prefix}chart_title-text {
+    font-size: $nine-pt;
+    margin: 0;
+    padding: 0;
+    border: none;
+    line-height: 1em;
+    color: $color-black;
+  }
+
+  .#{$prefix}chart_qualifier {
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 6px;
+    height: auto;
+    font-size: $eight-pt;
+    line-height: 1em;
+    vertical-align: middle;
+    margin: 0;
+    padding-bottom: 0;
+    color: $color-black;
+  }
+
+  .#{$prefix}chart_qualifier-bar {
+    display: block;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .#{$prefix}chart_source {
+    font-size: $six-five-pt;
+    padding-top: 4px;
+    display: block;
+    color: $color-black;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    line-height: $six-five-pt;
+    @media(min-width: 420px) {
+      width: auto;
+    }
+  }
+
+  .#{$prefix}chart_legend {
+    padding: 0;
+    margin: 0;
+    display: block;
+    line-height: 11px;
+    margin-top: 2px;
+  }
+
+  .#{$prefix}chart_legend .#{$prefix}legend_item {
+    margin: 0;
+    padding-right: 8px;
+    line-height: $eight-pt;
+    white-space: nowrap;
+  }
+
+  .#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_icon {
+    margin-top: 0px;
+    height: 6px;
+    width: 6px;
+    border-radius: 4px;
+    margin-right: 3px;
+  }
+
+  .#{$prefix}chart_legend .#{$prefix}legend_item .#{$prefix}legend_item_text {
+    color: $color-black;
+    font-size: $eight-pt;
+  }
+
+  // axes
+
+  .#{$prefix}axis-group .#{$prefix}minor line {
+    stroke: $color-black;
+    stroke-dasharray: 0.01, ptToPx(1.7);
+    stroke-width: $point-five-pt;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .#{$prefix}axis-group g.tick line {
+    stroke: $color-black;
+    stroke-width: $point-five-pt;
+    fill: none;
+  }
+
+  .#{$prefix}zero-line {
+    fill: none;
+    stroke: $color-black;
+    stroke-width: $point-five-pt;
+  }
+
+  .#{$prefix}y-axis g.tick text {
+    text-anchor: end!important;
+  }
+
+  .#{$prefix}axis-group path {
+    shape-rendering: crispEdges;
+    stroke: $color-black;
+  }
+
+  .#{$prefix}axis-group text, .#{$prefix}bar-label {
+    font-size: $eight-pt;
+    color: $color-black;
+    fill: $color-black;
+  }
+
+  .#{$prefix}series_group .#{$prefix}line, .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {
+    stroke-width: $one-pt !important;
+  }
+
+  .#{$prefix}series_group .#{$prefix}line:only-of-type {
+    stroke-width: $one-pt;
+  }
+
+  .major-tick line {
+    stroke: $color-black;
+    stroke-width: $point-five-pt;
+  }
+
+}

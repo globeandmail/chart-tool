@@ -6,7 +6,7 @@ import Papa from 'papaparse';
 import { app_settings } from './settings';
 import { timeFormat } from 'd3-time-format';
 // import multiSVGtoPNG from './multiSVGtoPNG';
-import ChartTool from './chart-tool';
+// import './chart-tool';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -535,23 +535,79 @@ export function drawError(error) {
 
 export function drawChart(container, obj, cb) {
   let error;
-  // debugger;
-  // const ct = ChartTool();
-  console.log(ChartTool);
-//   try {
-//     const chartObj = {};
-//     chartObj.id = obj._id;
-//     chartObj.data = embed(obj);
-//     ChartTool.create(container, chartObj, cb);
-//   } catch (e) {
-//     error = e;
-//     console.log(error);
-//     drawError(container, error);
-//     if (obj.drawFinished) { obj.drawFinished(); }
-//   }
-//   if (error) {
-//     return error;
-//   }
+  try {
+    const chartObj = {};
+    chartObj.id = obj._id;
+    chartObj.data = embed(obj);
+    window.ChartTool.create(container, chartObj, cb);
+  } catch (e) {
+    error = e;
+    console.log(error);
+    drawError(container, error);
+    if (obj.drawFinished) { obj.drawFinished(); }
+  }
+}
+
+export function chartTypeFieldReset(type) {
+  const defaults = app_settings.chart.options;
+  switch (type) {
+    case 'line':
+      return {
+        'options.type': type,
+        'options.interpolation': defaults.interpolation,
+        'options.stacked': defaults.stacked,
+        'x_axis.scale': 'time',
+        'x_axis.nice': false,
+        'y_axis.scale': 'linear',
+        'y_axis.nice': true,
+        'options.indexed': false
+      };
+    case 'multiline':
+      return {
+        'options.type': type,
+        'options.interpolation': defaults.interpolation,
+        'options.stacked': defaults.stacked,
+        'x_axis.scale': 'time',
+        'x_axis.nice': false,
+        'y_axis.scale': 'linear',
+        'y_axis.nice': true,
+        'options.indexed': false
+      };
+    case 'area':
+      return {
+        'options.type': type,
+        'options.interpolation': defaults.interpolation,
+        'x_axis.scale': 'time',
+        'x_axis.nice': false,
+        'y_axis.scale': 'linear',
+        'y_axis.nice': true,
+        'y_axis.min': '',
+        'options.indexed': false
+      };
+    case 'column':
+      return {
+        'options.type': type,
+        'options.interpolation': false,
+        'x_axis.scale': 'ordinal',
+        'x_axis.nice': false,
+        'y_axis.scale': 'linear',
+        'y_axis.nice': true,
+        'y_axis.min': '',
+        'options.indexed': false
+      };
+    case 'bar':
+      return {
+        'options.type': type,
+        'options.interpolation': false,
+        'x_axis.scale': 'linear',
+        'x_axis.nice': false,
+        'y_axis.scale': 'ordinal',
+        'y_axis.nice': false,
+        'y_axis.min': '',
+        'options.indexed': false
+      };
+  }
+
 }
 
 // export function generateThumb(obj) {

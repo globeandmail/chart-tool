@@ -1,7 +1,7 @@
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
 import chartSettings from './config/chart-settings';
-import { clearDrawn, clearObj, clearChart, getBounding, svgTest, generateThumb, debounce as debounceFn } from './utils/utils';
+import { clearDrawn, clearObj, clearChart, getBounding, svgTest, generateThumb, isElement, debounce as debounceFn } from './utils/utils';
 import { parse } from './utils/dataparse';
 import { ChartManager } from './charts/manager';
 import 'core-js/library/fn/object/assign';
@@ -34,8 +34,6 @@ export default (root => {
           drawn = clearDrawn(drawn, chart);
 
           const obj = clearObj(chart);
-
-          debugger;
 
           const container = clearChart(cont);
 
@@ -89,15 +87,20 @@ export default (root => {
         }
 
         function destroyChart(id) {
-          let container, obj;
-          for (let i = 0; i < charts.length; i++) {
-            if (charts[i].id === id) {
-              obj = charts[i];
+          let container;
+          if (!isElement(id)) {
+            let obj;
+            for (let i = 0; i < charts.length; i++) {
+              if (charts[i].id === id) {
+                obj = charts[i];
+              }
             }
+            container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
+            clearDrawn(drawn, obj);
+            clearObj(obj);
+          } else {
+            container = id;
           }
-          container = `.${chartSettings.baseClass}[data-chartid=${obj.id}]`;
-          clearDrawn(drawn, obj);
-          clearObj(obj);
           clearChart(container);
         }
 

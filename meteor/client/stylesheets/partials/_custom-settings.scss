@@ -1,0 +1,82 @@
+// // Basic settings
+//
+// $prefix: 'ct-';
+// $width: 100%;
+// $margin: 0 0 20px 0;
+//
+// // Fonts
+// $heading-font-family: 'Helvetica';
+// $heading-font-weight: bold;
+// $heading-font-style: normal;
+// $heading-font-size: 15px;
+// $heading-font-line-height: 17px;
+//
+// $utility-font-family: 'Helvetica';
+// $utility-font-weight: normal;
+// $utility-font-style: normal;
+// $utility-font-size: 13px;
+// $utility-font-line-height: 16px;
+//
+// @mixin heading-font {
+//   font-family: $heading-font-family;
+//   font-weight: $heading-font-weight;
+//   font-style: $heading-font-style;
+//   font-size: $heading-font-size;
+//   line-height: $heading-font-line-height;
+// }
+//
+// @mixin utility-font {
+//   font-family: $utility-font-family;
+//   font-weight: $utility-font-weight;
+//   font-style: $utility-font-style;
+//   font-size: $utility-font-size;
+//   line-height: $utility-font-line-height;
+// }
+//
+// // Color palettes
+// $primary-color: #1f77b4;
+// $primary-shade-1: #ff7f0e;
+// $primary-shade-2: #bcbd22;
+// $primary-shade-3: #8c564b;
+// $primary-shade-4: #7f7f7f;
+// $primaryShades: $primary-color, $primary-shade-1, $primary-shade-2, $primary-shade-3, $primary-shade-4;
+//
+// $alternate-color: #6b6ecf;
+// $alternate-shade-1: #b5cf6b;
+// $alternate-shade-2: #e7ba52;
+// $alternate-shade-3: #d6616b;
+// $alternate-shade-4: #ce6dbd;
+// $alternateShades: $alternate-color, $alternate-shade-1, $alternate-shade-2, $alternate-shade-3, $alternate-shade-4;
+//
+// $grayscale-color: #000000;
+// $grayscale-shade-1: #333333;
+// $grayscale-shade-2: #555555;
+// $grayscale-shade-3: #888888;
+// $grayscale-shade-4: #aaaaaa;
+// $grayscaleShades: $grayscale-color, $grayscale-shade-1, $grayscale-shade-2, $grayscale-shade-3, $grayscale-shade-4;
+//
+// $palette-count: 3;
+// $palette-names: 'primary', 'alternate', 'grayscale';
+// $palettes: $primaryShades, $alternateShades, $grayscaleShades;
+//
+// // Other colors
+// $color-black: #111111;
+// $color-gray-dark: #595959;
+// $color-gray-medium: #777777;
+// $color-gray-light: #F9F9F9;
+// $color-white: #FFFFFF;
+//
+// $color-red: #DA161F;
+// $color-orange: #FF6B00;
+// $color-green: #50AA30;
+// $color-blue: #29639C;
+// $color-yellow: #F8E71C;
+// $color-beige: #FFF8E7;
+// $color-red-bright: #F90611;
+//
+// $axis-stroke-color: lighten($color-gray-medium, 35%);
+// $axis-stroke-width: 1px;
+// $axis-stroke-dasharray: 1, 3px;
+// $line-stroke-width: 2.5px;
+//
+// $series-count-max: 5;

@@ -37,8 +37,7 @@ Meteor.methods({
   },
 
   'charts.update.multiple.fields'(chartId, fields) {
-    const obj = {};
-    fields.map(f => { obj[f.field] = f.value; });
+    const obj = fields;
     obj.lastEdited = new Date();
     return Charts.update(chartId, { $set: obj });
   },

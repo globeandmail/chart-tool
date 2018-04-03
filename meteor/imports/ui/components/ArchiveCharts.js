@@ -25,6 +25,9 @@ class ArchiveCharts extends Component {
     const history = createBrowserHistory();
     history.push({
       pathname: `/chart/${id}/edit`,
+      state: {
+        id
+      }
     });
   }
 
