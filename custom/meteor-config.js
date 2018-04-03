@@ -1,12 +1,12 @@
 import config from './chart-tool-config.json';
 import { version, buildVer, name } from '../package.json';
 
-app_version = version;
-app_build = buildVer;
-app_name = name;
-prefix = config.prefix;
+export const app_version = version;
+export const app_build = buildVer;
+export const app_name = name;
+export const prefix = config.prefix;
 
-app_settings = {
+export const app_settings = {
 
   s3: config.image,
 

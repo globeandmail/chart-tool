@@ -7,7 +7,7 @@ import ChartPreview from '../components/ChartPreview';
 import Footer from '../components/Footer';
 import createBrowserHistory from 'history/createBrowserHistory';
 import { withTracker } from 'meteor/react-meteor-data';
-import { timeSince, prettyCreatedAt } from '../../modules/utils';
+import { timeSince, prettyCreatedAt, renderLoading } from '../../modules/utils';
 
 class ShowChart extends Component {
 
@@ -40,20 +40,20 @@ class ShowChart extends Component {
 
   renderChart() {
     return (
-      <div className='chart-show'>
+      <div>
         <div className='top-line'>
           <h3 className='slug'>{ this.state.chart.slug }</h3>
           <div className='chart-links'>
             <h3 className='edit'><a href={`/chart/${ this.state.chart._id }/edit`}>Edit</a></h3>
           </div>
         </div>
-          <ChartPreview
-            editable={false}
-            share={false}
-            social={false}
-            exportable={false}
-            data={this.state.chart}
-          />
+        <ChartPreview
+          editable={false}
+          share={false}
+          social={false}
+          exportable={false}
+          data={this.state.chart}
+        />
         <div className='chart-show_tags'>
           <h4>Tags</h4>
           <ul>
@@ -69,17 +69,13 @@ class ShowChart extends Component {
     );
   }
 
-  renderLoading() {
-    return(<h1>Derp</h1>);
-  }
-
   render() {
     return (
       <div>
         <Header />
         <section>
-          <div className='chart-single'>
-            {this.state.chart ? this.renderChart() : this.renderLoading()}
+          <div className='chart-show'>
+            {this.state.chart ? this.renderChart() : renderLoading()}
           </div>
         </section>
         <Footer />

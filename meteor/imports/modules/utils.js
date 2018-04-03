@@ -1,3 +1,4 @@
+import React from 'react';
 import { Meteor } from 'meteor/meteor';
 // import Charts from '../api/Charts/Charts';
 import Swal from 'sweetalert2';
@@ -5,7 +6,7 @@ import Papa from 'papaparse';
 import { app_settings } from './settings';
 import { timeFormat } from 'd3-time-format';
 // import multiSVGtoPNG from './multiSVGtoPNG';
-// import ChartTool from './chart-tool';
+import ChartTool from './chart-tool';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -503,6 +504,22 @@ export function prettyCreatedAt(createdAt) {
   return `${month} ${day} ${year}`;
 }
 
+export function renderLoading() {
+  return <div className='loading'><p>Loading…</p></div>;
+}
+
+export function drawError(error) {
+  return (
+    <div className='chart-error-container'>
+      <div className='chart-error'>
+        <img src='/images/error.svg' className='chart-error_img' />
+        <p className='chart-error_text'>{error.error}</p>
+        <p className='chart-error_reason'>{error.reason}</p>
+      </div>
+    </div>
+  );
+}
+
 // export function updateAndSave(method, obj, data) {
 //   setInactive();
 //   Meteor.call(method, obj._id, data, (err) => {
@@ -516,13 +533,11 @@ export function prettyCreatedAt(createdAt) {
 //   });
 // }
 
-// export function drawChart(container, obj, cb) {
-//   document
-//     .querySelector(container)
-//     .querySelectorAll('.chart-error-container')
-//     .forEach(e => e.parentNode.removeChild(e));
-//
-//   let error;
+export function drawChart(container, obj, cb) {
+  let error;
+  // debugger;
+  // const ct = ChartTool();
+  console.log(ChartTool);
 //   try {
 //     const chartObj = {};
 //     chartObj.id = obj._id;
@@ -533,48 +548,11 @@ export function prettyCreatedAt(createdAt) {
 //     console.log(error);
 //     drawError(container, error);
 //     if (obj.drawFinished) { obj.drawFinished(); }
-//   } finally {
+//   }
+//   if (error) {
 //     return error;
 //   }
-// }
-
-// export function drawError(container, error) {
-//
-//   document
-//     .querySelector(container)
-//     .querySelectorAll('svg')
-//     .forEach(e => e.parentNode.removeChild(e));
-//
-//   document
-//     .querySelector(container)
-//     .querySelectorAll('div')
-//     .forEach(e => e.parentNode.removeChild(e));
-//
-//   const errorContainer = select(container).append('div')
-//     .attr('class', 'chart-error-container');
-//
-//   const errorGroup = errorContainer.append('div')
-//     .attr('class', 'chart-error');
-//
-//   errorGroup.append('img')
-//     .attr({
-//       'class': 'chart-error_img',
-//       'src': '/images/error.svg'
-//     });
-//
-//   errorGroup.append('h2')
-//     .attr('class', 'chart-error_warning')
-//     .text('Chart error');
-//
-//   errorGroup.append('p')
-//     .attr('class', 'chart-error_text')
-//     .text(error.error);
-//
-//   errorGroup.append('p')
-//     .attr('class', 'chart-error_reason')
-//     .text(error.reason);
-//
-// }
+}
 
 // export function generateThumb(obj) {
 //

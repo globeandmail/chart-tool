@@ -1,4 +1,4 @@
-import FontFaceObserver from 'fontfaceobserver';
+// import FontFaceObserver from 'fontfaceobserver';
 import { select } from 'd3-selection';
 import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
@@ -253,17 +253,17 @@ export function csvToTable(target, data) {
     .text(d => d);
 }
 
-export function waitForFonts(fonts) {
-  return new Promise((resolve, reject) => {
-    if (fonts && fonts.length) {
-      Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
-        .then(() => resolve())
-        .catch(() => reject());
-    } else {
-      resolve();
-    }
-  });
-}
+// export function waitForFonts(fonts) {
+//   return new Promise((resolve, reject) => {
+//     if (fonts && fonts.length) {
+//       Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
+//         .then(() => resolve())
+//         .catch(() => reject());
+//     } else {
+//       resolve();
+//     }
+//   });
+// }
 
 export function getUniqueDateValues(data, type) {
   const allDates = data.map(d => {

@@ -35,6 +35,8 @@ export default (root => {
 
           const obj = clearObj(chart);
 
+          debugger;
+
           const container = clearChart(cont);
 
           obj.data.width = getBounding(container, 'width');

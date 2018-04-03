@@ -26,7 +26,7 @@ gulp.task('scss-compile:dev', () => {
     ]))
     .pipe(sourcemaps.write())
     .pipe(rename('chart-tool.css'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/lib/chart-tool/stylesheets`))
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style`))
     .pipe(gulp.dest(`${gulpConfig.buildPathDev}`))
     .on('error', gutil.log);
 });
@@ -39,7 +39,7 @@ gulp.task('scss-compile:build', () => {
     ))
     .pipe(csso({ debug: true }))
     .pipe(rename('chart-tool.min.css'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/lib/chart-tool/stylesheets`))
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style`))
     .pipe(gulp.dest(buildCss))
     .on('error', gutil.log);
 });

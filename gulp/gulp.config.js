@@ -19,7 +19,7 @@ const libPath = './src',
   buildCssFilename = 'bundle',
 
   meteorPath = './meteor',
-  meteorBundle = `${meteorPath}/lib/chart-tool/scripts`,
+  meteorBundle = `${meteorPath}/imports/modules`,
   meteorSettings = `${meteorBundle}/settings.js`,
   meteorBuildPath = `.${buildPath}/meteor`;
 
