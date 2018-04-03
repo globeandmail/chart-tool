@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { matchPath } from 'react-router';
+import { Link } from 'react-router-dom';
 import Tags from '../../api/Tags/Tags';
 import Charts from '../../api/Charts/Charts';
 import Header from '../components/Header';
 import Chart from '../components/Chart';
 import Footer from '../components/Footer';
-import createBrowserHistory from 'history/createBrowserHistory';
 import { withTracker } from 'meteor/react-meteor-data';
 import { timeSince, prettyCreatedAt, renderLoading } from '../../modules/utils';
 
@@ -24,8 +23,7 @@ class ShowChart extends Component {
       if (err) {
         console.log(err);
       } else {
-        const history = createBrowserHistory();
-        history.push({
+        this.props.history.push({
           pathname: `/chart/${result}/edit`,
           state: {
             id: result
@@ -43,8 +41,7 @@ class ShowChart extends Component {
   }
 
   goToChart() {
-    const history = createBrowserHistory();
-    history.push({
+    this.props.history.push({
       pathname: `/chart/${ this.props.id }/edit`,
       state: {
         id: this.props.id
@@ -58,7 +55,7 @@ class ShowChart extends Component {
         <div className='top-line'>
           <h3 className='slug'>{ this.state.chart.slug }</h3>
           <div className='chart-links'>
-            <h3 className='edit'><a onClick={this.goToChart}>Edit</a></h3>
+            <h3 className='edit'><Link to={`/chart/${ this.props.id }/edit`}>Edit</Link></h3>
           </div>
         </div>
         <Chart
@@ -99,19 +96,14 @@ class ShowChart extends Component {
 
 }
 
-export default withTracker(() => {
-  const history = createBrowserHistory(),
-    match = matchPath(history.location.pathname, {
-      path: '/chart/:id',
-      exact: true,
-      strict: false
-    }),
-    subscription = Meteor.subscribe('chart', match.params.id);
-  Meteor.subscribe('chart.tags', match.params.id);
+export default withTracker(props => {
+  const subscription = Meteor.subscribe('chart', props.match.params._id);
+  Meteor.subscribe('chart.tags', props.match.params._id);
   return {
     loading: !subscription.ready(),
     tags: Tags.find().fetch().map(t => t.tagName),
-    chart: Charts.findOne({ _id: match.params.id }),
-    id: match.params.id
+    chart: Charts.findOne({ _id: props.match.params._id }),
+    id: props.match.params._id,
+    props
   };
 })(ShowChart);

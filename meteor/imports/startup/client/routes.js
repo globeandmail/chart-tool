@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router';
 import createBrowserHistory from 'history/createBrowserHistory';
 import NewChart from '../../ui/pages/NewChart';
@@ -6,28 +6,31 @@ import Status from '../../ui/pages/Status';
 import Archive from '../../ui/pages/Archive';
 import ShowChart from '../../ui/pages/ShowChart';
 import PDF from '../../ui/pages/PDF';
-import EditChart from '../../ui/layouts/Edit';
+import EditChart from '../../ui/layouts/EditChart';
 
 import 'react-select/dist/react-select.css';
 import '../../ui/style/main.scss';
 import '../../ui/style/chart-tool.css';
 
-const browserHistory = createBrowserHistory();
-
-export const routes = () => (
-  <Router history={browserHistory}>
-    <Switch>
-      <Redirect from='/chart/pdf/:_id' to='/chart/:_id/pdf'/>
-      <Redirect from='/chart/edit/:_id' to='/chart/:_id/edit'/>
-      <Redirect from='/list' to='/archive'/>
-      <Route exact path='/' component={NewChart} />
-      <Route exact path='/new' component={NewChart} />
-      <Route exact path='/status' component={Status} />
-      <Route exact path='/archive' component={Archive} />
-      <Route exact path='/chart/:_id' component={ShowChart} />
-      <Route exact path='/chart/:_id/pdf' component={PDF} />
-      <Route exact path='/chart/:_id/edit' component={EditChart} />
-      {/* <Route component={NotFound}/> */}
-    </Switch>
-  </Router>
-);
+export default class Routes extends Component {
+  render() {
+    const browserHistory = createBrowserHistory();
+    return (
+      <Router history={browserHistory}>
+        <Switch>
+          <Route exact path='/new' render={props => <NewChart {...props} />} />
+          <Route exact path='/status' render={props => <Status {...props} />} />
+          <Route exact path='/archive' render={props => <Archive {...props} />} />
+          <Route exact path='/chart/:_id' render={props => <ShowChart {...props} />} />
+          <Route exact path='/chart/:_id/pdf' render={props => <PDF {...props} />} />
+          <Route exact path='/chart/:_id/edit' render={props => <EditChart {...props} />} />
+          <Redirect from='/' to='/new' />
+          <Redirect from='/list' to='/archive' />
+          <Redirect from='/chart/pdf/:_id' to='/chart/:_id/pdf' />
+          <Redirect from='/chart/edit/:_id' to='/chart/:_id/edit' /> */}
+          {/* <Route component={NotFound}/> */}
+        </Switch>
+      </Router>
+    );
+  }
+}

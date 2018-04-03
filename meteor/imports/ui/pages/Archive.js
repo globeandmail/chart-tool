@@ -7,7 +7,6 @@ import Footer from '../components/Footer';
 import { debounce } from '../../modules/utils';
 import { withTracker } from 'meteor/react-meteor-data';
 import ArchiveChartsComponent from '../components/ArchiveCharts';
-import createBrowserHistory from 'history/createBrowserHistory';
 import Select from 'react-select';
 
 class Archive extends Component {
@@ -15,9 +14,7 @@ class Archive extends Component {
   constructor(props) {
     super(props);
 
-    const history = createBrowserHistory();
-
-    const query = parseQueryString(history.location.search);
+    const query = parseQueryString(this.props.history.location.search);
 
     let types = [],
       tags = [],
@@ -98,12 +95,7 @@ class Archive extends Component {
     queryObj.sortOrder = this.state.sort.order;
     queryObj.sortField = this.state.sort.field;
 
-    const history = createBrowserHistory();
-
-    history.replace({
-      pathname: '/archive',
-      search: `?${stringify(queryObj)}`
-    });
+    window.history.replaceState({}, '', `/archive?${stringify(queryObj)}`);
   }
 
   componentDidUpdate() {
@@ -270,6 +262,7 @@ class Archive extends Component {
             limit={this.state.limit}
             sort={this.state.sort}
             setLimit={this.setLimit}
+            history={this.props.history}
           />
         </div>
         <Footer />
@@ -278,11 +271,10 @@ class Archive extends Component {
   }
 }
 
-export default withTracker(() => {
+export default withTracker(props => {
   Meteor.subscribe('tags');
   return {
-    tags: Tags.find().fetch().map(t => {
-      return { value: t._id, label: t.tagName };
-    })
+    props,
+    tags: Tags.find().fetch().map(t => ({ value: t._id, label: t.tagName }))
   };
 })(Archive);

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { matchPath } from 'react-router';
 import { parse as parseQueryString } from 'query-string';
 import Charts from '../../api/Charts/Charts';
 import Chart from '../components/Chart';
-import createBrowserHistory from 'history/createBrowserHistory';
 import { withTracker } from 'meteor/react-meteor-data';
 import { app_settings } from '../../modules/settings';
 import { determineWidth, determineHeight } from '../../modules/utils';
@@ -85,18 +83,11 @@ class PDF extends Component {
 }
 
 export default withTracker(() => {
-  const history = createBrowserHistory(),
-    match = matchPath(history.location.pathname, {
-      path: '/chart/:id/pdf',
-      exact: true,
-      strict: false
-    }),
-    subscription = Meteor.subscribe('chart', match.params.id),
-    query = parseQueryString(history.location.search);
-
+  const subscription = Meteor.subscribe('chart', this.props.match.params.id),
+    query = parseQueryString(this.props.history.location.search);
   return {
     loading: !subscription.ready(),
-    chart: Charts.findOne({ _id: match.params.id }),
+    chart: Charts.findOne({ _id: this.props.match.params.id }),
     query
   };
 })(PDF);

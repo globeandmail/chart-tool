@@ -2,29 +2,17 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import Charts from '../../api/Charts/Charts';
 import Chart from './Chart';
-import createBrowserHistory from 'history/createBrowserHistory';
 import { withTracker } from 'meteor/react-meteor-data';
-import { matchPath } from 'react-router';
 
 class ChartPreview extends Component {
 
   constructor(props) {
     super(props);
     this.handleFieldChange = this.handleFieldChange.bind(this);
-    this.state = {
-      chart: this.props.chart
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.state.chart !== nextProps.chart) {
-      const chart = nextProps.chart;
-      this.setState({ chart });
-    }
   }
 
   handleFieldChange(text, type) {
-    Meteor.call(`charts.update.${type}`, this.props.id, text, err => {
+    Meteor.call(`charts.update.${type}`, this.props.match.params._id, text, err => {
       if (err) console.log(err);
     });
   }
@@ -37,7 +25,7 @@ class ChartPreview extends Component {
           { !this.props.loading ?
             <Chart
               type={'desktop'}
-              data={this.state.chart}
+              data={this.props.chart}
               editable={true}
               share_data={false}
               social={false}
@@ -51,7 +39,7 @@ class ChartPreview extends Component {
           { !this.props.loading ?
             <Chart
               type={'mobile'}
-              data={this.state.chart}
+              data={this.props.chart}
               editable={true}
               share_data={false}
               social={false}
@@ -65,19 +53,10 @@ class ChartPreview extends Component {
 
 }
 
-export default withTracker(() => {
-
-  const history = createBrowserHistory(),
-    match = matchPath(history.location.pathname, {
-      path: '/chart/:id/edit',
-      exact: true,
-      strict: false
-    }),
-    subscription = Meteor.subscribe('chart', match.params.id);
-
+export default withTracker(props => {
+  const subscription = Meteor.subscribe('chart', props.match.params._id);
   return {
     loading: !subscription.ready(),
-    id: match.params.id,
-    chart: Charts.findOne({ _id: match.params.id })
+    chart: Charts.findOne({ _id: props.match.params._id })
   };
 })(ChartPreview);

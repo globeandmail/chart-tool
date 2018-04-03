@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import Charts from '../../api/Charts/Charts';
 import { withTracker } from 'meteor/react-meteor-data';
-import createBrowserHistory from 'history/createBrowserHistory';
 
 class ArchiveCharts extends Component {
 
@@ -22,16 +21,13 @@ class ArchiveCharts extends Component {
   }
 
   goToChart(id) {
-    const history = createBrowserHistory();
-    history.push({
-      pathname: `/chart/${id}/edit`,
-      state: {
-        id
-      }
+    this.props.history.push({
+      pathname: `/chart/${id}/edit`
     });
   }
 
   render() {
+
     return (
       <section className='charts-archive_results'>
         <div className='charts-archive_count'>
@@ -91,17 +87,19 @@ export default withTracker({
       },
       limit: props.limit
     };
-    Meteor.subscribe('chart.archive', params);
-    const options = { sort: {} };
+    const subscription = Meteor.subscribe('chart.archive', params),
+      options = { sort: {} };
     options.sort = [[props.sort.field, props.sort.order]];
     return {
       params: params,
+      loading: !subscription.ready(),
       charts: Charts.find({}, options).fetch(),
       setLimit: props.setLimit,
       search: props.search,
       types: props.types,
       tags: props.tags,
-      limit: props.limit
+      limit: props.limit,
+      history: props.history
     };
   },
   pure: false

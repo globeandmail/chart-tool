@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import createBrowserHistory from 'history/createBrowserHistory';
 import { slugParse, dataParse } from '../../modules/utils';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
@@ -36,8 +35,7 @@ export default class NewChart extends Component {
         if (err) {
           console.log(err);
         } else {
-          const history = createBrowserHistory();
-          history.push({ pathname: `/chart/${result}/edit` });
+          this.props.history.push({ pathname: `/chart/${result}/edit` });
         }
       });
     } else {

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { matchPath } from 'react-router';
+import { Link } from 'react-router-dom';
 import { app_settings } from '../../modules/settings';
 import { slugParse, debounce } from '../../modules/utils';
 import { withTracker } from 'meteor/react-meteor-data';
-import createBrowserHistory from 'history/createBrowserHistory';
 import Charts from '../../api/Charts/Charts';
 
 class Header extends Component {
@@ -18,7 +17,7 @@ class Header extends Component {
   }
 
   setSlugValue(slug) {
-    Meteor.call('charts.update.slug', this.props.chart._id, slug, err => {
+    Meteor.call('charts.update.slug', this.props.match.params._id, slug, err => {
       if (err) console.log(err);
     });
   }
@@ -53,9 +52,9 @@ class Header extends Component {
   renderNav() {
     return (
       <div className={this.props.edit ? 'header-edit-nav' : 'header-nav'}>
-        <h2 className='header-help'><a href={ app_settings.help || 'http://www.github.com/globeandmail/chart-tool' } target='_blank'>Help</a></h2>
-        <h2 className='header-list'><a href='/archive'>Archive</a></h2>
-        <h2 className='header-new'><a href='/new'>New chart</a></h2>
+        <h2 className='header-help'><Link to={ app_settings.help || 'http://www.github.com/globeandmail/chart-tool' }>Help</Link></h2>
+        <h2 className='header-list'><Link to='/archive'>Archive</Link></h2>
+        <h2 className='header-new'><Link to='/new'>New chart</Link></h2>
       </div>
     );
   }
@@ -79,18 +78,12 @@ class Header extends Component {
   }
 }
 
-export default withTracker(({ edit }) => {
-  const props = {};
-  if (edit) {
-    const history = createBrowserHistory(),
-      match = matchPath(history.location.pathname, {
-        path: '/chart/:id/edit',
-        exact: true,
-        strict: false
-      }),
-      subscription = Meteor.subscribe('chart', match.params.id);
-    props.loading = !subscription.ready();
-    props.chart = Charts.findOne({ _id: match.params.id });
+export default withTracker(props => {
+  const ret = { props };
+  if (props.edit) {
+    const subscription = Meteor.subscribe('chart', props.match.params._id);
+    ret.loading = !subscription.ready();
+    ret.chart = Charts.findOne({ _id: props.match.params._id });
   }
-  return props;
+  return ret;
 })(Header);
