@@ -505,18 +505,51 @@ export function renderLoading() {
   return <div className='loading'><p>Loading…</p></div>;
 }
 
-// export function updateAndSave(method, obj, data) {
-//   setInactive();
-//   Meteor.call(method, obj._id, data, (err) => {
-//     if (!err) {
-//       const newObj = Charts.findOne(Session.get('chartId'));
-//       generateThumb(newObj);
-//     } else {
-//       console.log(err);
-//     }
-//     setActive();
-//   });
-// }
+export function updateAndSave(method, id, data) {
+  const thumbnailMethods = [
+    'charts.update.data',
+    'charts.update.dateformat',
+    'charts.update.hashours',
+    'charts.update.heading',
+    'charts.update.qualifier',
+    'charts.update.source',
+    'charts.update.class',
+    'charts.update.options.type',
+    'charts.update.options.interpolation',
+    'charts.update.options.stacked',
+    'charts.update.options.expanded',
+    'charts.update.options.indexed',
+    'charts.update.x_axis.scale',
+    'charts.update.x_axis.ticks',
+    'charts.update.x_axis.orient',
+    'charts.update.x_axis.format',
+    'charts.update.x_axis.prefix',
+    'charts.update.x_axis.suffix',
+    'charts.update.x_axis.min',
+    'charts.update.x_axis.max',
+    'charts.update.x_axis.nice',
+    'charts.update.y_axis.scale',
+    'charts.update.y_axis.ticks',
+    'charts.update.y_axis.orient',
+    'charts.update.y_axis.format',
+    'charts.update.y_axis.prefix',
+    'charts.update.y_axis.suffix',
+    'charts.update.y_axis.min',
+    'charts.update.y_axis.max',
+    'charts.update.y_axis.nice',
+    'charts.reset.x_axis',
+    'charts.reset.y_axis'
+  ];
+  const createThumbnail = thumbnailMethods.indexOf(method) !== -1 ? true : false;
+
+  // setInactive();
+  Meteor.call(method, id, data, (err, res) => {
+    if (err) console.log(err);
+    // const newObj = Charts.findOne(Session.get('chartId'));
+    // generateThumb(newObj);
+    // setActive();
+  });
+}
 
 export function drawChart(container, obj, cb) {
   let error;
@@ -593,6 +626,15 @@ export function chartTypeFieldReset(type) {
       };
   }
 
+}
+
+export function arrayDiff(a1, a2) {
+  const o1 = {}, o2 = {}, diff = [];
+  for (let i = 0; i < a1.length; i++) { o1[a1[i]] = true; }
+  for (let i = 0; i < a2.length; i++) { o2[a2[i]] = true; }
+  for (let k in o1) { if (!(k in o2)) { diff.push(k); } }
+  for (let k in o2) { if (!(k in o1)) { diff.push(k); } }
+  return diff;
 }
 
 // export function generateThumb(obj) {

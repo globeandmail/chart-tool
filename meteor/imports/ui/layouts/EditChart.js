@@ -12,9 +12,9 @@ import ChartOutput from '../components/ChartOutput';
 // import ChartOverlays from '../components/ChartOverlays';
 import ChartStatus from '../components/ChartStatus';
 import ChartData from '../components/ChartData';
-// import ChartXAxis from '../components/ChartXAxis';
-// import ChartYAxis from '../components/ChartYAxis';
-// import ChartTags from '../components/ChartTags';
+import ChartXAxis from '../components/ChartXAxis';
+import ChartYAxis from '../components/ChartYAxis';
+import ChartTags from '../components/ChartTags';
 // import ChartStyling from '../components/ChartStyling';
 // import ChartOptions from '../components/ChartOptions';
 
@@ -45,9 +45,9 @@ class EditChart extends Component {
           <aside className='options-area'>
             { !this.props.loading ? <ChartStatus {...this.props} name={this.state.animalName} /> : null }
             { !this.props.loading ? <ChartData {...this.props} /> : null }
-            {/* { !this.props.loading ? <ChartXAxis {...this.props} /> : null } */}
-            {/* { !this.props.loading ? <ChartYAxis {...this.props} /> : null } */}
-            {/* { !this.props.loading ? <ChartTags {...this.props} /> : null } */}
+            { !this.props.loading ? <ChartXAxis {...this.props} /> : null }
+            { !this.props.loading ? <ChartYAxis {...this.props} /> : null }
+            { !this.props.loading ? <ChartTags {...this.props} /> : null }
             {/* { !this.props.loading ? <ChartStyling {...this.props} /> : null } */}
             {/* { !this.props.loading ? <ChartOptions {...this.props} /> : null } */}
           </aside>

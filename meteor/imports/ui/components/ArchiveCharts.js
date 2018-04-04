@@ -21,9 +21,7 @@ class ArchiveCharts extends Component {
   }
 
   goToChart(id) {
-    this.props.history.push({
-      pathname: `/chart/${id}/edit`
-    });
+    this.props.history.push({ pathname: `/chart/${id}` });
   }
 
   render() {

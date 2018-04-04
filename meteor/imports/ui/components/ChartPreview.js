@@ -15,6 +15,9 @@ export default class ChartPreview extends Component {
     });
   }
 
+  // need to determine which methods will require thumbnail generation
+  // when updating, need to set chart as inactive and then as active
+
   render() {
     return (
       <div className='chart-preview'>

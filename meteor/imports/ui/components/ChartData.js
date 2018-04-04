@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Meteor } from 'meteor/meteor';
-import { dataParse } from '../../modules/utils';
+import { dataParse, updateAndSave } from '../../modules/utils';
 import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 
@@ -46,8 +45,8 @@ export default class ChartData extends Component {
       expanded: true,
       data: this.props.chart.data,
       dateConstruction: this.props.chart.date_format,
-      hasHours: false,
-      index: this.props.chart.index
+      hasHours: this.props.chart.hasHours,
+      indexed: this.props.chart.options.indexed
     };
   }
 
@@ -62,21 +61,26 @@ export default class ChartData extends Component {
 
   handleData(event) {
     const data = dataParse(event.target.value);
+    updateAndSave('charts.update.data', this.props.chart._id, data);
     this.setState({ data });
-    // updateAndSave('updateData', this, data);
-    // event.target.value = data;
   }
 
   handleDateConstruction(event) {
-
+    const dateConstruction = event.target.value;
+    updateAndSave('charts.update.dateformat', this.props.chart._id, dateConstruction);
+    this.setState({ dateConstruction });
   }
 
   handleHasHours(event) {
-
+    const hasHours = event.target.value === 'on' ? true : false;
+    updateAndSave('charts.update.hashours', this.props.chart._id, !hasHours);
+    this.setState({ hasHours: !hasHours });
   }
 
   handleIndex(event) {
-
+    const indexed = event.target.value;
+    updateAndSave('charts.update.options.indexed', this.props.chart._id, indexed);
+    this.setState({ indexed });
   }
 
   dateCalc() {
@@ -140,7 +144,7 @@ export default class ChartData extends Component {
               name='pasteData'
               placeholder='Paste your spreadsheet data here'
               className='input-data-edit'
-              onBlur={() => this.handleData.bind(this)}
+              onBlur={(event) => this.handleData(event) }
               defaultValue={this.state.data}
               ></textarea>
           </div>
