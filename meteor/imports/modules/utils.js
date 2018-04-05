@@ -631,9 +631,9 @@ export function setDocumentTitle(path, slug) {
     '/archive': 'Archive - Chart Tool',
     '/chart/:_id': `${slug} - Chart Tool`,
     '/chart/:_id/pdf': `${slug} - Chart Tool`,
-    '/chart/:_id/edit': `${slug} - Chart Tool`,
+    '/chart/:_id/edit': `${slug} - Chart Tool`
   };
-  return titles[path];
+  return titles[path] ? titles[path] : 'Not found - Chart Tool';
 }
 
 // export function generateThumb(obj) {

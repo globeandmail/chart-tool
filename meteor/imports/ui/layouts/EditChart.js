@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Redirect } from 'react-router';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Presence } from 'meteor/tmeasday:presence';
 import generateRandomAnimalName from 'random-animal-name-generator';
@@ -32,24 +33,28 @@ class EditChart extends Component {
   }
 
   render() {
+    const chartAvailable = !this.props.loading && this.props.chart;
+    if (!this.props.loading && !this.props.chart) {
+      return <Redirect to='/404' />;
+    }
     return (
       <div>
-        { !this.props.loading ? <Header edit={true} {...this.props} /> : null }
+        { chartAvailable ? <Header edit={true} {...this.props} /> : null }
         <section>
           <article className='main-area'>
-            { !this.props.loading ? <ChartType {...this.props} /> : null }
-            { !this.props.loading ? <ChartPreview {...this.props} /> : null }
-            { !this.props.loading ? <ChartOutput {...this.props} /> : null }
-            {/* { !this.props.loading ? <ChartOverlays {...this.props} /> : null } */}
+            { chartAvailable ? <ChartType {...this.props} /> : null }
+            { chartAvailable ? <ChartPreview {...this.props} /> : null }
+            { chartAvailable ? <ChartOutput {...this.props} /> : null }
+            {/* { chartAvailable ? <ChartOverlays {...this.props} /> : null } */}
           </article>
           <aside className='options-area'>
-            { !this.props.loading ? <ChartStatus {...this.props} name={this.state.animalName} /> : null }
-            { !this.props.loading ? <ChartData {...this.props} /> : null }
-            { !this.props.loading ? <ChartXAxis {...this.props} /> : null }
-            { !this.props.loading ? <ChartYAxis {...this.props} /> : null }
-            { !this.props.loading ? <ChartTags {...this.props} /> : null }
-            { !this.props.loading ? <ChartStyling {...this.props} /> : null }
-            { !this.props.loading ? <ChartOptions {...this.props} /> : null }
+            { chartAvailable ? <ChartStatus {...this.props} name={this.state.animalName} /> : null }
+            { chartAvailable ? <ChartData {...this.props} /> : null }
+            { chartAvailable ? <ChartXAxis {...this.props} /> : null }
+            { chartAvailable ? <ChartYAxis {...this.props} /> : null }
+            { chartAvailable ? <ChartTags {...this.props} /> : null }
+            { chartAvailable ? <ChartStyling {...this.props} /> : null }
+            { chartAvailable ? <ChartOptions {...this.props} /> : null }
           </aside>
         </section>
         <Footer />

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import Charts from '../../api/Charts/Charts';
 import Header from '../components/Header';
@@ -69,6 +70,9 @@ class ShowChart extends Component {
   }
 
   render() {
+    if (!this.props.loading && !this.props.chart) {
+      return <Redirect to='/404' />;
+    }
     return (
       <div>
         <Header {...this.props} />
