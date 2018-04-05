@@ -56,7 +56,7 @@ export default class ChartEmbed extends Component {
       <textarea
         className='export-embed'
         readOnly={true}
-        defaultValue={this.embedCode()}
+        value={this.embedCode()}
         onClick={this.selectEmbed}>
       </textarea>
     );

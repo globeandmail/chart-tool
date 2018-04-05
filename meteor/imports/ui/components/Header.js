@@ -3,14 +3,24 @@ import { Meteor } from 'meteor/meteor';
 import slugify from 'slug';
 import { Link } from 'react-router-dom';
 import { app_settings } from '../../modules/settings';
-import { debounce } from '../../modules/utils';
+import { setDocumentTitle } from '../../modules/utils';
 
 export default class Header extends Component {
 
   constructor(props) {
     super(props);
-    this.setSlugValue = debounce(this.setSlugValue, 500);
+    this.setSlugValue = this.setSlugValue.bind(this);
     this.updateSlug = this.updateSlug.bind(this);
+  }
+
+  componentDidMount() {
+    const slug = this.props.chart && this.props.chart.slug ? this.props.chart.slug : undefined;
+    document.title = setDocumentTitle(this.props.match.path, slug);
+  }
+
+  componentDidUpdate() {
+    const slug = this.props.chart && this.props.chart.slug ? this.props.chart.slug : undefined;
+    document.title = setDocumentTitle(this.props.match.path, slug);
   }
 
   setSlugValue(slug) {
@@ -22,10 +32,7 @@ export default class Header extends Component {
   updateSlug(event) {
     const slugData = event.target.value,
       slug = slugify(slugData);
-    if (slug) {
-      this.setState({ slug });
-      this.setSlugValue(slug);
-    }
+    if (slug) { this.setSlugValue(slug); }
   }
 
   renderEditSlug() {
@@ -37,8 +44,8 @@ export default class Header extends Component {
             name='slug'
             className='input-slug-edit'
             placeholder={this.props.chart.slug}
-            value={this.props.chart.slug}
-            onChange={this.updateSlug}
+            defaultValue={this.props.chart.slug}
+            onBlur={this.updateSlug}
           />
         </div>
         { this.renderNav() }

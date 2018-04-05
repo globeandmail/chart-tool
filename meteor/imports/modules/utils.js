@@ -624,6 +624,18 @@ export function arrayDiff(a1, a2) {
   return diff;
 }
 
+export function setDocumentTitle(path, slug) {
+  const titles = {
+    '/new': 'New chart - Chart Tool',
+    '/status': 'Status - Chart Tool',
+    '/archive': 'Archive - Chart Tool',
+    '/chart/:_id': `${slug} - Chart Tool`,
+    '/chart/:_id/pdf': `${slug} - Chart Tool`,
+    '/chart/:_id/edit': `${slug} - Chart Tool`,
+  };
+  return titles[path];
+}
+
 // export function generateThumb(obj) {
 //
 //   const scale = 2,

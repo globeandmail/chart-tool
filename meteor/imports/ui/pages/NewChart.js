@@ -56,7 +56,7 @@ export default class NewChart extends Component {
   render() {
     return(
       <div>
-        <Header />
+        <Header {...this.props} />
         <section>
           <article>
             <form className='new-chart' onSubmit={this.createChart}>

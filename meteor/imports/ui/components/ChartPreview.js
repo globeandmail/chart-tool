@@ -26,7 +26,7 @@ export default class ChartPreview extends Component {
           { !this.props.loading ?
             <Chart
               type={'desktop'}
-              data={this.props.chart}
+              chart={this.props.chart}
               editable={true}
               share_data={false}
               social={false}
@@ -40,7 +40,7 @@ export default class ChartPreview extends Component {
           { !this.props.loading ?
             <Chart
               type={'mobile'}
-              data={this.props.chart}
+              chart={this.props.chart}
               editable={true}
               share_data={false}
               social={false}

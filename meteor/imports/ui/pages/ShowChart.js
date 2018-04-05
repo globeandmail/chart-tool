@@ -51,7 +51,7 @@ class ShowChart extends Component {
           share_data={false}
           social={false}
           exportable={false}
-          data={this.props.chart}
+          chart={this.props.chart}
         />
         <div className='chart-show_tags'>
           <h4>Tags</h4>
@@ -71,7 +71,7 @@ class ShowChart extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header {...this.props} />
         <section>
           <div className='chart-show'>
             {this.props.loading ? renderLoading() : this.renderChart()}

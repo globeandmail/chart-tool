@@ -4,6 +4,34 @@ import { app_settings } from '../../modules/settings';
 import '../../modules/chart-tool';
 import '../../modules/cursorManager';
 
+function chartPresentationalString(data) {
+  const obj = {
+    'annotations': data.annotations,
+    'class': data.class,
+    'data': data.data,
+    'date_format': data.date_format,
+    'deck': data.deck,
+    'hasHours': data.hasHours,
+    'heading': data.heading,
+    'options.expanded': data.options.expanded,
+    'options.indexed': data.options.indexed,
+    'options.interpolation': data.options.interpolation,
+    'options.stacked': data.options.stacked,
+    'options.tips': data.options.tips,
+    'options.type': data.options.type,
+    'print': data.print,
+    'qualifier': data.qualifier,
+    'range': data.range,
+    'series': data.series,
+    'source': data.source,
+    'time_format': data.time_format,
+    'x_axis': data.x_axis,
+    'y_axis': data.y_axis
+  };
+
+  return JSON.stringify(obj);
+}
+
 export default class Chart extends Component {
 
   constructor(props) {
@@ -16,6 +44,23 @@ export default class Chart extends Component {
       width: 0,
       height: 0
     };
+  }
+
+  componentDidMount() {
+    this.componentChangeFunction();
+  }
+
+  componentDidUpdate() {
+    this.componentChangeFunction();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const oldChart = chartPresentationalString(this.props.chart),
+      newChart = chartPresentationalString(nextProps.chart);
+
+    return this.state.width !== nextState.width ||
+      this.state.height !== nextState.height ||
+      oldChart !== newChart;
   }
 
   drawError(error) {
@@ -63,7 +108,7 @@ export default class Chart extends Component {
   }
 
   componentChangeFunction() {
-    const chart = this.props.data;
+    const chart = this.props.chart;
     if (this.props.editable || this.props.editable === false) chart.editable = this.props.editable;
     if (this.props.share_data || this.props.share_data === false) chart.options.share_data = this.props.share_data;
     if (this.props.social || this.props.social === false) chart.options.social = this.props.social;
@@ -82,14 +127,6 @@ export default class Chart extends Component {
     } else if (errors) {
       this.chartRef.current.innerHTML = this.drawError(errors);
     }
-  }
-
-  componentDidMount() {
-    this.componentChangeFunction();
-  }
-
-  componentDidUpdate() {
-    this.componentChangeFunction();
   }
 
   componentWillUnmount() {

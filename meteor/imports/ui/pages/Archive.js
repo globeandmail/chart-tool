@@ -168,7 +168,7 @@ class Archive extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header {...this.props} />
         <div className='charts-archive'>
           <aside className='charts-archive_aside-wrapper'>
             <div className='charts-archive_aside'>

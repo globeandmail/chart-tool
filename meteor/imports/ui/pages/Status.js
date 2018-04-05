@@ -27,7 +27,7 @@ class Status extends Component {
   render() {
     return(
       <div>
-        <Header />
+        <Header {...this.props} />
 
         <section>
           <h1 className='status-header'>Chart Tool status dashboard</h1>
