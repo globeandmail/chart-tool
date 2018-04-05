@@ -46,19 +46,19 @@ gulp.task('scss-compile:build', () => {
 
 gulp.task('scss-settings', () => {
   return gulp.src(`${gulpConfig.libStylesheets}/settings/_settings.scss`)
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
 });
 
 gulp.task('scss-custom-meteor-before', () => {
   return gulp.src(`${gulpConfig.customPath}/base.scss`)
     .pipe(rename('_custom-settings.scss'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
 });
 
 gulp.task('scss-custom-meteor-after', () => {
   return gulp.src(`${gulpConfig.customPath}/meteor-custom.scss`)
     .pipe(rename('_custom.scss'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
 });
 
 gulp.task('scss:build', done => {

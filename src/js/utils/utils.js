@@ -4,12 +4,10 @@ import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
 import {
   curveLinear,
-  curveCardinal,
-  curveCatmullRom,
-  curveMonotoneX,
   curveNatural,
   curveStepBefore,
-  curveStepAfter
+  curveStepAfter,
+  curveStep
 } from 'd3-shape';
 import Settings from '../config/chart-settings';
 import bucket from '../config/env';
@@ -185,18 +183,14 @@ export function timeInterval(data) {
 
 export function getCurve(interp) {
   switch (interp) {
-    case 'cardinal':
-      return curveCardinal;
     case 'linear':
       return curveLinear;
+    case 'step':
+      return curveStep;
     case 'step-before':
       return curveStepBefore;
     case 'step-after':
       return curveStepAfter;
-    case 'monotone':
-      return curveMonotoneX;
-    case 'catmull-rom':
-      return curveCatmullRom;
     case 'natural':
       return curveNatural;
   }

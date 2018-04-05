@@ -5133,7 +5133,7 @@ Cardinal.prototype = {
   }
 };
 
-var curveCardinal = (function custom(tension) {
+(function custom(tension) {
 
   function cardinal(context) {
     return new Cardinal(context, tension);
@@ -5326,7 +5326,7 @@ CatmullRom.prototype = {
   }
 };
 
-var curveCatmullRom = (function custom(alpha) {
+(function custom(alpha) {
 
   function catmullRom(context) {
     return alpha ? new CatmullRom(context, alpha) : new Cardinal(context, 0);
@@ -5567,10 +5567,6 @@ ReflectContext.prototype = {
   bezierCurveTo: function(x1, y1, x2, y2, x, y) { this._context.bezierCurveTo(y1, x1, y2, x2, y, x); }
 };
 
-function monotoneX(context) {
-  return new MonotoneX(context);
-}
-
 function Natural(context) {
   this._context = context;
 }
@@ -5677,6 +5673,10 @@ Step.prototype = {
     }
     this._x = x, this._y = y;
   }
+};
+
+var curveStep = function(context) {
+  return new Step(context, 0.5);
 };
 
 function stepBefore(context) {
@@ -6366,7 +6366,7 @@ var _iterStep = function(done, value){
 };
 
 var addToUnscopables = _addToUnscopables;
-var step$1             = _iterStep;
+var step             = _iterStep;
 var Iterators$2        = _iterators;
 var toIObject$2        = _toIobject;
 
@@ -6385,11 +6385,11 @@ var es6_array_iterator = _iterDefine(Array, 'Array', function(iterated, kind){
     , index = this._i++;
   if(!O || index >= O.length){
     this._t = undefined;
-    return step$1(1);
+    return step(1);
   }
-  if(kind == 'keys'  )return step$1(0, index);
-  if(kind == 'values')return step$1(0, O[index]);
-  return step$1(0, [index, O[index]]);
+  if(kind == 'keys'  )return step(0, index);
+  if(kind == 'values')return step(0, O[index]);
+  return step(0, [index, O[index]]);
 }, 'values');
 
 // argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
@@ -6570,7 +6570,7 @@ var anInstance  = _anInstance;
 var defined$3     = _defined;
 var forOf       = _forOf;
 var $iterDefine = _iterDefine;
-var step$2        = _iterStep;
+var step$1        = _iterStep;
 var setSpecies  = _setSpecies;
 var DESCRIPTORS = _descriptors;
 var fastKey     = _meta.fastKey;
@@ -6691,12 +6691,12 @@ var _collectionStrong = {
       if(!that._t || !(that._l = entry = entry ? entry.n : that._t._f)){
         // or finish the iteration
         that._t = undefined;
-        return step$2(1);
+        return step$1(1);
       }
       // return step by kind
-      if(kind == 'keys'  )return step$2(0, entry.k);
-      if(kind == 'values')return step$2(0, entry.v);
-      return step$2(0, [entry.k, entry.v]);
+      if(kind == 'keys'  )return step$1(0, entry.k);
+      if(kind == 'values')return step$1(0, entry.v);
+      return step$1(0, [entry.k, entry.v]);
     }, IS_MAP ? 'entries' : 'values' , !IS_MAP, true);
 
     // add [@@species], 23.1.2.2, 23.2.2.2
@@ -7121,18 +7121,14 @@ function timeInterval$$1(data) {
 
 function getCurve(interp) {
   switch (interp) {
-    case 'cardinal':
-      return curveCardinal;
     case 'linear':
       return curveLinear;
+    case 'step':
+      return curveStep;
     case 'step-before':
       return stepBefore;
     case 'step-after':
       return stepAfter;
-    case 'monotone':
-      return monotoneX;
-    case 'catmull-rom':
-      return curveCatmullRom;
     case 'natural':
       return curveNatural;
   }
