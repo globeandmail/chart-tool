@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import slugify from 'slug';
 import { Link } from 'react-router-dom';
 import { app_settings } from '../../modules/settings';
-import { slugParse, debounce } from '../../modules/utils';
+import { debounce } from '../../modules/utils';
 
 export default class Header extends Component {
 
@@ -20,7 +21,7 @@ export default class Header extends Component {
 
   updateSlug(event) {
     const slugData = event.target.value,
-      slug = slugParse(slugData);
+      slug = slugify(slugData);
     if (slug) {
       this.setState({ slug });
       this.setSlugValue(slug);

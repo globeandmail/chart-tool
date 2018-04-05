@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Link } from 'react-router-dom';
-import Tags from '../../api/Tags/Tags';
 import Charts from '../../api/Charts/Charts';
 import Header from '../components/Header';
 import Chart from '../components/Chart';
@@ -23,9 +22,7 @@ class ShowChart extends Component {
       } else {
         this.props.history.push({
           pathname: `/chart/${result}/edit`,
-          state: {
-            id: result
-          }
+          state: { id: result }
         });
       }
     });
@@ -59,7 +56,7 @@ class ShowChart extends Component {
         <div className='chart-show_tags'>
           <h4>Tags</h4>
           <ul>
-            {this.props.tags.map(d => <li key={d}>{d}</li>)}
+            {this.props.chart.tags.map(d => <li key={d}>{d}</li>)}
           </ul>
         </div>
         <div className='chart-show_dates'>
@@ -89,10 +86,8 @@ class ShowChart extends Component {
 
 export default withTracker(props => {
   const subscription = Meteor.subscribe('chart', props.match.params._id);
-  Meteor.subscribe('chart.tags', props.match.params._id);
   return {
     loading: !subscription.ready(),
-    tags: Tags.find().fetch().map(t => t.tagName),
     chart: Charts.findOne({ _id: props.match.params._id }),
     id: props.match.params._id,
     props

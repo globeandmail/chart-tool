@@ -417,11 +417,6 @@ export const queries = {
         options: options
       };
     }
-  },
-  'chart.tags': params => {
-    return {
-      find: { tagged: params.chartId }
-    };
   }
 };
 

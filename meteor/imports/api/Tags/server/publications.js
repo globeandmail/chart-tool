@@ -13,9 +13,3 @@ Meteor.publish('tags', function() {
   if (data) { return data; }
   return this.ready();
 });
-
-Meteor.publish('chart.tags', chartId => {
-  const data = Tags.find({ tagged: chartId });
-  if (data) { return data; }
-  return this.ready();
-});

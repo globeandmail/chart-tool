@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import ChartEmbed from './ChartEmbed';
-import { withTracker } from 'meteor/react-meteor-data';
 
 export default class ChartOutput extends Component {
 
