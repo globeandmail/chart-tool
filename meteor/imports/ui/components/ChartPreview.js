@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import Chart from './Chart';
+import { renderLoading } from '../../modules/utils';
 
 export default class ChartPreview extends Component {
 
@@ -31,7 +32,7 @@ export default class ChartPreview extends Component {
               share_data={false}
               social={false}
               handleFieldChange={this.handleFieldChange}
-            /> : null
+            /> : renderLoading()
           }
         </div>
 
@@ -45,7 +46,7 @@ export default class ChartPreview extends Component {
               share_data={false}
               social={false}
               handleFieldChange={this.handleFieldChange}
-            /> : null
+            /> : renderLoading()
           }
         </div>
       </div>

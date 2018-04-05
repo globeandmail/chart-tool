@@ -10,7 +10,7 @@ import Footer from '../components/Footer';
 import ChartType from '../components/ChartType';
 import ChartPreview from '../components/ChartPreview';
 import ChartOutput from '../components/ChartOutput';
-// import ChartOverlays from '../components/ChartOverlays';
+import ChartOverlays from '../components/ChartOverlays';
 import ChartStatus from '../components/ChartStatus';
 import ChartData from '../components/ChartData';
 import ChartXAxis from '../components/ChartXAxis';
@@ -24,42 +24,59 @@ class EditChart extends Component {
   constructor(props) {
     super(props);
     const animalName = generateRandomAnimalName();
+    this.toggleOverlay = this.toggleOverlay.bind(this);
     Presence.state = () => {
       return { currentChartId: this.props.match.params._id, user: animalName };
     };
     this.state = {
-      animalName: animalName
+      animalName,
+      overlay: 'web'
     };
   }
 
-  render() {
-    const chartAvailable = !this.props.loading && this.props.chart;
-    if (!this.props.loading && !this.props.chart) {
-      return <Redirect to='/404' />;
-    }
+  toggleOverlay(event) {
+    const overlay = event.target.value === this.state.overlay ? false : event.target.value;
+    this.setState({ overlay });
+  }
+
+  renderPage() {
     return (
       <div>
-        { chartAvailable ? <Header edit={true} {...this.props} /> : null }
+        <Header edit={true} {...this.props} />
         <section>
           <article className='main-area'>
-            { chartAvailable ? <ChartType {...this.props} /> : null }
-            { chartAvailable ? <ChartPreview {...this.props} /> : null }
-            { chartAvailable ? <ChartOutput {...this.props} /> : null }
-            {/* { chartAvailable ? <ChartOverlays {...this.props} /> : null } */}
+            <ChartType {...this.props} />
+            <ChartPreview {...this.props} />
+            <ChartOutput
+              toggleOverlay={this.toggleOverlay}
+              {...this.props}
+            />
+            <ChartOverlays
+              overlay={this.state.overlay}
+              toggleOverlay={this.toggleOverlay}
+              {...this.props}
+            />
           </article>
           <aside className='options-area'>
-            { chartAvailable ? <ChartStatus {...this.props} name={this.state.animalName} /> : null }
-            { chartAvailable ? <ChartData {...this.props} /> : null }
-            { chartAvailable ? <ChartXAxis {...this.props} /> : null }
-            { chartAvailable ? <ChartYAxis {...this.props} /> : null }
-            { chartAvailable ? <ChartTags {...this.props} /> : null }
-            { chartAvailable ? <ChartStyling {...this.props} /> : null }
-            { chartAvailable ? <ChartOptions {...this.props} /> : null }
+            <ChartStatus name={this.state.animalName} {...this.props} />
+            <ChartData {...this.props} />
+            <ChartXAxis {...this.props} />
+            <ChartYAxis {...this.props} />
+            <ChartTags {...this.props} />
+            <ChartStyling {...this.props} />
+            <ChartOptions {...this.props} />
           </aside>
         </section>
         <Footer />
       </div>
     );
+  }
+
+  render() {
+    if (!this.props.loading && !this.props.chart) {
+      return <Redirect to='/404' />;
+    }
+    return !this.props.loading ? this.renderPage() : null;
   }
 
 }

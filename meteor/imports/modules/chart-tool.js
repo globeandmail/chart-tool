@@ -6953,7 +6953,6 @@ $export$4($export$4.S + $export$4.F * !_iterDetect(function(iter){ Array.from(it
   }
 });
 
-// import FontFaceObserver from 'fontfaceobserver';
 function debounce$1(fn, params, timeout, root) {
   var timeoutID = -1;
   return (function () {
@@ -7129,6 +7128,8 @@ function getCurve(interp) {
       return stepBefore;
     case 'step-after':
       return stepAfter;
+    case 'cardinal':
+    case 'monotone':
     case 'natural':
       return curveNatural;
   }
@@ -7189,18 +7190,6 @@ function csvToTable(target, data) {
     .append('td')
     .text(function (d) { return d; });
 }
-
-// export function waitForFonts(fonts) {
-//   return new Promise((resolve, reject) => {
-//     if (fonts && fonts.length) {
-//       Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
-//         .then(() => resolve())
-//         .catch(() => reject());
-//     } else {
-//       resolve();
-//     }
-//   });
-// }
 
 function getUniqueDateValues(data, type) {
   var allDates = data.map(function (d) {

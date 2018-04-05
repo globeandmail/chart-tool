@@ -4,7 +4,6 @@ import { parse as parseQueryString, stringify } from 'query-string';
 import Tags from '../../api/Tags/Tags';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { debounce } from '../../modules/utils';
 import { withTracker } from 'meteor/react-meteor-data';
 import ArchiveChartsComponent from '../components/ArchiveCharts';
 import Select from 'react-select';
@@ -46,7 +45,7 @@ class Archive extends Component {
 
     this.setQueryUrl = this.setQueryUrl.bind(this);
     this.setLimit = this.setLimit.bind(this);
-    this.setSearch = debounce(this.setSearch, 300);
+    this.setSearch = this.setSearch.bind(this);
     this.setChartType = this.setChartType.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSortFieldChange = this.handleSortFieldChange.bind(this);
@@ -104,7 +103,7 @@ class Archive extends Component {
   }
 
   setSearch(event) {
-    let search = event.target.value.trim().replace(/^\s+/, '');
+    const search = event.target.value.trim().replace(/^\s+/, '');
     const filters = this.state.filters;
     filters.search = search;
     const sort = this.state.sort;

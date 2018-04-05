@@ -96,6 +96,15 @@
   }
 }
 
+.web-export-submit-custom {
+  pointer-events: none;
+  opacity: 0.3;
+  &.active {
+    pointer-events: auto;
+    opacity: 1;
+  }
+}
+
 .print-export-mode {
   margin-top: 0.5em;
   margin-bottom: 1em;

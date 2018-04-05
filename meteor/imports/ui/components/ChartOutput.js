@@ -1,31 +1,11 @@
 import React, { Component } from 'react';
-import { Meteor } from 'meteor/meteor';
 import ChartEmbed from './ChartEmbed';
 
 export default class ChartOutput extends Component {
 
   constructor(props) {
     super(props);
-    // this.handleFieldChange = this.handleFieldChange.bind(this);
   }
-
-  // handleFieldChange(text, type) {
-  //   Meteor.call(`charts.update.${type}`, this.props.id, text, err => {
-  //     if (err) console.log(err);
-  //   });
-  // }
-
-  // 'click .export-embed': function(e) {
-  //   e.target.select();
-  // },
-  // 'click .export-png': function(e) {
-  //   Overlay.show("chartOverlayWeb", this);
-  //   window.scrollTo(0, 0);
-  // },
-  // 'click .export-pdf': function(e) {
-  //   Overlay.show("chartOverlayPrint", this);
-  //   window.scrollTo(0, 0);
-  // }
 
   render() {
     return (
@@ -36,8 +16,14 @@ export default class ChartOutput extends Component {
         </div>
         <div className='download'>
           <h3>Export</h3>
-          <div className='button export-button export-png'>Web-ready PNG</div>
-          <div className='button export-button export-pdf'>Print export</div>
+          <button
+            value={'web'}
+            onClick={this.props.toggleOverlay}
+            className='button export-button export-png'>Web-ready PNG</button>
+          <button
+            value={'print'}
+            onClick={this.props.toggleOverlay}
+            className='button export-button export-pdf'>Print export</button>
         </div>
 
       </div>
