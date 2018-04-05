@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { dataParse, updateAndSave } from '../../modules/utils';
+import { app_settings } from '../../modules/settings';
 import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 
@@ -41,12 +42,13 @@ export default class ChartData extends Component {
 
   constructor(props) {
     super(props);
+    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
+    this.handleData = this.handleData.bind(this);
+    this.handleDateConstruction = this.handleDateConstruction.bind(this);
+    this.handleHasHours = this.handleHasHours.bind(this);
+    this.handleIndex = this.handleIndex.bind(this);
     this.state = {
-      expanded: true,
-      data: this.props.chart.data,
-      dateConstruction: this.props.chart.date_format,
-      hasHours: this.props.chart.hasHours,
-      indexed: this.props.chart.options.indexed
+      expanded: true
     };
   }
 
@@ -62,25 +64,47 @@ export default class ChartData extends Component {
   handleData(event) {
     const data = dataParse(event.target.value);
     updateAndSave('charts.update.data', this.props.chart._id, data);
-    this.setState({ data });
   }
 
   handleDateConstruction(event) {
-    const dateConstruction = event.target.value;
+    let dateConstruction = event.target.value;
+
+    const dateFormat = this.props.chart.date_format,
+      str = ` ${app_settings.chart.time_format}`,
+      re = /\s\%H\:\%M/g;
+
+    if (re.test(dateFormat)) { dateConstruction += str; }
+
     updateAndSave('charts.update.dateformat', this.props.chart._id, dateConstruction);
-    this.setState({ dateConstruction });
   }
 
   handleHasHours(event) {
-    const hasHours = event.target.value === 'on' ? true : false;
-    updateAndSave('charts.update.hashours', this.props.chart._id, !hasHours);
-    this.setState({ hasHours: !hasHours });
+    let dateFormat = this.props.chart.date_format;
+
+    const hasHours = event.target.checked,
+      str = ` ${app_settings.chart.time_format}`,
+      re = /\s\%H\:\%M/g;
+
+    const fields = {
+      'charts.update.hashours': hasHours,
+    };
+
+    if (!re.test(dateFormat)) {
+      fields['charts.update.dateformat'] = dateFormat += str;
+    } else {
+      fields['charts.update.dateformat'] = dateFormat.replace(str, '');
+    }
+
+    updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {
+      if (err) console.log(err);
+    });
+
   }
 
   handleIndex(event) {
-    const indexed = event.target.value;
+    let indexed = event.target.value;
+    if (isNaN(Number(indexed)) || indexed === '') { indexed = false; }
     updateAndSave('charts.update.options.indexed', this.props.chart._id, indexed);
-    this.setState({ indexed });
   }
 
   dateCalc() {
@@ -98,8 +122,7 @@ export default class ChartData extends Component {
     Swal({
       title: 'Date format?',
       text: 'Chart Tool sometimes needs you to tell it how your dates are formatted so it can figure out how to parse them. Make sure your selected date format matches that of your data!',
-      type: 'info',
-      confirmButtonColor: '#fff'
+      type: 'info'
     });
   }
 
@@ -107,8 +130,7 @@ export default class ChartData extends Component {
     Swal({
       title: 'Hours?',
       text: 'Turn on this feature if your data contains timestamps as well as dates. Make sure your selected date format matches that of your data!',
-      type: 'info',
-      confirmButtonColor: '#fff'
+      type: 'info'
     });
   }
 
@@ -116,8 +138,7 @@ export default class ChartData extends Component {
     Swal({
       title: 'Your dates should match',
       text: 'This shows an example of how your dates should be formatted so Chart Tool can parse them.',
-      type: 'info',
-      confirmButtonColor: '#fff'
+      type: 'info'
     });
   }
 
@@ -125,15 +146,14 @@ export default class ChartData extends Component {
     Swal({
       title: 'Index?',
       text: 'Scale the first value in each series to this value and show all other values relative to this index.',
-      type: 'info',
-      confirmButtonColor: '#fff'
+      type: 'info'
     });
   }
 
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={() => this.toggleCollapseExpand()}>Data</h3>
+        <h3 onClick={this.toggleCollapseExpand}>Data</h3>
 
         <div className={`unit-edit ${this.expandStatus()}`}>
 
@@ -144,8 +164,8 @@ export default class ChartData extends Component {
               name='pasteData'
               placeholder='Paste your spreadsheet data here'
               className='input-data-edit'
-              onBlur={(event) => this.handleData(event) }
-              defaultValue={this.state.data}
+              onBlur={this.handleData}
+              defaultValue={this.props.chart.data}
               ></textarea>
           </div>
 
@@ -154,7 +174,11 @@ export default class ChartData extends Component {
               <div className='unit-edit unit-edit-time time-format-edit'>
                 <h4>Date format <a onClick={this.helpDateConstruction} className='help-toggle help-date-construction'>?</a></h4>
                 <div className='select-wrapper'>
-                  <select className='select-date-construction' onChange={this.handleDateConstruction}>
+                  <select
+                    className='select-date-construction'
+                    value={this.props.chart.date_format}
+                    onChange={this.handleDateConstruction}
+                    >
                     {formats.map(f => {
                       return <option key={f.pretty} value={f.format}>{f.pretty}</option>;
                     })}
@@ -168,7 +192,7 @@ export default class ChartData extends Component {
                   className='input-checkbox-hours'
                   type='checkbox'
                   name='Hours'
-                  value={this.state.hasHours}
+                  value={this.props.chart.hasHours}
                   onChange={this.handleHasHours} />
               </div>
 
@@ -184,7 +208,7 @@ export default class ChartData extends Component {
                   name='index'
                   placeholder='100'
                   className='input-index input-field'
-                  value={this.state.index}
+                  value={this.props.chart.options.indexed}
                   onChange={this.handleIndex} />
               </div>
             </div>

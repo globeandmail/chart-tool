@@ -9,9 +9,7 @@ export default class Header extends Component {
   constructor(props) {
     super(props);
     this.setSlugValue = debounce(this.setSlugValue, 500);
-    this.state = {
-      slug: this.props.chart && this.props.chart.slug ? this.props.chart.slug : ''
-    };
+    this.updateSlug = this.updateSlug.bind(this);
   }
 
   setSlugValue(slug) {
@@ -37,9 +35,9 @@ export default class Header extends Component {
             type='text'
             name='slug'
             className='input-slug-edit'
-            placeholder={this.state.slug}
-            value={this.state.slug}
-            onChange={this.updateSlug.bind(this)}
+            placeholder={this.props.chart.slug}
+            value={this.props.chart.slug}
+            onChange={this.updateSlug}
           />
         </div>
         { this.renderNav() }
@@ -55,13 +53,6 @@ export default class Header extends Component {
         <h2 className='header-new'><Link to='/new'>New chart</Link></h2>
       </div>
     );
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.chart !== nextProps.chart) {
-      const slug = nextProps.chart.slug;
-      this.setState({ slug });
-    }
   }
 
   render() {

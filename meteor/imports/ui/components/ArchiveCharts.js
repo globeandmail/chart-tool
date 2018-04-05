@@ -25,7 +25,6 @@ class ArchiveCharts extends Component {
   }
 
   render() {
-
     return (
       <section className='charts-archive_results'>
         <div className='charts-archive_count'>
@@ -37,7 +36,7 @@ class ArchiveCharts extends Component {
             <select
               className='charts-archive_count-limit'
               value={this.props.limit}
-              onChange={this.props.setLimit.bind(this)}>
+              onChange={this.props.setLimit}>
               {[24, 48, 96].map(l => <option key={l} value={l}>{l}</option>)}
             </select>
           </div>

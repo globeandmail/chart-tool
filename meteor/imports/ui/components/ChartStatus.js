@@ -14,8 +14,7 @@ class ChartStatus extends Component {
     Swal({
       title: 'Who\u2019s editing my what now?',
       text: 'Surprise! Chart Tool allows for multiple people to edit your chart at once.',
-      type: 'info',
-      confirmButtonColor: '#fff'
+      type: 'info'
     });
   }
 

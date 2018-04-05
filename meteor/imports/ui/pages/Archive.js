@@ -47,6 +47,7 @@ class Archive extends Component {
     this.setQueryUrl = this.setQueryUrl.bind(this);
     this.setLimit = this.setLimit.bind(this);
     this.setSearch = debounce(this.setSearch, 300);
+    this.setChartType = this.setChartType.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleSortFieldChange = this.handleSortFieldChange.bind(this);
     this.handleSortOrderChange = this.handleSortOrderChange.bind(this);
@@ -102,8 +103,8 @@ class Archive extends Component {
     this.setQueryUrl();
   }
 
-  setSearch(val) {
-    let search = val.trim().replace(/^\s+/, '');
+  setSearch(event) {
+    let search = event.target.value.trim().replace(/^\s+/, '');
     const filters = this.state.filters;
     filters.search = search;
     const sort = this.state.sort;
@@ -112,8 +113,8 @@ class Archive extends Component {
   }
 
   setChartType(event) {
-    const type = event.target.value;
-    const filters = this.state.filters;
+    const type = event.target.value,
+      filters = this.state.filters;
     let newTypes;
     if (filters.types.indexOf(type) === -1) {
       newTypes = filters.types;
@@ -179,7 +180,7 @@ class Archive extends Component {
                     className='charts-archive_search-field input-search'
                     type='text'
                     placeholder='Search by keyword…'
-                    onChange={event => this.setSearch(event.target.value)}
+                    onChange={this.setSearch}
                     defaultValue={this.state.filters.search}
                   />
                 </div>
@@ -243,7 +244,7 @@ class Archive extends Component {
                             type='checkbox'
                             value={t.toLowerCase()}
                             className='input-checkbox'
-                            onChange={event => { this.setChartType(event); }}
+                            onChange={this.setChartType}
                             checked={this.isChecked(t)}
                           />
                           <label htmlFor={`${t.toLowerCase()}Type`}>{t}</label>

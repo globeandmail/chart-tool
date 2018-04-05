@@ -10,6 +10,7 @@ import EditChart from '../../ui/layouts/EditChart';
 
 import 'react-select/dist/react-select.css';
 import '../../ui/style/main.scss';
+import 'sweetalert2/dist/sweetalert2.css';
 import '../../ui/style/chart-tool.css';
 
 export default class Routes extends Component {

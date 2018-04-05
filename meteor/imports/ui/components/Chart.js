@@ -79,7 +79,7 @@ export default class Chart extends Component {
       qualifier.addEventListener('blur', this.qualifierBlur);
       source.addEventListener('click', this.sourceClick);
       source.addEventListener('blur', this.sourceBlur);
-    } else {
+    } else if (errors) {
       this.chartRef.current.innerHTML = this.drawError(errors);
     }
   }
@@ -98,10 +98,10 @@ export default class Chart extends Component {
         qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
         source = this.chartRef.current.querySelector('.editable-chart_source');
 
-      title.removeEventListener('blur', this.titleBlur);
-      qualifier.removeEventListener('blur', this.qualifierBlur);
-      source.removeEventListener('click', this.sourceClick);
-      source.removeEventListener('blur', this.sourceBlur);
+      if (title) title.removeEventListener('blur', this.titleBlur);
+      if (qualifier) qualifier.removeEventListener('blur', this.qualifierBlur);
+      if (source) source.removeEventListener('click', this.sourceClick);
+      if (source) source.removeEventListener('blur', this.sourceBlur);
     }
     window.ChartTool.destroy(this.chartRef.current);
   }

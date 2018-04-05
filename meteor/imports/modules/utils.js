@@ -154,15 +154,6 @@ export function csvFormat(obj) {
   }
 }
 
-export function slugParse(slug) {
-  const re = /^[a-zA-Z0-9-]*$/;
-  if (!re.test(slug)) {
-    return slug.replace(/[ +.,!@#$%^&*();:\/|<>'" =]/g,'-').toLowerCase();
-  } else {
-    return slug.toLowerCase();
-  }
-}
-
 export function dataParse(data) {
 
   const newData = data.replace(/\n\n/g, '\n').trim();
@@ -507,6 +498,7 @@ export function renderLoading() {
 
 export function updateAndSave(method, id, data) {
   const thumbnailMethods = [
+    'charts.update.multiple.fields',
     'charts.update.data',
     'charts.update.dateformat',
     'charts.update.hashours',

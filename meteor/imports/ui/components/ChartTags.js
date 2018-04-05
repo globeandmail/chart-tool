@@ -1,90 +1,70 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import slug from 'slug';
 import Tags from '../../api/Tags/Tags';
 import { Creatable as Select } from 'react-select';
 import { withTracker } from 'meteor/react-meteor-data';
-import { updateAndSave } from '../../modules/utils';
+import { arrayDiff } from '../../modules/utils';
 
 class ChartTags extends Component {
 
   constructor(props) {
     super(props);
+    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleNewTag = this.handleNewTag.bind(this);
     this.state = {
-      expanded: true,
-      tags: this.props.chart.tags
+      expanded: true
     };
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (this.props.availableTags !== nextProps.availableTags) {
-  //     const filteredTags = nextProps.tags.filter(t => {
-  //       return this.state.tags.indexOf(t.label) !== -1 ? true : false;
-  //     });
-  //     const filters = this.state.filters;
-  //     filters.tags = filteredTags.map(d => d.label);
-  //     this.setState({ filters });
-  //     this.setState({ selectedOption: filteredTags });
-  //   }
-  // }
 
   expandStatus() {
     return this.state.expanded ? 'expanded' : 'collapsed';
   }
 
-  handleSelectChange(selectedOption) {
-    debugger;
-    // const tags = selectedOption.map(s => s.label);
-    // updateAndSave('charts.update.tags', this.props.chart._id, tags);
-    // this.setState({ tags });
+  toggleCollapseExpand() {
+    const expanded = !this.state.expanded;
+    this.setState({ expanded });
+  }
+
+  handleSelectChange(selectedOptions) {
+    const newChartTags = selectedOptions.map(s => s.value),
+      oldChartTags = this.props.chartTags.map(s => s.value),
+      tagId = arrayDiff(newChartTags, oldChartTags)[0];
+
+    Meteor.call('tags.change', tagId, this.props.chart._id, selectedOptions.map(s => s.label), err => {
+      if (err) { console.log(err); }
+    });
   }
 
   handleNewTag(event) {
-    debugger;
-  }
+    const newTag = slug(event.value),
+      newChartTags = this.props.chartTags.map(s => s.label);
 
-//   Meteor.call('createTag', input, chartId, function(err, result) {
-//     if (err) {
-//       console.log(err);
-//     } else if (result) {
-//       debugger;
-//       Meteor.call('updateTags', chartId, tagName);
-//       callback(result);
-//     }
-//   });
-// Meteor.call('addTag', value, chartId, function(err, result) {
-//   if (err) {
-//     console.log(err);
-//   } else if (result) {
-//     Meteor.call('updateTags', chartId, item[0].innerText);
-//   }
-// });
-// Meteor.call('removeTag', value, chartId, function(err, result) {
-//   if (err) {
-//     console.log(err);
-//   } else if (result) {
-//     Meteor.call('updateTags', chartId, item[0].innerText);
-//   }
-// });
+    newChartTags.push(newTag);
+
+    Meteor.call('tags.create', newTag, this.props.chart._id, newChartTags, err => {
+      if (err) { console.log(err); }
+    });
+  }
 
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={() => this.toggleCollapseExpand()}>Tags</h3>
-        {/* <div className="edit-box_toggle"> */}
-          <div className={`unit-edit ${this.expandStatus()}`}>
-            <h4>Add a few tags below</h4>
-            { !this.props.loading ?
-              <Select
-                multi={true}
-                className={'edit-tags-select'}
-                value={this.state.tags}
-                onChange={(event) => this.handleSelectChange(event)}
-                options={this.props.availableTags}
-                onNewOptionClick={(event) => this.handleNewTag(event)}
-              /> : null
-            }
-          </div>
-        {/* </div> */}
+        <h3 onClick={this.toggleCollapseExpand}>Tags</h3>
+        <div className={`unit-edit ${this.expandStatus()}`}>
+          <h4>Add a few tags below</h4>
+          { !this.props.loading ?
+            <Select
+              multi={true}
+              className={'edit-tags-select'}
+              value={this.props.chartTags}
+              onChange={this.handleSelectChange}
+              options={this.props.availableTags}
+              onNewOptionClick={this.handleNewTag}
+            /> : null
+          }
+        </div>
       </div>
     );
   }
@@ -96,6 +76,7 @@ export default withTracker(props => {
   return {
     props,
     loading: !subscription.ready(),
+    chartTags: Tags.find({ tagged: props.chart._id }).fetch().map(t => ({ value: t._id, label: t.tagName })),
     availableTags: Tags.find().fetch().map(t => ({ value: t._id, label: t.tagName }))
   };
 })(ChartTags);

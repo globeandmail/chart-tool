@@ -17,20 +17,26 @@ export default class ChartYAxis extends Component {
 
   constructor(props) {
     super(props);
+    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
+    this.handlePrefix = this.handlePrefix.bind(this);
+    this.handleSuffix = this.handleSuffix.bind(this);
+    this.handleFormatVal = this.handleFormatVal.bind(this);
+    this.handleMin = this.handleMin.bind(this);
+    this.handleMax = this.handleMax.bind(this);
+    this.handleTicks = this.handleTicks.bind(this);
+    this.handleNice = this.handleNice.bind(this);
     this.state = {
-      expanded: true,
-      prefix: this.props.chart.y_axis.prefix,
-      formatVal: this.props.chart.y_axis.format,
-      suffix: this.props.chart.y_axis.suffix,
-      min: this.props.chart.y_axis.min,
-      max: this.props.chart.y_axis.max,
-      ticks: this.props.chart.y_axis.ticks,
-      nice: this.props.chart.y_axis.nice
+      expanded: false
     };
   }
 
   expandStatus() {
     return this.state.expanded ? 'expanded' : 'collapsed';
+  }
+
+  toggleCollapseExpand() {
+    const expanded = !this.state.expanded;
+    this.setState({ expanded });
   }
 
   displayMin() {
@@ -41,8 +47,17 @@ export default class ChartYAxis extends Component {
 
       const dateFormat = chart.x_axis.scale === 'ordinal' ? undefined : app_settings.chart.date_format,
         ChartToolParser = window.ChartTool.parse,
-        cleanCSV = dataParse(chart.data),
+        cleanCSV = dataParse(chart.data);
+
+      let dataObj, error;
+
+      try {
         dataObj = ChartToolParser(cleanCSV, dateFormat, chart.options.indexed);
+      } catch(e) {
+        error = e;
+      }
+
+      if (error) return;
 
       const mArr = [];
 
@@ -58,37 +73,28 @@ export default class ChartYAxis extends Component {
     }
   }
 
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
-  }
-
   handlePrefix(event) {
     const prefix = event.target.value;
     updateAndSave('charts.update.y_axis.prefix', this.props.chart._id, prefix);
-    this.setState({ prefix });
   }
 
   handleSuffix(event) {
     const suffix = event.target.value;
     updateAndSave('charts.update.y_axis.suffix', this.props.chart._id, suffix);
-    this.setState({ suffix });
   }
 
   handleFormatVal(event) {
     const format = event.target.value;
     updateAndSave('charts.update.y_axis.format', this.props.chart._id, format);
-    this.setState({ format });
   }
 
   handleMin(event) {
     const input = event.target.value,
       minVal = parseInt(input),
-      maxVal = parseInt(this.state.max);
+      maxVal = parseInt(this.props.chart.y_axis.max);
 
     if (input === '') {
       updateAndSave('charts.update.y_axis.min', this.props.chart._id, input);
-      this.setState({ min: input });
       return;
     }
 
@@ -96,28 +102,24 @@ export default class ChartYAxis extends Component {
       Swal({
         title: 'Check your inputs',
         text: 'Value should be a number.',
-        type: 'error',
-        confirmButtonColor: '#fff'
+        type: 'error'
       });
       return;
     }
 
     if (isNumber(minVal) && !maxVal) {
       updateAndSave('charts.update.y_axis.min', this.props.chart._id, input);
-      this.setState({ min: input });
       return;
     }
 
     if (isNumber(minVal) && maxVal) {
       if (minVal < maxVal) {
         updateAndSave('charts.update.y_axis.min', this.props.chart._id, input);
-        this.setState({ min: input });
       } else {
         Swal({
           title: 'Check your inputs',
           text: 'Min value should be less than max value.',
-          type: 'error',
-          confirmButtonColor: '#fff'
+          type: 'error'
         });
       }
       return;
@@ -128,11 +130,10 @@ export default class ChartYAxis extends Component {
   handleMax(event) {
     const input = event.target.value,
       maxVal = parseInt(input),
-      minVal = parseInt(this.state.min);
+      minVal = parseInt(this.props.chart.y_axis.min);
 
     if (input === '') {
       updateAndSave('charts.update.y_axis.max', this.props.chart._id, input);
-      this.setState({ max: input });
       return;
     }
 
@@ -140,28 +141,24 @@ export default class ChartYAxis extends Component {
       Swal({
         title: 'Check your inputs',
         text: 'Value should be a number.',
-        type: 'error',
-        confirmButtonColor: '#fff'
+        type: 'error'
       });
       return;
     }
 
     if (isNumber(maxVal) && !minVal) {
       updateAndSave('charts.update.y_axis.max', this.props.chart._id, input);
-      this.setState({ max: input });
       return;
     }
 
     if (isNumber(maxVal) && minVal) {
       if (minVal < maxVal) {
         updateAndSave('charts.update.y_axis.max', this.props.chart._id, input);
-        this.setState({ max: input });
       } else {
         Swal({
           title: 'Check your inputs',
           text: 'Max value should be greater than min value.',
-          type: 'error',
-          confirmButtonColor: '#fff'
+          type: 'error'
         });
       }
       return;
@@ -169,23 +166,20 @@ export default class ChartYAxis extends Component {
   }
 
   handleTicks(event) {
-    const ticks = !event.target.value ? 'auto' : event.target.valu;
+    const ticks = !event.target.value ? 'auto' : event.target.value;
     updateAndSave('charts.update.y_axis.ticks', this.props.chart._id, ticks);
-    this.setState({ ticks });
   }
 
   handleNice(event) {
-    const nice = event.target.value === 'on' ? true : false;
-    updateAndSave('charts.update.y_axis.nice', this.props.chart._id, !nice);
-    this.setState({ nice: !nice });
+    const nice = event.target.checked;
+    updateAndSave('charts.update.y_axis.nice', this.props.chart._id, nice);
   }
 
   helpTicks() {
     Swal({
       title: 'Ticks?',
       text: 'Choose how many ticks to display on the Y-axis.',
-      type: 'info',
-      confirmButtonColor: '#fff'
+      type: 'info'
     });
   }
 
@@ -193,15 +187,14 @@ export default class ChartYAxis extends Component {
     Swal({
       title: 'Niceify?',
       text: 'Enable this to make the Y-axis end on a nice round value.',
-      type: 'info',
-      confirmButtonColor: '#fff'
+      type: 'info'
     });
   }
 
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={() => this.toggleCollapseExpand()}>Y-axis</h3>
+        <h3 onClick={this.toggleCollapseExpand}>Y-axis</h3>
           <div className={`unit-edit ${this.expandStatus()}`}>
           { this.props.chart.options.type !== 'column' && this.props.chart.options.type !== 'bar' ?
             <div>
@@ -213,13 +206,17 @@ export default class ChartYAxis extends Component {
                     name='prefix'
                     placeholder='$'
                     className='input-prefix-x input-field'
-                    defaultValue={this.state.prefix}
-                    onBlur={(event) => this.handlePrefix(event)}
+                    defaultValue={this.props.chart.y_axis.prefix}
+                    onBlur={this.handlePrefix}
                   />
                 </div>
                 <div className='y-formatval-edit'>
                   <div className='select-wrapper'>
-                    <select className='select-formatval-y' onChange={this.handleFormatVal}>
+                    <select
+                      className='select-formatval-y'
+                      value={this.props.chart.y_axis.format}
+                      onChange={this.handleFormatVal}
+                      >
                       {formats.map(f => {
                         return <option key={f.pretty} value={f.format}>{f.pretty}</option>;
                       })}
@@ -232,8 +229,8 @@ export default class ChartYAxis extends Component {
                     name='suffix'
                     placeholder='%'
                     className='input-suffix-y input-field'
-                    defaultValue={this.state.suffix}
-                    onBlur={(event) => this.handleSuffix(event)}
+                    defaultValue={this.props.chart.y_axis.suffix}
+                    onBlur={this.handleSuffix}
                   />
                 </div>
               </div>
@@ -246,8 +243,8 @@ export default class ChartYAxis extends Component {
                       name='min'
                       placeholder='Min'
                       className='input-min-y input-field'
-                      defaultValue={this.state.min}
-                      onBlur={(event) => this.handleMin(event)}
+                      defaultValue={this.props.chart.y_axis.min}
+                      onBlur={this.handleMin}
                     /> : null }
                     { this.displayMin() === true ? <span className='axisval-to'> to </span> : null }
                   <input
@@ -255,8 +252,8 @@ export default class ChartYAxis extends Component {
                     name='max'
                     placeholder='Max'
                     className='input-max-y input-field'
-                    defaultValue={this.state.max}
-                    onBlur={(event) => this.handleMax(event)}
+                    defaultValue={this.props.chart.y_axis.max}
+                    onBlur={this.handleMax}
                   />
                 </span>
               </div>
@@ -267,8 +264,8 @@ export default class ChartYAxis extends Component {
                   name='ticks'
                   placeholder='Ticks'
                   className='input-ticks-y input-field'
-                  defaultValue={this.state.ticks}
-                  onBlur={(event) => this.handleTicks(event)}
+                  defaultValue={this.props.chart.y_axis.ticks}
+                  onBlur={this.handleTicks}
                 />
               </div>
             </div>
@@ -279,8 +276,8 @@ export default class ChartYAxis extends Component {
                 className='input-checkbox-y-nice'
                 type='checkbox'
                 name='yNice'
-                checked={this.state.nice}
-                onChange={(event) => this.handleNice(event)}
+                checked={this.props.chart.y_axis.nice}
+                onChange={this.handleNice}
               />
             </div>
         </div>

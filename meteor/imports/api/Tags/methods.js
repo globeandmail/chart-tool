@@ -2,48 +2,40 @@ import { Meteor } from 'meteor/meteor';
 import Tags from './Tags';
 
 Meteor.methods({
-  'tags.create'(tagName, chartId) {
-    const tagExists = Tags.find({ tagName: tagName }).count();
-    if (!tagExists) {
-      const now = new Date();
-      return Tags.insert({
-        createdAt: now,
-        lastEdited: now,
-        tagName: tagName,
-        tagged: [chartId]
-      });
-    }
+  'tags.create'(tagName, chartId, chartTagArr) {
+    const now = new Date();
+    Meteor.call('charts.update.tags', chartId, chartTagArr);
+    return Tags.insert({
+      createdAt: now,
+      lastEdited: now,
+      tagName: tagName,
+      tagged: [chartId]
+    });
   },
-  'tags.add'(tagId, chartId) {
+  'tags.change'(tagId, chartId, chartTagArr) {
     const currTag = Tags.findOne(tagId),
-      arr = currTag.tagged.slice();
-    // if chart doesn't already exist within array
-    if (!(arr.indexOf(chartId) > -1)) {
+      arr = currTag.tagged.slice(),
+      chartIndex = arr.indexOf(chartId);
+
+    Meteor.call('charts.update.tags', chartId, chartTagArr);
+
+    // chart doesn't exist within array
+    if (chartIndex === -1) {
       arr.push(chartId);
+    } else {
+      // chart exists in array, remove it
+      arr.splice(chartIndex, 1);
+    }
+
+    if (arr.length) {
       return Tags.update(tagId, {
         $set: {
           tagged: arr,
           lastEdited: new Date()
         }
       });
-    }
-  },
-  'tags.remove'(tagId, chartId) {
-    const currTag = Tags.findOne(tagId),
-      taggedArr = currTag.tagged,
-      index = taggedArr.indexOf(chartId);
-    if (index > -1) {
-      taggedArr.splice(index, 1);
-      if (taggedArr.length) {
-        return Tags.update(tagId, {
-          $set: {
-            tagged: taggedArr,
-            lastEdited: new Date()
-          }
-        });
-      } else {
-        return Tags.remove(tagId);
-      }
+    } else {
+      return Tags.remove(tagId);
     }
   }
 });

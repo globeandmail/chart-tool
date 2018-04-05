@@ -15,13 +15,12 @@ Meteor.publish('chart.archive', function(params) {
   const parameters = queryConstructor(params);
 
   parameters.options.fields = parameters.options.fields || {};
+  parameters.options.fields.img = true;
+  parameters.options.fields.slug = true;
+  parameters.options.fields.lastEdited = true;
+  parameters.options.fields.createdAt = true;
 
-  const fields = parameters.options.fields;
-
-  fields.img = true;
-  fields.slug = true;
-  fields.lastEdited = true;
-  fields.createdAt = true;
+  // console.log(JSON.stringify(parameters));
 
   const data = Charts.find(parameters.find, parameters.options);
   if (data) { return data; }

@@ -20,12 +20,13 @@ export default class ChartXAxis extends Component {
 
   constructor(props) {
     super(props);
+    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
+    this.handlePrefix = this.handlePrefix.bind(this);
+    this.handleSuffix = this.handleSuffix.bind(this);
+    this.handleFormatVal = this.handleFormatVal.bind(this);
+    this.handleScale = this.handleScale.bind(this);
     this.state = {
-      expanded: true,
-      prefix: this.props.chart.x_axis.prefix,
-      formatVal: this.props.chart.x_axis.format,
-      suffix: this.props.chart.x_axis.suffix,
-      scale: this.props.chart.x_axis.scale
+      expanded: false
     };
   }
 
@@ -41,31 +42,28 @@ export default class ChartXAxis extends Component {
   handlePrefix(event) {
     const prefix = event.target.value;
     updateAndSave('charts.update.x_axis.prefix', this.props.chart._id, prefix);
-    this.setState({ prefix });
   }
 
   handleSuffix(event) {
     const suffix = event.target.value;
     updateAndSave('charts.update.x_axis.suffix', this.props.chart._id, suffix);
-    this.setState({ suffix });
   }
 
   handleFormatVal(event) {
     const format = event.target.value;
     updateAndSave('charts.update.x_axis.format', this.props.chart._id, format);
-    this.setState({ format });
   }
 
   handleScale(event) {
     const scale = event.target.value;
+    console.log(event.target.value, event.target.scale);
     updateAndSave('charts.update.x_axis.scale', this.props.chart._id, scale);
-    this.setState({ scale });
   }
 
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={() => this.toggleCollapseExpand()}>X-axis</h3>
+        <h3 onClick={this.toggleCollapseExpand}>X-axis</h3>
         <div className={`unit-edit ${this.expandStatus()}`}>
           { this.props.chart.options.type === 'column' || this.props.chart.options.type === 'bar' ?
             <div className='unit-edit'>
@@ -76,13 +74,17 @@ export default class ChartXAxis extends Component {
                   name='prefix'
                   placeholder='$'
                   className='input-prefix-x input-field'
-                  defaultValue={this.state.prefix}
-                  onBlur={(event) => this.handlePrefix(event)}
+                  defaultValue={this.props.chart.x_axis.prefix}
+                  onBlur={this.handlePrefix}
                 />
               </div>
               <div className='x-formatval-edit'>
                 <div className='select-wrapper'>
-                  <select className='select-formatval-x' onChange={this.handleFormatVal}>
+                  <select
+                    className='select-formatval-x'
+                    value={this.props.chart.x_axis.format}
+                    onChange={this.handleFormatVal}
+                    >
                     {formats.map(f => {
                       return <option key={f.pretty} value={f.format}>{f.pretty}</option>;
                     })}
@@ -95,8 +97,8 @@ export default class ChartXAxis extends Component {
                   name='suffix'
                   placeholder='%'
                   className='input-suffix-x input-field'
-                  defaultValue={this.state.suffix}
-                  onBlur={(event) => this.handleSuffix(event)}
+                  defaultValue={this.props.chart.x_axis.suffix}
+                  onBlur={this.handleSuffix}
                 />
               </div>
             </div>
@@ -111,9 +113,9 @@ export default class ChartXAxis extends Component {
                         <input id={s.id}
                           type='radio'
                           name='x-axis-scale'
-                          checked={this.state.scale === s.value.toLowerCase()}
+                          checked={this.props.chart.x_axis.scale === s.value.toLowerCase()}
                           value={s.value.toLowerCase()}
-                          onChange={(event) => this.handleScale(event)}
+                          onChange={this.handleScale}
                           className='input-radio input-radio-x-scale'
                         />
                         <label htmlFor={s.id}>{s.value}</label>

@@ -6,7 +6,6 @@ export default class ChartEmbed extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   useBase64Images() {

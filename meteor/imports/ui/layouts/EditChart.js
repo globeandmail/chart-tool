@@ -15,8 +15,8 @@ import ChartData from '../components/ChartData';
 import ChartXAxis from '../components/ChartXAxis';
 import ChartYAxis from '../components/ChartYAxis';
 import ChartTags from '../components/ChartTags';
-// import ChartStyling from '../components/ChartStyling';
-// import ChartOptions from '../components/ChartOptions';
+import ChartStyling from '../components/ChartStyling';
+import ChartOptions from '../components/ChartOptions';
 
 class EditChart extends Component {
 
@@ -48,8 +48,8 @@ class EditChart extends Component {
             { !this.props.loading ? <ChartXAxis {...this.props} /> : null }
             { !this.props.loading ? <ChartYAxis {...this.props} /> : null }
             { !this.props.loading ? <ChartTags {...this.props} /> : null }
-            {/* { !this.props.loading ? <ChartStyling {...this.props} /> : null } */}
-            {/* { !this.props.loading ? <ChartOptions {...this.props} /> : null } */}
+            { !this.props.loading ? <ChartStyling {...this.props} /> : null }
+            { !this.props.loading ? <ChartOptions {...this.props} /> : null }
           </aside>
         </section>
         <Footer />

@@ -3,7 +3,7 @@
 @import "base/normalize";
 @import "base/mixins";
 @import "base/helpers";
-@import "base/sweetalert";
+// @import "base/sweetalert";
 
 $grid-columns: 24 !global;
 $max-width: em(1180) !global;
@@ -87,4 +87,5 @@ section {
 .collapsed {
   height: 0px;
   opacity: 0;
+  display: none;
 }

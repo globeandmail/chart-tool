@@ -13,9 +13,7 @@ class ShowChart extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      chart: this.props.chart
-    };
+    this.state = {};
   }
 
   forkChart() {
@@ -33,13 +31,6 @@ class ShowChart extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.state.data !== nextProps.chart) {
-      const chart = nextProps.chart;
-      this.setState({ chart });
-    }
-  }
-
   goToChart() {
     this.props.history.push({
       pathname: `/chart/${ this.props.id }/edit`,
@@ -53,7 +44,7 @@ class ShowChart extends Component {
     return (
       <div>
         <div className='top-line'>
-          <h3 className='slug'>{ this.state.chart.slug }</h3>
+          <h3 className='slug'>{ this.props.chart.slug }</h3>
           <div className='chart-links'>
             <h3 className='edit'><Link to={`/chart/${ this.props.id }/edit`}>Edit</Link></h3>
           </div>
@@ -63,7 +54,7 @@ class ShowChart extends Component {
           share_data={false}
           social={false}
           exportable={false}
-          data={this.state.chart}
+          data={this.props.chart}
         />
         <div className='chart-show_tags'>
           <h4>Tags</h4>
@@ -72,8 +63,8 @@ class ShowChart extends Component {
           </ul>
         </div>
         <div className='chart-show_dates'>
-          <p>Created on { prettyCreatedAt(this.state.chart.createdAt) }</p>
-          <p>Last edited { timeSince(this.state.chart.lastEdited) }</p>
+          <p>Created on { prettyCreatedAt(this.props.chart.createdAt) }</p>
+          <p>Last edited { timeSince(this.props.chart.lastEdited) }</p>
         </div>
         <div className='chart-show_fork' onClick={this.forkChart}>Fork this chart</div>
       </div>
