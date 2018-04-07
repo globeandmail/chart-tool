@@ -42,12 +42,12 @@ export default class ChartStyling extends Component {
     const stacked = event.target.checked;
 
     const fields = {
-      'charts.update.options.stacked': stacked
+      'options.stacked': stacked
     };
 
     if (stacked) {
-      fields['charts.update.y_axis.min'] = '';
-      fields['charts.update.y_axis.max'] = '';
+      fields['y_axis.min'] = '';
+      fields['y_axis.max'] = '';
     }
 
     updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {

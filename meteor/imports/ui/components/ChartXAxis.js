@@ -56,7 +56,6 @@ export default class ChartXAxis extends Component {
 
   handleScale(event) {
     const scale = event.target.value;
-    console.log(event.target.value, event.target.scale);
     updateAndSave('charts.update.x_axis.scale', this.props.chart._id, scale);
   }
 
@@ -65,7 +64,7 @@ export default class ChartXAxis extends Component {
       <div className='edit-box'>
         <h3 onClick={this.toggleCollapseExpand}>X-axis</h3>
         <div className={`unit-edit ${this.expandStatus()}`}>
-          { this.props.chart.options.type === 'column' || this.props.chart.options.type === 'bar' ?
+          { this.props.chart.options.type === 'bar' ?
             <div className='unit-edit'>
               <h4>Formatting</h4>
               <div className='x-prefix-edit'>

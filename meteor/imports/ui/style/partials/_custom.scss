@@ -7,7 +7,9 @@
 // }
 
 @function ptToPx($pt) {
-  $magic: 1.30522;
+  $magic: 96 / 72;
+  // points = pixels * 72 / 96
+  // pts * 96 / 72 = px
   $val: ($pt * $magic) * 1px;
   @return ($val);
 }
@@ -17,9 +19,9 @@ $one-pt: ptToPx(1.0);
 $one-five-pt: ptToPx(1.5);
 $two-pt: ptToPx(2.0);
 
-$six-five-pt: 8px; // actually renders at 6.15pt
-$eight-pt: 10px; // actually renders at 7.69pt
-$nine-pt: 12.0px; // actually renders at 9.22pt
+$six-five-pt: ptToPx(6.5); // actually renders at 6.15pt
+$eight-pt: ptToPx(8); // actually renders at 7.69pt
+$nine-pt: ptToPx(9); // actually renders at 9.22pt
 
 // base64 fonts go here
 
@@ -32,7 +34,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     margin: 0;
     padding: 0;
     line-height: 1em;
-    margin-bottom: 2px;
+    padding-bottom: 2px;
   }
 
   .#{$prefix}chart_title-text {
@@ -65,7 +67,7 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
 
   .#{$prefix}chart_source {
     font-size: $six-five-pt;
-    padding-top: 4px;
+    padding-top: 0;
     display: block;
     color: $color-black;
     padding-bottom: 0;
@@ -76,12 +78,16 @@ $nine-pt: 12.0px; // actually renders at 9.22pt
     }
   }
 
+  .#{$prefix}chart_source-text {
+    padding-top: 4px;
+  }
+
   .#{$prefix}chart_legend {
     padding: 0;
     margin: 0;
     display: block;
     line-height: 11px;
-    margin-top: 2px;
+    padding-top: 2px;
   }
 
   .#{$prefix}chart_legend .#{$prefix}legend_item {

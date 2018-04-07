@@ -4,10 +4,17 @@ import Swal from 'sweetalert2';
 import Papa from 'papaparse';
 import { app_settings } from './settings';
 import { timeFormat, timeParse } from 'd3-time-format';
+import ChartTool from './chart-tool';
 // import multiSVGtoPNG from './multiSVGtoPNG';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function mode(arr) {
+  return arr
+    .sort((a, b) => arr.filter(v => v === a).length - arr.filter(v => v === b).length)
+    .pop();
 }
 
 export function extend(from, to) {
@@ -187,23 +194,34 @@ export function dataParse(data) {
     });
   }
 
+  let start, end;
+
   if (parseParams) {
     parsedData = cleanData(Papa.parse(newData, parseParams).data);
+    start = parsedData.start;
+    end = parsedData.end;
     const csvOptions = {
       delimiter: ',',
       newline: '\n'
     };
-    reformattedCSV = jsonToCSV(parsedData, csvOptions);
+    reformattedCSV = jsonToCSV(parsedData.output, csvOptions);
     output = reformattedCSV;
   } else {
     output = newData;
   }
 
-  return output;
+  return {
+    data: output,
+    start,
+    end
+  };
 
 }
 
 export function cleanData(data) {
+
+  const start = [],
+    end = [];
 
   // strip empty lines
 
@@ -219,7 +237,9 @@ export function cleanData(data) {
     //step through each value
     const line = obj.map(arr => {
       const line_output = cleanNumber(arr);
-      return line_output;
+      if (line_output.start.length) start.push(line_output.start);
+      if (line_output.end.length) end.push(line_output.end);
+      return line_output.data;
     });
 
     const re = /^\d*\/\d*\/\d*$/;
@@ -238,7 +258,11 @@ export function cleanData(data) {
 
   // add the header row back to the data
   output.unshift(headerRow);
-  return output;
+  return {
+    output,
+    start,
+    end
+  };
 }
 
 export function formatDate(data, format) {
@@ -249,7 +273,12 @@ export function formatDate(data, format) {
 
 export function cleanNumber(data) {
   // remove everything that isnt a number, decimal, or negative
-  return data.toString().replace(/[^0-9\.-]/g, '');
+  // and do some checking for characters we can use for prefix/suffix
+  return {
+    data: data.toString().replace(/[^0-9\.-]/g, ''),
+    start: data.match(/^[^0-9\.-]+/g) || [],
+    end: data.match(/[^0-9\.-]+$/g) || []
+  };
 }
 
 export function removeNbsp(val) {
@@ -262,40 +291,40 @@ export function isNumber(n) {
 }
 
 // converts from columns into millimeters
-export function determineWidth(columns) {
-  let cols;
-
-  switch (columns) {
-    case '1col':
-      cols = 1;
-      break;
-    case '2col':
-      cols = 2;
-      break;
-    case '3col':
-      cols = 3;
-      break;
-    case '4col':
-      cols = 4;
-      break;
-    case '5col':
-      cols = 5;
-      break;
-    default:
-      cols = app_settings.print.default_cols;
-      break;
-  }
-  return ((cols * app_settings.print.column_width) + ((cols - 1) * app_settings.print.gutter_width));
-}
+// export function determineWidth(columns) {
+//   let cols;
+//
+//   switch (columns) {
+//     case '1col':
+//       cols = 1;
+//       break;
+//     case '2col':
+//       cols = 2;
+//       break;
+//     case '3col':
+//       cols = 3;
+//       break;
+//     case '4col':
+//       cols = 4;
+//       break;
+//     case '5col':
+//       cols = 5;
+//       break;
+//     default:
+//       cols = app_settings.print.default_cols;
+//       break;
+//   }
+//   return ((cols * app_settings.print.column_width) + ((cols - 1) * app_settings.print.gutter_width));
+// }
 
 // converts from lines into mm
-export function determineHeight(lines, width) {
-  if (!lines) {
-    return width * 0.75;
-  } else {
-    return app_settings.print.first_line_depth + (app_settings.print.line_depth * (lines - 1));
-  }
-}
+// export function determineHeight(lines, width) {
+//   if (!lines) {
+//     return width * 0.75;
+//   } else {
+//     return app_settings.print.first_line_depth + (app_settings.print.line_depth * (lines - 1));
+//   }
+// }
 
 export function standardizeDates(data, oldFormat, newFormat) {
 
@@ -544,7 +573,7 @@ export function drawChart(container, obj, cb) {
     const chartObj = {};
     chartObj.id = obj._id;
     chartObj.data = embed(obj);
-    window.ChartTool.create(container, chartObj, cb);
+    ChartTool.create(container, chartObj, cb);
   } catch (e) {
     error = e;
     console.log(error);
@@ -634,6 +663,42 @@ export function setDocumentTitle(path, slug) {
     '/chart/:_id/edit': `${slug} - Chart Tool`
   };
   return titles[path] ? titles[path] : 'Not found - Chart Tool';
+}
+
+export function convertToMM(print) {
+  let width, height;
+
+  // get mm width and height
+  if (print.mode === 'columns') {
+    const x = Number(print.columns.replace('col', '')), y = Number(print.lines);
+    width = (x * app_settings.print.column_width) + ((x - 1) * app_settings.print.gutter_width);
+    height = (y - 1) * app_settings.print.line_depth + app_settings.print.first_line_depth;
+  } else {
+    width = print.width;
+    height = print.height;
+  }
+
+  return {
+    width: Math.round(width * 100) / 100,
+    height: Math.round(height * 100) / 100
+  };
+}
+
+export function generateMeasurements(print) {
+
+  const { width, height } = convertToMM(print);
+
+  const name = print.mode === 'columns' ? `${print.columns}-${print.lines}lin` : `${width}mm-${height}mm`;
+
+  const dpi = 96;
+
+  return {
+    width: (width * dpi) / 25.4,
+    height: (height * dpi) / 25.4,
+    // width: Math.ceil(width * pxRatio),
+    // height: Math.ceil(height * pxRatio),
+    name
+  };
 }
 
 // export function generateThumb(obj) {

@@ -7,6 +7,7 @@ import Status from '../../ui/pages/Status';
 import Archive from '../../ui/pages/Archive';
 import ShowChart from '../../ui/pages/ShowChart';
 import PDF from '../../ui/pages/PDF';
+import PNG from '../../ui/pages/PNG';
 import NotFound from '../../ui/pages/NotFound';
 import EditChart from '../../ui/layouts/EditChart';
 
@@ -40,6 +41,7 @@ export default class Routes extends Component {
           <Route exact path='/archive' render={props => <Archive {...props} />} />
           <Route exact path='/chart/:_id' render={props => <ShowChart {...props} />} />
           <Route exact path='/chart/:_id/pdf' render={props => <PDF {...props} />} />
+          <Route exact path='/chart/:_id/png' render={props => <PNG {...props} />} />
           <Route exact path='/chart/:_id/edit' render={props => <EditChart {...props} />} />
           <Route path='*' render={props => <NotFound {...props} />} />
         </Switch>

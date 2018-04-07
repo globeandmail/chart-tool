@@ -41,6 +41,8 @@
     font-size: 2em;
   }
   .overlay-close {
+    @include appearance(none);
+    border: none;
     float: right;
     font-size: 2.4em;
     color: $color-black;
@@ -94,6 +96,10 @@
   &:hover {
     border: 1px solid $primary-color;
   }
+}
+
+.web-export-button {
+  width: 100%;
 }
 
 .web-export-submit-custom {

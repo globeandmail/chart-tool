@@ -1,6 +1,9 @@
 /* Chart Tool v1.2.3-0 | https://github.com/globeandmail/chart-tool | MIT */
-var ChartToolInit = (function () {
-'use strict';
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.ChartToolInit = factory());
+}(this, (function () { 'use strict';
 
 var xhtml = "http://www.w3.org/1999/xhtml";
 
@@ -834,7 +837,7 @@ var selection_dispatch = function(type, params) {
       : dispatchConstant)(type, params));
 };
 
-var root = [null];
+var root$1 = [null];
 
 function Selection(groups, parents) {
   this._groups = groups;
@@ -842,7 +845,7 @@ function Selection(groups, parents) {
 }
 
 function selection() {
-  return new Selection([[document.documentElement]], root);
+  return new Selection([[document.documentElement]], root$1);
 }
 
 Selection.prototype = selection.prototype = {
@@ -881,7 +884,7 @@ Selection.prototype = selection.prototype = {
 var select = function(selector) {
   return typeof selector === "string"
       ? new Selection([[document.querySelector(selector)]], [document.documentElement])
-      : new Selection([[selector]], root);
+      : new Selection([[selector]], root$1);
 };
 
 var noop = {value: function() {}};
@@ -6964,14 +6967,16 @@ function debounce$1(fn, params, timeout, root) {
 }
 
 function clearChart(cont) {
-  var el = isElement(cont) ? cont : document.querySelector(cont);
-  while (el && el.querySelectorAll('svg').length) {
-    var svg = el.querySelectorAll('svg');
-    svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
-  }
-  while (el && el.querySelectorAll('div').length) {
-    var div = el.querySelectorAll('div');
-    div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+  if (typeof document !== 'undefined') {
+    var el = isElement(cont) ? cont : document.querySelector(cont);
+    while (el && el.querySelectorAll('svg').length) {
+      var svg = el.querySelectorAll('svg');
+      svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
+    }
+    while (el && el.querySelectorAll('div').length) {
+      var div = el.querySelectorAll('div');
+      div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+    }
   }
   return cont;
 }
@@ -6979,17 +6984,6 @@ function clearChart(cont) {
 function clearObj(obj) {
   if (obj.chartObj) { obj.chartObj = undefined; }
   return obj;
-}
-
-function clearDrawn(drawn, obj) {
-  if (drawn.length) {
-    for (var i = drawn.length - 1; i >= 0; i--) {
-      if (drawn[i].id === obj.id) {
-        drawn.splice(i, 1);
-      }
-    }
-  }
-  return drawn;
 }
 
 function getBounding(selector$$1, dimension) {
@@ -7142,9 +7136,7 @@ function getTranslate(node) {
   return [matrix.e, matrix.f];
 }
 
-function svgTest(root) {
-  return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
-}
+
 
 function getThumbnailPath(obj) {
   var imgSettings = obj.image;
@@ -7154,32 +7146,7 @@ function getThumbnailPath(obj) {
   return ("https://s3.amazonaws.com/" + (imgSettings.bucket) + "/" + (imgSettings.base_path) + id + "/" + (imgSettings.filename) + "." + (imgSettings.extension));
 }
 
-function generateThumb(container, obj) {
 
-  var settings = new chartSettings();
-
-  var imgSettings = settings.image;
-
-  var cont = document.querySelector(container),
-    fallback = cont.querySelector(("." + (settings.prefix) + "base64img"));
-
-  if (imgSettings && imgSettings.enable && obj.data.id) {
-
-    var img = document.createElement('img');
-
-    img.setAttribute('src', getThumbnailPath(obj));
-    img.setAttribute('alt', obj.data.heading);
-    img.setAttribute('class', ((settings.prefix) + "thumbnail"));
-
-    cont.appendChild(img);
-
-  } else if (fallback) {
-
-    fallback.style.display = 'block';
-
-  }
-
-}
 
 function csvToTable(target, data) {
   var parsedCSV = csvParseRows(data);
@@ -8448,7 +8415,7 @@ var selection_transition = function(name) {
 selection.prototype.interrupt = selection_interrupt;
 selection.prototype.transition = selection_transition;
 
-var root$1 = [null];
+var root$2 = [null];
 
 function attrsFunction(selection$$1, map) {
   return selection$$1.each(function() {
@@ -12430,196 +12397,177 @@ var $export$5 = _export$2;
 
 $export$5($export$5.S + $export$5.F, 'Object', {assign: _objectAssign});
 
-var this$1 = undefined;
-var index = (function (root) {
+var root = typeof window !== 'undefined' ? window : undefined;
 
-  'use strict';
+var ChartTool = (function ChartTool() {
 
-  var Meteor = this$1 && this$1.Meteor || {},
-    isServer = Meteor.isServer || undefined;
+  var charts = [],
+    dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
 
-  if (!isServer) {
+  var dispatchFunctions;
 
-    if (root) {
-
-      var ChartTool = (function ChartTool() {
-
-        var charts = [];
-
-        var dispatchFunctions, drawn = [];
-
-        var dispatcher = dispatch('start', 'finish', 'redraw', 'mouseOver', 'mouseMove', 'mouseOut', 'click');
-
-        function createChart(cont, chart, callback) {
-          var this$1 = this;
+  function createChart(cont, chart, callback) {
+    var this$1 = this;
 
 
-          dispatcher.call('start', this, chart);
+    dispatcher.call('start', this, chart);
 
-          if (chart.data.chart.drawStart) { chart.data.chart.drawStart(); }
+    if (chart.data.chart.drawStart) { chart.data.chart.drawStart(); }
 
-          drawn = clearDrawn(drawn, chart);
+    var obj = clearObj(chart),
+      container = clearChart(cont);
 
-          var obj = clearObj(chart);
+    var exportable = chart.data.chart.exportable;
 
-          var container = clearChart(cont);
+    obj.data.width = exportable ? exportable.width : getBounding(container, 'width');
+    obj.dispatch = dispatcher;
 
-          obj.data.width = getBounding(container, 'width');
-          obj.dispatch = dispatcher;
+    var chartObj = new ChartManager(container, obj);
 
-          var chartObj;
+    // if (svgTest(root)) {
+      // chartObj = new ChartManager(container, obj);
+    // } else {
+    //   generateThumb(container, obj);
+    // }
 
-          if (svgTest(root)) {
-            chartObj = new ChartManager(container, obj);
-          } else {
-            generateThumb(container, obj);
-          }
+    obj.chartObj = chartObj;
 
-          drawn.push({ id: obj.id, chartObj: chartObj });
+    select(container)
+      .on('click', function () { return dispatcher.call('click', this$1, chartObj); })
+      .on('mouseover', function () { return dispatcher.call('mouseOver', this$1, chartObj); })
+      .on('mousemove', function () { return dispatcher.call('mouseMove', this$1, chartObj); })
+      .on('mouseout', function () { return dispatcher.call('mouseOut', this$1, chartObj); });
 
-          obj.chartObj = chartObj;
+    dispatcher.call('finish', this, chartObj);
+    if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
 
-          select(container)
-            .on('click', function () { return dispatcher.call('click', this$1, chartObj); })
-            .on('mouseover', function () { return dispatcher.call('mouseOver', this$1, chartObj); })
-            .on('mousemove', function () { return dispatcher.call('mouseMove', this$1, chartObj); })
-            .on('mouseout', function () { return dispatcher.call('mouseOut', this$1, chartObj); });
-
-          dispatcher.call('finish', this, chartObj);
-          if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
-
-          if (callback) { callback(); }
-
-        }
-
-        function readChart(id) {
-          for (var i = 0; i < charts.length; i++) {
-            if (charts[i].id === id) {
-              return charts[i];
-            }
-          }
-        }
-
-        function listCharts(charts) {
-          var chartsArr = [];
-          for (var i = 0; i < charts.length; i++) {
-            chartsArr.push(charts[i].id);
-          }
-          return chartsArr;
-        }
-
-        function updateChart(id, obj) {
-          var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (chartSettings.prefix) + id + "]";
-          createChart(container, { id: id, data: obj });
-        }
-
-        function destroyChart(id) {
-          var container;
-          if (!isElement(id)) {
-            var obj;
-            for (var i = 0; i < charts.length; i++) {
-              if (charts[i].id === id) {
-                obj = charts[i];
-              }
-            }
-            container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
-            clearDrawn(drawn, obj);
-            clearObj(obj);
-          } else {
-            container = id;
-          }
-          clearChart(container);
-        }
-
-        function createLoop(resizeEvent) {
-          if (root.ChartTool.length || resizeEvent) {
-            var chartList = root.ChartTool.length ? root.ChartTool : charts;
-            var loop = function ( i ) {
-              var chart = chartList[i];
-              var matchedCharts = (void 0);
-              if (charts.length) {
-                matchedCharts = charts.filter(function (c) { return c.id === chart.id; });
-              }
-              if (!matchedCharts || !matchedCharts.length) {
-                charts.push(chart);
-              }
-              var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (chart.id) + "]";
-              createChart(container, chart);
-            };
-
-            for (var i = 0; i < chartList.length; i++) loop( i );
-          }
-        }
-
-        function initializer() {
-          dispatchFunctions = root.__charttooldispatcher || [];
-          for (var prop in dispatchFunctions) {
-            if (dispatchFunctions.hasOwnProperty(prop)) {
-              if (Object.keys(dispatcher._).indexOf(prop) > -1) {
-                dispatcher.on(prop, dispatchFunctions[prop]);
-              } else {
-                console.log(("Chart Tool does not offer a dispatcher of type " + prop + ". For available dispatcher types, please see the ChartTool.dispatch() method."));
-              }
-            }
-          }
-          var debouncer = debounce$1(createLoop, true, chartSettings.debounce, root);
-          select(root)
-            .on(("resize." + (chartSettings.prefix) + "debounce"), debouncer)
-            .on(("resize." + (chartSettings.prefix) + "redraw"), dispatcher.call('redraw', this, charts));
-          if (root.ChartTool) { createLoop(); }
-        }
-
-        return {
-          init: function() {
-            if (!this.initialized) {
-              initializer();
-              this.initialized = true;
-            }
-          },
-          // similar to the push method, except this is explicitly invoked by the user
-          create: function (container, obj, cb) {
-            return createChart(container, obj, cb);
-          },
-          // push is basically the same as the create method, except for embed-based charts only
-          push: function (obj, cb) {
-            var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
-            createChart(container, obj, cb);
-          },
-          read: function (id) {
-            return readChart(id);
-          },
-          list: function () {
-            return listCharts(charts);
-          },
-          update: function (id, obj) {
-            return updateChart(id, obj);
-          },
-          destroy: function (id) {
-            return destroyChart(id);
-          },
-          dispatch: function () {
-            return Object.keys(dispatcher);
-          },
-          parse: parse,
-          version: chartSettings.version,
-          build: chartSettings.build,
-          wat: function () {
-            console.log(("ChartTool v" + (chartSettings.version) + " is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool"));
-          }
-        };
-
-      })();
-
-      if (!root.Meteor) { ChartTool.init(); }
-      root.ChartTool = ChartTool;
-
-    }
+    if (callback) { callback(); }
 
   }
 
-})(typeof window !== 'undefined' ? window : undefined);
+  function readChart(id) {
+    for (var i = 0; i < charts.length; i++) {
+      if (charts[i].id === id) {
+        return charts[i];
+      }
+    }
+  }
 
-return index;
+  function listCharts(charts) {
+    var chartsArr = [];
+    for (var i = 0; i < charts.length; i++) {
+      chartsArr.push(charts[i].id);
+    }
+    return chartsArr;
+  }
 
-}());
+  function updateChart(id, obj) {
+    var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (chartSettings.prefix) + id + "]";
+    createChart(container, { id: id, data: obj });
+  }
+
+  function destroyChart(id) {
+    var container;
+    if (!isElement(id)) {
+      var obj;
+      for (var i = 0; i < charts.length; i++) {
+        if (charts[i].id === id) {
+          obj = charts[i];
+        }
+      }
+      container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
+      clearObj(obj);
+    } else {
+      container = id;
+    }
+    clearChart(container);
+  }
+
+  function createLoop(resizeEvent) {
+    if (root.ChartTool.length || resizeEvent) {
+      var chartList = root.ChartTool.length ? root.ChartTool : charts;
+      var loop = function ( i ) {
+        var chart = chartList[i];
+        var matchedCharts = (void 0);
+        if (charts.length) {
+          matchedCharts = charts.filter(function (c) { return c.id === chart.id; });
+        }
+        if (!matchedCharts || !matchedCharts.length) {
+          charts.push(chart);
+        }
+        var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (chart.id) + "]";
+        createChart(container, chart);
+      };
+
+      for (var i = 0; i < chartList.length; i++) loop( i );
+    }
+  }
+
+  function initializer() {
+    dispatchFunctions = root.__charttooldispatcher || [];
+    for (var prop in dispatchFunctions) {
+      if (dispatchFunctions.hasOwnProperty(prop)) {
+        if (Object.keys(dispatcher._).indexOf(prop) > -1) {
+          dispatcher.on(prop, dispatchFunctions[prop]);
+        } else {
+          console.log(("Chart Tool does not offer a dispatcher of type " + prop + ". For available dispatcher types, please see the ChartTool.dispatch() method."));
+        }
+      }
+    }
+    var debouncer = debounce$1(createLoop, true, chartSettings.debounce, root);
+    select(root)
+      .on(("resize." + (chartSettings.prefix) + "debounce"), debouncer)
+      .on(("resize." + (chartSettings.prefix) + "redraw"), dispatcher.call('redraw', this, charts));
+    if (root.ChartTool) { createLoop(); }
+  }
+
+  return {
+    init: function() {
+      if (!this.initialized) {
+        initializer();
+        this.initialized = true;
+      }
+    },
+    // similar to the push method, except this is explicitly invoked by the user
+    create: function (container, obj, cb) {
+      return createChart(container, obj, cb);
+    },
+    // push is basically the same as the create method, except for embed-based charts only
+    push: function (obj, cb) {
+      var container = "." + (chartSettings.baseClass) + "[data-chartid=" + (obj.id) + "]";
+      createChart(container, obj, cb);
+    },
+    read: function (id) {
+      return readChart(id);
+    },
+    list: function () {
+      return listCharts(charts);
+    },
+    update: function (id, obj) {
+      return updateChart(id, obj);
+    },
+    destroy: function (id) {
+      return destroyChart(id);
+    },
+    dispatch: function () {
+      return Object.keys(dispatcher);
+    },
+    parse: parse,
+    version: chartSettings.version,
+    build: chartSettings.build,
+    wat: function () {
+      console.log(("ChartTool v" + (chartSettings.version) + " is a free, open-source chart generator and front-end library maintained by The Globe and Mail. For more information, check out our GitHub repo: https://github.com/globeandmail/chart-tool"));
+    }
+  };
+
+})();
+
+if (root) {
+  ChartTool.init();
+  root.ChartTool = ChartTool;
+}
+
+return ChartTool;
+
+})));
 //# sourceMappingURL=chart-tool.js.map

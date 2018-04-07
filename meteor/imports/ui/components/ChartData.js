@@ -62,7 +62,7 @@ export default class ChartData extends Component {
   }
 
   handleData(event) {
-    const data = dataParse(event.target.value);
+    const { data } = dataParse(event.target.value);
     updateAndSave('charts.update.data', this.props.chart._id, data);
   }
 
@@ -86,13 +86,13 @@ export default class ChartData extends Component {
       re = /\s\%H\:\%M/g;
 
     const fields = {
-      'charts.update.hashours': hasHours,
+      hashours: hasHours,
     };
 
     if (!re.test(dateFormat)) {
-      fields['charts.update.dateformat'] = dateFormat += str;
+      fields.dateformat = dateFormat += str;
     } else {
-      fields['charts.update.dateformat'] = dateFormat.replace(str, '');
+      fields.dateformat = dateFormat.replace(str, '');
     }
 
     updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {

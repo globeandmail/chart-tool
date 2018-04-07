@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
-import { app_settings } from '../../modules/settings';
+import { Meteor } from 'meteor/meteor';
+import fileSaver from 'file-saver';
 
 const exportSettings = {
   facebook: {
-    width: '421',
-    scale: '2.85',
-    ratio: '52.3%'
+    width: 421,
+    height: 220,
+    scale: 2.85
   },
   instagram: {
-    width: '380',
-    scale: '2.85',
-    ratio: '100%'
+    width: 380,
+    height: 380,
+    scale: 2.85
   }
 };
 
 // need to include white space around images
 // drop source line?
+// need interstitial screen when image is downloading
 
-export default class ChartStyling extends Component {
+export default class ChartOverlayWeb extends Component {
 
   constructor(props) {
     super(props);
@@ -25,45 +27,54 @@ export default class ChartStyling extends Component {
     this.handleCustomSize = this.handleCustomSize.bind(this);
     this.state = {
       width: '',
-      height: ''
+      height: '',
+      margin: 3
     };
   }
 
   handleExport(event) {
     event.preventDefault();
 
-    debugger;
+    let filename = `${this.props.chart.slug}-web`;
 
-    const width = parseInt(event.target.width.value),
-      ratio = parseFloat(event.target.ratio.value),
-      scale = function (width) {
-        switch(width) {
-          case 460:
-            return 5;
-          case 620:
-            return 4;
-          case 940:
-            return 3;
-        }
-      },
-      options = {
-        scale: scale(width),
-        descriptor: 'web'
-      };
+    let width, height, scale;
 
+    if (exportSettings[event.target.name]) {
+      width = exportSettings[event.target.name].width;
+      scale = exportSettings[event.target.name].scale;
+      height = exportSettings[event.target.name].height;
+      filename += `-${event.target.name}`;
+    }
 
-    // descriptor needs to include event.target.name for buttons
+    if (event.target.name === 'picker') {
+      for (let i = 0; i < event.target.length; i++) {
+        const n = Number(event.target[i].value);
+        if (event.target[i].name === 'width') width = n;
+        if (event.target[i].name === 'ratio') height = width * n;
+        scale = 2;
+      }
+    }
 
-    this.editable = false;
-    this.exportable = {};
-    this.exportable.type = 'web';
-    this.exportable.dynamicHeight = true;
-    this.exportable.width = width;
-    this.exportable.height = width * (ratio / 100);
+    if (event.target.name === 'custom') {
+      width = Number(this.state.width);
+      height = Number(this.state.height);
+      scale = Number(event.target[2].value);
+    }
 
-    // downloadImg(this, options);
+    Meteor.call('chart.png.download', this.props.chart._id, {
+      width,
+      height,
+      scale,
+      margin: this.state.margin
+    }, (error, response) => {
+      if (error) {
+        console.log(error);
+      } else {
+        const blob = new Blob([response], { type: 'image/png' });
+        fileSaver.saveAs(blob, `${filename}.png`);
+      }
+    });
 
-    // return false;
   }
 
   handleCustomSize(event) {
@@ -78,73 +89,6 @@ export default class ChartStyling extends Component {
     return (this.state.width && this.state.height) ? 'active' : '';
   }
 
-  // 'click .web-export-button': function(event) {
-  //
-  //   var width = parseInt(event.target.dataset.width),
-  //       ratio = parseFloat(event.target.dataset.ratio),
-  //       options = {
-  //         scale: event.target.dataset.scale,
-  //         descriptor: event.target.dataset.descriptor
-  //       };
-  //
-  //   if (!ratio) { ratio = 67; }
-  //
-  //   this.editable = false;
-  //   this.exportable = {};
-  //   this.exportable.type = "web";
-  //   this.exportable.dynamicHeight = true;
-  //   this.exportable.width = width;
-  //   this.exportable.height = width * (ratio / 100);
-  //
-  //   downloadImg(this, options);
-  // },
-  // 'submit .web-export-custom-picker': function(event) {
-  //   event.preventDefault();
-  //
-  //   var width = parseInt(event.target.width.value),
-  //       height = parseFloat(event.target.height.value),
-  //       options = {
-  //         scale: parseFloat(event.target.scale.value),
-  //         descriptor: "web"
-  //       };
-  //
-  //   if (isNaN(width) || isNaN(height)) {
-  //
-  //     var title, text;
-  //
-  //     if (isNaN(width) && isNaN(height)) {
-  //       title = "Missing width and height sizes";
-  //       text = "Looks like you're missing width and height attributes for your custom size. Make sure to set those before downloading your image."
-  //     } else {
-  //       var missing = isNaN(width) ? "width" : "height";
-  //       title = "Missing " + missing + " size"
-  //       text = "Looks like you're missing a " + missing + " attribute for your custom size. Make sure to set it before downloading your image."
-  //     }
-  //
-  //     sweetAlert({
-  //       title: title,
-  //       text: text,
-  //       type: "info",
-  //       confirmButtonColor: "#fff"
-  //     });
-  //
-  //   } else {
-  //
-  //     this.editable = false;
-  //     this.exportable = {};
-  //     this.exportable.type = "web";
-  //     this.exportable.dynamicHeight = true;
-  //     this.exportable.width = width;
-  //     this.exportable.height = height;
-  //
-  //     downloadImg(this, options);
-  //
-  //     return false;
-  //
-  //   }
-  //
-  // },
-
   render() {
     return (
       <div>
@@ -152,61 +96,45 @@ export default class ChartStyling extends Component {
         <div className='overlay-container'>
           <div className='overlay-header'>
             <h3>Web export</h3>
-              <button value={'web'} onClick={this.props.toggleOverlay} className='overlay-close'>&times;</button>
+            <button value={'web'} onClick={this.props.toggleOverlay} className='overlay-close'>&times;</button>
           </div>
-
           <div className='overlay-web'>
-
             <div className='web-export web-export-web'>
               <h3>Web</h3>
-
               <p>Web images are available at several widths and aspect ratios, and download at 2&times; scale for retina screen support.</p>
-
-              <form onSubmit={this.handleExport} custom='picker' className='web-export-picker'>
-
+              <form onSubmit={this.handleExport} name='picker' className='web-export-picker'>
                 <div className='web-export-row'>
-
                   <div className='web-export-field web-export-field-width'>
                     <h5>Width</h5>
                     <div className='select-wrapper'>
-                      <select type='choice' name='width' className='select-web-export-width' defaultValue={'460'}>
-                        <option value='320'>320px</option>
-                        <option value='460'>460px</option>
-                        <option value='620'>620px</option>
+                      <select type='choice' name='width' className='select-web-export-width' defaultValue={460}>
+                        <option value={320}>320px</option>
+                        <option value={460}>460px</option>
+                        <option value={620}>620px</option>
                       </select>
                     </div>
                   </div>
-
                   <div className='web-export-field web-export-field-ratio'>
                     <h5>Ratio</h5>
                     <div className='select-wrapper'>
-                      <select type='choice' name='ratio' className='select-web-export-ratio' defaultValue={'67%'}>
-                        <option value='67%'>3&times;2</option>
-                        <option value='56.25%'>16&times;9</option>
-                        <option value='100%'>1&times;1</option>
-                        <option value='150%'>2&times;3</option>
-                        <option value='200%'>2&times;1</option>
+                      <select type='choice' name='ratio' className='select-web-export-ratio' defaultValue={0.67}>
+                        <option value={0.67}>3&times;2</option>
+                        <option value={0.5625}>16&times;9</option>
+                        <option value={1}>1&times;1</option>
+                        <option value={1.5}>2&times;3</option>
+                        <option value={2}>2&times;1</option>
                       </select>
                     </div>
                   </div>
-
                 </div>
-
                 <input className='web-export-submit' value='Download' type='submit' />
-
               </form>
-
             </div>
-
             <div className='web-export web-export-custom'>
               <h3>Custom sizes</h3>
-
               <p>Need a custom-sized image of your chart? Just pick a width, height, and scaling factor.</p>
-
-              <form onSubmit={this.handleExport} type='custom' className='web-export-custom-picker'>
-
+              <form onSubmit={this.handleExport} name='custom' className='web-export-custom-picker'>
                 <div className='web-export-row'>
-
                   <div className='web-export-custom-field web-export-custom-field-width'>
                     <h5>Width</h5>
                       <span><input
@@ -218,7 +146,6 @@ export default class ChartStyling extends Component {
                         onChange={this.handleCustomSize}
                       />px</span>
                   </div>
-
                   <div className='web-export-custom-field web-export-custom-field-height'>
                     <h5>Height</h5>
                       <span><input
@@ -230,7 +157,6 @@ export default class ChartStyling extends Component {
                         onChange={this.handleCustomSize}
                       />px</span>
                   </div>
-
                   <div className='web-export-custom-field web-export-custom-field-scale'>
                     <h5>Scale</h5>
                     <div className='select-wrapper'>
@@ -242,42 +168,24 @@ export default class ChartStyling extends Component {
                       </select>
                     </div>
                   </div>
-
                 </div>
-
                 <input className={`web-export-submit web-export-submit-custom ${this.canExport()}`} value='Download' type='submit' />
-
               </form>
-
             </div>
-
             <div className='web-export web-export-social'>
               <h3>Social</h3>
-
               <p>Social images are sized to match the aspect ratios of their respective platforms&rsquo; &ldquo;cards&rdquo;.</p>
-
               <div className='web-export-social-buttons'>
-
                 <button
                   className='web-export-button'
                   name='instagram'
-                  onClick={this.handleExport}
-                  >
-                  Instagram
-                </button>
-
+                  onClick={this.handleExport}>Instagram</button>
                 <button
                   className='web-export-button'
                   name='facebook'
-                  onClick={this.handleExport}
-                  >
-                  Facebook
-                </button>
-
+                  onClick={this.handleExport}>Facebook</button>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>

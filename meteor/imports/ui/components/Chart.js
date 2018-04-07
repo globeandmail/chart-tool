@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { drawChart, removeNbsp } from '../../modules/utils';
+import { drawChart, removeNbsp, generateMeasurements } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
-import '../../modules/chart-tool';
 import '../../modules/cursorManager';
+import ChartTool from '../../modules/chart-tool';
 
 function chartPresentationalString(data) {
   const obj = {
@@ -40,10 +40,6 @@ export default class Chart extends Component {
     this.titleBlur = this.titleBlur.bind(this);
     this.qualifierBlur = this.qualifierBlur.bind(this);
     this.sourceBlur = this.sourceBlur.bind(this);
-    this.state = {
-      width: 0,
-      height: 0
-    };
   }
 
   componentDidMount() {
@@ -54,13 +50,11 @@ export default class Chart extends Component {
     this.componentChangeFunction();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const oldChart = chartPresentationalString(this.props.chart),
       newChart = chartPresentationalString(nextProps.chart);
 
-    return this.state.width !== nextState.width ||
-      this.state.height !== nextState.height ||
-      oldChart !== newChart;
+    return oldChart !== newChart;
   }
 
   drawError(error) {
@@ -109,9 +103,39 @@ export default class Chart extends Component {
 
   componentChangeFunction() {
     const chart = this.props.chart;
-    if (this.props.editable || this.props.editable === false) chart.editable = this.props.editable;
-    if (this.props.share_data || this.props.share_data === false) chart.options.share_data = this.props.share_data;
-    if (this.props.social || this.props.social === false) chart.options.social = this.props.social;
+    chart.editable = this.props.editable;
+    chart.options.share_data = this.props.share_data;
+    chart.options.social = this.props.social;
+
+    if (this.props.exportable) {
+
+      chart.exportable = {
+        dynamicHeight: true
+      };
+
+      if (this.props.type === 'print') {
+        const { width, height } = generateMeasurements(chart.print);
+        chart.exportable.width = width;
+        chart.exportable.height = height;
+        chart.exportable.x_axis = app_settings.print.x_axis;
+        chart.exportable.y_axis = app_settings.print.y_axis;
+        chart.exportable.margin = app_settings.print.margin;
+        chart.exportable.type = 'pdf';
+        chart.exportable.barLabelOffset = app_settings.print.barLabelOffset;
+      }
+
+      if (this.props.type === 'png') {
+        chart.exportable.width = this.props.width;
+        chart.exportable.height = this.props.height;
+        chart.exportable.type = 'png';
+        if (this.props.margin) {
+          chart.exportable.width = chart.exportable.width - (this.props.margin * 2);
+          chart.exportable.height = chart.exportable.height - (this.props.margin * 2);
+        }
+      }
+
+      chart.options.tips = this.props.tips;
+    }
 
     const errors = drawChart(this.chartRef.current, chart);
 
@@ -140,11 +164,17 @@ export default class Chart extends Component {
       if (source) source.removeEventListener('click', this.sourceClick);
       if (source) source.removeEventListener('blur', this.sourceBlur);
     }
-    window.ChartTool.destroy(this.chartRef.current);
+    ChartTool.destroy(this.chartRef.current);
   }
 
   render() {
-    return <div className='chart-wrapper' ref={this.chartRef} />;
+    const style = {};
+    if (this.props.margin) {
+      style.top = `${this.props.margin}px`;
+      style.left = `${this.props.margin}px`;
+      style.position = 'absolute';
+    }
+    return <div className='chart-wrapper' ref={this.chartRef} style={style} />;
   }
 
 }

@@ -30,7 +30,7 @@ class EditChart extends Component {
     };
     this.state = {
       animalName,
-      overlay: 'web'
+      overlay: false
     };
   }
 

@@ -5,7 +5,7 @@ import Charts from '../../api/Charts/Charts';
 import Chart from '../components/Chart';
 import { withTracker } from 'meteor/react-meteor-data';
 
-class PDF extends Component {
+class PNG extends Component {
 
   constructor(props) {
     super(props);
@@ -13,11 +13,14 @@ class PDF extends Component {
 
   render() {
     return (
-      <div className='chart-pdf'>
+      <div className='chart-png'>
         { !this.props.loading ?
           <Chart
-            type={'print'}
+            type={'png'}
             chart={this.props.chart}
+            width={this.props.query.width}
+            height={this.props.query.height}
+            margin={this.props.query.margin}
             editable={false}
             tips={false}
             exportable={true}
@@ -39,4 +42,4 @@ export default withTracker(props => {
     chart: Charts.findOne({ _id: props.match.params._id }),
     query
   };
-})(PDF);
+})(PNG);

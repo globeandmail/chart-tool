@@ -3,6 +3,7 @@ import { dataParse, updateAndSave, isNumber } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { min } from 'd3-array';
 import Swal from 'sweetalert2';
+import { parse } from '../../modules/chart-tool';
 
 const formats = [
   { format: 'comma', pretty: '1,234' },
@@ -46,13 +47,12 @@ export default class ChartYAxis extends Component {
     if (type === 'area' || type === 'bar' || type === 'column') {
 
       const dateFormat = chart.x_axis.scale === 'ordinal' ? undefined : app_settings.chart.date_format,
-        ChartToolParser = window.ChartTool.parse,
-        cleanCSV = dataParse(chart.data);
+        { data } = dataParse(chart.data);
 
       let dataObj, error;
 
       try {
-        dataObj = ChartToolParser(cleanCSV, dateFormat, chart.options.indexed);
+        dataObj = parse(data, dateFormat, chart.options.indexed);
       } catch(e) {
         error = e;
       }
@@ -61,7 +61,7 @@ export default class ChartYAxis extends Component {
 
       const mArr = [];
 
-      dataObj.data.map(dataObj.data, d => {
+      dataObj.data.map(d => {
         for (let i = 0; i < d.series.length; i++) {
           mArr.push(Number(d.series[i].val));
         }
@@ -196,7 +196,7 @@ export default class ChartYAxis extends Component {
       <div className='edit-box'>
         <h3 onClick={this.toggleCollapseExpand}>Y-axis</h3>
           <div className={`unit-edit ${this.expandStatus()}`}>
-          { this.props.chart.options.type !== 'column' && this.props.chart.options.type !== 'bar' ?
+          { this.props.chart.options.type !== 'bar' ?
             <div>
               <div className='unit-edit'>
                 <h4>Formatting</h4>
@@ -264,8 +264,8 @@ export default class ChartYAxis extends Component {
                   name='ticks'
                   placeholder='Ticks'
                   className='input-ticks-y input-field'
-                  defaultValue={this.props.chart.y_axis.ticks}
-                  onBlur={this.handleTicks}
+                  value={this.props.chart.y_axis.ticks === 'auto' ? '' : this.props.chart.y_axis.ticks}
+                  onChange={this.handleTicks}
                 />
               </div>
             </div>

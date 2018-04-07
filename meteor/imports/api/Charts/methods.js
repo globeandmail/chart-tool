@@ -3,19 +3,25 @@ import MD5 from 'crypto-js/md5';
 import Charts from './Charts';
 import { extend, queryConstructor } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
+import { generatePDF, generatePNG } from '../../modules/generate';
+import { convertToMM } from '../../modules/utils';
 
 Meteor.methods({
   // addChart only takes the text and data from the /new route
   // everything else is taken from settings.js in /lib
-  'charts.add'(text, data) {
+  'charts.add'(text, d) {
     const newChart = extend(app_settings.chart),
       now = new Date();
 
     newChart.createdAt = now;
     newChart.lastEdited = now;
     newChart.slug = text;
-    newChart.data = data;
-    newChart.md5 = MD5(data).toString();
+    newChart.data = d.data;
+    newChart.x_axis.prefix = d.start;
+    newChart.y_axis.prefix = d.start;
+    newChart.x_axis.suffix = d.end;
+    newChart.y_axis.suffix = d.end;
+    newChart.md5 = MD5(d.data).toString();
 
     return Charts.insert(newChart);
   },
@@ -480,11 +486,31 @@ Meteor.methods({
     });
   },
 
-  // Stats methods
+  // Stats and export methods
 
   'charts.matched.count'(params) {
     const parameters = queryConstructor(params);
     delete parameters.options.limit;
     return Charts.find(parameters.find, parameters.options).count();
+  },
+
+  'chart.pdf.download'(chartId) {
+    const chartData = Charts.findOne({ _id: chartId });
+    const { width, height } = convertToMM(chartData.print);
+    return generatePDF(chartData, width, height)
+      .then(result => result)
+      .catch(error => {
+        throw new Meteor.Error('500', error);
+      });
+  },
+
+  'chart.png.download'(chartId, params) {
+    const chartData = Charts.findOne({ _id: chartId });
+    return generatePNG(chartData, params)
+      .then(result => result)
+      .catch(error => {
+        throw new Meteor.Error('500', error);
+      });
   }
+
 });
