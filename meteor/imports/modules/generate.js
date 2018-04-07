@@ -24,13 +24,17 @@ export async function generatePNG(chart, params) {
     height: params.height,
     deviceScaleFactor: params.scale
   });
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&height=${params.height}${params.margin ? `&margin=${params.margin}` : ''}`, { waitUntil: ['load', 'networkidle0'] });
-  const png = await page.screenshot({ clip: {
-    x: 0,
-    y: 0,
-    width: params.width,
-    height: params.height
-  }, type: 'png' });
+  const optionalMargin = params.margin ? `&margin=${params.margin}` : '';
+  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&height=${params.height}${optionalMargin}`, { waitUntil: ['load', 'networkidle0'] });
+  const png = await page.screenshot({
+    clip: {
+      x: 0,
+      y: 0,
+      width: params.width,
+      height: params.height
+    },
+    type: params.type ? params.type : 'png'
+  });
   await browser.close();
   return png;
 }

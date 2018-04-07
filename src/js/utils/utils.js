@@ -1,4 +1,3 @@
-// import FontFaceObserver from 'fontfaceobserver';
 import { select } from 'd3-selection';
 import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
@@ -25,14 +24,16 @@ export function debounce(fn, params, timeout, root) {
 }
 
 export function clearChart(cont) {
-  let el = isElement(cont) ? cont : document.querySelector(cont);
-  while (el && el.querySelectorAll('svg').length) {
-    let svg = el.querySelectorAll('svg');
-    svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
-  }
-  while (el && el.querySelectorAll('div').length) {
-    let div = el.querySelectorAll('div');
-    div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+  if (typeof document !== 'undefined') {
+    let el = isElement(cont) ? cont : document.querySelector(cont);
+    while (el && el.querySelectorAll('svg').length) {
+      let svg = el.querySelectorAll('svg');
+      svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
+    }
+    while (el && el.querySelectorAll('div').length) {
+      let div = el.querySelectorAll('div');
+      div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+    }
   }
   return cont;
 }
@@ -40,17 +41,6 @@ export function clearChart(cont) {
 export function clearObj(obj) {
   if (obj.chartObj) { obj.chartObj = undefined; }
   return obj;
-}
-
-export function clearDrawn(drawn, obj) {
-  if (drawn.length) {
-    for (let i = drawn.length - 1; i >= 0; i--) {
-      if (drawn[i].id === obj.id) {
-        drawn.splice(i, 1);
-      }
-    }
-  }
-  return drawn;
 }
 
 export function getBounding(selector, dimension) {
@@ -191,6 +181,8 @@ export function getCurve(interp) {
       return curveStepBefore;
     case 'step-after':
       return curveStepAfter;
+    case 'cardinal':
+    case 'monotone':
     case 'natural':
       return curveNatural;
   }
@@ -251,18 +243,6 @@ export function csvToTable(target, data) {
     .append('td')
     .text(d => d);
 }
-
-// export function waitForFonts(fonts) {
-//   return new Promise((resolve, reject) => {
-//     if (fonts && fonts.length) {
-//       Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
-//         .then(() => resolve())
-//         .catch(() => reject());
-//     } else {
-//       resolve();
-//     }
-//   });
-// }
 
 export function getUniqueDateValues(data, type) {
   const allDates = data.map(d => {

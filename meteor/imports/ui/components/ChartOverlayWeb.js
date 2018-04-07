@@ -15,7 +15,6 @@ const exportSettings = {
   }
 };
 
-// need to include white space around images
 // drop source line?
 // need interstitial screen when image is downloading
 

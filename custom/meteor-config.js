@@ -12,25 +12,6 @@ export const app_settings = {
 
   embedJS: config.embedJS,
   embedCSS: config.embedCSS,
-
-  animal_api: 'http://www.whimsicalwordimal.com/api/name/',
-  names: [
-    'Sardonic Salamander',
-    'Obstreperous Okapi',
-    'Jaundiced Jaguar',
-    'Warbling Wren',
-    'Pontificating Panther',
-    'Ceylonese Civet',
-    'Smug Sponge',
-    'Stained Seahorse',
-    'Knightly Kangaroo',
-    'Traditionalist Tortoise',
-    'Stalkless Shrimp',
-    'Colloidal Coral',
-    'Terrified Tang',
-    'Booked Baboon'
-  ],
-
   source_suffix: config.source.suffix,
 
   // if you want to add more colour palettes, just add their
