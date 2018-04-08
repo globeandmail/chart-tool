@@ -7325,9 +7325,9 @@ function recipe(obj) {
 
   var embed = obj.data, chart = embed.chart;
 
-  // I'm not a big fan of indenting stuff like t
+  // I'm not a big fan of indenting stuff like this
   // (looking at you, Pereira), but I'm making an exception
-  // in t case because my eyes were bleeding
+  // in this case because my eyes were bleeding
 
   t.dispatch    = obj.dispatch;
   t.version     = embed.version                           || t.version;
@@ -7385,6 +7385,8 @@ function recipe(obj) {
 
   t.dateFormat = inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
   t.data = parse(chart.data, t.dateFormat, o.index, o.stacked) || t.data;
+
+  t.annotations = chart.annotations || t.annotations;
 
   if (!t.data.stackedData) { o.stacked = false; }
 
@@ -10847,7 +10849,8 @@ function stackedColumnChart(node, obj) {
     yAxisObj: yAxisObj,
     seriesGroup: seriesGroup,
     series: series,
-    rect: rect
+    rect: rect,
+    singleColumn: singleColumn
   };
 
 }
@@ -10867,6 +10870,51 @@ function plot(node, obj) {
     default:
       return lineChart(node, obj);
   }
+}
+
+function annotation(node, obj, rendered) {
+
+  var annoData = obj.annotations;
+
+  if (annoData.highlight && annoData.highlight.length) {
+    highlight(node, obj, rendered);
+  }
+
+  if (annoData.text && annoData.text.length) {
+    text(node, obj, rendered);
+  }
+
+  if (annoData.range && annoData.range.length) {
+    range$1(node, obj, rendered);
+  }
+
+}
+
+function highlight(node, obj, rendered) {
+  var ref;
+  if (obj.options.type === 'bar') {
+    ref = rendered.plot.barItems[0];
+  } else if (obj.options.type === 'column') {
+    ref = rendered.plot.columnItems[0];
+  }
+  if (ref && obj.data.seriesAmount === 1) {
+    var h = obj.annotations.highlight;
+    var loop = function ( i ) {
+      ref.filter(function (d) { return d.key === h[i].key; })
+        .select('rect')
+        .style('fill', h[i].color);
+    };
+
+    for (var i = 0; i < h.length; i++) loop( i );
+  }
+}
+
+function text(node, obj, rendered) {
+
+}
+
+function range$1(node, obj, rendered) {
+
 }
 
 function bisectData(data, keyVal, stacked, xKey) {
@@ -10891,6 +10939,11 @@ function cursorPos(overlay) {
 }
 
 function getTipData(obj, cursor) {
+
+  // TODO:
+  // need to standardize output of this between standard and stacked data.
+  // right now tipData for regular data looks like this: { key: Date, series: [] }
+  // while for stacked it's an array like [[y0, y1, data: {}]]
 
   var scale, scaleType, cursorVal;
 
@@ -10925,15 +10978,13 @@ function getTipData(obj, cursor) {
       }
     }
 
-    // still need to handle ordinal stacking
-
     return tipData;
 
   }
 
   xVal = scale.invert(cursorVal);
 
-  if (obj.options.stacked) {
+  if (obj.options.stacked && obj.options.type === 'area') {
     var data = obj.data.stackedData.map(function (item) {
       return item.sort(function (a, b) {
         return a.data[obj.data.keys[0]] - b.data[obj.data.keys[0]];
@@ -11214,7 +11265,7 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
     }
   }
 
-  if (!isUndefined) {
+  if (!isUndefined || isUndefined !== tipData.series.length) {
 
     var domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
@@ -11266,7 +11317,9 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
     tipNodes.tipPathCircles
       .selectAll(("." + (obj.prefix) + "tip_path-circle"))
         .data(tipData.series)
-        .classed(((obj.prefix) + "active"), function (d) { return d.val ? true : false; })
+        .classed(((obj.prefix) + "active"), function (d) {
+          return d.val && d.val !== '__undefined__';
+        })
         .attrs({
           'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
           'cy': function (d) {
@@ -11327,7 +11380,7 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
     }
   }
 
-  if (!isUndefined) {
+  if (!isUndefined || isUndefined !== tipData.series.length) {
 
     var domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
@@ -11385,7 +11438,7 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
     if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
       tipNodes.tipTextDate
-        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].data[obj.data.keys[0]]);
+        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key ? tipData.key : tipData[0].data[obj.data.keys[0]]);
     } else {
       tipNodes.tipTextDate
         .text(tipData.key);
@@ -11463,7 +11516,7 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         .attrs({
           'cx': function (d) {
             var xData;
-            if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
               xData = tipData.key;
             } else {
               xData = d.data[obj.data.keys[0]];
@@ -11472,7 +11525,7 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
           },
           'cy': function (d) {
             var yData;
-            if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
               var index = obj.data.data.indexOf(obj.data.data.filter(function (a) {
                 return a.key === tipData.key;
               })[0]);
@@ -11495,10 +11548,10 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
     var xPos;
 
-    if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-      xPos = tipData.key;
-    } else {
+    if (obj.rendered.plot.xScaleObj.obj.type === 'time') {
       xPos = tipData[0].data[obj.data.keys[0]];
+    } else {
+      xPos = tipData.key;
     }
 
     tipNodes.xTipLine.select('line')
@@ -12011,6 +12064,10 @@ var ChartManager = function ChartManager(container, obj) {
   rendered.container = node;
 
   rendered.plot = plot(node, this.recipe);
+
+  if (this.recipe.options.annotations) {
+    rendered.annotations = annotation(node, this.recipe, rendered);
+  }
 
   if (this.recipe.options.tips) {
     rendered.tips = tipsManager(node, this.recipe);

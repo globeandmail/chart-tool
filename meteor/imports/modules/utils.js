@@ -40,6 +40,10 @@ export function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
 
+export function isObject(item) {
+  return (typeof item === 'object' && !Array.isArray(item) && item !== null);
+}
+
 export function escapeStr(str) {
   if (typeof str === 'string') {
     return str ? str.replace(/\'/g, '\\\'') : str;
@@ -65,7 +69,6 @@ export function cleanEmbed(data) {
     'img',
     'prefix',
     'series',
-    'annotations',
     'range',
     'public',
     'users',
@@ -517,17 +520,39 @@ export function updateAndSave(method, id, data) {
     'charts.update.y_axis.max',
     'charts.update.y_axis.nice',
     'charts.reset.x_axis',
-    'charts.reset.y_axis'
+    'charts.reset.y_axis',
+    'charts.update.annotations.reset',
+    'charts.update.annotations.highlight',
+    'charts.update.annotations.highlight.reset'
   ];
+
   const createThumbnail = thumbnailMethods.indexOf(method) !== -1 ? true : false;
 
-  // setInactive();
   Meteor.call(method, id, data, (err, res) => {
     if (err) console.log(err);
-    // const newObj = Charts.findOne(Session.get('chartId'));
-    // generateThumb(newObj);
-    // setActive();
+    if (createThumbnail) generateThumb(id);
   });
+}
+
+function generateThumb(id) {
+  // call server-side PNG generator and create thumb
+  // needs to be debounced somehow so that it doesn't get created every 5 seconds
+  // perhaps rate limit the call?
+
+  // Meteor.call('chart.update.thumbnail', id, {
+  //   width: 460,
+  //   height: 310,
+  //   scale: 2
+  //   margin: 2
+  // }, (error, response) => {
+  //   if (error) {
+  //     console.log(error);
+  //   } else {
+  //     const blob = new Blob([response], { type: 'image/png' });
+  //     fileSaver.saveAs(blob, `${filename}.png`);
+  //   }
+  // });
+
 }
 
 export function drawChart(container, obj, cb) {
@@ -557,7 +582,8 @@ export function chartTypeFieldReset(type) {
         'x_axis.nice': false,
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
-        'options.indexed': false
+        'options.indexed': false,
+        'charts.update.annotations.highlight.reset': []
       };
     case 'multiline':
       return {
@@ -568,7 +594,8 @@ export function chartTypeFieldReset(type) {
         'x_axis.nice': false,
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
-        'options.indexed': false
+        'options.indexed': false,
+        'charts.update.annotations.highlight.reset': []
       };
     case 'area':
       return {
@@ -579,7 +606,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'y_axis.min': '',
-        'options.indexed': false
+        'options.indexed': false,
+        'charts.update.annotations.highlight.reset': []
       };
     case 'column':
       return {
@@ -601,7 +629,7 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'ordinal',
         'y_axis.nice': false,
         'y_axis.min': '',
-        'options.indexed': false
+        'options.indexed': false,
       };
   }
 

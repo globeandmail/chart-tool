@@ -68,6 +68,19 @@ var app_settings = {
   // name to this array and charts will be classed using this name
   palettes: ['Primary', 'Alternate', 'Grayscale'],
 
+  highlightOptions: [
+    '#1f77b4',
+    '#ff7f0e',
+    '#bcbd22',
+    '#8c564b',
+    '#7f7f7f',
+    '#6b6ecf',
+    '#b5cf6b',
+    '#e7ba52',
+    '#d6616b',
+    '#ce6dbd'
+  ],
+
   help: 'https://github.com/globeandmail/chart-tool/tree/master/README.md',
 
   chart: {
@@ -96,7 +109,7 @@ var app_settings = {
       x_axis: true,
       y_axis: true,
       tips: true,
-      annotations: false,
+      annotations: true,
       range: false,
       series: false,
       indexed: false,
@@ -129,10 +142,11 @@ var app_settings = {
       nice: config.yAxis.nice
     },
 
-    series: [],
-    mobile: {},
-    annotations: [],
-    range: [],
+    annotations: {
+      highlight: [],
+      range: [],
+      text: []
+    },
 
     public: false,
 
@@ -150,21 +164,21 @@ var app_settings = {
 
   },
 
-  empty_series: {
-    style: '',
-    emphasis: {},
-    pointers: {}
-  },
-
-  empty_range: {
-    //x or y
-    axis: '',
-    //key to use as start location
-    start: '',
-    //optional - if not specified a line is shown instead
-    end: '',
-    label: ''
-  },
+  // empty_series: {
+  //   style: '',
+  //   emphasis: {},
+  //   pointers: {}
+  // },
+  //
+  // empty_range: {
+  //   //x or y
+  //   axis: '',
+  //   //key to use as start location
+  //   start: '',
+  //   //optional - if not specified a line is shown instead
+  //   end: '',
+  //   label: ''
+  // },
 
   print: {
     gutter_width: 4,

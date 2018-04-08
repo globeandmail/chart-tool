@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { drawChart, removeNbsp, generateMeasurements } from '../../modules/utils';
+import { drawChart, removeNbsp, generateMeasurements, updateAndSave, extend } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import '../../modules/cursorManager';
 import ChartTool from '../../modules/chart-tool';
 
-function chartPresentationalString(data) {
+function chartPresentationalString(props) {
+  const data = props.chart;
+  if ('tips' in props) data.options.tips = props.tips;
   const obj = {
     'annotations': data.annotations,
     'class': data.class,
@@ -40,6 +42,7 @@ export default class Chart extends Component {
     this.titleBlur = this.titleBlur.bind(this);
     this.qualifierBlur = this.qualifierBlur.bind(this);
     this.sourceBlur = this.sourceBlur.bind(this);
+    this.handleHighlight = this.handleHighlight.bind(this);
   }
 
   componentDidMount() {
@@ -51,8 +54,8 @@ export default class Chart extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const oldChart = chartPresentationalString(this.props.chart),
-      newChart = chartPresentationalString(nextProps.chart);
+    const oldChart = chartPresentationalString(this.props),
+      newChart = chartPresentationalString(nextProps);
 
     return oldChart !== newChart;
   }
@@ -79,6 +82,40 @@ export default class Chart extends Component {
     this.props.handleFieldChange(text, 'qualifier');
   }
 
+  handleHighlight(event) {
+
+    const chart = this.props.chart,
+      key = event.target.parentElement.dataset.key,
+      color = this.props.currentAnnotation.highlight;
+
+    let highlight;
+
+    if (chart.annotations && chart.annotations.highlight) {
+      highlight = extend(chart.annotations.highlight);
+    } else {
+      highlight = [];
+    }
+
+    const keyIndex = highlight.map(d => d.key).indexOf(key);
+
+    if (keyIndex === -1) {
+      highlight.push({ key, color });
+    } else {
+      if (highlight[keyIndex].color !== color) {
+        highlight[keyIndex].color = color;
+      } else {
+        highlight.splice(keyIndex, 1);
+      }
+    }
+
+    const h = highlight.filter(d => {
+      if (d.color && d.key) return d;
+    });
+
+    updateAndSave('charts.update.annotation.highlight', this.props.chart._id, h);
+
+  }
+
   sourceBlur(event) {
     event.preventDefault();
     const currText = event.target.textContent;
@@ -101,11 +138,36 @@ export default class Chart extends Component {
     window.cursorManager.setEndOfContenteditable(event.target);
   }
 
+  chartEditable() {
+    const title = this.chartRef.current.querySelector('.editable-chart_title'),
+      qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
+      source = this.chartRef.current.querySelector('.editable-chart_source');
+
+    title.addEventListener('blur', this.titleBlur);
+    qualifier.addEventListener('blur', this.qualifierBlur);
+    source.addEventListener('click', this.sourceClick);
+    source.addEventListener('blur', this.sourceBlur);
+  }
+
+  chartAnnotatable() {
+    const prefix = app_settings.chart.prefix;
+    const rectBar = this.chartRef.current.querySelectorAll(`.${prefix}series_group g.${prefix}bar`),
+      rectCol = this.chartRef.current.querySelectorAll(`.${prefix}series_group g.${prefix}column`);
+    for (let i = 0; i < rectBar.length; i++) {
+      rectBar[i].addEventListener('click', this.handleHighlight);
+    }
+    for (let i = 0; i < rectCol.length; i++) {
+      rectCol[i].addEventListener('click', this.handleHighlight);
+    }
+  }
+
   componentChangeFunction() {
     const chart = this.props.chart;
-    chart.editable = this.props.editable;
-    chart.options.share_data = this.props.share_data;
-    chart.options.social = this.props.social;
+
+    if ('editable' in this.props) chart.editable = this.props.editable;
+    if ('share_data' in this.props) chart.options.share_data = this.props.share_data;
+    if ('social' in this.props) chart.options.social = this.props.social;
+    if ('tips' in this.props) chart.options.tips = this.props.tips;
 
     if (this.props.exportable) {
 
@@ -133,24 +195,18 @@ export default class Chart extends Component {
           chart.exportable.height = chart.exportable.height - (this.props.margin * 2);
         }
       }
-
-      chart.options.tips = this.props.tips;
     }
 
     const errors = drawChart(this.chartRef.current, chart);
 
-    if (!errors && this.props.editable) {
-      const title = this.chartRef.current.querySelector('.editable-chart_title'),
-        qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
-        source = this.chartRef.current.querySelector('.editable-chart_source');
-
-      title.addEventListener('blur', this.titleBlur);
-      qualifier.addEventListener('blur', this.qualifierBlur);
-      source.addEventListener('click', this.sourceClick);
-      source.addEventListener('blur', this.sourceBlur);
-    } else if (errors) {
+    if (errors) {
       this.chartRef.current.innerHTML = this.drawError(errors);
+      return;
     }
+
+    if (this.props.editable) this.chartEditable();
+    if (this.props.annotationMode) this.chartAnnotatable();
+
   }
 
   componentWillUnmount() {

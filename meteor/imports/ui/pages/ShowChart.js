@@ -53,6 +53,7 @@ class ShowChart extends Component {
           social={false}
           exportable={false}
           chart={this.props.chart}
+          tips={true}
         />
         <div className='chart-show_tags'>
           <h4>Tags</h4>

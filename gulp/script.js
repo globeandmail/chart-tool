@@ -12,7 +12,7 @@ const replace = require('rollup-plugin-replace');
 
 gulp.task('js:build', done => {
   runSequence(
-    'clean-meteorbundle',
+    // 'clean-meteorbundle',
     'clean-buildpath',
     'clean-meteorsettings',
     'rollup:build',
@@ -23,16 +23,16 @@ gulp.task('js:build', done => {
 
 gulp.task('js:dev', done => {
   runSequence(
-    'clean-meteorbundle',
+    // 'clean-meteorbundle',
     'rollup:dev',
     'rollup-meteor:dev',
     'move-meteor:dev',
     done);
 });
 
-gulp.task('clean-meteorbundle', () => {
-  return del([`${gulpConfig.meteorBundle}/chart-tool.js`, `${gulpConfig.meteorBundle}/settings.js`]);
-});
+// gulp.task('clean-meteorbundle', () => {
+//   return del([`${gulpConfig.meteorBundle}/chart-tool.js`, `${gulpConfig.meteorBundle}/settings.js`]);
+// });
 
 gulp.task('clean-buildpath', () => {
   return del([`${gulpConfig.buildpath}/**/*.js`]);

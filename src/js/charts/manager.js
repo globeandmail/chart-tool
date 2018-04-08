@@ -3,6 +3,7 @@ import base from './components/base';
 import header from './components/header';
 import footer from './components/footer';
 import plot from './components/plot';
+import annotation from './components/annotation';
 import { tipsManager as tips } from './components/tips';
 import shareData from './components/share-data';
 import social from './components/social';
@@ -33,6 +34,10 @@ export class ChartManager {
     rendered.container = node;
 
     rendered.plot = plot(node, this.recipe);
+
+    if (this.recipe.options.annotations) {
+      rendered.annotations = annotation(node, this.recipe, rendered);
+    }
 
     if (this.recipe.options.tips) {
       rendered.tips = tips(node, this.recipe);

@@ -25,10 +25,12 @@
     "query-string": "^6.0.0",
     "random-animal-name-generator": "^0.1.0",
     "react": "^16.3.0",
+    "react-color": "^2.14.0",
     "react-dom": "^16.3.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-select": "^1.2.1",
+    "react-toggle": "^4.0.2",
     "slug": "^0.9.1",
     "sweetalert2": "^7.18.0"
   }

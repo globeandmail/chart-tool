@@ -15,6 +15,7 @@ import ChartStatus from '../components/ChartStatus';
 import ChartData from '../components/ChartData';
 import ChartXAxis from '../components/ChartXAxis';
 import ChartYAxis from '../components/ChartYAxis';
+import ChartAnnotations from '../components/ChartAnnotations';
 import ChartTags from '../components/ChartTags';
 import ChartStyling from '../components/ChartStyling';
 import ChartOptions from '../components/ChartOptions';
@@ -25,12 +26,21 @@ class EditChart extends Component {
     super(props);
     const animalName = generateRandomAnimalName();
     this.toggleOverlay = this.toggleOverlay.bind(this);
+    this.toggleAnnotationMode = this.toggleAnnotationMode.bind(this);
+    this.handleHighlightColor = this.handleHighlightColor.bind(this);
     Presence.state = () => {
       return { currentChartId: this.props.match.params._id, user: animalName };
     };
     this.state = {
       animalName,
-      overlay: false
+      overlay: false,
+      annotationMode: false,
+      currentAnnotation: {
+        highlight: '',
+        type: null,
+        text: [],
+        range: []
+      }
     };
   }
 
@@ -39,14 +49,30 @@ class EditChart extends Component {
     this.setState({ overlay });
   }
 
+  toggleAnnotationMode(annotationMode) {
+    this.setState({ annotationMode });
+  }
+
+  handleHighlightColor(event) {
+    const currentAnnotation = this.state.currentAnnotation;
+    currentAnnotation.highlight = event.hex;
+    this.setState({ currentAnnotation });
+  }
+
   renderPage() {
     return (
       <div>
         <Header edit={true} {...this.props} />
         <section>
           <article className='main-area'>
-            <ChartType {...this.props} />
-            <ChartPreview {...this.props} />
+            <ChartType
+              {...this.props}
+            />
+            <ChartPreview
+              annotationMode={this.state.annotationMode}
+              currentAnnotation={this.state.currentAnnotation}
+              {...this.props}
+            />
             <ChartOutput
               toggleOverlay={this.toggleOverlay}
               {...this.props}
@@ -58,13 +84,34 @@ class EditChart extends Component {
             />
           </article>
           <aside className='options-area'>
-            <ChartStatus name={this.state.animalName} {...this.props} />
-            <ChartData {...this.props} />
-            <ChartXAxis {...this.props} />
-            <ChartYAxis {...this.props} />
-            <ChartTags {...this.props} />
-            <ChartStyling {...this.props} />
-            <ChartOptions {...this.props} />
+            <ChartStatus
+              name={this.state.animalName}
+              {...this.props}
+            />
+            <ChartData
+              {...this.props}
+            />
+            <ChartXAxis
+              {...this.props}
+            />
+            <ChartYAxis
+              {...this.props}
+            />
+            <ChartAnnotations
+              annotationMode={this.state.annotationMode}
+              toggleAnnotationMode={this.toggleAnnotationMode}
+              handleHighlightColor={this.handleHighlightColor}
+              {...this.props}
+            />
+            <ChartTags
+              {...this.props}
+            />
+            <ChartStyling
+              {...this.props}
+            />
+            <ChartOptions
+              {...this.props}
+            />
           </aside>
         </section>
         <Footer />

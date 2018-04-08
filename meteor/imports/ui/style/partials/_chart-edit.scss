@@ -531,3 +531,16 @@ select {
   height: 100%;
   pointer-events: none;
 }
+
+.note {
+  font-size: 0.8em;
+  color: $color-gray-medium;
+}
+
+.chart-preview-annotation {
+  rect {
+    &:hover {
+      cursor: url('/images/cursor.cur') 0 15, auto;
+    }
+  }
+}

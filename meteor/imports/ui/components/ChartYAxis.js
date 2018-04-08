@@ -46,7 +46,7 @@ export default class ChartYAxis extends Component {
 
     if (type === 'area' || type === 'bar' || type === 'column') {
 
-      const dateFormat = chart.x_axis.scale === 'ordinal' ? undefined : app_settings.chart.date_format,
+      const dateFormat = chart.x_axis.scale === 'ordinal' ? undefined : this.props.chart.date_format,
         { data } = dataParse(chart.data);
 
       let dataObj, error;

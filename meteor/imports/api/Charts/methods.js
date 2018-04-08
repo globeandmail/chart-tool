@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import MD5 from 'crypto-js/md5';
 import Charts from './Charts';
-import { extend, queryConstructor } from '../../modules/utils';
+import { extend, queryConstructor, isObject } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { generatePDF, generatePNG } from '../../modules/generate';
 import { convertToMM } from '../../modules/utils';
@@ -485,6 +485,67 @@ Meteor.methods({
       }
     });
   },
+
+  'charts.update.annotation.reset'(chartId) {
+    return Charts.update(chartId, {
+      $set: {
+        annotations: app_settings.chart.annotations,
+        'options.annotations': true,
+        lastEdited: new Date()
+      }
+    });
+  },
+
+  'charts.update.annotation.highlight'(chartId, highlight) {
+    let anno = Charts.findOne(chartId).annotations;
+
+    if (isObject(anno)) {
+      anno.highlight = highlight;
+    } else {
+      anno = {
+        highlight: highlight,
+        range: [],
+        text: []
+      };
+    }
+
+    return Charts.update(chartId, {
+      $set: {
+        annotations: anno,
+        'options.annotations': true,
+        lastEdited: new Date()
+      }
+    });
+  },
+
+  'charts.update.annotation.highlight.reset'(chartId) {
+    return Charts.update(chartId, {
+      $set: {
+        'annotations.highlight': [],
+        'options.annotations': true,
+        lastEdited: new Date()
+      }
+    });
+  },
+
+  // removeHighlightAnnotation: function(chartId, key) {
+  //   var anno = Charts.findOne(chartId).annotations,
+  //     filtered = anno.highlight.filter(function(h) {
+  //       return h.key === key;
+  //     });
+  //   if (filtered.length) {
+  //     var newArr = anno.highlight.map(function(h) {
+  //       if (h.key !== key) { return h; }
+  //     });
+  //     anno.highlight = newArr;
+  //   }
+  //   return Charts.update(chartId, {
+  //     $set: {
+  //       annotations: anno,
+  //       lastEdited: new Date()
+  //     }
+  //   });
+  // },
 
   // Stats and export methods
 
