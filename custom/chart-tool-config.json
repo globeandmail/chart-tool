@@ -9,6 +9,7 @@
   "tipTimeout": 5000,
   "ratioMobile": 1.15,
   "ratioDesktop": 0.65,
+  "thumbnailDebounce": 1500,
 
   "dateFormat": "%Y-%m-%d",
   "timeFormat": "%H:%M",
@@ -126,7 +127,7 @@
   },
 
   "image": {
-    "enable": false,
+    "enable": true,
     "base_path": "",
     "expiration": 30000,
     "filename": "thumbnail",
