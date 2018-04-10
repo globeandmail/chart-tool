@@ -9,7 +9,7 @@ export default class ChartEmbed extends Component {
   }
 
   useBase64Images() {
-    return app_settings.s3 && app_settings.s3.enable;
+    return !(app_settings.s3 && app_settings.s3.enable);
   }
 
   selectEmbed(event) {
@@ -30,24 +30,24 @@ export default class ChartEmbed extends Component {
     return `<!-- CHART TOOL v${app_version}-${app_build} -->
 <!-- edited: ${this.props.chart.lastEdited} -->
 <!-- slug: ${this.props.chart.slug} -->
-<div class='${prefix}chart' data-chartid="${prefix}${this.props.chart._id}">
-  <script type='text/javascript'>
+<div class="${prefix}chart" data-chartid="${prefix}${this.props.chart._id}">
+  <script type="text/javascript">
     (function(root) {
       var data = ${JSON.stringify(this.getEmbed(), null, 2)};
       root.ChartTool = root.ChartTool || [];
-      root.ChartTool.push({id: '${prefix}' + data.id, data: data});
-      var b = document.getElementsByTagName('body')[0];
-      if (!b.classList.contains('${prefix}charttool-init')) {
-        b.classList.add('${prefix}charttool-init');
-        var c = document.createElement('link');
-        var j = document.createElement('script');
-        c.href = '${app_settings.embedCSS}?token=${app_build}'; c.rel = 'stylesheet';
-        j.src = '${app_settings.embedJS}?token=${app_build}'; j.async = true; j.defer = true;
-        document.getElementsByTagName('head')[0].appendChild(c);
-        document.getElementsByTagName('head')[0].appendChild(j);
+      root.ChartTool.push({id: "${prefix}" + data.id, data: data});
+      var b = document.getElementsByTagName("body")[0];
+      if (!b.classList.contains("${prefix}charttool-init")) {
+        b.classList.add("${prefix}charttool-init");
+        var c = document.createElement("link");
+        var j = document.createElement("script");
+        c.href = "${app_settings.embedCSS}?token=${app_build}"; c.rel = "stylesheet";
+        j.src = "${app_settings.embedJS}?token=${app_build}"; j.async = true; j.defer = true;
+        document.getElementsByTagName("head")[0].appendChild(c);
+        document.getElementsByTagName("head")[0].appendChild(j);
       }
     })(this);
-  </script>${this.useBase64Images() ? `\n<img src='${this.props.chart.img}' class='${prefix}base64img ${prefix}thumbnail' />` : ''}
+  </script>${this.useBase64Images() ? `\n<img src="${this.props.chart.img}" class="${prefix}base64img ${prefix}thumbnail" />` : ''}
 </div>`;
   }
 

@@ -29,23 +29,25 @@ const ChartTool = (function ChartTool() {
     obj.data.width = exportable ? exportable.width : getBounding(container, 'width');
     obj.dispatch = dispatcher;
 
-    let chartObj = new ChartManager(container, obj);
+    let chartObj, error;
 
-    // if (svgTest(root)) {
-      // chartObj = new ChartManager(container, obj);
-    // } else {
-    //   generateThumb(container, obj);
-    // }
+    try {
+      chartObj = new ChartManager(container, obj);
+      obj.chartObj = chartObj;
 
-    obj.chartObj = chartObj;
+      select(container)
+        .on('click', () => dispatcher.call('click', this, chartObj))
+        .on('mouseover', () => dispatcher.call('mouseOver', this, chartObj))
+        .on('mousemove', () => dispatcher.call('mouseMove', this, chartObj))
+        .on('mouseout', () => dispatcher.call('mouseOut', this, chartObj));
 
-    select(container)
-      .on('click', () => dispatcher.call('click', this, chartObj))
-      .on('mouseover', () => dispatcher.call('mouseOver', this, chartObj))
-      .on('mousemove', () => dispatcher.call('mouseMove', this, chartObj))
-      .on('mouseout', () => dispatcher.call('mouseOut', this, chartObj));
+      dispatcher.call('finish', this, chartObj);
+    } catch(e) {
+      error = e;
+      console.log(error);
+      generateThumb(container, obj);
+    }
 
-    dispatcher.call('finish', this, chartObj);
     if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
 
     if (callback) { callback(); }

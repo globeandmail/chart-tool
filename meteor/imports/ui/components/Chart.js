@@ -5,8 +5,8 @@ import '../../modules/cursorManager';
 import ChartTool from '../../modules/chart-tool';
 
 function chartPresentationalString(props) {
-  const data = props.chart;
-  if ('tips' in props) data.options.tips = props.tips;
+  const data = extend(props.chart);
+  if (props.annotationMode) data.options.tips = false;
   const obj = {
     'annotations': data.annotations,
     'class': data.class,
@@ -73,13 +73,42 @@ export default class Chart extends Component {
   titleBlur(event) {
     event.preventDefault();
     const text = removeNbsp(event.target.innerText).trim();
-    this.props.handleFieldChange(text, 'heading');
+    if (this.props.chart.heading !== text) {
+      updateAndSave('charts.update.heading', this.props.chart._id, text);
+    }
   }
 
   qualifierBlur(event) {
     event.preventDefault();
     const text = removeNbsp(event.target.innerText).trim();
-    this.props.handleFieldChange(text, 'qualifier');
+    if (this.props.chart.qualifier !== text) {
+      updateAndSave('charts.update.qualifier', this.props.chart._id, text);
+    }
+  }
+
+  sourceBlur(event) {
+    event.preventDefault();
+    const currText = event.target.textContent;
+    let text;
+    if (currText === `${app_settings.chart.source}${app_settings.source_suffix}` || !currText) {
+      text = app_settings.chart.source;
+    } else {
+      const newText = currText.replace(`${app_settings.chart.source}${app_settings.source_suffix}`, '').trim();
+      text = `${app_settings.chart.source}${app_settings.source_suffix} ${newText}`;
+      text = removeNbsp(text).trim();
+    }
+    if (this.props.chart.source !== text) {
+      updateAndSave('charts.update.source', this.props.chart._id, text);
+    }
+  }
+
+  sourceClick(event) {
+    event.preventDefault();
+    const currText = event.target.textContent.trim();
+    if (currText === app_settings.chart.source || !currText) {
+      event.target.textContent = `${app_settings.chart.source}${app_settings.source_suffix}`;
+    }
+    window.cursorManager.setEndOfContenteditable(event.target);
   }
 
   handleHighlight(event) {
@@ -116,28 +145,6 @@ export default class Chart extends Component {
 
   }
 
-  sourceBlur(event) {
-    event.preventDefault();
-    const currText = event.target.textContent;
-    let text;
-    if (currText === app_settings.chart.source + app_settings.source_suffix || currText === '') {
-      event.target.textContent = app_settings.chart.source;
-      text = app_settings.chart.source;
-    } else {
-      text = removeNbsp(currText).trim();
-    }
-    this.props.handleFieldChange(text, 'source');
-  }
-
-  sourceClick(event) {
-    event.preventDefault();
-    const currText = event.target.textContent.trim();
-    if (currText === app_settings.chart.source || currText === '') {
-      event.target.textContent = app_settings.chart.source + app_settings.source_suffix;
-    }
-    window.cursorManager.setEndOfContenteditable(event.target);
-  }
-
   chartEditable() {
     const title = this.chartRef.current.querySelector('.editable-chart_title'),
       qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
@@ -162,7 +169,7 @@ export default class Chart extends Component {
   }
 
   componentChangeFunction() {
-    const chart = this.props.chart;
+    const chart = extend(this.props.chart);
 
     if ('editable' in this.props) chart.editable = this.props.editable;
     if ('share_data' in this.props) chart.options.share_data = this.props.share_data;
@@ -172,7 +179,7 @@ export default class Chart extends Component {
     if (this.props.exportable) {
 
       chart.exportable = {
-        dynamicHeight: true
+        dynamicHeight: this.props.dynamicHeight || true
       };
 
       if (this.props.type === 'print') {
@@ -188,7 +195,7 @@ export default class Chart extends Component {
 
       if (this.props.type === 'png') {
         chart.exportable.width = this.props.width;
-        chart.exportable.height = this.props.height;
+        if (this.props.height) chart.exportable.height = this.props.height;
         chart.exportable.type = 'png';
         if (this.props.margin) {
           chart.exportable.width = chart.exportable.width - (this.props.margin * 2);
@@ -196,6 +203,8 @@ export default class Chart extends Component {
         }
       }
     }
+
+    if (this.props.annotationMode) chart.options.tips = false;
 
     const errors = drawChart(this.chartRef.current, chart);
 

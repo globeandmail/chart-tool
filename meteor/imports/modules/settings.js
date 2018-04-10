@@ -164,22 +164,6 @@ var app_settings = {
 
   },
 
-  // empty_series: {
-  //   style: '',
-  //   emphasis: {},
-  //   pointers: {}
-  // },
-  //
-  // empty_range: {
-  //   //x or y
-  //   axis: '',
-  //   //key to use as start location
-  //   start: '',
-  //   //optional - if not specified a line is shown instead
-  //   end: '',
-  //   label: ''
-  // },
-
   print: {
     gutter_width: 4,
     column_width: 47,

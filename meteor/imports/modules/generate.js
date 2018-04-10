@@ -1,5 +1,7 @@
 import puppeteer from 'puppeteer';
 import { Meteor } from 'meteor/meteor';
+import { S3 } from 'aws-sdk';
+import { app_settings } from './settings';
 
 export async function generatePDF(chart, width, height) {
   const browser = await puppeteer.launch();
@@ -37,4 +39,59 @@ export async function generatePNG(chart, params) {
   });
   await browser.close();
   return png;
+}
+
+export async function generateThumb(chart, params) {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setViewport({
+    width: params.width,
+    height: 600,
+    deviceScaleFactor: params.scale
+  });
+  const optionalMargin = params.margin ? `&margin=${params.margin}` : '';
+  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&dynamicHeight=${params.dynamicHeight}${optionalMargin}`, { waitUntil: ['load', 'networkidle0'] });
+
+  const chartElement = await page.$('.chart-png');
+  const chartBBox = await chartElement.boundingBox();
+
+  await page.setViewport({
+    width: params.width,
+    height: chartBBox.height,
+    deviceScaleFactor: params.scale
+  });
+
+  const png = await page.screenshot({
+    clip: {
+      x: 0,
+      y: 0,
+      width: params.width,
+      height: chartBBox.height
+    },
+    type: params.type ? params.type : 'png'
+  });
+
+  await browser.close();
+
+  // need to test s3 stuff
+
+  if (app_settings.s3.enable) {
+    const s3 = new S3({
+      accessKeyId: process.env.S3_CHARTTOOL_KEY,
+      secretAccessKey: process.env.S3_CHARTTOOL_SECRET,
+      region: process.env.S3_CHARTTOOL_REGION
+    });
+
+    const upload = await s3.upload({
+      Bucket: process.env.S3_CHARTTOOL_BUCKE,
+      Key: `${app_settings.s3.base_path}${chart._id}/${app_settings.s3.filename}.${app_settings.s3.extension}`,
+      Body: new Blob([png], { type: 'image/png' })
+    }).promise();
+
+    return upload.Location;
+
+  } else {
+    return `data:image/png;base64,${png.toString('base64')}`;
+  }
+
 }

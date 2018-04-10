@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { updateAndSave } from '../../modules/utils';
 import Swal from 'sweetalert2';
 
-export default class ChartStyling extends Component {
+export default class ChartOptions extends Component {
 
   constructor(props) {
     super(props);
@@ -26,19 +26,19 @@ export default class ChartStyling extends Component {
     this.setState({ expanded });
   }
 
-  handleShareData() {
+  handleShareData(event) {
     const shareData = event.target.checked;
     updateAndSave('charts.update.options.share_data', this.props.chart._id, shareData);
   }
 
-  handleSocial() {
+  handleSocial(event) {
     const social = event.target.checked;
     updateAndSave('charts.update.options.social', this.props.chart._id, social);
   }
 
-  handleTips() {
+  handleTips(event) {
     const tips = event.target.checked;
-    updateAndSave('charts.update.options.stacked', this.props.chart._id, tips);
+    updateAndSave('charts.update.options.tips', this.props.chart._id, tips);
   }
 
   handleDelete() {
@@ -102,8 +102,8 @@ export default class ChartStyling extends Component {
               className='input-checkbox-share-data'
               type='checkbox'
               name='Share'
-              onChange={this.handleShareData}
               checked={this.props.chart.options.share_data}
+              onChange={this.handleShareData}
             />
           </div>
           <div className='unit-edit social-edit'>
@@ -112,8 +112,8 @@ export default class ChartStyling extends Component {
               className='input-checkbox-social'
               type='checkbox'
               name='Social'
-              onChange={this.handleSocial}
               checked={this.props.chart.options.social}
+              onChange={this.handleSocial}
             />
           </div>
           <div className='unit-edit tips-edit'>
@@ -122,8 +122,8 @@ export default class ChartStyling extends Component {
               className='input-checkbox-tips'
               type='checkbox'
               name='Tips'
-              onChange={this.handleTips}
               checked={this.props.chart.options.tips}
+              onChange={this.handleTips}
             />
           </div>
           <button onClick={this.handleDelete} className='unit-edit unit-delete'>Delete chart</button>

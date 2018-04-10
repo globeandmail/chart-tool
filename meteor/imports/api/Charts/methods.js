@@ -3,7 +3,7 @@ import MD5 from 'crypto-js/md5';
 import Charts from './Charts';
 import { extend, queryConstructor, isObject } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
-import { generatePDF, generatePNG } from '../../modules/generate';
+import { generatePDF, generatePNG, generateThumb } from '../../modules/generate';
 import { convertToMM } from '../../modules/utils';
 
 Meteor.methods({
@@ -569,6 +569,22 @@ Meteor.methods({
     const chartData = Charts.findOne({ _id: chartId });
     return generatePNG(chartData, params)
       .then(result => result)
+      .catch(error => {
+        throw new Meteor.Error('500', error);
+      });
+  },
+
+  'chart.update.thumbnail'(chartId, params) {
+    const chartData = Charts.findOne({ _id: chartId });
+    return generateThumb(chartData, params)
+      .then(result => {
+        return Charts.update(chartId, {
+          $set: {
+            img: result,
+            lastEdited: new Date()
+          }
+        });
+      })
       .catch(error => {
         throw new Meteor.Error('500', error);
       });

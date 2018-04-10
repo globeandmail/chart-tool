@@ -45,8 +45,6 @@ export default class ChartAnnotations extends Component {
 
     if (error) return;
 
-
-
     if (this.props.chart.options.type === 'bar' || this.props.chart.options.type === 'column') {
       return dataObj.seriesAmount === 1;
     } else {

@@ -438,20 +438,6 @@ export function queryConstructor(args) {
 
 }
 
-export function setInactive() {
-  const containers = document.querySelectorAll('.preview-outer-container');
-  for (let i = 0; i < containers.length; i++) {
-    containers[i].classList.add('preview-inactive');
-  }
-}
-
-export function setActive() {
-  const containers = document.querySelectorAll('.preview-outer-container');
-  for (let i = 0; i < containers.length; i++) {
-    containers[i].classList.remove('preview-inactive');
-  }
-}
-
 export function timeSince(timeStamp) {
   const now = new Date(),
     secondsPast = (now.getTime() - timeStamp.getTime()) / 1000;
@@ -484,6 +470,22 @@ export function prettyCreatedAt(createdAt) {
 
 export function renderLoading() {
   return <div className='loading'><p>Loading…</p></div>;
+}
+
+const debouncedThumb = debounce(id => {
+  generateThumb(id);
+}, 3000);
+
+function generateThumb(id) {
+
+  Meteor.call('chart.update.thumbnail', id, {
+    width: 460,
+    scale: 2,
+    dynamicHeight: false
+  }, error => {
+    if (error) console.log(error);
+  });
+
 }
 
 export function updateAndSave(method, id, data) {
@@ -528,31 +530,13 @@ export function updateAndSave(method, id, data) {
 
   const createThumbnail = thumbnailMethods.indexOf(method) !== -1 ? true : false;
 
-  Meteor.call(method, id, data, (err, res) => {
-    if (err) console.log(err);
-    if (createThumbnail) generateThumb(id);
+  Meteor.call(method, id, data, (err) => {
+    if (err) {
+      console.log(err);
+    } else if (createThumbnail) {
+      debouncedThumb(id);
+    }
   });
-}
-
-function generateThumb(id) {
-  // call server-side PNG generator and create thumb
-  // needs to be debounced somehow so that it doesn't get created every 5 seconds
-  // perhaps rate limit the call?
-
-  // Meteor.call('chart.update.thumbnail', id, {
-  //   width: 460,
-  //   height: 310,
-  //   scale: 2
-  //   margin: 2
-  // }, (error, response) => {
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     const blob = new Blob([response], { type: 'image/png' });
-  //     fileSaver.saveAs(blob, `${filename}.png`);
-  //   }
-  // });
-
 }
 
 export function drawChart(container, obj, cb) {

@@ -7146,7 +7146,32 @@ function getThumbnailPath(obj) {
   return ("https://s3.amazonaws.com/" + (imgSettings.bucket) + "/" + (imgSettings.base_path) + id + "/" + (imgSettings.filename) + "." + (imgSettings.extension));
 }
 
+function generateThumb(container, obj) {
 
+  var settings = new chartSettings();
+
+  var imgSettings = settings.image;
+
+  var cont = document.querySelector(container),
+    fallback = cont.querySelector(("." + (settings.prefix) + "base64img"));
+
+  if (imgSettings && imgSettings.enable && obj.data.id) {
+
+    var img = document.createElement('img');
+
+    img.setAttribute('src', getThumbnailPath(obj));
+    img.setAttribute('alt', obj.data.heading);
+    img.setAttribute('class', ((settings.prefix) + "thumbnail"));
+
+    cont.appendChild(img);
+
+  } else if (fallback) {
+
+    fallback.style.display = 'block';
+
+  }
+
+}
 
 function csvToTable(target, data) {
   var parsedCSV = csvParseRows(data);
@@ -12479,23 +12504,25 @@ var ChartTool = (function ChartTool() {
     obj.data.width = exportable ? exportable.width : getBounding(container, 'width');
     obj.dispatch = dispatcher;
 
-    var chartObj = new ChartManager(container, obj);
+    var chartObj, error;
 
-    // if (svgTest(root)) {
-      // chartObj = new ChartManager(container, obj);
-    // } else {
-    //   generateThumb(container, obj);
-    // }
+    try {
+      chartObj = new ChartManager(container, obj);
+      obj.chartObj = chartObj;
 
-    obj.chartObj = chartObj;
+      select(container)
+        .on('click', function () { return dispatcher.call('click', this$1, chartObj); })
+        .on('mouseover', function () { return dispatcher.call('mouseOver', this$1, chartObj); })
+        .on('mousemove', function () { return dispatcher.call('mouseMove', this$1, chartObj); })
+        .on('mouseout', function () { return dispatcher.call('mouseOut', this$1, chartObj); });
 
-    select(container)
-      .on('click', function () { return dispatcher.call('click', this$1, chartObj); })
-      .on('mouseover', function () { return dispatcher.call('mouseOver', this$1, chartObj); })
-      .on('mousemove', function () { return dispatcher.call('mouseMove', this$1, chartObj); })
-      .on('mouseout', function () { return dispatcher.call('mouseOut', this$1, chartObj); });
+      dispatcher.call('finish', this, chartObj);
+    } catch(e) {
+      error = e;
+      console.log(error);
+      generateThumb(container, obj);
+    }
 
-    dispatcher.call('finish', this, chartObj);
     if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
 
     if (callback) { callback(); }

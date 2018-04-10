@@ -20,6 +20,7 @@ class PNG extends Component {
             chart={this.props.chart}
             width={this.props.query.width}
             height={this.props.query.height}
+            dynamicHeight={this.props.query.dynamicHeight}
             margin={this.props.query.margin}
             editable={false}
             tips={false}
