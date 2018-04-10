@@ -586,7 +586,7 @@ Meteor.methods({
         });
       })
       .catch(error => {
-        throw new Meteor.Error('500', error);
+        throw new Meteor.Error('500', JSON.stringify(error));
       });
   }
 

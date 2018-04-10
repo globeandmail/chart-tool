@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 import { Meteor } from 'meteor/meteor';
-import { S3 } from 'aws-sdk';
+import AWS from 'aws-sdk';
 import { app_settings } from './settings';
 
 export async function generatePDF(chart, width, height) {
@@ -73,19 +73,22 @@ export async function generateThumb(chart, params) {
 
   await browser.close();
 
-  // need to test s3 stuff
-
   if (app_settings.s3.enable) {
-    const s3 = new S3({
+
+    AWS.config.setPromisesDependency(null);
+
+    const s3 = new AWS.S3({
       accessKeyId: process.env.S3_CHARTTOOL_KEY,
       secretAccessKey: process.env.S3_CHARTTOOL_SECRET,
       region: process.env.S3_CHARTTOOL_REGION
     });
 
     const upload = await s3.upload({
-      Bucket: process.env.S3_CHARTTOOL_BUCKE,
+      Bucket: process.env.S3_CHARTTOOL_BUCKET,
       Key: `${app_settings.s3.base_path}${chart._id}/${app_settings.s3.filename}.${app_settings.s3.extension}`,
-      Body: new Blob([png], { type: 'image/png' })
+      Body: png,
+      ContentType: 'image/png',
+      ACL: 'public-read'
     }).promise();
 
     return upload.Location;

@@ -474,10 +474,9 @@ export function renderLoading() {
 
 const debouncedThumb = debounce(id => {
   generateThumb(id);
-}, 3000);
+}, app_settings.thumbnail_debounce);
 
 function generateThumb(id) {
-
   Meteor.call('chart.update.thumbnail', id, {
     width: 460,
     scale: 2,
@@ -485,7 +484,6 @@ function generateThumb(id) {
   }, error => {
     if (error) console.log(error);
   });
-
 }
 
 export function updateAndSave(method, id, data) {

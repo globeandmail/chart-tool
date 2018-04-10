@@ -144,7 +144,7 @@ export default class ChartAnnotations extends Component {
               <p>Select a color below, or type in a hex value:</p>
               <ColorPicker
                 triangle={'hide'}
-                color={app_settings.highlightOptions}
+                colors={app_settings.highlightOptions}
                 onChangeComplete={this.props.handleHighlightColor}
               />
               {this.currentHighlights() ?
