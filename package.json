@@ -5,6 +5,7 @@
   "description": "A responsive charting application",
   "main": "gulpfile.js",
   "dependencies": {
+    "brace-expansion": "^1.1.11",
     "core-js": "^2.4.1",
     "d3-array": "^1.0.1",
     "d3-axis": "^1.0.3",
@@ -20,7 +21,7 @@
     "d3-time-format": "^2.1.1"
   },
   "engines": {
-    "node": "7.1.0"
+    "node": "8.11.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.3",
@@ -55,7 +56,7 @@
     "yargs": "^6.4.0"
   },
   "scripts": {
-    "test": "",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "cd meteor && meteor npm install"
   },
   "keywords": [
