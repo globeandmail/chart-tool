@@ -127,7 +127,7 @@
   },
 
   "image": {
-    "enable": true,
+    "enable": false,
     "base_path": "",
     "expiration": 30000,
     "filename": "thumbnail",
@@ -135,7 +135,7 @@
     "thumbnailWidth": 460
   },
 
-  "embedJS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.js",
-  "embedCSS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.css"
+  "embedJS": "http://globeandmail.github.io/{{version}}/chart-tool.min.js",
+  "embedCSS": "http://globeandmail.github.io/{{version}}/chart-tool.min.css"
 
 }

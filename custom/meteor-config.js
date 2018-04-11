@@ -11,8 +11,8 @@ export const app_settings = {
   s3: config.image,
   thumbnail_debounce: config.thumbnailDebounce,
 
-  embedJS: config.embedJS,
-  embedCSS: config.embedCSS,
+  embedJS: config.embedJS.replace('{{version}}', version),
+  embedCSS: config.embedCSS.replace('{{version}}', version),
   source_suffix: config.source.suffix,
 
   // if you want to add more colour palettes, just add their
