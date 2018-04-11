@@ -151,7 +151,7 @@ export const app_settings = {
 
   web: {
     margin: {
-      top: 2,
+      top: 7,
       right: 0,
       bottom: 0,
       left: 0

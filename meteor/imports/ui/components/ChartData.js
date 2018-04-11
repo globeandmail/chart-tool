@@ -86,13 +86,13 @@ export default class ChartData extends Component {
       re = /\s\%H\:\%M/g;
 
     const fields = {
-      hashours: hasHours,
+      hasHours: hasHours,
     };
 
     if (!re.test(dateFormat)) {
-      fields.dateformat = dateFormat += str;
+      fields.date_format = dateFormat += str;
     } else {
-      fields.dateformat = dateFormat.replace(str, '');
+      fields.date_format = dateFormat.replace(str, '');
     }
 
     updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {
@@ -176,7 +176,7 @@ export default class ChartData extends Component {
                 <div className='select-wrapper'>
                   <select
                     className='select-date-construction'
-                    value={this.props.chart.date_format}
+                    value={this.props.chart.date_format.replace('%H:%M', '').trim()}
                     onChange={this.handleDateConstruction}
                     >
                     {formats.map(f => {
@@ -192,7 +192,7 @@ export default class ChartData extends Component {
                   className='input-checkbox-hours'
                   type='checkbox'
                   name='Hours'
-                  value={this.props.chart.hasHours}
+                  checked={this.props.chart.hasHours}
                   onChange={this.handleHasHours} />
               </div>
 

@@ -576,6 +576,7 @@ Meteor.methods({
 
   'chart.update.thumbnail'(chartId, params) {
     const chartData = Charts.findOne({ _id: chartId });
+    if (chartData.options.type !== 'bar') params.height = Math.round(params.width * 0.67);
     return generateThumb(chartData, params)
       .then(result => {
         return Charts.update(chartId, {

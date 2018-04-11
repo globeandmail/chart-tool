@@ -57,16 +57,6 @@ select {
   }
 }
 
-// .edit-box_toggle {
-//   display: none;
-//   opacity: 0;
-// }
-//
-// .edit-box_active {
-//   display: block;
-//   opacity: 1;
-// }
-
 .input-data-edit {
   border: none;
   background-color: $color-gray-light;
@@ -79,6 +69,8 @@ select {
   font-family: "Monaco", "Lucida Console", monospace;
   border: 2px solid $color-gray-light;
   box-sizing: border-box;
+  white-space: nowrap;
+  overflow: auto;
   @include transition (all 0.1s ease-out);
   @include placeholder {
     color: $color-gray-medium;

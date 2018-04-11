@@ -44,6 +44,8 @@
   border: 2px solid $color-gray-light;
   margin-bottom: 2em;
   box-sizing: border-box;
+  white-space: nowrap;
+  overflow: auto;
   @include transition (all 0.1s ease-out);
   @include placeholder {
     color: $color-gray-medium;

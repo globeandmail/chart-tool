@@ -51,18 +51,19 @@ export async function generateThumb(chart, params) {
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
-    height: 600,
+    height: params.height || 600,
     deviceScaleFactor: params.scale
   });
-  const optionalMargin = params.margin ? `&margin=${params.margin}` : '';
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&dynamicHeight=${params.dynamicHeight}${optionalMargin}`, { waitUntil: ['load', 'networkidle0'] });
+  const optionalMargin = params.margin ? `&margin=${params.margin}` : '',
+    optionalHeight = params.height ? `&height=${params.height}` : '';
+  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&dynamicHeight=${params.dynamicHeight}${optionalHeight}${optionalMargin}`, { waitUntil: ['load', 'networkidle0'] });
 
   const chartElement = await page.$('.chart-png');
   const chartBBox = await chartElement.boundingBox();
 
   await page.setViewport({
     width: params.width,
-    height: chartBBox.height,
+    height: params.height || chartBBox.height,
     deviceScaleFactor: params.scale
   });
 

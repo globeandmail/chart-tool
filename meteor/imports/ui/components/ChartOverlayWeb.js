@@ -5,8 +5,8 @@ import Chart from './Chart';
 
 const exportSettings = {
   facebook: {
-    width: 421,
-    height: 220,
+    width: 500,
+    height: Math.round(500 / 1.913636364),
     scale: 2.85
   },
   instagram: {
@@ -15,8 +15,8 @@ const exportSettings = {
     scale: 2.85
   },
   twitter: {
-    width: 421,
-    height: 236,
+    width: 500,
+    height: Math.round(500 / 1.783898305),
     scale: 2.85
   },
   picker: {

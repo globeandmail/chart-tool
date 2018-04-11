@@ -478,7 +478,7 @@ const debouncedThumb = debounce(id => {
 
 function generateThumb(id) {
   Meteor.call('chart.update.thumbnail', id, {
-    width: 460,
+    width: app_settings.s3.thumbnailWidth,
     scale: 2,
     dynamicHeight: false
   }, error => {
