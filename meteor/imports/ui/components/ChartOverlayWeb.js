@@ -27,12 +27,15 @@ export default class ChartOverlayWeb extends Component {
     this.state = {
       width: '',
       height: '',
-      margin: 3
+      margin: 3,
+      active: true
     };
   }
 
   handleExport(event) {
     event.preventDefault();
+
+    this.setState({ active: false });
 
     let filename = `${this.props.chart.slug}-web`;
 
@@ -71,6 +74,7 @@ export default class ChartOverlayWeb extends Component {
       } else {
         const blob = new Blob([response], { type: 'image/png' });
         fileSaver.saveAs(blob, `${filename}.png`);
+        this.setState({ active: true });
       }
     });
 
@@ -92,7 +96,7 @@ export default class ChartOverlayWeb extends Component {
     return (
       <div>
         <div className='overlay-outer' />
-        <div className='overlay-container'>
+        <div className={`overlay-container ${this.state.active ? 'active' : ''}`}>
           <div className='overlay-header'>
             <h3>Web export</h3>
             <button value={'web'} onClick={this.props.toggleOverlay} className='overlay-close'>&times;</button>

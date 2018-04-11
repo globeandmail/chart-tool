@@ -8,8 +8,6 @@
 
 @function ptToPx($pt) {
   $magic: 96 / 72;
-  // points = pixels * 72 / 96
-  // pts * 96 / 72 = px
   $val: ($pt * $magic) * 1px;
   @return ($val);
 }
@@ -19,9 +17,9 @@ $one-pt: ptToPx(1.0);
 $one-five-pt: ptToPx(1.5);
 $two-pt: ptToPx(2.0);
 
-$six-five-pt: ptToPx(6.5); // actually renders at 6.15pt
-$eight-pt: ptToPx(8); // actually renders at 7.69pt
-$nine-pt: ptToPx(9); // actually renders at 9.22pt
+$six-five-pt: ptToPx(6.5);
+$eight-pt: ptToPx(8);
+$nine-pt: ptToPx(9);
 
 // base64 fonts go here
 
@@ -70,7 +68,7 @@ $nine-pt: ptToPx(9); // actually renders at 9.22pt
     padding-top: 0;
     display: block;
     color: $color-black;
-    padding-bottom: 0;
+    padding-bottom: 1.5px;
     margin-bottom: 0;
     line-height: $six-five-pt;
     @media(min-width: 420px) {

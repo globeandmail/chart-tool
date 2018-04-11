@@ -3,7 +3,6 @@
 @import "base/normalize";
 @import "base/mixins";
 @import "base/helpers";
-// @import "base/sweetalert";
 
 $grid-columns: 24 !global;
 $max-width: em(1180) !global;
@@ -25,7 +24,6 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
-  margin-bottom: 30px;
   @include interface-font-regular;
 }
 

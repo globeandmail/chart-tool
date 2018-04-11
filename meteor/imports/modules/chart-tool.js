@@ -4245,6 +4245,7 @@ var debounce = 500;
 var tipTimeout = 5000;
 var ratioMobile = 1.15;
 var ratioDesktop = 0.65;
+
 var dateFormat = "%Y-%m-%d";
 var timeFormat$1 = "%H:%M";
 var margin = {"top":10,"right":3,"bottom":0,"left":0};
@@ -5768,7 +5769,7 @@ function sum$1(series) {
 }
 
 // defined in rollup.config.js
-var bucket = "chartprod";
+var bucket = "chartstg";
 
 var toString$1 = {}.toString;
 

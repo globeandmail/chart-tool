@@ -24,6 +24,14 @@
   h3 {
     border-bottom: 1px solid $color-black;
   }
+  button, input {
+    opacity: 0.3;
+  }
+  &.active {
+    button, input {
+      opacity: 1;
+    }
+  }
 }
 
 .overlay-header {

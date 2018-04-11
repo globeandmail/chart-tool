@@ -21,10 +21,15 @@ export default class ChartOverlayPrint extends Component {
     this.handleColumns = this.handleColumns.bind(this);
     this.handleLines = this.handleLines.bind(this);
     this.handleMMDimension = this.handleMMDimension.bind(this);
+    this.state = {
+      active: true
+    };
   }
 
   handleExport(event) {
     event.preventDefault();
+
+    this.setState({ active: false });
 
     const print = generateMeasurements(this.props.chart.print),
       filename = `${this.props.chart.slug}-print-${print.name}.pdf`;
@@ -35,6 +40,7 @@ export default class ChartOverlayPrint extends Component {
       } else {
         const blob = new Blob([response], { type: 'application/pdf' });
         fileSaver.saveAs(blob, filename);
+        this.setState({ active: true });
       }
     });
   }
@@ -137,7 +143,7 @@ export default class ChartOverlayPrint extends Component {
     return (
       <div>
         <div className='overlay-outer' />
-        <div className='overlay-container'>
+        <div className={`overlay-container ${this.state.active ? 'active' : ''}`}>
           <div className='overlay-header'>
             <h3>Print export</h3>
             <button value={'print'} onClick={this.props.toggleOverlay} className='overlay-close'>&times;</button>

@@ -50,7 +50,7 @@ class ArchiveCharts extends Component {
                 onClick={() => this.goToChart(chart._id)}
                 >
                 <div className='charts-archive_single-inner'>
-                  <h4 className='slug'>{ chart.slug }</h4>
+                  <h4 className='slug'>{chart.slug}</h4>
                   {chart.img ?
                     <img src={chart.img} /> :
                     <div className='empty-image'><p>No image available</p></div>

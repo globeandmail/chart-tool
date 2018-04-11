@@ -72,21 +72,22 @@ export default class ChartAnnotations extends Component {
   helpHighlighting() {
     Swal({
       title: 'Highlighting?',
-      text: 'You can now highlight chosen bars and columns with a custom colour. Try it out!',
+      text: "You can now highlight chosen bars and columns with a custom colour. Try it out by clicking on a colour, then clicking on the bar you'd like to recolour.",
       type: 'info'
     });
   }
 
-  // HIGHLIGHTING
-  // No highlighting on multiseries of any sort
-  //
+  helpRanges() {
+
+  }
+
+  helpText() {
+
+  }
+
   // RANGES
   // Should include a field where you can type the minimum and maximum value
   // How do I handle ordinal-time data?
-
-  // BARS OR COLUMNS
-  // key, like 'Canada'
-  // aka rows
   //
   // LINE OR AREA
   // column headings
@@ -141,11 +142,11 @@ export default class ChartAnnotations extends Component {
           {this.displayHighlight() ?
             <div className='unit-edit anno-highlight-edit'>
               <h4>Highlighting <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
-              <p>Select a color below, or type in a hex value:</p>
               <ColorPicker
                 triangle={'hide'}
                 colors={app_settings.highlightOptions}
                 onChangeComplete={this.props.handleHighlightColor}
+                width={'100%'}
               />
               {this.currentHighlights() ?
                 <div>
@@ -161,24 +162,20 @@ export default class ChartAnnotations extends Component {
               : null }
             </div> : null }
 
-          <button onClick={this.resetAnnotations}>Reset all annotations</button>
+          <div className='unit-edit anno-text-edit' style={{ opacity: 0.2 }}>
+            <h4>Ranges (coming soon) <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
+            {/* Add line|range
+            Current range elements */}
+          </div>
 
-          {/* <!-- Clear all annotations button -->
-
-          <!-- – highlighting one or more lines, bars, columns, or column/bar series (in cases where there are 2 series) -->
-
-          <!-- <div className='unit-edit anno-text-edit'>
-            <h4>Text <a href='#' className='help-toggle help-anno-text'>?</a></h4>
-            Add point|area text
+          <div className='unit-edit anno-text-edit' style={{ opacity: 0.2 }}>
+            <h4>Text annotations (coming soon) <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
+            {/* Add point|area text
             Current text elements
-            Alignment
-          </div> -->
+            Alignment */}
+          </div>
 
-          <!-- <div className='unit-edit anno-rage-edit'>
-            <h4>Range <a href='#' className='help-toggle help-range-text'>?</a></h4>
-            Add line|range
-            Current range elements
-          </div> --> */}
+          <button className='annotation-reset' onClick={this.resetAnnotations}>Reset all annotations</button>
 
         </div>
       </div>

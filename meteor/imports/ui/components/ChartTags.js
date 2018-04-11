@@ -14,7 +14,7 @@ class ChartTags extends Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleNewTag = this.handleNewTag.bind(this);
     this.state = {
-      expanded: true
+      expanded: false
     };
   }
 

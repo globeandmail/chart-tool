@@ -544,3 +544,28 @@ select {
     }
   }
 }
+
+.twitter-picker {
+  box-shadow: none !important;
+  > div {
+    padding: 0 !important;
+  }
+}
+
+.annotation-reset {
+  @include appearance(none);
+  background: none;
+  border: 1px solid $color-black;
+  color: $color-black;
+  font-size: 1em;
+  margin-top: 0.5em;
+  padding: 0.4em 0.5em 0.45em 0.5em;
+  border-radius: 4px;
+  @include transition (all 0.1s ease-out);
+  text-decoration: none;
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+    @include transition (all 0.1s ease-in);
+  }
+}

@@ -5,6 +5,7 @@ var debounce = 500;
 var tipTimeout = 5000;
 var ratioMobile = 1.15;
 var ratioDesktop = 0.65;
+var thumbnailDebounce = 1500;
 var dateFormat = "%Y-%m-%d";
 var timeFormat = "%H:%M";
 var margin = {"top":10,"right":3,"bottom":0,"left":0};
@@ -29,6 +30,7 @@ var config = {
 	tipTimeout: tipTimeout,
 	ratioMobile: ratioMobile,
 	ratioDesktop: ratioDesktop,
+	thumbnailDebounce: thumbnailDebounce,
 	dateFormat: dateFormat,
 	timeFormat: timeFormat,
 	margin: margin,
@@ -59,6 +61,7 @@ var prefix$$1 = config.prefix;
 var app_settings = {
 
   s3: config.image,
+  thumbnail_debounce: config.thumbnailDebounce,
 
   embedJS: config.embedJS,
   embedCSS: config.embedCSS,
