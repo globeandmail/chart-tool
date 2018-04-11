@@ -1,15 +1,12 @@
-import FontFaceObserver from 'fontfaceobserver';
 import { select } from 'd3-selection';
 import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
 import {
   curveLinear,
-  curveCardinal,
-  curveCatmullRom,
-  curveMonotoneX,
   curveNatural,
   curveStepBefore,
-  curveStepAfter
+  curveStepAfter,
+  curveStep
 } from 'd3-shape';
 import Settings from '../config/chart-settings';
 import bucket from '../config/env';
@@ -27,14 +24,16 @@ export function debounce(fn, params, timeout, root) {
 }
 
 export function clearChart(cont) {
-  let el = document.querySelector(cont);
-  while (el && el.querySelectorAll('svg').length) {
-    let svg = el.querySelectorAll('svg');
-    svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
-  }
-  while (el && el.querySelectorAll('div').length) {
-    let div = el.querySelectorAll('div');
-    div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+  if (typeof document !== 'undefined') {
+    let el = isElement(cont) ? cont : document.querySelector(cont);
+    while (el && el.querySelectorAll('svg').length) {
+      let svg = el.querySelectorAll('svg');
+      svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
+    }
+    while (el && el.querySelectorAll('div').length) {
+      let div = el.querySelectorAll('div');
+      div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+    }
   }
   return cont;
 }
@@ -44,19 +43,13 @@ export function clearObj(obj) {
   return obj;
 }
 
-export function clearDrawn(drawn, obj) {
-  if (drawn.length) {
-    for (let i = drawn.length - 1; i >= 0; i--) {
-      if (drawn[i].id === obj.id) {
-        drawn.splice(i, 1);
-      }
-    }
-  }
-  return drawn;
-}
-
 export function getBounding(selector, dimension) {
-  return document.querySelector(selector).getBoundingClientRect()[dimension];
+  if (isElement(selector)) {
+    return selector.getBoundingClientRect()[dimension];
+  } else {
+    return document.querySelector(selector).getBoundingClientRect()[dimension];
+  }
+
 }
 
 export class TimeObj {
@@ -180,18 +173,16 @@ export function timeInterval(data) {
 
 export function getCurve(interp) {
   switch (interp) {
-    case 'cardinal':
-      return curveCardinal;
     case 'linear':
       return curveLinear;
+    case 'step':
+      return curveStep;
     case 'step-before':
       return curveStepBefore;
     case 'step-after':
       return curveStepAfter;
+    case 'cardinal':
     case 'monotone':
-      return curveMonotoneX;
-    case 'catmull-rom':
-      return curveCatmullRom;
     case 'natural':
       return curveNatural;
   }
@@ -253,18 +244,6 @@ export function csvToTable(target, data) {
     .text(d => d);
 }
 
-export function waitForFonts(fonts) {
-  return new Promise((resolve, reject) => {
-    if (fonts && fonts.length) {
-      Promise.all(fonts.map(f => new FontFaceObserver(f).load()))
-        .then(() => resolve())
-        .catch(() => reject());
-    } else {
-      resolve();
-    }
-  });
-}
-
 export function getUniqueDateValues(data, type) {
   const allDates = data.map(d => {
     switch (type) {
@@ -274,4 +253,9 @@ export function getUniqueDateValues(data, type) {
     }
   });
   return Array.from(new Set(allDates));
+}
+
+export function isElement(el) {
+  const isString = typeof cont === 'string';
+  return !isString && el.nodeName;
 }

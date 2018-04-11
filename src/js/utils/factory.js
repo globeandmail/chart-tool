@@ -8,9 +8,9 @@ export default function recipe(obj) {
 
   const embed = obj.data, chart = embed.chart;
 
-  // I'm not a big fan of indenting stuff like t
+  // I'm not a big fan of indenting stuff like this
   // (looking at you, Pereira), but I'm making an exception
-  // in t case because my eyes were bleeding
+  // in this case because my eyes were bleeding
 
   t.dispatch    = obj.dispatch;
   t.version     = embed.version                           || t.version;
@@ -68,6 +68,8 @@ export default function recipe(obj) {
 
   t.dateFormat = inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
   t.data = parse(chart.data, t.dateFormat, o.index, o.stacked) || t.data;
+
+  t.annotations = chart.annotations || t.annotations;
 
   if (!t.data.stackedData) { o.stacked = false; }
 

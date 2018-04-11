@@ -27,6 +27,11 @@ export function cursorPos(overlay) {
 
 export function getTipData(obj, cursor) {
 
+  // TODO:
+  // need to standardize output of this between standard and stacked data.
+  // right now tipData for regular data looks like this: { key: Date, series: [] }
+  // while for stacked it's an array like [[y0, y1, data: {}]]
+
   let scale, scaleType, cursorVal;
 
   if (obj.options.type === 'bar') {
@@ -60,15 +65,13 @@ export function getTipData(obj, cursor) {
       }
     }
 
-    // still need to handle ordinal stacking
-
     return tipData;
 
   }
 
   xVal = scale.invert(cursorVal);
 
-  if (obj.options.stacked) {
+  if (obj.options.stacked && obj.options.type === 'area') {
     const data = obj.data.stackedData.map(item => {
       return item.sort((a, b) => {
         return a.data[obj.data.keys[0]] - b.data[obj.data.keys[0]];
@@ -349,7 +352,7 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
     }
   }
 
-  if (!isUndefined) {
+  if (!isUndefined || isUndefined !== tipData.series.length) {
 
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
@@ -401,7 +404,9 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
     tipNodes.tipPathCircles
       .selectAll(`.${obj.prefix}tip_path-circle`)
         .data(tipData.series)
-        .classed(`${obj.prefix}active`, d => { return d.val ? true : false; })
+        .classed(`${obj.prefix}active`, d => {
+          return d.val && d.val !== '__undefined__';
+        })
         .attrs({
           'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
           'cy': d => {
@@ -462,7 +467,7 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
     }
   }
 
-  if (!isUndefined) {
+  if (!isUndefined || isUndefined !== tipData.series.length) {
 
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
       ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
@@ -520,7 +525,7 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
     if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
       tipNodes.tipTextDate
-        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].data[obj.data.keys[0]]);
+        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key ? tipData.key : tipData[0].data[obj.data.keys[0]]);
     } else {
       tipNodes.tipTextDate
         .text(tipData.key);
@@ -598,7 +603,7 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         .attrs({
           'cx': d => {
             let xData;
-            if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
               xData = tipData.key;
             } else {
               xData = d.data[obj.data.keys[0]];
@@ -607,7 +612,7 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
           },
           'cy': d => {
             let yData;
-            if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
               const index = obj.data.data.indexOf(obj.data.data.filter(a => {
                 return a.key === tipData.key;
               })[0]);
@@ -630,10 +635,10 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
     let xPos;
 
-    if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-      xPos = tipData.key;
-    } else {
+    if (obj.rendered.plot.xScaleObj.obj.type === 'time') {
       xPos = tipData[0].data[obj.data.keys[0]];
+    } else {
+      xPos = tipData.key;
     }
 
     tipNodes.xTipLine.select('line')

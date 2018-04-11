@@ -1,0 +1,65 @@
+// specific to the "new chart" view
+
+.new-chart {
+  margin-top: 3em;
+  @include span-columns(18);
+  @include shift(3);
+}
+
+.input-slug, .input-data {
+  width: 100%;
+}
+
+.input-slug {
+  font-size: 5em;
+  border: none;
+  color: $color-black;
+  background-color: $color-gray-light;
+  padding: 0.05em 0.05em;
+  border-bottom: 2px solid $color-gray-medium;
+  margin-bottom: 0.4em;
+  @include transition (all 0.1s ease-out);
+  @include placeholder {
+    color: $color-gray-medium;
+    @include interface-font-light;
+    letter-spacing: -0.03em;
+  }
+  &:focus {
+    outline: none;
+    border-color: $color-black;
+    @include placeholder {
+      color: $color-gray-medium;
+    }
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.input-data {
+  font-family: "Monaco", "Lucida Console", monospace;
+  background-color: $color-gray-light;
+  height: 20em;
+  padding: 0.3em;
+  resize: none;
+  font-size: 1.2em;
+  border: 2px solid $color-gray-light;
+  margin-bottom: 2em;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: auto;
+  @include transition (all 0.1s ease-out);
+  @include placeholder {
+    color: $color-gray-medium;
+  }
+  &:focus {
+    outline: none;
+    border: 2px solid $color-black;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.input-submit {
+  @extend %button;
+  width: 100%;
+  background: none;
+  font-size: 2em;
+}

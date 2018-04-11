@@ -37,7 +37,11 @@ gulp.task('clean-meteor:build', () => {
 });
 
 gulp.task('clean-meteor-libs', () => {
-  return del([`${gulpConfig.meteorPath}/lib/chart-tool/**/*`]);
+  return del([
+    `${gulpConfig.meteorBundle}/chart-tool.js`,
+    `${gulpConfig.meteorBundle}/settings.js`,
+    `${gulpConfig.meteorPath}/imports/ui/style/chart-tool.css`
+  ]);
 });
 
 gulp.task('set-version', () => {
