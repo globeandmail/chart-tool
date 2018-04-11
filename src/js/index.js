@@ -1,7 +1,7 @@
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
 import chartSettings from './config/chart-settings';
-import { clearObj, clearChart, getBounding, svgTest, generateThumb, isElement, debounce as debounceFn } from './utils/utils';
+import { clearObj, clearChart, getBounding, generateThumb, isElement, debounce as debounceFn } from './utils/utils';
 import { parse } from './utils/dataparse';
 import { ChartManager } from './charts/manager';
 import 'core-js/library/fn/object/assign';

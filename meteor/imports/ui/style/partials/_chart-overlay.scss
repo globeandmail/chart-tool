@@ -26,10 +26,12 @@
   }
   button, input {
     opacity: 0.3;
+    pointer-events: none;
   }
   &.active {
     button, input {
       opacity: 1;
+      pointer-events: all;
     }
   }
 }
@@ -71,10 +73,6 @@
   @include row();
 }
 
-.web-export {
-  @include span-columns(8 of 24);
-}
-
 .web-export, .print-export {
   h3 {
     font-size: 1.4em;
@@ -92,7 +90,12 @@
   }
 }
 
-.web-export-button, .web-export-submit, .print-export-button_pdf, .print-export-button_jpg, .print-export-mode-button {
+.web-export-button,
+.web-export-submit,
+.print-export-button_pdf,
+.print-export-button_jpg,
+.print-export-mode-button,
+.web-export-mode-button {
   @extend %button;
   display: block;
   background: none;
@@ -103,6 +106,17 @@
   font-size: 1.2em;
   &:hover {
     border: 1px solid $primary-color;
+  }
+}
+
+.web-export-mode-button {
+  @include span-columns(8 of 24);
+  text-transform: uppercase;
+  font-size: 1em;
+  letter-spacing: 1px;
+  opacity: 0.3 !important;
+  &.active {
+    opacity: 1 !important;
   }
 }
 
@@ -133,10 +147,10 @@
   margin-right: 0.2em;
   font-size: 1em;
   text-transform: uppercase;
-  opacity: 0.2;
+  opacity: 0.2 !important;
   &.active {
     pointer-events: none;
-    opacity: 1;
+    opacity: 1 !important;
   }
   &:hover {
     opacity: 1;
@@ -152,26 +166,32 @@
   line-height: 1.2;
 }
 
-.print-export-preview, .print-export-options {
+.print-export-preview, .print-export-options, .web-export-preview, .web-export-options {
+  h4 {
+    font-size: 1em;
+    @include interface-font-bold;
+    margin-bottom: 0.5em;
+  }
   p {
     font-size: 1.2em;
   }
 }
 
-.print-export-preview {
+.print-export-preview, .web-export-preview {
   @include span-columns(16 of 24);
 }
 
-.print-export-options {
+.print-export-options, .web-export-options {
   @include span-columns(8 of 24);
 }
 
-.print-export-preview-chart {
+.print-export-preview-chart, .web-export-preview-chart {
   @include span-columns(16 of 24);
   height: auto;
+  position: relative;
 }
 
-.print-export-form {
+.print-export-form, .web-export-form {
   @extend .radio-buttons;
   ul {
     margin-bottom: 1.6em;
@@ -205,6 +225,10 @@
   }
 }
 
+.web-export-form ul {
+  border: none;
+}
+
 .web-export-field-width, .web-export-field-ratio {
   @include span-columns(6 of 12);
   .select-wrapper, select {
@@ -219,14 +243,6 @@
     padding-bottom: 0.2em;
     margin: 0;
   }
-}
-
-.web-export-custom-picker {
-  margin-top: 2.5em;
-}
-
-.web-export-social-buttons {
-  margin-top: 3.5em;
 }
 
 .web-export-row {
@@ -250,4 +266,30 @@
   .select-wrapper, select {
     width: 100%;
   }
+}
+
+.web-export-options {
+  p {
+    font-size: 1em;
+    margin: 0;
+    margin-bottom: 1em;
+  }
+  ul {
+    margin: 0.2em 0;
+  }
+  li {
+    padding-bottom: 0.2em;
+  }
+  input {
+    position: relative;
+    top: -1px;
+  }
+  label {
+    font-size: 1em;
+    margin-left: 0.4em;
+  }
+}
+
+.web-export-option-group {
+  margin-bottom: 1em;
 }

@@ -7,6 +7,12 @@ import ChartTool from '../../modules/chart-tool';
 function chartPresentationalString(props) {
   const data = extend(props.chart);
   if (props.annotationMode) data.options.tips = false;
+  if (props.hideHead) data.options.head = !props.hideHead;
+  if (props.hideQualifier) data.options.qualifier = !props.hideQualifier;
+  if (props.hideFooter) data.options.footer = !props.hideFooter;
+  if ('exportable' in props) data.exportable = {};
+  if ('width' in props) data.exportable.width = props.width;
+  if ('height' in props) data.exportable.height = props.height;
   const obj = {
     'annotations': data.annotations,
     'class': data.class,
@@ -21,6 +27,9 @@ function chartPresentationalString(props) {
     'options.stacked': data.options.stacked,
     'options.tips': data.options.tips,
     'options.type': data.options.type,
+    'options.head': data.options.head,
+    'options.qualifier': data.options.qualifier,
+    'options.footer': data.options.footer,
     'print': data.print,
     'qualifier': data.qualifier,
     'range': data.range,
@@ -28,7 +37,8 @@ function chartPresentationalString(props) {
     'source': data.source,
     'time_format': data.time_format,
     'x_axis': data.x_axis,
-    'y_axis': data.y_axis
+    'y_axis': data.y_axis,
+    'exportable': data.exportable
   };
 
   return JSON.stringify(obj);
@@ -184,19 +194,23 @@ export default class Chart extends Component {
 
       if (this.props.type === 'print') {
         const { width, height } = generateMeasurements(chart.print);
+        chart.exportable.type = 'pdf';
         chart.exportable.width = width;
         chart.exportable.height = height;
         chart.exportable.x_axis = app_settings.print.x_axis;
         chart.exportable.y_axis = app_settings.print.y_axis;
         chart.exportable.margin = app_settings.print.margin;
-        chart.exportable.type = 'pdf';
         chart.exportable.barLabelOffset = app_settings.print.barLabelOffset;
       }
 
       if (this.props.type === 'png') {
-        chart.exportable.width = this.props.width;
-        if (this.props.height) chart.exportable.height = this.props.height;
         chart.exportable.type = 'png';
+        chart.exportable.width = this.props.width;
+        chart.exportable.margin = app_settings.web.margin;
+        if (this.props.height) chart.exportable.height = this.props.height;
+        if (this.props.hideHead) chart.options.head = !this.props.hideHead;
+        if (this.props.hideQualifier) chart.options.qualifier = !this.props.hideQualifier;
+        if (this.props.hideFooter) chart.options.footer = !this.props.hideFooter;
         if (this.props.margin) {
           chart.exportable.width = chart.exportable.width - (this.props.margin * 2);
           chart.exportable.height = chart.exportable.height - (this.props.margin * 2);

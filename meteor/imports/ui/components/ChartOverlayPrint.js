@@ -134,7 +134,7 @@ export default class ChartOverlayPrint extends Component {
             <label htmlFor='print-height'>mm tall</label>
           </li>
         </ul>
-        <input className='print-export-button_pdf' value='Generate editable PDF' onClick={this.handleExport} type='button' />
+        <input className='print-export-button_pdf' value='Download editable PDF' onClick={this.handleExport} type='button' />
       </div>
     );
   }

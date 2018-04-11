@@ -120,11 +120,6 @@ export const app_settings = {
     column_width: 47,
     first_line_depth: 2.14,
     line_depth: 3.35,
-    dpi: 266, // this actually doesn't matter for PDFs, but good to make note
-    magic: {
-      width: 3.698,
-      height: 3.675
-    },
     x_axis: {
       tickTarget: 8,
       ticksSmall: 5,
@@ -146,12 +141,21 @@ export const app_settings = {
       paddingRight: 5
     },
     margin: {
-      top: 7,
-      right: 2,
+      top: 5,
+      right: 1,
       bottom: 0,
       left: 0
     },
     barLabelOffset: 3
+  },
+
+  web: {
+    margin: {
+      top: 2,
+      right: 0,
+      bottom: 0,
+      left: 0
+    },
   }
 
 };

@@ -22,6 +22,9 @@ class PNG extends Component {
             height={this.props.query.height}
             dynamicHeight={this.props.query.dynamicHeight}
             margin={this.props.query.margin}
+            hideHead={this.props.query.hideHead}
+            hideQualifier={this.props.query.hideQualifier}
+            hideFooter={this.props.query.hideFooter}
             editable={false}
             tips={false}
             exportable={true}

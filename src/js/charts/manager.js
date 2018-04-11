@@ -21,7 +21,7 @@ export class ChartManager {
 
     // check that each section is needed
 
-    if (this.recipe.options.head) {
+    if (this.recipe.options.head || this.recipe.options.qualifier) {
       rendered.header = header(container, this.recipe);
     }
 

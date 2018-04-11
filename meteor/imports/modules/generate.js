@@ -27,7 +27,12 @@ export async function generatePNG(chart, params) {
     deviceScaleFactor: params.scale
   });
   const optionalMargin = params.margin ? `&margin=${params.margin}` : '';
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&height=${params.height}${optionalMargin}`, { waitUntil: ['load', 'networkidle0'] });
+  let hideStr = '';
+  if (params.hide.head) hideStr = `${hideStr}&hideHead=true`;
+  if (params.hide.qualifier) hideStr = `${hideStr}&hideQualifier=true`;
+  if (params.hide.footer) hideStr = `${hideStr}&hideFooter=true`;
+  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&height=${params.height}${optionalMargin}${hideStr}`, { waitUntil: ['load', 'networkidle0'] });
+
   const png = await page.screenshot({
     clip: {
       x: 0,

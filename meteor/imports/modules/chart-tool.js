@@ -8544,7 +8544,7 @@ function header(container, obj) {
     headerGroup.style('width', ((obj.exportable.width) + "px"));
   }
 
-  if (obj.heading !== '' || obj.editable) {
+  if ((obj.heading !== '' || obj.editable) && obj.options.head) {
     var headerText = headerGroup
       .append('div')
       .attr('class', ((obj.prefix) + "chart_title-text"))
@@ -8560,7 +8560,7 @@ function header(container, obj) {
 
   var qualifier;
 
-  if (obj.qualifier !== '' || obj.editable) {
+  if ((obj.qualifier !== '' || obj.editable) &&  obj.options.qualifier) {
     qualifier = headerGroup
       .append('div')
       .attrs({
@@ -12077,7 +12077,7 @@ var ChartManager = function ChartManager(container, obj) {
 
   // check that each section is needed
 
-  if (this.recipe.options.head) {
+  if (this.recipe.options.head || this.recipe.options.qualifier) {
     rendered.header = header(container, this.recipe);
   }
 
