@@ -55,7 +55,8 @@
     "yargs": "^6.4.0"
   },
   "scripts": {
-    "test": ""
+    "test": "",
+    "postinstall": "cd meteor && meteor npm install"
   },
   "keywords": [
     "charts",
