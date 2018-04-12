@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MD5 from 'crypto-js/md5';
 import { dataParse, updateAndSave } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
+import { parse } from '../../modules/chart-tool';
 import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 
@@ -63,14 +64,28 @@ export default class ChartData extends Component {
   }
 
   handleData(event) {
-    const { data } = dataParse(event.target.value);
-    if (data !== this.props.chart.data) {
+    const { data } = dataParse(event.target.value),
+      chart = this.props.chart;
+    if (data !== chart.data) {
+
+      const hasHighlights = chart.annotations && chart.annotations.highlight && chart.annotations.highlight.length;
+
       const fields = {
         data: data,
-        md5: MD5(data).toString(),
-        'annotations.highlight': []
+        md5: MD5(data).toString()
       };
-      updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {
+
+      if (hasHighlights) {
+        const keys = parse(data).data.map(d => d.key);
+        const h = chart.annotations.highlight.filter(d => {
+          if (keys.indexOf(d.key) !== -1) return d;
+        });
+        if (h.length !== chart.annotations.highlight.length) {
+          fields['annotations.highlight'] = h;
+        }
+      }
+
+      updateAndSave('charts.update.multiple.fields', chart._id, fields, err => {
         if (err) console.log(err);
       });
     }
