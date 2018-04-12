@@ -28,7 +28,9 @@ function highlight(node, obj, rendered) {
   if (ref && obj.data.seriesAmount === 1) {
     const h = obj.annotations.highlight;
     for (let i = 0; i < h.length; i++) {
-      ref.filter(d => d.key === h[i].key)
+      ref.filter(d => {
+        return d.key.toString() === h[i].key;
+      })
         .select('rect')
         .style('fill', h[i].color);
     }
