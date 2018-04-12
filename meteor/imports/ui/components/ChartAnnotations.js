@@ -3,6 +3,7 @@ import { TwitterPicker as ColorPicker } from 'react-color';
 import { updateAndSave, dataParse } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { parse } from '../../modules/chart-tool';
+import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 
 export default class ChartAnnotations extends Component {
@@ -162,12 +163,17 @@ export default class ChartAnnotations extends Component {
                   <p>Currently highlighted</p>
                   <ul>
                   {this.props.chart.annotations.highlight.map(d => {
+                    const formatTime = timeFormat(this.props.chart.date_format);
+                    let keyText = d.key;
+                    if (this.props.chart.x_axis.scale === 'time' || this.props.chart.x_axis.scale === 'ordinal-time') {
+                      keyText = formatTime(new Date(d.key));
+                    }
                     return (
                       <li className='highlight-item' key={d.key}>
                         <div className='highlight-color' style={{ backgroundColor: d.color }}>
                           <button className='highlight-remove' value={d.key} onClick={this.removeHighlight}>&times;</button>
                         </div>
-                        <div className='highlight-key'>{d.key}</div>
+                        <div className='highlight-key'>{keyText}</div>
                       </li>
                     );
                   })}

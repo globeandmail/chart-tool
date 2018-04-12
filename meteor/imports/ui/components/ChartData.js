@@ -76,7 +76,8 @@ export default class ChartData extends Component {
       };
 
       if (hasHighlights) {
-        const keys = parse(data).data.map(d => d.key);
+        const dateFormat = (chart.x_axis.scale === 'time' || chart.x_axis.scale === 'ordinal-time') ? chart.date_format : undefined;
+        const keys = parse(data, dateFormat).data.map(d => d.key.toString());
         const h = chart.annotations.highlight.filter(d => {
           if (keys.indexOf(d.key) !== -1) return d;
         });

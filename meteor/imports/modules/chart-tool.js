@@ -10926,7 +10926,9 @@ function highlight(node, obj, rendered) {
   if (ref && obj.data.seriesAmount === 1) {
     var h = obj.annotations.highlight;
     var loop = function ( i ) {
-      ref.filter(function (d) { return d.key === h[i].key; })
+      ref.filter(function (d) {
+        return d.key.toString() === h[i].key
+      })
         .select('rect')
         .style('fill', h[i].color);
     };
