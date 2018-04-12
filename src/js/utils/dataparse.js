@@ -2,6 +2,7 @@ import { csvParseRows, csvParse } from 'd3-dsv';
 import { timeParse } from 'd3-time-format';
 import { stack } from 'd3-shape';
 import { range } from 'd3-array';
+import { getUniqueDateValues } from './utils';
 
 /**
  * Data parsing module. Takes a CSV and turns it into an Object, and optionally determines the formatting to use when parsing dates.
@@ -82,18 +83,29 @@ export function parse(csv, inputDateFormat, index, stacked) {
       const o = {};
       o[headers[0]] = data[i].key;
       for (let j = 0; j < data[i].series.length; j++) {
-        o[data[i].series[j].key] = data[i].series[j].val;
+        if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
+          o[data[i].series[j].key] = '0';
+        } else {
+          o[data[i].series[j].key] = data[i].series[j].val;
+        }
       }
       return o;
     }));
   }
+
+  const uniqueDayValues = inputDateFormat ? getUniqueDateValues(data, 'day') : undefined;
+  const uniqueMonthValues = inputDateFormat ? getUniqueDateValues(data, 'month') : undefined;
+  const uniqueYearValues = inputDateFormat ? getUniqueDateValues(data, 'year') : undefined;
 
   return {
     csv: csv,
     data: data,
     seriesAmount: seriesAmount,
     keys: headers,
-    stackedData: stackedData
+    stackedData: stackedData,
+    uniqueDayValues: uniqueDayValues,
+    uniqueMonthValues: uniqueMonthValues,
+    uniqueYearValues: uniqueYearValues
   };
 
 }

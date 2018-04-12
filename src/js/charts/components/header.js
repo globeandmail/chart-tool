@@ -12,7 +12,7 @@ export default function header(container, obj) {
     headerGroup.style('width', `${obj.exportable.width}px`);
   }
 
-  if (obj.heading !== '' || obj.editable) {
+  if ((obj.heading !== '' || obj.editable) && obj.options.head) {
     const headerText = headerGroup
       .append('div')
       .attr('class', `${obj.prefix}chart_title-text`)
@@ -28,7 +28,7 @@ export default function header(container, obj) {
 
   let qualifier;
 
-  if (obj.options.type === 'bar') {
+  if ((obj.qualifier !== '' || obj.editable) &&  obj.options.qualifier) {
     qualifier = headerGroup
       .append('div')
       .attrs({

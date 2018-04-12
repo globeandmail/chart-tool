@@ -62,14 +62,13 @@
   @include utility-font;
 }
 
-@for $counter from 1 through $series-count-max {
+@for $pcounter from 1 through $palette-count {
+  $palette: nth( $palettes, $pcounter );
+  $palette-name: nth( $palette-names, $pcounter );
 
-  .#{$prefix}primary .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter - 1} .#{$prefix}legend_item_icon {
-    background: nth($primaryShades, $counter);
+  @for $counter from 1 through $series-count-max {
+    .#{$prefix + $palette-name} .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter - 1} .#{$prefix}legend_item_icon {
+      background: nth( $palette, $counter );
+    }
   }
-
-  .#{$prefix}alternate .#{$prefix}chart_legend .#{$prefix}legend_item_#{$counter - 1} .#{$prefix}legend_item_icon{
-    background: nth($alternateShades, $counter);
-  }
-
 }

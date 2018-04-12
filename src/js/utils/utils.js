@@ -3,35 +3,37 @@ import { csvParseRows } from 'd3-dsv';
 import { timeYears, timeMonths, timeDays, timeHours, timeMinutes } from 'd3-time';
 import {
   curveLinear,
-  curveCardinal,
-  curveCatmullRom,
-  curveMonotoneX,
   curveNatural,
   curveStepBefore,
-  curveStepAfter
+  curveStepAfter,
+  curveStep
 } from 'd3-shape';
 import Settings from '../config/chart-settings';
 import bucket from '../config/env';
+import 'core-js/fn/set';
+import 'core-js/fn/array/from';
 
-export function debounce(fn, obj, timeout, root) {
+export function debounce(fn, params, timeout, root) {
   let timeoutID = -1;
-  return () => {
+  return (() => {
     if (timeoutID > -1) { root.clearTimeout(timeoutID); }
     timeoutID = root.setTimeout(() => {
-      fn(obj);
+      fn(params);
     }, timeout);
-  };
+  });
 }
 
 export function clearChart(cont) {
-  let el = document.querySelector(cont);
-  while (el && el.querySelectorAll('svg').length) {
-    let svg = el.querySelectorAll('svg');
-    svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
-  }
-  while (el && el.querySelectorAll('div').length) {
-    let div = el.querySelectorAll('div');
-    div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+  if (typeof document !== 'undefined') {
+    let el = isElement(cont) ? cont : document.querySelector(cont);
+    while (el && el.querySelectorAll('svg').length) {
+      let svg = el.querySelectorAll('svg');
+      svg[svg.length - 1].parentNode.removeChild(svg[svg.length - 1]);
+    }
+    while (el && el.querySelectorAll('div').length) {
+      let div = el.querySelectorAll('div');
+      div[div.length - 1].parentNode.removeChild(div[div.length - 1]);
+    }
   }
   return cont;
 }
@@ -41,19 +43,13 @@ export function clearObj(obj) {
   return obj;
 }
 
-export function clearDrawn(drawn, obj) {
-  if (drawn.length) {
-    for (let i = drawn.length - 1; i >= 0; i--) {
-      if (drawn[i].id === obj.id) {
-        drawn.splice(i, 1);
-      }
-    }
-  }
-  return drawn;
-}
-
 export function getBounding(selector, dimension) {
-  return document.querySelector(selector).getBoundingClientRect()[dimension];
+  if (isElement(selector)) {
+    return selector.getBoundingClientRect()[dimension];
+  } else {
+    return document.querySelector(selector).getBoundingClientRect()[dimension];
+  }
+
 }
 
 export class TimeObj {
@@ -104,21 +100,45 @@ export function wrapText(text, width) {
   });
 }
 
-export function timeDiff(d1, d2, tolerance) {
+export function timeDiff(d1, d2, tolerance, data) {
 
   const diff = d2 - d1,
     time = new TimeObj();
 
+  let ctx;
+
   // returning the context
-  if ((diff / time.year) > tolerance) { return 'years'; }
-  else if ((diff / time.month) > tolerance) { return 'months'; }
-  else if ((diff / time.week) > tolerance) { return 'weeks'; }
-  else if ((diff / time.day) > tolerance) { return 'days'; }
-  else if ((diff / time.hour) > tolerance) { return 'hours'; }
-  else if ((diff / time.min) > tolerance) { return 'minutes'; }
-  else { return 'days'; }
+  if ((diff / time.year) > tolerance) { ctx = 'years'; }
+  else if ((diff / time.month) > tolerance) { ctx = 'months'; }
+  else if ((diff / time.week) > tolerance) { ctx = 'weeks'; }
+  else if ((diff / time.day) > tolerance) { ctx = 'days'; }
+  else if ((diff / time.hour) > tolerance) { ctx = 'hours'; }
+  else if ((diff / time.min) > tolerance) { ctx = 'minutes'; }
+  else { ctx = 'days'; }
   // if none of these work i feel bad for you son
   // i've got 99 problems but an if/else ain't one
+
+  // data passed in, looking at drawing tips
+  if (data && (ctx === 'years' || ctx === 'months')) {
+    const uniqueDayValues = data.uniqueDayValues;
+    const uniqueMonthValues = data.uniqueMonthValues;
+
+    if (ctx === 'years') {
+      // if only one unique day value, but multiple unique month values, probably monthly data
+      if (uniqueDayValues.length === 1 && uniqueMonthValues.length > 1) ctx = 'monthly';
+      // if many unique day values and multiple unique month values, probably months data
+      if (uniqueDayValues.length > 1 && uniqueMonthValues.length > 1) ctx = 'months';
+    }
+
+    if (ctx == 'months') {
+      // if only one unique day value, and only one unique month values, probably annual data
+      if (uniqueDayValues.length === 1 && uniqueMonthValues.length === 1) ctx = 'years';
+      // if only one unique day value and many unique months, probably monthly data
+      if (uniqueDayValues.length === 1 && uniqueMonthValues.length > 1) ctx = 'monthly';
+    }
+  }
+
+  return ctx;
 
 }
 
@@ -153,18 +173,16 @@ export function timeInterval(data) {
 
 export function getCurve(interp) {
   switch (interp) {
-    case 'cardinal':
-      return curveCardinal;
     case 'linear':
       return curveLinear;
+    case 'step':
+      return curveStep;
     case 'step-before':
       return curveStepBefore;
     case 'step-after':
       return curveStepAfter;
+    case 'cardinal':
     case 'monotone':
-      return curveMonotoneX;
-    case 'catmull-rom':
-      return curveCatmullRom;
     case 'natural':
       return curveNatural;
   }
@@ -221,7 +239,23 @@ export function csvToTable(target, data) {
   target.append('table').selectAll('tr')
     .data(parsedCSV).enter()
     .append('tr').selectAll('td')
-    .data(d => { return d; }).enter()
+    .data(d => d).enter()
     .append('td')
-    .text(d => { return d; });
+    .text(d => d);
+}
+
+export function getUniqueDateValues(data, type) {
+  const allDates = data.map(d => {
+    switch (type) {
+      case 'day': return d.key.getDate();
+      case 'month': return d.key.getMonth();
+      case 'year': return d.key.getFullYear();
+    }
+  });
+  return Array.from(new Set(allDates));
+}
+
+export function isElement(el) {
+  const isString = typeof cont === 'string';
+  return !isString && el.nodeName;
 }

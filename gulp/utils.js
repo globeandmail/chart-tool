@@ -37,7 +37,11 @@ gulp.task('clean-meteor:build', () => {
 });
 
 gulp.task('clean-meteor-libs', () => {
-  return del([`${gulpConfig.meteorPath}/lib/chart-tool/**/*`]);
+  return del([
+    `${gulpConfig.meteorBundle}/chart-tool.js`,
+    `${gulpConfig.meteorBundle}/settings.js`,
+    `${gulpConfig.meteorPath}/imports/ui/style/chart-tool.css`
+  ]);
 });
 
 gulp.task('set-version', () => {
@@ -48,7 +52,7 @@ gulp.task('set-version', () => {
 
 gulp.task('buildver', () => {
   if (args.set) {
-    var val = args.set;
+    const val = args.set;
     return gulp.src('./package.json')
       .pipe(jeditor(pkg => {
         pkg.buildVer = val.toString();

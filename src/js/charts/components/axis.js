@@ -396,40 +396,23 @@ export function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
 export function setTickFormatY(fmt, d) {
   // checking for a format and formatting y-axis values accordingly
-
-  let currentFormat;
-
   switch (fmt) {
     case 'general':
-      currentFormat = format('')(d);
-      break;
+      return format('')(d);
     case 'si':
     case 'comma':
-      if (isFloat(parseFloat(d))) {
-        currentFormat = format(',.2f')(d);
-      } else {
-        currentFormat = format(',')(d);
-      }
-      break;
+      return isFloat(parseFloat(d)) ? format(',.2f')(d) : format(',')(d);
     case 'round1':
-      currentFormat = format(',.1f')(d);
-      break;
+      return format(',.1f')(d);
     case 'round2':
-      currentFormat = format(',.2f')(d);
-      break;
+      return format(',.2f')(d);
     case 'round3':
-      currentFormat = format(',.3f')(d);
-      break;
+      return format(',.3f')(d);
     case 'round4':
-      currentFormat = format(',.4f')(d);
-      break;
+      return format(',.4f')(d);
     default:
-      currentFormat = format(',')(d);
-      break;
+      return format(',')(d);
   }
-
-  return currentFormat;
-
 }
 
 export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
@@ -846,7 +829,9 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
   // resets ranges and dimensions, redraws yAxis, redraws xAxis
   // …then redraws yAxis again if tick wrapping has changed xAxis height
 
-  axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
+  let newXAxisObj, newYAxisObj;
+
+  newYAxisObj = axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
 
   const scaleObj = {
     rangeType: 'range',
@@ -859,7 +844,7 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 
   const prevXAxisHeight = obj.dimensions.xAxisHeight;
 
-  const newXAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), 'xAxis');
+  newXAxisObj = axisManager(node, obj, xAxisObj.axis.scale(), 'xAxis');
 
   newXAxisObj.node
     .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()}, ${obj.dimensions.computedHeight() - obj.dimensions.xAxisHeight})`);
@@ -869,8 +854,16 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
   }
 
   if (prevXAxisHeight !== obj.dimensions.xAxisHeight) {
-    axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
+    newYAxisObj = axisManager(node, obj, yAxisObj.axis.scale(), 'yAxis');
   }
+
+  // reset x-axis object values
+  xAxisObj.node = newXAxisObj.node;
+  xAxisObj.axis = newXAxisObj.axis;
+
+  // reset y-axis object values
+  yAxisObj.node = newYAxisObj.node;
+  yAxisObj.axis = newYAxisObj.axis;
 
 }
 

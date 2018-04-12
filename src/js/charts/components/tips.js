@@ -27,6 +27,11 @@ export function cursorPos(overlay) {
 
 export function getTipData(obj, cursor) {
 
+  // TODO:
+  // need to standardize output of this between standard and stacked data.
+  // right now tipData for regular data looks like this: { key: Date, series: [] }
+  // while for stacked it's an array like [[y0, y1, data: {}]]
+
   let scale, scaleType, cursorVal;
 
   if (obj.options.type === 'bar') {
@@ -47,7 +52,7 @@ export function getTipData(obj, cursor) {
     const step = scale.step(),
       domainPosition = Math.floor(cursorVal / step);
 
-    if (domainPosition > scale.domain().length) {
+    if (domainPosition >= scale.domain().length) {
       xVal = scale.domain()[scale.domain().length - 1];
     } else {
       xVal = scale.domain()[domainPosition];
@@ -60,16 +65,18 @@ export function getTipData(obj, cursor) {
       }
     }
 
-    // still need to handle ordinal stacking
-
     return tipData;
 
   }
 
   xVal = scale.invert(cursorVal);
 
-  if (obj.options.stacked) {
-    const data = obj.data.stackedData;
+  if (obj.options.stacked && obj.options.type === 'area') {
+    const data = obj.data.stackedData.map(item => {
+      return item.sort((a, b) => {
+        return a.data[obj.data.keys[0]] - b.data[obj.data.keys[0]];
+      });
+    });
     const i = bisectData(data, xVal, obj.options.stacked, obj.data.keys[0]);
 
     const arr = [];
@@ -81,7 +88,7 @@ export function getTipData(obj, cursor) {
       } else {
         const d0 = data[k][i[k] - 1],
           d1 = data[k][i[k]];
-        refIndex = xVal - d0.x > d1.x - xVal ? i[k] : (i[k] - 1);
+        refIndex = xVal - d0.data[obj.data.keys[0]] > d1.data[obj.data.keys[0]] - xVal ? i[k] : (i[k] - 1);
         arr.push(data[k][refIndex]);
       }
     }
@@ -89,7 +96,7 @@ export function getTipData(obj, cursor) {
     tipData = arr;
 
   } else {
-    const data = obj.data.data,
+    const data = obj.data.data.sort((a, b) => a.key - b.key),
       i = bisectData(data, xVal),
       d0 = data[i - 1],
       d1 = data[i];
@@ -345,32 +352,41 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
     }
   }
 
-  if (!isUndefined) {
+  if (!isUndefined || isUndefined !== tipData.series.length) {
 
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
     tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
       .data(tipData.series)
       .text(d => {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-        if (d.val) {
+        if ((d.val || d.val === 0) && d.val !== '__undefined__') {
           return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
         } else {
           return 'n/a';
         }
+      })
+      .classed(`${obj.prefix}muted`, d => {
+        return (!(d.val || d.val === 0) || d.val === '__undefined__');
       });
 
-    tipNodes.tipTextDate
-      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+    let bandwidth = 0;
+
+    if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+      tipNodes.tipTextDate
+        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+    } else {
+      tipNodes.tipTextDate
+        .text(tipData.key);
+      bandwidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
+    }
 
     tipNodes.tipGroup
       .selectAll(`.${obj.prefix}tip_text-group`)
       .data(tipData.series)
-      .classed(`${obj.prefix}active`, d => {
-        return d.val ? true : false;
-      });
+      .classed(`${obj.prefix}active`, d => { return d.val ? true : false; });
 
     tipNodes.tipGroup
       .attr('transform', () => {
@@ -388,11 +404,15 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
     tipNodes.tipPathCircles
       .selectAll(`.${obj.prefix}tip_path-circle`)
         .data(tipData.series)
-        .classed(`${obj.prefix}active`, d => { return d.val ? true : false; })
+        .classed(`${obj.prefix}active`, d => {
+          return d.val && d.val !== '__undefined__';
+        })
         .attrs({
-          'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+          'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
           'cy': d => {
-            if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
+            if (d.val && d.val !== '__undefined__') {
+              return obj.rendered.plot.yScaleObj.scale(d.val);
+            }
           }
         });
 
@@ -404,8 +424,8 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
 
     tipNodes.xTipLine.select('line')
       .attrs({
-        'x1': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-        'x2': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'x1': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
+        'x2': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
         'y1': 0,
         'y2': obj.dimensions.yAxisHeight()
       });
@@ -415,10 +435,10 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
         let x;
         if (cursor.x > obj.dimensions.tickWidth() / 2) {
           // tipbox pointing left
-          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
         } else {
           // tipbox pointing right
-          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
         }
         return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
       });
@@ -447,68 +467,96 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
     }
   }
 
-  if (!isUndefined) {
+  if (!isUndefined || isUndefined !== tipData.series.length) {
 
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
     tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
-      .data(tipData)
+      .data(() => {
+        if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+          return tipData;
+        } else {
+          return tipData.series;
+        }
+      })
       .text((d, i) => {
-
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-
-        let text;
-
-        for (let k = 0; k < tipData.length; k++) {
-          if (i === 0) {
-            if (!isNaN(d[0] + d[1])) {
-              text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
-              break;
-            } else {
-              text = 'n/a';
-              break;
-            }
-          } else if (k === i) {
-            let hasUndefined = 0;
-            for (let j = 0; j < i; j++) {
-              if (isNaN(d[0] + d[1])) {
-                hasUndefined++;
+        if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+          if (d.val || d.val === 0) {
+            return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+          } else {
+            return 'n/a';
+          }
+        } else {
+          let text;
+          for (let k = 0; k < tipData.length; k++) {
+            if (i === 0) {
+              if (!isNaN(d[0] + d[1])) {
+                text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
+                break;
+              } else {
+                text = 'n/a';
+                break;
+              }
+            } else if (k === i) {
+              let hasUndefined = 0;
+              for (let j = 0; j < i; j++) {
+                if (isNaN(d[0] + d[1])) {
+                  hasUndefined++;
+                  break;
+                }
+              }
+              if (!hasUndefined && !isNaN(d[0] + d[1])) {
+                text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
+                break;
+              } else {
+                text = 'n/a';
                 break;
               }
             }
-            if (!hasUndefined && !isNaN(d[0] + d[1])) {
-              text = obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
-              break;
-            } else {
-              text = 'n/a';
-              break;
-            }
           }
+          return text;
         }
-        return text;
       });
 
-    tipNodes.tipTextDate
-      .call(tipDateFormatter, ctx, obj.monthsAbr, tipData[0].data[obj.data.keys[0]]);
+    let bandwidth = 0;
+
+    if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+      tipNodes.tipTextDate
+        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key ? tipData.key : tipData[0].data[obj.data.keys[0]]);
+    } else {
+      tipNodes.tipTextDate
+        .text(tipData.key);
+      bandwidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
+    }
 
     tipNodes.tipGroup
       .selectAll(`.${obj.prefix}tip_text-group`)
-      .data(tipData)
-      .classed(`${obj.prefix}active`, (d, i) => {
-        let hasUndefined = 0;
-        for (let j = 0; j < i; j++) {
-          if (isNaN(d[0] + d[1])) {
-            hasUndefined++;
-            break;
-          }
-        }
-
-        if (!hasUndefined && !isNaN(d[0] + d[1])) {
-          return true;
+      .data(() => {
+        if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+          return tipData;
         } else {
-          return false;
+          return tipData.series;
+        }
+      })
+      .classed(`${obj.prefix}active`, (d, i) => {
+        if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+          return d.val ? true : false;
+        } else {
+          let hasUndefined = 0;
+          for (let j = 0; j < i; j++) {
+            if (isNaN(d[0] + d[1])) {
+              hasUndefined++;
+              break;
+            }
+          }
+          if (!hasUndefined && !isNaN(d[0] + d[1])) {
+            return true;
+          } else {
+            return false;
+          }
         }
       });
 
@@ -527,28 +575,54 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
 
     tipNodes.tipPathCircles
       .selectAll(`.${obj.prefix}tip_path-circle`)
-        .data(tipData)
-        .classed(`${obj.prefix}active`, (d, i) => {
-          let hasUndefined = 0;
-          for (let j = 0; j < i; j++) {
-            if (isNaN(d[0] + d[1])) {
-              hasUndefined++;
-              break;
-            }
-          }
-          if (!hasUndefined && !isNaN(d[0] + d[1])) {
-            return true;
+        .data(() => {
+          if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+            return tipData;
           } else {
-            return false;
+            return tipData.series;
+          }
+        })
+        .classed(`${obj.prefix}active`, (d, i) => {
+          if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+            return d.val ? true : false;
+          } else {
+            let hasUndefined = 0;
+            for (let j = 0; j < i; j++) {
+              if (isNaN(d[0] + d[1])) {
+                hasUndefined++;
+                break;
+              }
+            }
+            if (!hasUndefined && !isNaN(d[0] + d[1])) {
+              return true;
+            } else {
+              return false;
+            }
           }
         })
         .attrs({
           'cx': d => {
-            return obj.rendered.plot.xScaleObj.scale(d.data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight;
+            let xData;
+            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
+              xData = tipData.key;
+            } else {
+              xData = d.data[obj.data.keys[0]];
+            }
+            return obj.rendered.plot.xScaleObj.scale(xData) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2);
           },
           'cy': d => {
-            if (!isNaN(d[1])) {
-              return obj.rendered.plot.yScaleObj.scale(d[1]);
+            let yData;
+            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
+              const index = obj.data.data.indexOf(obj.data.data.filter(a => {
+                return a.key === tipData.key;
+              })[0]);
+              const stackedPoint = obj.data.stackedData[obj.data.keys.indexOf(d.key) - 1];
+              yData = stackedPoint[index][1];
+            } else {
+              yData = d[1];
+            }
+            if (!isNaN(yData)) {
+              return obj.rendered.plot.yScaleObj.scale(yData);
             }
           }
         });
@@ -559,10 +633,18 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
       });
 
+    let xPos;
+
+    if (obj.rendered.plot.xScaleObj.obj.type === 'time') {
+      xPos = tipData[0].data[obj.data.keys[0]];
+    } else {
+      xPos = tipData.key;
+    }
+
     tipNodes.xTipLine.select('line')
       .attrs({
-        'x1': obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-        'x2': obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'x1': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
+        'x2': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
         'y1': 0,
         'y2': obj.dimensions.yAxisHeight()
       });
@@ -572,10 +654,10 @@ export function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         let x;
         if (cursor.x > obj.dimensions.tickWidth() / 2) {
           // tipbox pointing left
-          x = obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
         } else {
           // tipbox pointing right
-          x = obj.rendered.plot.xScaleObj.scale(tipData[0].data[obj.data.keys[0]]) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
         }
         return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
       });
@@ -594,11 +676,14 @@ export function columnChartTips(tipNodes, innerTipEls, obj) {
     .text(d => {
       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-      if (d.val) {
+      if ((d.val || d.val === 0) && d.val !== '__undefined__') {
         return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
       } else {
         return 'n/a';
       }
+    })
+    .classed(`${obj.prefix}muted`, d => {
+      return (!(d.val || d.val === 0) || d.val === '__undefined__');
     });
 
   obj.rendered.plot.seriesGroup.selectAll('rect')
@@ -621,7 +706,7 @@ export function columnChartTips(tipNodes, innerTipEls, obj) {
     tipNodes.tipTextDate.text(tipData.key);
   } else {
     const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-      ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
+      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
     tipNodes.tipTextDate
     .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
@@ -735,6 +820,11 @@ export function tipDateFormatter(selection, ctx, months, data) {
     switch (ctx) {
       case 'years':
         dStr = d.getFullYear();
+        break;
+      case 'monthly':
+        dMonth = months[d.getMonth()];
+        dYear = d.getFullYear();
+        dStr = `${dMonth} ${dYear}`;
         break;
       case 'months':
         dMonth = months[d.getMonth()];

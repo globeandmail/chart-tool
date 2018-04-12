@@ -1,0 +1,563 @@
+// chart-edit
+
+.main-area {
+  @include span-columns(18, block-collapse);
+  padding-right: 1em;
+}
+
+.options-area {
+  @include span-columns(6, block-collapse);
+  border-left: 1px solid $color-black;
+  padding-left: 1em;
+}
+
+.edit-box {
+  margin-bottom: 1.6em;
+  h3 {
+    border-bottom: 1px solid $color-black;
+    padding-bottom: 0.1em;
+    margin: 0 0 0.3em 0;
+    cursor: pointer;
+    @include user-select(none);
+    @include interface-font-light;
+    @include transition (all 0.1s ease-out);
+    &:hover {
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+      border-color: $primary-color;
+    }
+  }
+  h4 {
+    @include interface-font-bold;
+    font-size: 1em;
+    margin: 0.7em 0 0.5em 0;
+  }
+  span {
+    color: $color-gray-medium;
+  }
+}
+
+select {
+  @include interface-font-light;
+  border: 1px solid $color-black;
+  outline: none;
+  background: transparent;
+  width: auto;
+  padding: 0.3em 1em 0.3em 0.5em;
+  @include appearance(none);
+  @include transition (all 0.1s ease-out);
+  @include placeholder {
+    @include interface-font-bold;
+  }
+  &:hover {
+    color: $primary-color;
+    cursor: pointer;
+    border-color: $primary-color;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.input-data-edit {
+  border: none;
+  background-color: $color-gray-light;
+  min-height: 14em;
+  width: 100%;
+  padding: 0.3em;
+  resize: none;
+  font-size: 0.8em;
+  tab-size: 20;
+  font-family: "Monaco", "Lucida Console", monospace;
+  border: 2px solid $color-gray-light;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: auto;
+  @include transition (all 0.1s ease-out);
+  @include placeholder {
+    color: $color-gray-medium;
+  }
+  &:focus {
+    outline: none;
+    border: 2px solid $color-black;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.x-axis-format-custom {
+  margin-top: 0.5em;
+  input, p {
+    display: inline;
+  }
+  input {
+    width: 70%;
+  }
+}
+
+.help-x-axis-custom {
+  font-size: 1.3em;
+}
+
+.time-hours-edit {
+  margin-left: 0.6em;
+  input {
+    margin-top: 0.6em;
+  }
+}
+
+.date-calculation {
+  font-size: 1.2em;
+  padding-left: 0.2em;
+}
+
+.input-custom-x {
+  font-size: 1.3em;
+  padding: 0.3em 0.5em;
+  width: 50%;
+}
+
+.unit-edit {
+  margin-bottom: 0.4em;
+}
+
+.unit-edit-half {
+  width: 48%;
+  display: inline-block;
+}
+
+.unit-edit-time {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.unit-edit-hide {
+  display: none;
+}
+
+.radio-buttons {
+  input {
+    margin-right: 0.4em;
+    outline: none;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+  }
+  li {
+    text-transform: uppercase;
+    font-size: 1em;
+    padding-bottom: 0.1em;
+    margin-bottom: 0.3em;
+    @include interface-font-light;
+  }
+  .input-border {
+    border: 1px solid $color-black;
+    border-radius: 100%;
+    height: 1em;
+    width: 1em;
+  }
+  input[type="radio"] {
+    border-radius: 50%;
+    border: 1px solid $color-black;
+    box-shadow: inset 0px 0px 0px 2px white;
+    width: 1em;
+    height: 1em;
+    margin-bottom: -2px;
+    @include appearance(none);
+  }
+  .input-radio:checked {
+    background-color: $primary-color;
+  }
+
+  @for $pcounter from 1 through $palette-count {
+    $palette: nth($palettes, $pcounter);
+    $palette-name: nth($palette-names, $pcounter);
+
+    .input-radio-#{$palette-name}:checked {
+      background-color: nth($palette, 1);
+    }
+  }
+}
+
+.input-field {
+  @extend %input;
+}
+
+.input-index {
+  width: 3.6em;
+  text-align: center;
+}
+
+.x-axisval-edit, .y-axisval-edit {
+  .input-field {
+    width: 3.9em;
+    text-align: center;
+    @include placeholder {
+      text-transform: uppercase;
+    }
+  }
+}
+
+.x-prefix-edit, .x-suffix-edit, .x-formatval-edit, .y-prefix-edit, .y-suffix-edit, .y-formatval-edit {
+  display: inline-block;
+}
+
+.input-prefix-x, .input-suffix-x, .input-prefix-y, .input-suffix-y {
+  width: 2.4em;
+  text-align: center;
+}
+
+.input-ticks-x, .input-ticks-y {
+  width: 3.9em;
+  text-align: center;
+}
+
+.x-formatval-edit, .y-formatval-edit {
+  padding: 0 0.4em;
+}
+
+.axisval-to {
+  font-size: 1.2em;
+  padding: 0 0.3em;
+}
+
+.chart-selector, .chart-preview {
+  @include row();
+  @include span-columns(18 of 18);
+  margin-bottom: 1em;
+}
+
+.selector-label {
+  padding-bottom: 0;
+  font-size: 1.6em;
+  margin: 0 0 0.3em 0;
+  display: inline-block;
+  border: none;
+}
+
+.selector-label {
+  @include interface-font-light;
+}
+
+.chart-types {
+  font-size: 1.6em;
+  outline: none;
+  background: transparent;
+  width: auto;
+  margin-left: 0.3em;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 8px;
+  @include appearance(none);
+  @include transition (all 0.1s ease-out);
+  @include interface-font-bold;
+  &:hover {
+    color: $primary-color;
+    cursor: pointer;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.chart-types option {
+  @include interface-font-bold;
+}
+
+.chart-preview {
+  margin-bottom: 4em;
+  h5 {
+    font-size: 0.9em;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: $primary-color;
+    @include interface-font-black;
+    margin: 0;
+    border-bottom: 1px solid $color-gray-medium;
+    margin-bottom: 0.75em;
+    padding-bottom: 0.2em;
+  }
+  .preview-container {
+    height: auto;
+    position: relative;
+  }
+}
+
+.desktop-preview, .embed-code {
+  @include span-columns(12 of 18);
+}
+.mobile-preview, .download {
+  @include span-columns(6 of 18);
+}
+
+.chart-error-container {
+  background-color: $color-gray-light;
+  width: 100%;
+  height: 400px;
+  .chart-error {
+    width: 80%;
+    position: relative;
+    top: 50%;
+    margin: 0 auto;
+    transform: translateY(-50%);
+    text-align: center;
+  }
+  .chart-error_img {
+    width: 30px;
+    margin-bottom: 20px;
+  }
+  .chart-error_warning {
+    @include interface-font-bold;
+  }
+}
+
+.output {
+  @include row();
+  h3 {
+    padding-bottom: 0.1em;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid $color-black;
+    @include interface-font-light;
+  }
+}
+
+.export-button {
+  margin-bottom: 0.4em;
+  font-size: 1.6em;
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.embed-code {
+  h3 span {
+    color: $color-gray-medium;
+  }
+}
+
+.export-embed {
+  display: block;
+  font-family: "Monaco", "Lucida Console", monospace;
+  text-align: left;
+  background-color: $color-gray-light;
+  height: 9em;
+  width: 100%;
+  padding: 0.3em;
+  resize: none;
+  font-size: 0.8em;
+  border: 2px solid $color-gray-light;
+  overflow-y: auto;
+  box-sizing: border-box;
+  @include transition (all 0.1s ease-out);
+  &:hover {
+    background-color: $color-gray-medium;
+    cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+.svg-output > svg {
+  display: block;
+}
+
+.selectize-input {
+  font-size: 0.8em;
+  font-family: "Monaco", "Lucida Console", monospace;
+  background-color: $color-gray-light;
+  border: 2px solid $color-gray-light;
+  box-sizing: border-box;
+  box-shadow: none;
+  border-radius: 0;
+  white-space: nowrap;
+  @include transition (all 0.1s ease-out);
+  &.focus {
+    box-shadow: none;
+    outline: none;
+    border: 2px solid $color-black;
+    border-radius: 0;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input [data-value].active {
+  font-family: "Monaco", "Lucida Console", monospace;
+  background: none;
+  text-shadow: none;
+  border: 1px solid $color-black;
+  border-radius: 4px;
+  box-shadow: none;
+  color: $color-black;
+  float: left;
+}
+
+.selectize-control.multi .selectize-input > div {
+  margin: 0 5px 5px 0;
+}
+
+.selectize-control.multi .selectize-input [data-value].active {
+  background-color: $color-black;
+  color: $color-gray-light;
+}
+
+.selectize-dropdown {
+  margin-top: -2px;
+}
+
+.selectize-dropdown .active {
+  background-color: lighten($primary-color, 60%);
+  color: $color-black;
+}
+
+.selectize-dropdown [data-selectable] .highlight {
+  background: lighten($primary-color, 50%);
+  color: $color-black;
+}
+
+.selectize-dropdown .active.create {
+  color: $color-black;
+}
+
+// Title, qualifier and source contentEditable fields
+
+.editable-chart_title,
+.editable-chart_qualifier,
+.editable-chart_source {
+  &:hover {
+    cursor: text;
+    background-color: $color-gray-light;
+  }
+  &:focus {
+    outline: none !important;
+    background-color: $color-gray-light;
+  }
+}
+
+.editable-chart_title {
+  &:empty:before {
+    content: "Please include a chart title";
+    color: $color-gray-medium;
+  }
+}
+
+.editable-chart_qualifier {
+  &:empty:before {
+    content: "Please include a chart qualifier";
+    color: $color-gray-medium;
+  }
+}
+
+.#{$prefix}type_bar .#{$prefix}chart_qualifier {
+  display: none;
+}
+
+.editable-chart_source {
+  &:empty:before {
+    content: "Please include a chart source";
+    color: $color-gray-medium;
+  }
+}
+
+.#{$prefix}chart_source {
+  @media only screen and (min-width: 420px) {
+    width: 100% !important;
+  }
+}
+
+.unit-delete {
+  @include appearance(none);
+  background: none;
+  border: 1px solid $color-red;
+  color: $color-red;
+  font-size: 1em;
+  padding: 0.4em 0.5em 0.45em 0.5em;
+  border-radius: 4px;
+  margin-top: 0.4em;
+  @include transition (all 0.1s ease-out);
+  &:hover {
+    background-color: $color-red;
+    color: $color-white;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.data-download {
+  margin-top: 1.7em;
+  a {
+    @include appearance(none);
+    background: none;
+    border: 1px solid $color-black;
+    color: $color-black;
+    font-size: 1em;
+    padding: 0.4em 0.5em 0.45em 0.5em;
+    border-radius: 4px;
+    @include transition (all 0.1s ease-out);
+    text-decoration: none;
+    &:hover {
+      border-color: $primary-color;
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+}
+
+.preview-outer-container {
+  position: relative;
+  &.preview-inactive {
+    pointer-events: none;
+    .loading-frame {
+      opacity: 1;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+  .loading-frame {
+    opacity: 0;
+    @include transition (all 0.1s ease-out);
+  }
+}
+
+.loading-frame {
+  opacity: 0;
+  background-color: rgba($color-white, 0.9);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.note {
+  font-size: 0.8em;
+  color: $color-gray-medium;
+}
+
+.chart-preview-annotation {
+  rect {
+    &:hover {
+      cursor: url('/images/cursor.cur') 0 15, auto;
+    }
+  }
+}
+
+.twitter-picker {
+  box-shadow: none !important;
+  > div {
+    padding: 0 !important;
+  }
+}
+
+.annotation-reset {
+  @include appearance(none);
+  background: none;
+  border: 1px solid $color-black;
+  color: $color-black;
+  font-size: 1em;
+  margin-top: 0.5em;
+  padding: 0.4em 0.5em 0.45em 0.5em;
+  border-radius: 4px;
+  @include transition (all 0.1s ease-out);
+  text-decoration: none;
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+    @include transition (all 0.1s ease-in);
+  }
+}

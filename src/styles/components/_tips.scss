@@ -64,23 +64,20 @@
   stroke-width: 1px;
 }
 
-@for $counter from 1 through $series-count-max {
+@for $pcounter from 1 through $palette-count {
+  $palette: nth( $palettes, $pcounter );
+  $palette-name: nth( $palette-names, $pcounter );
 
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
-  .#{$prefix}primary .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
-    fill: nth($primaryShades, $counter);
+  @for $counter from 1 through $series-count-max {
+    .#{$prefix + $palette-name} .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
+    .#{$prefix + $palette-name} .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
+      fill: nth( $palette, $counter );
+    }
   }
 
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
-  .#{$prefix}alternate .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
-    fill: nth($alternateShades, $counter);
+  .#{$prefix + $palette-name} .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle {
+    fill: $color-white;
   }
-
-}
-
-.#{$prefix}primary .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle,
-.#{$prefix}alternate .#{$prefix}tip.#{$prefix}tip_stacked .#{$prefix}tip_path-circle {
-  fill: $color-white;
 }
 
 .#{$prefix}muted {

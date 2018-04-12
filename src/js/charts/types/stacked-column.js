@@ -73,7 +73,8 @@ export default function stackedColumnChart(node, obj) {
     yAxisObj: yAxisObj,
     seriesGroup: seriesGroup,
     series: series,
-    rect: rect
+    rect: rect,
+    singleColumn: singleColumn
   };
 
 }

@@ -16,7 +16,9 @@ export default function stackedAreaChart(node, obj) {
   axisCleanup(node, obj, xAxisObj, yAxisObj);
 
   if (xScaleObj.obj.type === 'ordinal') {
-    xScale.rangeRound([0, obj.dimensions.tickWidth()], 1.0);
+    xScale
+      .range([0, obj.dimensions.tickWidth()])
+      .padding(0);
   }
 
   if (obj.data.seriesAmount === 1) {
@@ -26,10 +28,20 @@ export default function stackedAreaChart(node, obj) {
   node.classed(`${obj.prefix}stacked`, true);
 
   const seriesGroup = node.append('g')
-    .attr('class', () => {
-      let output = `${obj.prefix}series_group`;
-      if (obj.data.seriesAmount > 1) { output += ` ${obj.prefix}multiple`; }
-      return output;
+    .attrs({
+      'class': () => {
+        let output = `${obj.prefix}series_group`;
+        if (obj.data.seriesAmount > 1) {
+          // If more than one series append a 'muliple' class so we can target
+          output += ` ${obj.prefix}multiple`;
+        }
+        return output;
+      },
+      'transform': () => {
+        if (xScaleObj.obj.type === 'ordinal') {
+          return `translate(${xScale.bandwidth() / 2},0)`;
+        }
+      }
     });
 
   const series = seriesGroup.selectAll(`g.${obj.prefix}series`)
