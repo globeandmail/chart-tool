@@ -11,6 +11,7 @@ export default class ChartAnnotations extends Component {
     super(props);
     this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.resetAnnotations = this.resetAnnotations.bind(this);
+    this.removeHighlight = this.removeHighlight.bind(this);
     this.state = {
       expanded: false
     };
@@ -58,11 +59,19 @@ export default class ChartAnnotations extends Component {
 
   currentHighlights() {
     const chart = this.props.chart;
-    if (chart.annotations && chart.annotations.highlights && chart.annotations.highlights.length) {
+    if (chart.annotations && chart.annotations.highlight && chart.annotations.highlight.length) {
       return true;
     } else {
       return false;
     }
+  }
+
+  removeHighlight(event) {
+    const key = event.target.value;
+    const h = this.props.chart.annotations.highlight.filter(d => {
+      if (d.key !== key) return d;
+    });
+    updateAndSave('charts.update.annotation.highlight', this.props.chart._id, h);
   }
 
   resetAnnotations() {
@@ -149,21 +158,27 @@ export default class ChartAnnotations extends Component {
                 width={'100%'}
               />
               {this.currentHighlights() ?
-                <div>
+                <div className='currently-highlighted'>
                   <p>Currently highlighted</p>
-                  {this.props.chart.annotations.highlights.map(d => {
+                  <ul>
+                  {this.props.chart.annotations.highlight.map(d => {
                     return (
-                      <li key={d.key}>
-                        <span style={`background-color: ${d.color}`}></span>{d.key} &times;
+                      <li className='highlight-item' key={d.key}>
+                        <div className='highlight-color' style={{ backgroundColor: d.color }}>
+                          <button className='highlight-remove' value={d.key} onClick={this.removeHighlight}>&times;</button>
+                        </div>
+                        <div className='highlight-key'>{d.key}</div>
                       </li>
                     );
                   })}
+                </ul>
                 </div>
               : null }
             </div> : null }
 
           <div className='unit-edit anno-text-edit' style={{ opacity: 0.2 }}>
             <h4>Ranges (coming soon) <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
+
             {/* Add line|range
             Current range elements */}
           </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import MD5 from 'crypto-js/md5';
 import { dataParse, updateAndSave } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { timeFormat } from 'd3-time-format';
@@ -63,7 +64,16 @@ export default class ChartData extends Component {
 
   handleData(event) {
     const { data } = dataParse(event.target.value);
-    updateAndSave('charts.update.data', this.props.chart._id, data);
+    if (data !== this.props.chart.data) {
+      const fields = {
+        data: data,
+        md5: MD5(data).toString(),
+        'annotations.highlight': []
+      };
+      updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {
+        if (err) console.log(err);
+      });
+    }
   }
 
   handleDateConstruction(event) {
