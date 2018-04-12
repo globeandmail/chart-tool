@@ -2,12 +2,12 @@
   "name": "meteor",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "8.11.1"
   },
   "author": "",
   "license": "ISC",

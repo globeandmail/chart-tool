@@ -19,10 +19,7 @@ git filter-branch -f --prune-empty --subdirectory-filter meteor "deploy-${CURRHA
 heroku config:add MONGO_URL=$DEMO_CHARTTOL_MONGO
 heroku labs:enable http-session-affinity
 heroku config:add ROOT_URL=http://chart-tool-demo.herokuapp.com
-
-echo -n "" > .buildpacks
-
-echo 'https://github.com/tomcardoso/heroku-buildpack-meteor.git' >> .buildpacks
+heroku buildpacks:set https://github.com/AdmitHub/meteor-buildpack-horse.git
 
 git add .
 
