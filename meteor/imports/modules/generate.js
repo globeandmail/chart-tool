@@ -3,9 +3,14 @@ import { Meteor } from 'meteor/meteor';
 import AWS from 'aws-sdk';
 import { app_settings } from './settings';
 
+const args = {
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+};
+
 export async function generatePDF(chart, width, height) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(args);
   const page = await browser.newPage();
+  console.log(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf`);
   await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf`, { waitUntil: ['load', 'networkidle0'] });
   await page.emulateMedia('screen');
   const pdf = await page.pdf({
@@ -19,7 +24,7 @@ export async function generatePDF(chart, width, height) {
 }
 
 export async function generatePNG(chart, params) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(args);
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -47,7 +52,7 @@ export async function generatePNG(chart, params) {
 }
 
 export async function generateThumb(chart, params) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(args);
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
