@@ -126,16 +126,9 @@ export const app_settings = {
       dy: 0.7,
       ems: 1.1,
       barOffset: 5,
-      upper: {
-        tickHeight: 4,
-        textX: 2,
-        textY: 2
-      },
-      lower: {
-        tickHeight: 7,
-        textX: 2,
-        textY: 0
-      }
+      tickHeight: 4,
+      textX: 2,
+      textY: 2
     },
     y_axis: {
       paddingRight: 5

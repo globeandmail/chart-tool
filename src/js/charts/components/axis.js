@@ -177,8 +177,8 @@ export function timeAxis(axisNode, obj, scale, axis, axisSettings) {
 
   axisNode.selectAll('text')
     .attrs({
-      'x': axisSettings.upper.textX,
-      'y': axisSettings.upper.textY,
+      'x': axisSettings.textX,
+      'y': axisSettings.textY,
       'dy': `${axisSettings.dy}em`
     })
     .style('text-anchor', 'start')
@@ -190,7 +190,7 @@ export function timeAxis(axisNode, obj, scale, axis, axisSettings) {
     .call(dropTicks);
 
   axisNode.selectAll('line')
-    .attr('y2', axisSettings.upper.tickHeight);
+    .attr('y2', axisSettings.tickHeight);
 
 }
 
@@ -206,6 +206,7 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
     axisNode.selectAll('text')
       .style('text-anchor', 'middle')
       .attr('dy', `${axisSettings.dy}em`)
+      .attr('y', axisSettings.textY)
       .call(wrapText, bandWidth);
 
     const xPos = -(bandWidth / 2) - ((scale.step() * dimensions.bands.padding) / 2);
@@ -217,7 +218,7 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
       });
 
     axisNode.selectAll('line')
-      .attr('y2', axisSettings.upper.tickHeight);
+      .attr('y2', axisSettings.tickHeight);
 
     const lastTick = axisNode.append('g')
       .attrs({
@@ -227,7 +228,7 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
     lastTick.append('line')
       .attrs({
-        'y2': axisSettings.upper.tickHeight,
+        'y2': axisSettings.tickHeight,
         'x1': xPos,
         'x2': xPos
       });
@@ -279,8 +280,8 @@ export function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
 
   axisNode.selectAll('text')
     .attrs({
-      'x': axisSettings.upper.textX,
-      'y': axisSettings.upper.textY,
+      'x': axisSettings.textX,
+      'y': axisSettings.textY,
       'dy': `${axisSettings.dy}em`
     })
     .style('text-anchor', 'start')
@@ -298,7 +299,7 @@ export function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
     .call(ordinalTimeTicks, axisNode, ctx, scale, ordinalTickPadding);
 
   axisNode.selectAll('line')
-    .attr('y2', axisSettings.upper.tickHeight);
+    .attr('y2', axisSettings.tickHeight);
 
 }
 

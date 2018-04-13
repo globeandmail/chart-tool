@@ -160,4 +160,9 @@ $nine-pt: ptToPx(9);
     stroke-width: $point-five-pt;
   }
 
+  .#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect,
+  .#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect {
+    stroke-width: ptToPx(0.5);
+  }
+
 }

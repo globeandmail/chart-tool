@@ -77,16 +77,9 @@
     "widthThreshold": 420,
     "dy": 0.7,
     "barOffset": 9,
-    "upper": {
-      "tickHeight": 7,
-      "textX": 6,
-      "textY": 7
-    },
-    "lower": {
-      "tickHeight": 12,
-      "textX": 6,
-      "textY": 2
-    }
+    "tickHeight": 7,
+    "textX": 6,
+    "textY": 7
   },
 
   "barHeight": 25,
