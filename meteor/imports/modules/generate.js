@@ -12,7 +12,8 @@ export async function generatePDF(chart, width, height) {
     width: `${width}mm`,
     height: `${height}mm`,
     scale: 1,
-    pageRanges: '1'
+    pageRanges: '1',
+    printBackground: true
   });
   await browser.close();
   return pdf;

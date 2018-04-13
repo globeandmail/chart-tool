@@ -122,6 +122,8 @@ $nine-pt: ptToPx(9);
     stroke: $color-black;
     stroke-width: $point-five-pt;
     fill: none;
+    font-size: 16px;
+    stroke-linecap: square;
   }
 
   .#{$prefix}zero-line {

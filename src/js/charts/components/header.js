@@ -68,11 +68,12 @@ export default function header(container, obj) {
       });
 
     legendItem.append('span')
-      .attr('class', `${obj.prefix}legend_item_icon`);
+      .attr('class', `${obj.prefix}legend_item_icon`)
+      .text('\u00A0');
 
     legendItem.append('span')
       .attr('class', `${obj.prefix}legend_item_text`)
-      .text(d => { return d; });
+      .text(d => d);
   }
 
   obj.dimensions.headerHeight = headerGroup.node().getBoundingClientRect().height;
