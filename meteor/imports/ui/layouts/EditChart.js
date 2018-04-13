@@ -101,6 +101,7 @@ class EditChart extends Component {
               annotationMode={this.state.annotationMode}
               toggleAnnotationMode={this.toggleAnnotationMode}
               handleHighlightColor={this.handleHighlightColor}
+              currentAnnotation={this.state.currentAnnotation}
               {...this.props}
             />
             <ChartTags

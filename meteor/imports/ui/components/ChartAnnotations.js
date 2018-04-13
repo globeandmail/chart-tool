@@ -152,7 +152,9 @@ export default class ChartAnnotations extends Component {
                 triangle={'hide'}
                 colors={app_settings.highlightOptions}
                 onChangeComplete={this.props.handleHighlightColor}
+                color={this.props.currentAnnotation.highlight}
                 width={'100%'}
+                className={'color-picker'}
               />
               {this.currentHighlights() ?
                 <div className='currently-highlighted'>
