@@ -16,7 +16,6 @@ The interface has several routes available:
 * `/chart/:_id/edit`: Edit or export a chart based on its Mongo ID
 * `/chart/:_id/pdf`: Preview what an exported PDF will look like (warning: the chart will be teeny tiny since all the fonts are print-sized)
 * `/status`: A basic status page listing number of charts in the database, active users, and server and database connection status
-**Coming soon!**
 
 
 ### API endpoints
