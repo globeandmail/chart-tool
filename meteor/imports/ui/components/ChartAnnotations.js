@@ -111,14 +111,10 @@ export default class ChartAnnotations extends Component {
   //   ],
   //   range: [
   //     {
-  //       mode: 'xAxis',
-  //       x1: 'DATE',
-  //       x2: 'DATE' // optional
-  //     },
-  //     {
-  //       mode: 'yAxis',
-  //       y1: 'DATE',
-  //       y2: 'DATE' // optional
+  //       axis: 'x|y',
+  //       style: '',
+  //       start: 'DATE',
+  //       end: 'DATE' // optional
   //     }
   //   ],
   //   text: [
