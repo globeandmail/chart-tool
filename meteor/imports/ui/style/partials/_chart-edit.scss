@@ -455,7 +455,7 @@ select {
   }
 }
 
-.#{$prefix}chart_source {
+.chart-preview .#{$prefix}chart_source {
   @media only screen and (min-width: 420px) {
     width: 100% !important;
   }

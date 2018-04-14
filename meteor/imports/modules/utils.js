@@ -44,12 +44,6 @@ export function isObject(item) {
   return (typeof item === 'object' && !Array.isArray(item) && item !== null);
 }
 
-export function escapeStr(str) {
-  if (typeof str === 'string') {
-    return str ? str.replace(/\'/g, '\\\'') : str;
-  }
-}
-
 export function cleanEmbed(data) {
   const arr = [];
   arr.push(
@@ -84,10 +78,10 @@ export function embed(obj) {
   return {
     'version': obj.version,
     'id': obj._id,
-    'heading': escapeStr(obj.heading),
-    'qualifier': escapeStr(obj.qualifier),
-    'source': escapeStr(obj.source),
-    'tags': escapeStr(obj.tags),
+    'heading': obj.heading,
+    'qualifier': obj.qualifier,
+    'source': obj.source,
+    'tags': obj.tags,
     'chart': cleanEmbed(obj)
   };
 }
@@ -133,7 +127,7 @@ export function jsonToCSV(objArray, config) {
     for (let j = 0; j < array[i].length; j++) {
       if (line != '') { line += opt.delimiter; }
       if (array[i][j].match(/,/)) {
-        line += `'${array[i][j]}'`;
+        line += `"${array[i][j]}"`;
       } else {
         line += array[i][j];
       }
