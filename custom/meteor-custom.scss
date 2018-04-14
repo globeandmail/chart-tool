@@ -45,9 +45,9 @@ $nine-pt: ptToPx(9);
   }
 
   .#{$prefix}chart_qualifier {
-    display: inline-block;
-    padding-left: 20px;
-    padding-right: 6px;
+    display: block;
+    padding-right: 0;
+    padding-left: 0;
     height: auto;
     font-size: $eight-pt;
     line-height: 1em;
@@ -55,12 +55,6 @@ $nine-pt: ptToPx(9);
     margin: 0;
     padding-bottom: 0;
     color: $color-black;
-  }
-
-  .#{$prefix}chart_qualifier-bar {
-    display: block;
-    padding-right: 0;
-    padding-left: 0;
   }
 
   .#{$prefix}chart_source {

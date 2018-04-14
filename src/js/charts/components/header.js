@@ -33,7 +33,7 @@ export default function header(container, obj) {
       .append('div')
       .attrs({
         'class': () => {
-          let str = `${obj.prefix}chart_qualifier ${obj.prefix}chart_qualifier-bar`;
+          let str = `${obj.prefix}chart_qualifier`;
           if (obj.editable) { str += ' editable-chart_qualifier'; }
           return str;
         },
