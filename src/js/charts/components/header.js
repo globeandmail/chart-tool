@@ -28,7 +28,7 @@ export default function header(container, obj) {
 
   let qualifier;
 
-  if ((obj.qualifier !== '' || obj.editable) &&  obj.options.qualifier) {
+  if ((obj.qualifier !== '' || obj.editable) && obj.options.qualifier) {
     qualifier = headerGroup
       .append('div')
       .attrs({
