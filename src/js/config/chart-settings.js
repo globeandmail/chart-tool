@@ -16,6 +16,7 @@ const chartSettings = {
   heading: '',
   qualifier: '',
   source: '',
+  note: '',
   deck: '',
   index: '',
   hasHours: false,

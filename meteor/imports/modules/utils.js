@@ -62,6 +62,7 @@ export function cleanEmbed(data) {
     'heading',
     'qualifier',
     'source',
+    'note',
     'md5',
     'date_format',
     'time_format',
@@ -87,6 +88,7 @@ export function embed(obj) {
     'heading': escapeStr(obj.heading),
     'qualifier': escapeStr(obj.qualifier),
     'source': escapeStr(obj.source),
+    'note': escapeStr(obj.note),
     'tags': escapeStr(obj.tags),
     'chart': cleanEmbed(obj)
   };
@@ -495,6 +497,7 @@ export function updateAndSave(method, id, data) {
     'charts.update.heading',
     'charts.update.qualifier',
     'charts.update.source',
+    'charts.update.note',
     'charts.update.class',
     'charts.update.options.type',
     'charts.update.options.interpolation',

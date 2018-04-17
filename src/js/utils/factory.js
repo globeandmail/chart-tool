@@ -18,6 +18,7 @@ export default function recipe(obj) {
   t.heading     = embed.heading                           || t.heading;
   t.qualifier   = embed.qualifier                         || t.qualifier;
   t.source      = embed.source                            || t.source;
+  t.note        = embed.note                              || t.note;
   t.deck        = embed.deck                              || t.deck;
   t.customClass = chart.class                             || t.customClass;
   t.xAxis       = extend(t.xAxis, chart.x_axis) || t.xAxis;

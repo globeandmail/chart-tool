@@ -44,6 +44,7 @@ export const app_settings = {
     deck: '',
     class: 'primary',
     source: config.source.prefix,
+    note: '',
     date_format: config.dateFormat,
     time_format: config.timeFormat,
     hasHours: false,

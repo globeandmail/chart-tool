@@ -11,3 +11,14 @@
     display: inline-block;
   }
 }
+
+.#{$prefix}chart_note-text {
+  padding-bottom: 10px;
+  text-transform: none;
+  color: #777;
+  display: block;
+  @media only screen and (min-width: 420px) {
+    width: calc(100% - 100px);
+    display: inline-block;
+  }
+}

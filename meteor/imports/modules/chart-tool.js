@@ -4278,6 +4278,7 @@ var chartSettings = {
   heading: '',
   qualifier: '',
   source: '',
+  note: '',
   deck: '',
   index: '',
   hasHours: false,
@@ -5769,7 +5770,7 @@ function sum$1(series) {
 }
 
 // defined in rollup.config.js
-var bucket = "chartstg";
+var bucket = "chartprod";
 
 var toString$1 = {}.toString;
 
@@ -7361,6 +7362,7 @@ function recipe(obj) {
   t.heading     = embed.heading                           || t.heading;
   t.qualifier   = embed.qualifier                         || t.qualifier;
   t.source      = embed.source                            || t.source;
+  t.note        = embed.note                              || t.note;
   t.deck        = embed.deck                              || t.deck;
   t.customClass = chart.class                             || t.customClass;
   t.xAxis       = extend$1(t.xAxis, chart.x_axis) || t.xAxis;
@@ -8621,6 +8623,7 @@ function footer(container, obj) {
 
   var footerGroup;
 
+
   if (obj.source !== '' || obj.editable) {
     footerGroup = select(container)
       .append('div')
@@ -8631,6 +8634,24 @@ function footer(container, obj) {
       footerGroup.style('width', ((obj.exportable.width) + "px"));
     }
 
+  }
+
+
+  if (obj.note !== '' || obj.editable) {
+
+    var footerTextNote = footerGroup.append('div')
+      .attr('class', ((obj.prefix) + "chart_note-text"))
+      .text(obj.note);
+
+    if (obj.editable) {
+      footerTextNote
+        .attr('contentEditable', true)
+        .classed('editable-chart_note', true);
+    }
+
+  }
+
+  if (obj.source !== '' || obj.editable) {
     var footerText = footerGroup.append('div')
       .attr('class', ((obj.prefix) + "chart_source-text"))
       .text(obj.source);
@@ -8644,6 +8665,7 @@ function footer(container, obj) {
     obj.dimensions.footerHeight = footerGroup.node().getBoundingClientRect().height;
 
   }
+
 
   return {
     footerGroup: footerGroup

@@ -108,6 +108,14 @@ Meteor.methods({
       }
     });
   },
+  'charts.update.note'(chartId, src) {
+    return Charts.update(chartId, {
+      $set: {
+        note: src,
+        lastEdited: new Date()
+      }
+    });
+  },
   'charts.update.class'(chartId, customClass) {
     return Charts.update(chartId, {
       $set: {

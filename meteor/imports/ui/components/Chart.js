@@ -35,6 +35,7 @@ function chartPresentationalString(props) {
     'range': data.range,
     'series': data.series,
     'source': data.source,
+    'note': data.note,
     'time_format': data.time_format,
     'x_axis': data.x_axis,
     'y_axis': data.y_axis,
@@ -52,6 +53,7 @@ export default class Chart extends Component {
     this.titleBlur = this.titleBlur.bind(this);
     this.qualifierBlur = this.qualifierBlur.bind(this);
     this.sourceBlur = this.sourceBlur.bind(this);
+    this.noteBlur = this.noteBlur.bind(this);
     this.handleHighlight = this.handleHighlight.bind(this);
   }
 
@@ -121,6 +123,14 @@ export default class Chart extends Component {
     window.cursorManager.setEndOfContenteditable(event.target);
   }
 
+  noteBlur(event) {
+    event.preventDefault();
+    const text = event.target.innerText.trim();
+    if (this.props.chart.note !== text) {
+      updateAndSave('charts.update.note', this.props.chart._id, text);
+    }
+  }
+
   handleHighlight(event) {
 
     const chart = this.props.chart,
@@ -158,12 +168,14 @@ export default class Chart extends Component {
   chartEditable() {
     const title = this.chartRef.current.querySelector('.editable-chart_title'),
       qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
-      source = this.chartRef.current.querySelector('.editable-chart_source');
+      source = this.chartRef.current.querySelector('.editable-chart_source'),
+      note = this.chartRef.current.querySelector('.editable-chart_note');
 
     title.addEventListener('blur', this.titleBlur);
     qualifier.addEventListener('blur', this.qualifierBlur);
     source.addEventListener('click', this.sourceClick);
     source.addEventListener('blur', this.sourceBlur);
+    note.addEventListener('blur', this.noteBlur);
   }
 
   chartAnnotatable() {
@@ -237,11 +249,13 @@ export default class Chart extends Component {
       const title = this.chartRef.current.querySelector('.editable-chart_title'),
         qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
         source = this.chartRef.current.querySelector('.editable-chart_source');
+        note = this.chartRef.current.querySelector('.editable-chart_note');
 
       if (title) title.removeEventListener('blur', this.titleBlur);
       if (qualifier) qualifier.removeEventListener('blur', this.qualifierBlur);
       if (source) source.removeEventListener('click', this.sourceClick);
       if (source) source.removeEventListener('blur', this.sourceBlur);
+      if (note) note.removeEventListener('blur', this.noteBlur);
     }
     ChartTool.destroy(this.chartRef.current);
   }
