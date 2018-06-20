@@ -13,7 +13,7 @@ var tipOffset = {"vertical":2,"horizontal":1};
 var tipPadding = {"top":4,"right":9,"bottom":4,"left":9};
 var tipRadius = 3.5;
 var yAxis = {"display":true,"scale":"linear","ticks":"auto","orient":"right","format":"comma","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":true,"paddingRight":9,"tickLowerBound":3,"tickUpperBound":8,"tickGoal":5,"widthThreshold":420,"dy":"","textX":0,"textY":0};
-var xAxis = {"display":true,"scale":"time","ticks":"auto","orient":"bottom","format":"auto","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":false,"rangePoints":1,"tickTarget":6,"ticksSmall":4,"widthThreshold":420,"dy":0.7,"barOffset":9,"upper":{"tickHeight":7,"textX":6,"textY":7},"lower":{"tickHeight":12,"textX":6,"textY":2}};
+var xAxis = {"display":true,"scale":"time","ticks":"auto","orient":"bottom","format":"auto","prefix":"","suffix":"","min":"","max":"","rescale":false,"nice":false,"rangePoints":1,"tickTarget":6,"ticksSmall":4,"widthThreshold":420,"dy":0.7,"barOffset":9,"tickHeight":7,"textX":6,"textY":7};
 var barHeight = 25;
 var barLabelOffset = 6;
 var bands = {"padding":0.12,"offset":0.06,"outerPadding":0.06};
@@ -178,16 +178,9 @@ var app_settings = {
       dy: 0.7,
       ems: 1.1,
       barOffset: 5,
-      upper: {
-        tickHeight: 4,
-        textX: 2,
-        textY: 2
-      },
-      lower: {
-        tickHeight: 7,
-        textX: 2,
-        textY: 0
-      }
+      tickHeight: 4,
+      textX: 2,
+      textY: 2
     },
     y_axis: {
       paddingRight: 5

@@ -13,11 +13,13 @@ class ShowChart extends Component {
 
   constructor(props) {
     super(props);
+    this.forkChart = this.forkChart.bind(this);
+    this.goToChart = this.goToChart.bind(this);
     this.state = {};
   }
 
   forkChart() {
-    Meteor.call('forkChart', this.props.id, (err, result) => {
+    Meteor.call('charts.fork', this.props.id, (err, result) => {
       if (err) {
         console.log(err);
       } else {
