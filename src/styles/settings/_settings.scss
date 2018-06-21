@@ -10,12 +10,14 @@ $heading-font-weight: bold;
 $heading-font-style: normal;
 $heading-font-size: 15px;
 $heading-font-line-height: 17px;
+$heading-font-letter-spacing: 0px;
 
 $utility-font-family: 'Helvetica';
 $utility-font-weight: normal;
 $utility-font-style: normal;
 $utility-font-size: 13px;
 $utility-font-line-height: 16px;
+$utility-font-letter-spacing: 0px;
 
 @mixin heading-font {
   font-family: $heading-font-family;
@@ -23,6 +25,7 @@ $utility-font-line-height: 16px;
   font-style: $heading-font-style;
   font-size: $heading-font-size;
   line-height: $heading-font-line-height;
+  letter-spacing: $heading-font-letter-spacing;
 }
 
 @mixin utility-font {
@@ -31,6 +34,7 @@ $utility-font-line-height: 16px;
   font-style: $utility-font-style;
   font-size: $utility-font-size;
   line-height: $utility-font-line-height;
+  letter-spacing: $utility-font-letter-spacing;
 }
 
 // Color palettes

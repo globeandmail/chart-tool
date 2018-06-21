@@ -139,6 +139,7 @@ $nine-pt: ptToPx(9);
     font-size: $eight-pt;
     color: $color-black;
     fill: $color-black;
+    font-kerning: none;
   }
 
   .#{$prefix}series_group .#{$prefix}line, .#{$prefix}series_group .#{$prefix}line.#{$prefix}line-1 {

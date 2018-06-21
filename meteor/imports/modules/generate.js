@@ -4,7 +4,9 @@ import AWS from 'aws-sdk';
 import { app_settings } from './settings';
 
 export async function generatePDF(chart, width, height) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ['--enable-font-antialiasing', '--font-render-hinting=medium']
+  });
   const page = await browser.newPage();
   await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf`, { waitUntil: ['load', 'networkidle0'] });
   await page.emulateMedia('screen');
