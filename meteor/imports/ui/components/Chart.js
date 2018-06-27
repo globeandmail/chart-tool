@@ -98,10 +98,11 @@ export default class Chart extends Component {
 
   sourceBlur(event) {
     event.preventDefault();
-    const currText = event.target.textContent;
+    const currText = removeNbsp(event.target.textContent).trim();
     let text;
-    if (currText === `${app_settings.chart.source}${app_settings.source_suffix}` || !currText) {
+    if (currText === `${app_settings.chart.source}${app_settings.source_suffix}` || currText === `${app_settings.chart.source}` || !currText) {
       text = app_settings.chart.source;
+      event.target.textContent = text;
     } else {
       const newText = currText.replace(`${app_settings.chart.source}${app_settings.source_suffix}`, '').trim();
       text = `${app_settings.chart.source}${app_settings.source_suffix} ${newText}`;
