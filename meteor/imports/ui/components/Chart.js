@@ -102,6 +102,7 @@ export default class Chart extends Component {
     let text;
     if (currText === `${app_settings.chart.source}${app_settings.source_suffix}` || !currText) {
       text = app_settings.chart.source;
+      event.target.textContent = text;
     } else {
       const newText = currText.replace(`${app_settings.chart.source}${app_settings.source_suffix}`, '').trim();
       text = `${app_settings.chart.source}${app_settings.source_suffix} ${newText}`;
