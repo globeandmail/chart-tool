@@ -1,6 +1,5 @@
 import { select } from 'd3-selection';
 import 'd3-selection-multi';
-import { csvParse } from 'd3-dsv';
 
 export default function header(container, obj) {
 
@@ -13,7 +12,7 @@ export default function header(container, obj) {
     headerGroup.style('width', `${obj.exportable.width}px`);
   }
 
-  if (obj.heading !== '' || obj.editable) {
+  if ((obj.heading !== '' || obj.editable) && obj.options.head) {
     const headerText = headerGroup
       .append('div')
       .attr('class', `${obj.prefix}chart_title-text`)
@@ -29,20 +28,18 @@ export default function header(container, obj) {
 
   let qualifier;
 
-  if (obj.options.type === 'bar') {
-    if (obj.qualifier !== '' || obj.editable) {
-      qualifier = headerGroup
-        .append('div')
-        .attrs({
-          'class': () => {
-            let str = `${obj.prefix}chart_qualifier ${obj.prefix}chart_qualifier-bar`;
-            if (obj.editable) { str += ' editable-chart_qualifier'; }
-            return str;
-          },
-          'contentEditable': () => { return obj.editable ? true : false; }
-        })
-        .text(obj.qualifier);
-    }
+  if ((obj.qualifier !== '' || obj.editable) && obj.options.qualifier) {
+    qualifier = headerGroup
+      .append('div')
+      .attrs({
+        'class': () => {
+          let str = `${obj.prefix}chart_qualifier`;
+          if (obj.editable) { str += ' editable-chart_qualifier'; }
+          return str;
+        },
+        'contentEditable': () => { return obj.editable ? true : false; }
+      })
+      .text(obj.qualifier);
   }
 
   let legend;
@@ -51,20 +48,20 @@ export default function header(container, obj) {
 
     legend = headerGroup.append('div')
       .classed(`${obj.prefix}chart_legend`, true);
-    
-    if(obj.options.type === 'scatterplot'){
-      // Murat's note:
-      // For the scatterplot, keys must be replaced with unique categories from 'z' column
-      // For categories, return unique values from the 'z' column.
-      const categories = ['0'];
-      csvParse(obj.data.csv, function(d,i){
-        const lastColumn = obj.data.data.columns[obj.data.data.columns.length-1];
-        if(categories.indexOf(d[lastColumn]) === -1){
-          if(d[lastColumn] !== undefined){categories.push(d[lastColumn]);}
-        }
-      });
-      obj.data.keys = categories;
-    }
+
+    // if (obj.options.type === 'scatterplot') {
+    //   // Murat's note:
+    //   // For the scatterplot, keys must be replaced with unique categories from 'z' column
+    //   // For categories, return unique values from the 'z' column.
+    //   const categories = ['0'];
+    //   csvParse(obj.data.csv, function(d,i){
+    //     const lastColumn = obj.data.data.columns[obj.data.data.columns.length-1];
+    //     if(categories.indexOf(d[lastColumn]) === -1){
+    //       if(d[lastColumn] !== undefined){categories.push(d[lastColumn]);}
+    //     }
+    //   });
+    //   obj.data.keys = categories;
+    // }
 
     let keys = obj.data.keys.slice();
 
@@ -85,11 +82,12 @@ export default function header(container, obj) {
       });
 
     legendItem.append('span')
-      .attr('class', `${obj.prefix}legend_item_icon`);
+      .attr('class', `${obj.prefix}legend_item_icon`)
+      .text('\u00A0');
 
     legendItem.append('span')
       .attr('class', `${obj.prefix}legend_item_text`)
-      .text(d => { return d; });
+      .text(d => d);
   }
 
   obj.dimensions.headerHeight = headerGroup.node().getBoundingClientRect().height;

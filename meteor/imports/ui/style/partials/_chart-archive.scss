@@ -1,0 +1,236 @@
+// chart-list and chart-entry
+
+.charts-archive {
+  @include outer-container;
+  position: relative;
+}
+
+.charts-archive_aside-wrapper {
+  @include span-columns(3 of 12);
+}
+
+.charts-archive_aside {
+  margin-top: 35px;
+  h2 {
+    @include interface-font-bold;
+    margin-bottom: 0.4em;
+  }
+  label {
+    position: relative;
+    top: 1px;
+    padding-left: 0.3em;
+  }
+}
+
+.charts-archive_search-field {
+  width: 100%;
+  @extend %input;
+}
+
+.charts-archive_sort {
+  @include clearfix;
+  .select-wrapper {
+    &:after {
+      right: 8px;
+    }
+    &:first-of-type {
+      float: left;
+    }
+    &:last-of-type {
+      float: right;
+    }
+  }
+  select {
+    @include interface-font-regular;
+    font-size: 1em;
+    padding-right: 1.4em;
+  }
+}
+
+.charts-archive_results {
+  @include span-columns(9 of 12);
+  margin-top: 2.5em;
+}
+
+.charts-archive_grid {
+  display: block;
+  .charts-archive_empty-container {
+    display: none;
+    &:only-child {
+      display: block;
+    }
+  }
+}
+
+.charts-archive_count {
+  width: 100%;
+  background-color: $color-gray-light;
+  padding: 0.4em;
+  margin-bottom: 0.8em;
+  h3 {
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    @include interface-font-regular;
+    span {
+      @include interface-font-bold;
+    }
+  }
+  select {
+    border: none;
+    font-size: 0.9em;
+    padding: 0;
+    margin-left: 0.2em;
+    padding-bottom: 1px;
+    border-radius: 0;
+    border-bottom: 1px solid $color-black;
+    text-align-last: center;
+    @include interface-font-bold;
+  }
+}
+
+.charts-archive_count-left, .charts-archive_count-right {
+  display: inline-block;
+}
+
+.charts-archive_count-right {
+  float: right;
+}
+
+.charts-archive_empty-container {
+  background-color: $color-gray-light;
+  width: 100%;
+  height: 400px;
+}
+
+.charts-archive_empty {
+  width: 80%;
+  position: relative;
+  top: 50%;
+  margin: 0 auto;
+  transform: translateY(-50%);
+  text-align: center;
+  .chart-archive_empty-img {
+    width: 30px;
+    margin-bottom: 20px;
+  }
+  h2 {
+    @include interface-font-bold;
+  }
+}
+
+.charts-archive_single {
+  @include span-columns(8 of 24);
+  margin-bottom: 10px;
+  height: 230px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  &:after {
+    content: "";
+    display: block;
+  }
+  img {
+    display: block;
+    padding: 8px;
+    width: 100%;
+  }
+  h4 {
+    padding: 8px 8px 5px 8px;
+    @include interface-font-regular;
+    background-color: $color-white;
+    z-index: 100;
+  }
+  &:nth-of-type(3n) {
+    margin-right: 0;
+  }
+  &:hover {
+    .hover-screen {
+      opacity: 0.7;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+}
+
+.charts-archive_single-inner {
+  width: 100%;
+  border: 1px solid #e4e4e4;
+  display: block;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.empty-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+  background: $color-gray-light;
+  padding: 1em;
+  p {
+    text-align: center;
+    position: relative;
+    top: 45%;
+    transform: translateY(-50%);
+  }
+}
+
+.hover-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $primary-color;
+  opacity: 0;
+  @include transition (all 0.1s ease-out);
+}
+
+.top-line {
+  display: block;
+  @include clearfix;
+  margin-bottom: 0.6em;
+  .slug, .show, .edit {
+    display: block;
+  }
+  .slug {
+    float: left;
+    @include interface-font-bold;
+  }
+  .chart-links {
+    float: right;
+  }
+  .show, .edit {
+    display: inline;
+    padding-left: 0.4em;
+    a {
+      text-decoration: none;
+      color: $color-gray-medium;
+      @include transition (all 0.1s ease-out);
+      &:hover {
+        color: $primary-color;
+        @include transition (all 0.1s ease-in);
+      }
+    }
+  }
+}
+
+.charts-list_new {
+  text-align: right;
+  padding: 0 0.1em 0.5em 0;
+  display: inline;
+  font-size: 1.4em;
+  a {
+    text-decoration: none;
+    color: $color-gray-medium;
+    @include transition (all 0.1s ease-out);
+    &:hover {
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+}

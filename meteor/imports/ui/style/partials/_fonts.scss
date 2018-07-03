@@ -1,0 +1,24 @@
+$interface-font-light: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$interface-font-regular: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$interface-font-bold: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$interface-font-black: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+@mixin interface-font-light {
+  font-family: $interface-font-light;
+  font-weight: 200;
+}
+
+@mixin interface-font-regular {
+  font-family: $interface-font-regular;
+  font-weight: 400;
+}
+
+@mixin interface-font-bold {
+  font-family: $interface-font-bold;
+  font-weight: 600;
+}
+
+@mixin interface-font-black {
+  font-family: $interface-font-black;
+  font-weight: 800;
+}

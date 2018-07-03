@@ -9,12 +9,11 @@ const uglify = require('rollup-plugin-uglify');
 const eslint = require('rollup-plugin-eslint');
 const strip = require('rollup-plugin-strip');
 const replace = require('rollup-plugin-replace');
+const rename = require('gulp-rename');
 
 gulp.task('js:build', done => {
   runSequence(
-    'clean-meteorbundle',
     'clean-buildpath',
-    'clean-meteorsettings',
     'rollup:build',
     'rollup-meteor:build',
     'move-meteor:build',
@@ -23,23 +22,14 @@ gulp.task('js:build', done => {
 
 gulp.task('js:dev', done => {
   runSequence(
-    'clean-meteorbundle',
     'rollup:dev',
     'rollup-meteor:dev',
     'move-meteor:dev',
     done);
 });
 
-gulp.task('clean-meteorbundle', () => {
-  return del([`${gulpConfig.meteorBundle}/**/*.js`]);
-});
-
 gulp.task('clean-buildpath', () => {
   return del([`${gulpConfig.buildpath}/**/*.js`]);
-});
-
-gulp.task('clean-meteorsettings', () => {
-  return del([`${gulpConfig.buildPath}/meteorSettings.min.js`]);
 });
 
 gulp.task('move-meteor:dev', () => {
@@ -49,6 +39,7 @@ gulp.task('move-meteor:dev', () => {
 
 gulp.task('move-meteor:build', () => {
   gulp.src(`${gulpConfig.buildPath}/chart-tool.min.js`)
+    .pipe(rename('chart-tool.js'))
     .pipe(gulp.dest(gulpConfig.meteorBundle));
 });
 
@@ -70,7 +61,7 @@ gulp.task('rollup:dev', () => {
     cache = bundle;
     return bundle.write({
       banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
-      format: 'iife',
+      format: 'umd',
       sourceMap: true,
       dest: `${gulpConfig.buildPathDev}/chart-tool.js`,
       moduleName: 'ChartToolInit'
@@ -119,7 +110,7 @@ gulp.task('rollup:build', () => {
   return rollup(rConfig).then(bundle => {
     return bundle.write({
       banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
-      format: 'iife',
+      format: 'umd',
       dest: `${gulpConfig.buildPath}/chart-tool.min.js`,
       moduleName: 'ChartToolInit'
     });

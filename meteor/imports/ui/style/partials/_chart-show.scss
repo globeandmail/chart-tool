@@ -1,0 +1,61 @@
+.chart-show {
+  width: 620px;
+  margin: 0 auto 6em auto;
+  ul {
+    li {
+      padding-bottom: 0.3em;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    span {
+      @include interface-font-bold;
+    }
+  }
+}
+
+.chart-show_preview {
+  margin-bottom: 2em;
+}
+
+.chart-show_tags {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  h4 {
+    @include interface-font-bold;
+  }
+  li {
+    font-size: 0.8em;
+    font-family: "Monaco", "Lucida Console", monospace;
+    border: 1px solid $color-black;
+    border-radius: 4px;
+    color: $color-black;
+    display: inline;
+    padding: 0.3em;
+    margin-right: 0.5em;
+  }
+}
+
+
+.chart-show_fork {
+  color: $color-gray-medium;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin-top: 1em;
+  cursor: pointer;
+  @include transition (all 0.1s ease-out);
+  &:hover {
+    color: $primary-color;
+    @include transition (all 0.1s ease-in);
+  }
+}
+
+.chart-show_dates p {
+  color: $color-gray-medium;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  padding-bottom: 0.2em;
+}

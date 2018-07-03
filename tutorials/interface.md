@@ -12,12 +12,10 @@ The interface has several routes available:
 
 * `/new`: Make a new chart (also the default route)
 * `/archive`: List and search through all generated charts
-* `/chart/_id`: Preview an individual chart, a handy link for sharing with colleagues
-* `/chart/edit/_id`: Edit or export a chart based on its Mongo ID
-* `/chart/pdf/_id`: Preview what an exported PDF will look like (warning: the chart will be teeny tiny since all the fonts are print-sized)
-* `/chart/pdf/download/_id`: Trigger a PDF download
+* `/chart/:_id`: Preview an individual chart, a handy link for sharing with colleagues
+* `/chart/:_id/edit`: Edit or export a chart based on its Mongo ID
+* `/chart/:_id/pdf`: Preview what an exported PDF will look like (warning: the chart will be teeny tiny since all the fonts are print-sized)
 * `/status`: A basic status page listing number of charts in the database, active users, and server and database connection status
-* ~~`/chart/png/download/:_id/:width/:height/:scale?`: Trigger a PNG download of specified width, height, and, optionally, scale~~ **Coming soon!**
 
 
 ### API endpoints

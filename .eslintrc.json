@@ -7,7 +7,9 @@
   "extends": "eslint:recommended",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaFeatures": {}
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "rules": {
     "no-console": ["warn"],
@@ -30,10 +32,14 @@
     "semi": ["error", "always"],
     "space-in-parens": ["error", "never"],
     "no-var": ["error"],
-    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }]
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error"
   },
   "globals": {
     "DocumentTouch": false
   },
-  "plugins": []
+  "plugins": [
+    "react"
+  ]
 }

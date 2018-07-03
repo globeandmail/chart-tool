@@ -85,6 +85,7 @@ const chartSettings = {
     },
     barHeight: settings.barHeight,
     barLabelOffset: settings.barLabelOffset,
+    scatterplotRadius: settings.scatterplotRadius,
     bands: {
       padding: settings.bands.padding,
       offset: settings.bands.offset,

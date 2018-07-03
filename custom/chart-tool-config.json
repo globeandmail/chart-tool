@@ -9,6 +9,7 @@
   "tipTimeout": 5000,
   "ratioMobile": 1.15,
   "ratioDesktop": 0.65,
+  "thumbnailDebounce": 1500,
 
   "dateFormat": "%Y-%m-%d",
   "timeFormat": "%H:%M",
@@ -76,20 +77,14 @@
     "widthThreshold": 420,
     "dy": 0.7,
     "barOffset": 9,
-    "upper": {
-      "tickHeight": 7,
-      "textX": 6,
-      "textY": 7
-    },
-    "lower": {
-      "tickHeight": 12,
-      "textX": 6,
-      "textY": 2
-    }
+    "tickHeight": 7,
+    "textX": 6,
+    "textY": 7
   },
 
   "barHeight": 25,
   "barLabelOffset": 6,
+  "scatterplotRadius": 4,
 
   "bands": {
     "padding": 0.12,
@@ -134,7 +129,7 @@
     "thumbnailWidth": 460
   },
 
-  "embedJS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.js",
-  "embedCSS": "http://beta.images.theglobeandmail.com/static/templates/tools/chart-tool/1.2.0/chart-tool.min.css"
+  "embedJS": "http://globeandmail.github.io/{{version}}/chart-tool.min.js",
+  "embedCSS": "http://globeandmail.github.io/{{version}}/chart-tool.min.css"
 
 }

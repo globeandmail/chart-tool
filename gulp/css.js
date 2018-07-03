@@ -26,7 +26,7 @@ gulp.task('scss-compile:dev', () => {
     ]))
     .pipe(sourcemaps.write())
     .pipe(rename('chart-tool.css'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/lib/chart-tool/stylesheets`))
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style`))
     .pipe(gulp.dest(`${gulpConfig.buildPathDev}`))
     .on('error', gutil.log);
 });
@@ -38,27 +38,28 @@ gulp.task('scss-compile:build', () => {
       autoPrefixer(autoprefixerOptions)]
     ))
     .pipe(csso({ debug: true }))
+    .pipe(rename('chart-tool.css'))
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style`))
     .pipe(rename('chart-tool.min.css'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/lib/chart-tool/stylesheets`))
     .pipe(gulp.dest(buildCss))
     .on('error', gutil.log);
 });
 
 gulp.task('scss-settings', () => {
   return gulp.src(`${gulpConfig.libStylesheets}/settings/_settings.scss`)
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
 });
 
 gulp.task('scss-custom-meteor-before', () => {
   return gulp.src(`${gulpConfig.customPath}/base.scss`)
     .pipe(rename('_custom-settings.scss'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
 });
 
 gulp.task('scss-custom-meteor-after', () => {
   return gulp.src(`${gulpConfig.customPath}/meteor-custom.scss`)
     .pipe(rename('_custom.scss'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/client/stylesheets/partials`));
+    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
 });
 
 gulp.task('scss:build', done => {

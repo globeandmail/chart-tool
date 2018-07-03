@@ -84,26 +84,26 @@ export function appendXAxis(axisGroup, obj, scale, axis, axisType) {
       ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
     case 'linear':
-      drawXLinear(obj, axis, axisNode, axisSettings);
+      linearXAxis(obj, axis, axisNode, axisSettings);
       break;
   }
 
-   // Murat's note: Add X axis label.
-  switch(obj.options.type){
-    case 'scatterplot' : 
-      const xAxisLabel = axisNode.append("text")
-      .style("text-anchor", "middle")
-      .attrs({
-        'y': obj.dimensions.xAxisHeight + 20,
-        'class' : '.x-axis-label'
-      })
-      .text(obj.xAxis.label.toUpperCase());
-      
-      const yAxisWidth = obj.rendered.container.select("." + obj.prefix + "y-axis").node().getBBox().width;
-      
-      xAxisLabel.attr('x', (obj.dimensions.width)/2 - yAxisWidth )
-    break;
-  }
+  //  // Murat's note: Add X axis label.
+  // switch(obj.options.type){
+  //   case 'scatterplot' :
+  //     const xAxisLabel = axisNode.append("text")
+  //     .style("text-anchor", "middle")
+  //     .attrs({
+  //       'y': obj.dimensions.xAxisHeight + 20,
+  //       'class' : '.x-axis-label'
+  //     })
+  //     .text(obj.xAxis.label.toUpperCase());
+  //
+  //     const yAxisWidth = obj.rendered.container.select("." + obj.prefix + "y-axis").node().getBBox().width;
+  //
+  //     xAxisLabel.attr('x', (obj.dimensions.width)/2 - yAxisWidth )
+  //   break;
+  // }
 
   obj.dimensions.xAxisHeight = axisNode.node().getBBox().height;
 
@@ -118,24 +118,26 @@ export function appendYAxis(axisGroup, obj, scale, axis, axisType) {
   const axisObj = obj[axisType];
 
   let axisSettings;
-// Murat's note: add Y axis label
-  switch(obj.options.type){
-    case 'scatterplot' : 
-      const yAxisLabel = axisNode.append("text")
-      .text(obj.yAxis.label.toUpperCase())
-      .style('text-anchor', 'middle');
-      const xAxisNode = obj.rendered.container.select("." + obj.prefix + "x-axis").node();
-      const xAxisHeight = (xAxisNode) ? xAxisNode.getBBox().height : 0;
 
-      yAxisLabel.attrs({
-        'transform' : 'translate('+
-        (yAxisLabel.node().getBBox().height-5) +','+
-        (obj.dimensions.computedHeight() - xAxisHeight)/2
-        +') rotate (-90)',
-        'class':'y-axis-label'
-      });
-    break;
-  }
+  // // Murat's note: add Y axis label
+  // switch(obj.options.type){
+  //   case 'scatterplot' :
+  //     const yAxisLabel = axisNode.append("text")
+  //     .text(obj.yAxis.label.toUpperCase())
+  //     .style('text-anchor', 'middle');
+  //     const xAxisNode = obj.rendered.container.select("." + obj.prefix + "x-axis").node();
+  //     const xAxisHeight = (xAxisNode) ? xAxisNode.getBBox().height : 0;
+  //
+  //     yAxisLabel.attrs({
+  //       'transform' : 'translate('+
+  //       (yAxisLabel.node().getBBox().height-5) +','+
+  //       (obj.dimensions.computedHeight() - xAxisHeight)/2
+  //       +') rotate (-90)',
+  //       'class':'y-axis-label'
+  //     });
+  //   break;
+  // }
+
   if (obj.exportable && obj.exportable.y_axis) {
     axisSettings = Object.assign(axisObj, obj.exportable.y_axis);
   } else {
@@ -156,24 +158,28 @@ export function appendYAxis(axisGroup, obj, scale, axis, axisType) {
   }
 
 }
-export function drawXLinear(obj, axis, axisNode, axisSettings) {
+
+export function linearXAxis(obj, axis, axisNode, axisSettings) {
+
   axis.scale().range([0, obj.dimensions.tickWidth()]);
   //perhaps write a tickFinderX function?
+
   axis.tickValues(tickFinderY(axis.scale(), axisSettings));
 
   axisNode.call(axis);
   axisNode.selectAll('g')
-    .filter(function (d) { return d; })
-    .classed(((obj.prefix) + "minor"), true);
+    .filter(d => d)
+    .classed(`.${obj.prefix}minor`, true);
 
   const tickArr = axisNode.selectAll('.tick')._groups[0];
   //Get last tick width and subtract from range.
   const lastTick = tickArr[tickArr.length - 1];
-  const lastTickWidth = lastTick.getBoundingClientRect().width
+  const lastTickWidth = lastTick.getBoundingClientRect().width;
 
   axis.scale().range([0, obj.dimensions.tickWidth() - (lastTickWidth/2)]);
   axisNode.call(axis);
 }
+
 export function drawYAxis(obj, axis, axisNode, axisSettings) {
 
   axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
@@ -196,31 +202,32 @@ export function drawYAxis(obj, axis, axisNode, axisSettings) {
       'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
       'x2': obj.dimensions.computedWidth()
     });
-  //Murat's addition
-  let scatterplotTickPadding = 0;
 
-  axisNode.selectAll('.' + (obj.prefix) + "minor line")
-    .attrs({
-      'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-      'x2': 
-      function(){
-        // Short ticks for scatterplot.
-        switch(obj.options.type){
-          case 'scatterplot' : 
-            scatterplotTickPadding = 4;
-          return (obj.dimensions.labelWidth + scatterplotTickPadding);
-          break;
-          default:
-            return obj.dimensions.computedWidth();
-          break;
-        }
-      }
-    });
-    axisNode.selectAll(".tick:not(." + (obj.prefix) + "minor) line")
-      .attrs({
-        'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - scatterplotTickPadding,
-        'x2': obj.dimensions.computedWidth()
-    });
+  // //Murat's addition
+  // let scatterplotTickPadding = 0;
+  //
+  // axisNode.selectAll('.' + (obj.prefix) + "minor line")
+  //   .attrs({
+  //     'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+  //     'x2':
+  //     function(){
+  //       // Short ticks for scatterplot.
+  //       switch(obj.options.type){
+  //         case 'scatterplot' :
+  //           scatterplotTickPadding = 4;
+  //         return (obj.dimensions.labelWidth + scatterplotTickPadding);
+  //         break;
+  //         default:
+  //           return obj.dimensions.computedWidth();
+  //         break;
+  //       }
+  //     }
+  //   });
+  //   axisNode.selectAll(".tick:not(." + (obj.prefix) + "minor) line")
+  //     .attrs({
+  //       'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - scatterplotTickPadding,
+  //       'x2': obj.dimensions.computedWidth()
+  //   });
 
 }
 
@@ -256,8 +263,8 @@ export function timeAxis(axisNode, obj, scale, axis, axisSettings) {
 
   axisNode.selectAll('text')
     .attrs({
-      'x': axisSettings.upper.textX,
-      'y': axisSettings.upper.textY,
+      'x': axisSettings.textX,
+      'y': axisSettings.textY,
       'dy': `${axisSettings.dy}em`
     })
     .style('text-anchor', 'start')
@@ -269,7 +276,7 @@ export function timeAxis(axisNode, obj, scale, axis, axisSettings) {
     .call(dropTicks);
 
   axisNode.selectAll('line')
-    .attr('y2', axisSettings.upper.tickHeight);
+    .attr('y2', axisSettings.tickHeight);
 
 }
 
@@ -285,6 +292,7 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
     axisNode.selectAll('text')
       .style('text-anchor', 'middle')
       .attr('dy', `${axisSettings.dy}em`)
+      .attr('y', axisSettings.textY)
       .call(wrapText, bandWidth);
 
     const xPos = -(bandWidth / 2) - ((scale.step() * dimensions.bands.padding) / 2);
@@ -296,7 +304,7 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
       });
 
     axisNode.selectAll('line')
-      .attr('y2', axisSettings.upper.tickHeight);
+      .attr('y2', axisSettings.tickHeight);
 
     const lastTick = axisNode.append('g')
       .attrs({
@@ -306,7 +314,7 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
 
     lastTick.append('line')
       .attrs({
-        'y2': axisSettings.upper.tickHeight,
+        'y2': axisSettings.tickHeight,
         'x1': xPos,
         'x2': xPos
       });
@@ -358,8 +366,8 @@ export function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
 
   axisNode.selectAll('text')
     .attrs({
-      'x': axisSettings.upper.textX,
-      'y': axisSettings.upper.textY,
+      'x': axisSettings.textX,
+      'y': axisSettings.textY,
       'dy': `${axisSettings.dy}em`
     })
     .style('text-anchor', 'start')
@@ -377,7 +385,7 @@ export function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
     .call(ordinalTimeTicks, axisNode, ctx, scale, ordinalTickPadding);
 
   axisNode.selectAll('line')
-    .attr('y2', axisSettings.upper.tickHeight);
+    .attr('y2', axisSettings.tickHeight);
 
 }
 
