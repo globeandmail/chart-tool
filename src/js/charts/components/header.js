@@ -49,24 +49,14 @@ export default function header(container, obj) {
     legend = headerGroup.append('div')
       .classed(`${obj.prefix}chart_legend`, true);
 
-    // if (obj.options.type === 'scatterplot') {
-    //   // Murat's note:
-    //   // For the scatterplot, keys must be replaced with unique categories from 'z' column
-    //   // For categories, return unique values from the 'z' column.
-    //   const categories = ['0'];
-    //   csvParse(obj.data.csv, function(d,i){
-    //     const lastColumn = obj.data.data.columns[obj.data.data.columns.length-1];
-    //     if(categories.indexOf(d[lastColumn]) === -1){
-    //       if(d[lastColumn] !== undefined){categories.push(d[lastColumn]);}
-    //     }
-    //   });
-    //   obj.data.keys = categories;
-    // }
+    let keys;
 
-    let keys = obj.data.keys.slice();
-
-    // get rid of the first item as it doesnt represent a series
-    keys.shift();
+    if (obj.options.type === 'scatterplot') {
+      keys = obj.data.groups ? obj.data.groups.slice() : [];
+    } else {
+      keys = obj.data.keys.slice();
+      keys.shift(); // get rid of the first item as it doesnt represent a series
+    }
 
     if (obj.options.type === 'multiline') {
       keys = [keys[0], keys[1]];
@@ -93,9 +83,9 @@ export default function header(container, obj) {
   obj.dimensions.headerHeight = headerGroup.node().getBoundingClientRect().height;
 
   return {
-    headerGroup: headerGroup,
-    legend: legend,
-    qualifier: qualifier
+    headerGroup,
+    legend,
+    qualifier
   };
 
 }

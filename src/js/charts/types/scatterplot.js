@@ -1,8 +1,6 @@
 import { axisManager as Axis, axisCleanup, addZeroLine } from '../components/axis';
 import { scaleManager as Scale } from '../components/scale';
 import 'd3-selection-multi';
-import { createVoronoi } from '../../utils/utils';
-// import { gridify } from '../../utils/dataparse';
 
 export default function scatterplotChart(node, obj) {
 
@@ -15,130 +13,42 @@ export default function scatterplotChart(node, obj) {
 
   axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  if (obj.data.seriesAmount === 1) {
-    obj.seriesHighlight = () => { return 0; };
-  }
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
+
+  xScale.range([obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), obj.dimensions.tickWidth()]);
 
   const seriesGroup = node.append('g')
-    .attrs({
-      'class': `${obj.prefix}series_group`
-    });
+    .attr('class', `${obj.prefix}series_group`);
 
-  const dotItem = seriesGroup
+  const dotItems = seriesGroup
     .selectAll(`.${obj.prefix}dot`)
     .data(obj.data.data).enter()
     .append('circle')
     .attrs({
-      'class': (d, i) => `${obj.prefix}dot ${obj.prefix}dot-${i}`,
+      'class': d => {
+        let output = `${obj.prefix}dot`;
+        if (obj.data.groups) {
+          const groupIndex = obj.data.groups.indexOf(d.group);
+          output += ` ${obj.prefix}dot-${groupIndex}`;
+        } else {
+          output += ` ${obj.prefix}dot-0`;
+        }
+        return output;
+      },
       'data-key': d => d.key,
-
-      // 'class': function (d, i, o) {
-        // const category = (d.series.length > 1) ? d.series[d.series.length-1].val : undefined;
-        //
-        // let index = obj.data.keys.indexOf(category)-1;
-        //     index = (index < 0) ? 0 : index;
-        // let cx = xScale(d.key) + xAxisPadding;
-        // let cy = yScale(d.series[0].val);
-        //
-        // o[i].setAttribute('cx', cx);
-        // o[i].setAttribute('cy', cy);
-        //
-        // voronoiData.push([{
-        //   'obj':o[i],
-        //   'x': cx,
-        //   'y': cy,
-        //   'xd': {key:obj.xAxis.label, val:d.key},
-        //   'yd': {key:obj.yAxis.label, val:d.series[0].val},
-        //   'category': category
-        // }]);
-        // return ((obj.prefix) + obj.options.type + ' ' + (obj.prefix) + obj.options.type + '-' + index);
-      // },
+      'data-group': d => d.group,
       'cx': d => xScale(d.series[0].val),
       'cy': d => yScale(d.series[1].val),
       'r': obj.dimensions.scatterplotRadius
     });
 
-  // dotItem.append('circle')
-  //   .attrs({
-  //
-  //   });
-
-  // obj.xAxis.label = obj.data.data.columns[0];
-  // obj.yAxis.label = obj.data.data.columns[1];
-
-  // const yScaleObj = new Scale(obj, 'yAxis'),
-  //   xScaleObj = new Scale(obj, 'xAxis'),
-  //   xScale = xScaleObj.scale, yScale = yScaleObj.scale;
-  //
-  // const yAxisObj = new Axis(node, obj, yScaleObj.scale, 'yAxis'),
-  //   xAxisObj = new Axis(node, obj, xScaleObj.scale, 'xAxis');
-  //
-  // const xAxisPadding = obj.dimensions.computedWidth() - obj.dimensions.tickWidth();
-  //
-  // switch(xScaleObj.obj.type){
-  //   case 'ordinal-time':
-  //   case 'ordinal':
-  //     xScale
-  //       .range([0, obj.dimensions.tickWidth()])
-  //       .padding(0);
-  //     break;
-  //   case 'linear':
-  //     xScale.range([0, obj.dimensions.tickWidth()]);
-  //     break;
-  // }
-  //
-  // axisCleanup(node, obj, xAxisObj, yAxisObj);
-  //
-  // addZeroLine(obj, node, yAxisObj, 'yAxis');
-  //
-  // if (xScaleObj.obj.type !== 'ordinal-time') {
-  //   addZeroLine(obj, node, xAxisObj, 'xAxis');
-  // }
-
-  // const voronoi = new createVoronoi(xAxisPadding, 0, obj.dimensions.computedWidth(), obj.dimensions.yAxisHeight());
-  //
-  // const voronoiGrid = node.append('g')
-  //   .attr('class', obj.prefix + obj.options.type + '-voronoi');
-  //
-  // let voronoiData = [];
-  //
-  // obj.voronoi = voronoi;
-  // obj.voronoi.data = voronoiData;
-  // obj.voronoi.grid = voronoiGrid;
-
-  // const dotItem = seriesGroup
-  //   .selectAll(('.' + (obj.prefix) + obj.options.type))
-  //   .data(obj.data.data).enter()
-  //   .append('circle')
-  //   .attrs({
-  //     'class': function(d,i,o){
-  //       const category = (d.series.length > 1) ? d.series[d.series.length-1].val : undefined;
-  //
-  //       let index = obj.data.keys.indexOf(category)-1;
-  //           index = (index < 0) ? 0 : index;
-  //       let cx = xScale(d.key) + xAxisPadding;
-  //       let cy = yScale(d.series[0].val);
-  //
-  //       o[i].setAttribute('cx', cx);
-  //       o[i].setAttribute('cy', cy);
-  //
-  //       voronoiData.push([{
-  //         'obj':o[i],
-  //         'x': cx,
-  //         'y': cy,
-  //         'xd': {key:obj.xAxis.label, val:d.key},
-  //         'yd': {key:obj.yAxis.label, val:d.series[0].val},
-  //         'category': category
-  //       }]);
-  //       return ((obj.prefix) + obj.options.type + ' ' + (obj.prefix) + obj.options.type + '-' + index);
-  //     }
-  //   });
-
   return {
-    xScaleObj: xScaleObj,
-    yScaleObj: yScaleObj,
-    xAxisObj: xAxisObj,
-    yAxisObj: yAxisObj
+    xScaleObj,
+    yScaleObj,
+    xAxisObj,
+    yAxisObj,
+    seriesGroup,
+    dotItems
   };
 
 }

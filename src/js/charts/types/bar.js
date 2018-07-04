@@ -1,5 +1,5 @@
 import { select } from 'd3-selection';
-import { axisManager as Axis, setTickFormatY as setLabelFormat } from '../components/axis';
+import { axisManager as Axis, setTickFormat as setLabelFormat } from '../components/axis';
 import { scaleManager as Scale } from '../components/scale';
 import 'd3-selection-multi';
 

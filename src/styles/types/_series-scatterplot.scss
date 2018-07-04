@@ -5,7 +5,7 @@
 // }
 
 .#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot {
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot.muted {
@@ -17,8 +17,10 @@
   $palette: nth( $palettes, $pcounter );
   $palette-name: nth( $palette-names, $pcounter );
 
-  .#{$prefix + $palette-name}.#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot {
-  	fill: nth( $palette, 1 );
+  @for $counter from 1 through $series-count-max {
+    .#{$prefix + $palette-name}.#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot.#{$prefix}dot-#{$counter - 1} {
+    	fill: nth( $palette, $counter );
+    }
   }
 
 }

@@ -7471,15 +7471,14 @@ $export$6($export$6.S + $export$6.F * !_iterDetect(function(iter){ Array.from(it
   }
 });
 
-// import { voronoi } from 'd3-voronoi';
-function debounce$1(fn, obj, timeout, root) {
+function debounce$1(fn, params, timeout, root) {
   var timeoutID = -1;
-  return function () {
+  return (function () {
     if (timeoutID > -1) { root.clearTimeout(timeoutID); }
     timeoutID = root.setTimeout(function () {
-      fn(obj);
+      fn(params);
     }, timeout);
-  };
+  });
 }
 
 function clearChart(cont) {
@@ -7522,8 +7521,44 @@ var TimeObj = function TimeObj() {
   this.today = new Date();
 };
 
-function wrapText(text, width) {
-  text.each(function() {
+function wrapAnnoText(textNode) {
+  textNode.each(function() {
+
+    var text = select(this),
+      y = text.attr('y'),
+      lineHeight = 1.0, // ems
+      x = text.attr('x'),
+      dy = parseFloat(text.attr('dy')) || 0.1;
+
+    var words = text.text().split('\n').reverse(),
+      line$$1 = [],
+      lineNumber = 0,
+      word,
+      tspan = text.text(null).append('tspan')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('dy', (dy + "em"));
+
+    while (word = words.pop()) {
+      line$$1.push(word);
+      tspan.text(line$$1.join(' '));
+      if (line$$1.length > 1) {
+        line$$1.pop();
+        tspan.text(line$$1.join(' '));
+        line$$1 = [word];
+        tspan = text.append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', ((++lineNumber * lineHeight + dy) + "em"))
+          .text(word);
+      }
+    }
+  });
+}
+
+function wrapText(textNode, width) {
+
+  textNode.each(function() {
 
     var text = select(this),
       y = text.attr('y'),
@@ -7699,6 +7734,10 @@ function csvToTable(target, data) {
     .text(function (d) { return d; });
 }
 
+function getUniqueValues(data) {
+  return Array.from(new Set(data));
+}
+
 function getUniqueDateValues(data, type) {
   var allDates = data.map(function (d) {
     switch (type) {
@@ -7707,7 +7746,7 @@ function getUniqueDateValues(data, type) {
       case 'year': return d.key.getFullYear();
     }
   });
-  return Array.from(new Set(allDates));
+  return getUniqueValues(allDates);
 }
 
 function isElement(el) {
@@ -7735,13 +7774,23 @@ function inputDate(scaleType, defaultFormat, declaredFormat) {
   }
 }
 
-function parse(csv, inputDateFormat, index, stacked) {
+function parse(csv, inputDateFormat, index, stacked, type) {
 
   var val;
 
   var firstVals = {};
 
-  var headers = csvParseRows(csv.match(/^.*$/m)[0])[0];
+  var keys = csvParseRows(csv.match(/^.*$/m)[0])[0];
+
+  var groupingKey, dotSizingKey;
+
+  if (type && type === 'scatterplot') {
+    if (keys.length > 3) { groupingKey = keys[3]; }
+    if (keys.length >= 4) { dotSizingKey = keys[4]; }
+  }
+
+  if (groupingKey) { keys.splice(keys.indexOf(groupingKey), 1); }
+  if (dotSizingKey) { keys.splice(keys.indexOf(dotSizingKey), 1); }
 
   var data = csvParse(csv, function (d, i) {
 
@@ -7749,20 +7798,21 @@ function parse(csv, inputDateFormat, index, stacked) {
 
     if (inputDateFormat) {
       var dateFormat = timeParse(inputDateFormat);
-      obj.key = dateFormat(d[headers[0]]);
+      obj.key = dateFormat(d[keys[0]]);
     } else {
-      obj.key = d[headers[0]];
+      obj.key = d[keys[0]];
     }
+
+    if (groupingKey) { obj.group = d[groupingKey]; }
+    if (dotSizingKey) { obj.size = d[dotSizingKey]; }
 
     obj.series = [];
 
-    for (var j = 1; j < headers.length; j++) {
+    for (var j = 1; j < keys.length; j++) {
 
-      var key = headers[j];
+      var key = keys[j];
 
-      if (d[key] === 0 || d[key] === '') {
-        d[key] = '__undefined__';
-      }
+      if (d[key] === 0 || d[key] === '') { d[key] = '__undefined__'; }
 
       if (index) {
 
@@ -7791,17 +7841,23 @@ function parse(csv, inputDateFormat, index, stacked) {
 
   });
 
+  var groups = groupingKey ? getUniqueValues(data.map(function (d) { return d.group; })) : undefined;
+
   var seriesAmount = data[0].series.length;
 
   var stackedData;
 
-  if (stacked && headers.length > 2) {
-    var stackFn = stack().keys(headers.slice(1));
+  if (stacked && keys.length > 2) {
+    var stackFn = stack().keys(keys.slice(1));
     stackedData = stackFn(range(data.length).map(function (i) {
       var o = {};
-      o[headers[0]] = data[i].key;
+      o[keys[0]] = data[i].key;
       for (var j = 0; j < data[i].series.length; j++) {
-        o[data[i].series[j].key] = data[i].series[j].val;
+        if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
+          o[data[i].series[j].key] = '0';
+        } else {
+          o[data[i].series[j].key] = data[i].series[j].val;
+        }
       }
       return o;
     }));
@@ -7815,47 +7871,17 @@ function parse(csv, inputDateFormat, index, stacked) {
     csv: csv,
     data: data,
     seriesAmount: seriesAmount,
-    keys: headers,
+    keys: keys,
     stackedData: stackedData,
     uniqueDayValues: uniqueDayValues,
     uniqueMonthValues: uniqueMonthValues,
-    uniqueYearValues: uniqueYearValues
+    uniqueYearValues: uniqueYearValues,
+    groupingKey: groupingKey,
+    dotSizingKey: dotSizingKey,
+    groups: groups
   };
 
 }
-
-// export function gridify(str, increment){
-//   let newStr = 'x,y,z\n', x, y, z, c, inc = '';
-//
-//   increment = (increment) ? increment : 1;
-//
-//   if(increment > 1){inc = ` (x${increment})`;}
-//
-//   str = str.replace(/\t/g, ',');
-//
-//   const headers = csvParseRows(str.match(/^.*$/m)[0])[0];
-//
-//   csvParse(str, function(d,i){
-//     for(let k in d){
-//       z = k+(inc);
-//       if(headers.indexOf(k) == 0){
-//         x = (d[k]);
-//         c = 0;
-//       }else{
-//         let n = Math.round(Number(d[k])/increment);
-//         if (n > 0){
-//           for (i = 1; i <= n; i++){
-//             c += 1;
-//             y = c;
-//             newStr += (x + ',' + y +','+z+'\n');
-//           }
-//         }
-//       }
-//     }
-//   });
-//   return newStr;
-//   console.log(newStr);
-// }
 
 function isFloat(n) {
   return n === +n && n !== (n|0);
@@ -7961,7 +7987,7 @@ function recipe(obj) {
   t.dateFormat = chart.dateFormat || t.dateFormat;
 
   t.dateFormat = inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
-  t.data = parse(chart.data, t.dateFormat, o.index, o.stacked) || t.data;
+  t.data = parse(chart.data, t.dateFormat, o.index, o.stacked, o.type) || t.data;
 
   t.annotations = chart.annotations || t.annotations;
 
@@ -9132,24 +9158,14 @@ function header(container, obj) {
     legend = headerGroup.append('div')
       .classed(((obj.prefix) + "chart_legend"), true);
 
-    // if (obj.options.type === 'scatterplot') {
-    //   // Murat's note:
-    //   // For the scatterplot, keys must be replaced with unique categories from 'z' column
-    //   // For categories, return unique values from the 'z' column.
-    //   const categories = ['0'];
-    //   csvParse(obj.data.csv, function(d,i){
-    //     const lastColumn = obj.data.data.columns[obj.data.data.columns.length-1];
-    //     if(categories.indexOf(d[lastColumn]) === -1){
-    //       if(d[lastColumn] !== undefined){categories.push(d[lastColumn]);}
-    //     }
-    //   });
-    //   obj.data.keys = categories;
-    // }
+    var keys;
 
-    var keys = obj.data.keys.slice();
-
-    // get rid of the first item as it doesnt represent a series
-    keys.shift();
+    if (obj.options.type === 'scatterplot') {
+      keys = obj.data.groups ? obj.data.groups.slice() : [];
+    } else {
+      keys = obj.data.keys.slice();
+      keys.shift(); // get rid of the first item as it doesnt represent a series
+    }
 
     if (obj.options.type === 'multiline') {
       keys = [keys[0], keys[1]];
@@ -9641,28 +9657,21 @@ function appendXAxis(axisGroup, obj, scale, axis, axisType) {
       ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
     case 'linear':
-      linearXAxis(obj, axis, axisNode, axisSettings);
+      linearAxis(obj, axis, axisNode, axisSettings);
       break;
   }
 
-  //  // Murat's note: Add X axis label.
-  // switch(obj.options.type){
-  //   case 'scatterplot' :
-  //     const xAxisLabel = axisNode.append("text")
-  //     .style("text-anchor", "middle")
-  //     .attrs({
-  //       'y': obj.dimensions.xAxisHeight + 20,
-  //       'class' : '.x-axis-label'
-  //     })
-  //     .text(obj.xAxis.label.toUpperCase());
-  //
-  //     const yAxisWidth = obj.rendered.container.select("." + obj.prefix + "y-axis").node().getBBox().width;
-  //
-  //     xAxisLabel.attr('x', (obj.dimensions.width)/2 - yAxisWidth )
-  //   break;
-  // }
-
   obj.dimensions.xAxisHeight = axisNode.node().getBBox().height;
+
+  if (obj.options.type === 'scatterplot') {
+
+    axisNode.selectAll('.tick line')
+      .attrs({
+        'y1': 0,
+        'y2': obj.dimensions.xAxisHeight - obj.dimensions.computedHeight()
+      });
+
+  }
 
 }
 
@@ -9676,25 +9685,6 @@ function appendYAxis(axisGroup, obj, scale, axis, axisType) {
 
   var axisSettings;
 
-  // // Murat's note: add Y axis label
-  // switch(obj.options.type){
-  //   case 'scatterplot' :
-  //     const yAxisLabel = axisNode.append("text")
-  //     .text(obj.yAxis.label.toUpperCase())
-  //     .style('text-anchor', 'middle');
-  //     const xAxisNode = obj.rendered.container.select("." + obj.prefix + "x-axis").node();
-  //     const xAxisHeight = (xAxisNode) ? xAxisNode.getBBox().height : 0;
-  //
-  //     yAxisLabel.attrs({
-  //       'transform' : 'translate('+
-  //       (yAxisLabel.node().getBBox().height-5) +','+
-  //       (obj.dimensions.computedHeight() - xAxisHeight)/2
-  //       +') rotate (-90)',
-  //       'class':'y-axis-label'
-  //     });
-  //   break;
-  // }
-
   if (obj.exportable && obj.exportable.y_axis) {
     axisSettings = Object.assign(axisObj, obj.exportable.y_axis);
   } else {
@@ -9707,7 +9697,7 @@ function appendYAxis(axisGroup, obj, scale, axis, axisType) {
 
   switch(axisObj.scale) {
     case 'linear':
-      drawYAxis(obj, axis, axisNode, axisSettings);
+      linearAxis(obj, axis, axisNode, axisSettings);
       break;
     case 'ordinal':
       discreteAxis(axisNode, scale, axis, axisSettings, obj.dimensions);
@@ -9716,32 +9706,16 @@ function appendYAxis(axisGroup, obj, scale, axis, axisType) {
 
 }
 
-function linearXAxis(obj, axis, axisNode, axisSettings) {
+function linearAxis(obj, axis, axisNode, axisSettings) {
 
-  axis.scale().range([0, obj.dimensions.tickWidth()]);
-  //perhaps write a tickFinderX function?
+  var range$$1;
 
-  axis.tickValues(tickFinderY(axis.scale(), axisSettings));
+  if (axisSettings.axisType === 'xAxis') { range$$1 = [0, obj.dimensions.tickWidth()]; }
+  if (axisSettings.axisType === 'yAxis') { range$$1 = [obj.dimensions.yAxisHeight(), 0]; }
 
-  axisNode.call(axis);
-  axisNode.selectAll('g')
-    .filter(function (d) { return d; })
-    .classed(("." + (obj.prefix) + "minor"), true);
+  axis.scale().range(range$$1);
 
-  var tickArr = axisNode.selectAll('.tick')._groups[0];
-  //Get last tick width and subtract from range.
-  var lastTick = tickArr[tickArr.length - 1];
-  var lastTickWidth = lastTick.getBoundingClientRect().width;
-
-  axis.scale().range([0, obj.dimensions.tickWidth() - (lastTickWidth/2)]);
-  axisNode.call(axis);
-}
-
-function drawYAxis(obj, axis, axisNode, axisSettings) {
-
-  axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
-
-  axis.tickValues(tickFinderY(axis.scale(), axisSettings));
+  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
   axisNode.call(axis);
 
@@ -9749,42 +9723,29 @@ function drawYAxis(obj, axis, axisNode, axisSettings) {
     .filter(function (d) { return d; })
     .classed(((obj.prefix) + "minor"), true);
 
-  axisNode.selectAll('.tick text')
-    .attr('transform', 'translate(0,0)')
-    .call(updateTextY, axisNode, obj, axis, axisSettings)
-    .call(repositionTextY, obj.dimensions, axisSettings.textX);
+  if (axisSettings.axisType === 'yAxis') {
 
-  axisNode.selectAll('.tick line')
-    .attrs({
-      'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-      'x2': obj.dimensions.computedWidth()
-    });
+    axisNode.selectAll('.tick text')
+      .attr('transform', 'translate(0,0)')
+      .call(updateTextY, axisNode, obj, axis, axisSettings)
+      .call(repositionTextY, obj.dimensions, axisSettings.textX);
 
-  // //Murat's addition
-  // let scatterplotTickPadding = 0;
-  //
-  // axisNode.selectAll('.' + (obj.prefix) + "minor line")
-  //   .attrs({
-  //     'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-  //     'x2':
-  //     function(){
-  //       // Short ticks for scatterplot.
-  //       switch(obj.options.type){
-  //         case 'scatterplot' :
-  //           scatterplotTickPadding = 4;
-  //         return (obj.dimensions.labelWidth + scatterplotTickPadding);
-  //         break;
-  //         default:
-  //           return obj.dimensions.computedWidth();
-  //         break;
-  //       }
-  //     }
-  //   });
-  //   axisNode.selectAll(".tick:not(." + (obj.prefix) + "minor) line")
-  //     .attrs({
-  //       'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - scatterplotTickPadding,
-  //       'x2': obj.dimensions.computedWidth()
-  //   });
+    axisNode.selectAll('.tick line')
+      .attrs({
+        'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'x2': obj.dimensions.computedWidth()
+      });
+
+  } else {
+
+    axisNode.selectAll('text')
+      .call(updateTextX, axisNode, obj, axis, axisSettings);
+
+    // if necessary, drop ticks
+    axisNode.selectAll('.tick')
+      .call(dropTicks);
+
+  }
 
 }
 
@@ -9805,9 +9766,9 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
   }
 
   if (obj.dimensions.tickWidth() > axisSettings.widthThreshold) {
-    ticks$$1 = tickFinderX(domain, ctx, tickGoal);
+    ticks$$1 = tickFinderDates(domain, ctx, tickGoal);
   } else {
-    ticks$$1 = tickFinderX(domain, ctx, axisSettings.ticksSmall);
+    ticks$$1 = tickFinderDates(domain, ctx, axisSettings.ticksSmall);
   }
 
   if (obj.options.type !== 'column') {
@@ -9825,7 +9786,7 @@ function timeAxis(axisNode, obj, scale, axis, axisSettings) {
       'dy': ((axisSettings.dy) + "em")
     })
     .style('text-anchor', 'start')
-    .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+    .call(setTickFormatDate, ctx, axisSettings.ems, obj.monthsAbr);
 
   if (obj.options.type === 'column') { dropRedundantTicks(axisNode, ctx); }
 
@@ -9928,7 +9889,7 @@ function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
       'dy': ((axisSettings.dy) + "em")
     })
     .style('text-anchor', 'start')
-    .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+    .call(setTickFormatDate, ctx, axisSettings.ems, obj.monthsAbr);
 
   var ordinalTickPadding;
 
@@ -9946,7 +9907,7 @@ function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
 
 }
 
-function setTickFormatX(selection$$1, ctx, ems, monthsAbr) {
+function setTickFormatDate(selection$$1, ctx, ems, monthsAbr) {
 
   var prevYear,
     prevMonth,
@@ -10038,57 +9999,50 @@ function setTickFormatX(selection$$1, ctx, ems, monthsAbr) {
 
 }
 
-function setTickFormatY(fmt, d) {
-  // checking for a format and formatting y-axis values accordingly
-
-  var currentFormat;
+function setTickFormat(fmt, d) {
+  // checking for a format and formatting axis values accordingly
 
   switch (fmt) {
     case 'general':
-      currentFormat = format('')(d);
-      break;
+      return format('')(d);
     case 'si':
     case 'comma':
-      if (isFloat(parseFloat(d))) {
-        currentFormat = format(',.2f')(d);
-      } else {
-        currentFormat = format(',')(d);
-      }
-      break;
+      return isFloat(parseFloat(d)) ? format(',.2f')(d) : format(',')(d);
     case 'round1':
-      currentFormat = format(',.1f')(d);
-      break;
+      return format(',.1f')(d);
     case 'round2':
-      currentFormat = format(',.2f')(d);
-      break;
+      return format(',.2f')(d);
     case 'round3':
-      currentFormat = format(',.3f')(d);
-      break;
+      return format(',.3f')(d);
     case 'round4':
-      currentFormat = format(',.4f')(d);
-      break;
+      return format(',.4f')(d);
     default:
-      currentFormat = format(',')(d);
-      break;
+      return format(',')(d);
   }
-
-  return currentFormat;
 
 }
 
+function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
 
+  textNodes
+    .text(function (d, i) {
+      var val = setTickFormat(axisObj.format, d);
+      if (i === axis.tickValues().length - 1) {
+        val = (axisObj.prefix || '') + val + (axisObj.suffix || '');
+      }
+      return val;
+    });
+
+}
 
 function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
 
   var arr = [];
-  // Murat
-  var yAxisLabel = axisNode.select('.y-axis-label').node();
-  var yAxisLabelPadding = (yAxisLabel) ? yAxisLabel.getBBox().height + 5 : 0;
 
   textNodes
     .attr('transform', 'translate(0,0)')
     .text(function (d, i) {
-      var val = setTickFormatY(axisObj.format, d);
+      var val = setTickFormat(axisObj.format, d);
       if (i === axis.tickValues().length - 1) {
         val = (axisObj.prefix || '') + val + (axisObj.suffix || '');
       }
@@ -10096,7 +10050,7 @@ function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
     })
     .text(function() {
       var sel = select(this);
-      var textChar = sel.node().getBoundingClientRect().width + yAxisLabelPadding;
+      var textChar = sel.node().getBoundingClientRect().width;
       arr.push(textChar);
       return sel.text();
     })
@@ -10272,7 +10226,7 @@ function dropOversetTicks(axisNode, tickWidth) {
 
 }
 
-function tickFinderX(domain, period, tickGoal) {
+function tickFinderDates(domain, period, tickGoal) {
 
   // set ranges
   var startDate = domain[0],
@@ -10331,7 +10285,7 @@ function tickFinderX(domain, period, tickGoal) {
 
 }
 
-function tickFinderY(scale, tickSettings) {
+function tickFinderLinear(scale, tickSettings) {
 
   // In a nutshell:
   // Checks if an explicit number of ticks has been declared
@@ -10543,8 +10497,8 @@ function addZeroLine(obj, node, Axis, axisType) {
 
     if (axisType === 'xAxis') {
       zeroLine.attrs({
-        'y1': 0,
-        'y2': -(obj.dimensions.yAxisHeight()),
+        'y1': refLine.attr('y1'),
+        'y2': refLine.attr('y2'),
         'x1': 0,
         'x2': 0,
         'transform': ("translate(" + (transform[0]) + "," + (transform[1]) + ")")
@@ -11069,12 +11023,12 @@ function columnChart(node, obj) {
           }
         },
         'y': function (d) {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return yScale(Math.max(0, d.series[i].val));
           }
         },
         'height': function (d) {
-          if (d.series[i].val !== '__undefined__') {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
             return Math.abs(yScale(d.series[i].val) - yScale(0));
           }
         },
@@ -11195,9 +11149,21 @@ function barChart(node, obj) {
 
     barItem.append('rect')
       .attrs({
-        'class': function (d) { return d.series[i].val < 0 ? 'negative' : 'positive'; },
-        'width': function (d) { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
-        'x': function (d) { return xScale(Math.min(0, d.series[i].val)); },
+        'class': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return d.series[i].val < 0 ? 'negative' : 'positive';
+          }
+        },
+        'width': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return Math.abs(xScale(d.series[i].val) - xScale(0));
+          }
+        },
+        'x': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.min(0, d.series[i].val));
+          }
+        },
         'y': i * singleBar,
         'height': singleBar
       });
@@ -11209,11 +11175,13 @@ function barChart(node, obj) {
         'class': ((obj.prefix) + "bar-label")
       })
       .text(function (d, j) {
-        var val = setTickFormatY(obj.xAxis.format, d.series[i].val);
-        if (i === 0 && j === obj.data.data.length - 1) {
-          val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+        if (d.series[i].val && d.series[i].val !== '__undefined__') {
+          var val = setTickFormat(obj.xAxis.format, d.series[i].val);
+          if (i === 0 && j === obj.data.data.length - 1) {
+            val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
+          }
+          return val;
         }
-        return val;
       })
       .each(function() {
         if (Math.ceil(this.getComputedTextLength()) > widestText.width) {
@@ -11245,14 +11213,24 @@ function barChart(node, obj) {
   var loop$1 = function ( i ) {
     series[i].selectAll(("." + (obj.prefix) + "bar rect"))
       .attrs({
-        'width': function (d) { return Math.abs(xScale(d.series[i].val) - xScale(0)); },
-        'x': function (d) { return xScale(Math.min(0, d.series[i].val)); }
+        'width': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return Math.abs(xScale(d.series[i].val) - xScale(0));
+          }
+        },
+        'x': function (d) {
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.min(0, d.series[i].val));
+          }
+        }
       });
 
     series[i].selectAll(("." + (obj.prefix) + "bar-label"))
       .attrs({
         'x': function (d) {
-          return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
+          if (d.series[i].val && d.series[i].val !== '__undefined__') {
+            return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
+          }
         },
         'y': function () { return i * singleBar + Math.ceil(singleBar / 2); }
       });
@@ -11380,13 +11358,11 @@ function stackedBarChart(node, obj) {
     .attrs({
       'class': function (d, i) { return ((obj.prefix) + "bar-label " + (obj.prefix) + "bar-label-" + i); },
       'data-legend': function (d) { return d.key; },
-      'x': function (d, i) {
-        return xScale(Math.max(0, lastStack[i][1]));
-      },
+      'x': function (d, i) { return xScale(Math.max(0, lastStack[i][1])); },
       'y': function (d) { return yScale(d.key) + Math.ceil(singleBar / 2); }
     })
     .text(function (d, i) {
-      var val = setTickFormatY(obj.xAxis.format, d.value);
+      var val = setTickFormat(obj.xAxis.format, d.value);
       if (i === 0) {
         val = (obj.xAxis.prefix || '') + val + (obj.xAxis.suffix || '');
       }
@@ -11535,8 +11511,6 @@ function stackedColumnChart(node, obj) {
 
 }
 
-// import { gridify } from '../../utils/dataparse';
-
 function scatterplotChart(node, obj) {
 
   var xScaleObj = new scaleManager(obj, 'xAxis'),
@@ -11548,133 +11522,42 @@ function scatterplotChart(node, obj) {
 
   axisCleanup(node, obj, xAxisObj, yAxisObj);
 
-  if (obj.data.seriesAmount === 1) {
-    obj.seriesHighlight = function () { return 0; };
-  }
+  addZeroLine(obj, node, yAxisObj, 'yAxis');
+
+  xScale.range([obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), obj.dimensions.tickWidth()]);
 
   var seriesGroup = node.append('g')
-    .attrs({
-      'class': ((obj.prefix) + "series_group")
-    });
+    .attr('class', ((obj.prefix) + "series_group"));
 
-  var dotItem = seriesGroup
+  var dotItems = seriesGroup
     .selectAll(("." + (obj.prefix) + "dot"))
     .data(obj.data.data).enter()
     .append('circle')
     .attrs({
-      'class': function (d, i) {
-        return ((obj.prefix) + "dot " + (obj.prefix) + "dot-" + i);
+      'class': function (d) {
+        var output = (obj.prefix) + "dot";
+        if (obj.data.groups) {
+          var groupIndex = obj.data.groups.indexOf(d.group);
+          output += " " + (obj.prefix) + "dot-" + groupIndex;
+        } else {
+          output += " " + (obj.prefix) + "dot-0";
+        }
+        return output;
       },
-      'data-series': function (d, i) { return i; },
       'data-key': function (d) { return d.key; },
-
-      // 'class': function (d, i, o) {
-        // const category = (d.series.length > 1) ? d.series[d.series.length-1].val : undefined;
-        //
-        // let index = obj.data.keys.indexOf(category)-1;
-        //     index = (index < 0) ? 0 : index;
-        // let cx = xScale(d.key) + xAxisPadding;
-        // let cy = yScale(d.series[0].val);
-        //
-        // o[i].setAttribute('cx', cx);
-        // o[i].setAttribute('cy', cy);
-        //
-        // voronoiData.push([{
-        //   'obj':o[i],
-        //   'x': cx,
-        //   'y': cy,
-        //   'xd': {key:obj.xAxis.label, val:d.key},
-        //   'yd': {key:obj.yAxis.label, val:d.series[0].val},
-        //   'category': category
-        // }]);
-        // return ((obj.prefix) + obj.options.type + ' ' + (obj.prefix) + obj.options.type + '-' + index);
-      // },
+      'data-group': function (d) { return d.group; },
       'cx': function (d) { return xScale(d.series[0].val); },
       'cy': function (d) { return yScale(d.series[1].val); },
-      'r': 4
+      'r': obj.dimensions.scatterplotRadius
     });
-
-  // dotItem.append('circle')
-  //   .attrs({
-  //
-  //   });
-
-  // obj.xAxis.label = obj.data.data.columns[0];
-  // obj.yAxis.label = obj.data.data.columns[1];
-
-  // const yScaleObj = new Scale(obj, 'yAxis'),
-  //   xScaleObj = new Scale(obj, 'xAxis'),
-  //   xScale = xScaleObj.scale, yScale = yScaleObj.scale;
-  //
-  // const yAxisObj = new Axis(node, obj, yScaleObj.scale, 'yAxis'),
-  //   xAxisObj = new Axis(node, obj, xScaleObj.scale, 'xAxis');
-  //
-  // const xAxisPadding = obj.dimensions.computedWidth() - obj.dimensions.tickWidth();
-  //
-  // switch(xScaleObj.obj.type){
-  //   case 'ordinal-time':
-  //   case 'ordinal':
-  //     xScale
-  //       .range([0, obj.dimensions.tickWidth()])
-  //       .padding(0);
-  //     break;
-  //   case 'linear':
-  //     xScale.range([0, obj.dimensions.tickWidth()]);
-  //     break;
-  // }
-  //
-  // axisCleanup(node, obj, xAxisObj, yAxisObj);
-  //
-  // addZeroLine(obj, node, yAxisObj, 'yAxis');
-  //
-  // if (xScaleObj.obj.type !== 'ordinal-time') {
-  //   addZeroLine(obj, node, xAxisObj, 'xAxis');
-  // }
-
-  // const voronoi = new createVoronoi(xAxisPadding, 0, obj.dimensions.computedWidth(), obj.dimensions.yAxisHeight());
-  //
-  // const voronoiGrid = node.append('g')
-  //   .attr('class', obj.prefix + obj.options.type + '-voronoi');
-  //
-  // let voronoiData = [];
-  //
-  // obj.voronoi = voronoi;
-  // obj.voronoi.data = voronoiData;
-  // obj.voronoi.grid = voronoiGrid;
-
-  // const dotItem = seriesGroup
-  //   .selectAll(('.' + (obj.prefix) + obj.options.type))
-  //   .data(obj.data.data).enter()
-  //   .append('circle')
-  //   .attrs({
-  //     'class': function(d,i,o){
-  //       const category = (d.series.length > 1) ? d.series[d.series.length-1].val : undefined;
-  //
-  //       let index = obj.data.keys.indexOf(category)-1;
-  //           index = (index < 0) ? 0 : index;
-  //       let cx = xScale(d.key) + xAxisPadding;
-  //       let cy = yScale(d.series[0].val);
-  //
-  //       o[i].setAttribute('cx', cx);
-  //       o[i].setAttribute('cy', cy);
-  //
-  //       voronoiData.push([{
-  //         'obj':o[i],
-  //         'x': cx,
-  //         'y': cy,
-  //         'xd': {key:obj.xAxis.label, val:d.key},
-  //         'yd': {key:obj.yAxis.label, val:d.series[0].val},
-  //         'category': category
-  //       }]);
-  //       return ((obj.prefix) + obj.options.type + ' ' + (obj.prefix) + obj.options.type + '-' + index);
-  //     }
-  //   });
 
   return {
     xScaleObj: xScaleObj,
     yScaleObj: yScaleObj,
     xAxisObj: xAxisObj,
-    yAxisObj: yAxisObj
+    yAxisObj: yAxisObj,
+    seriesGroup: seriesGroup,
+    dotItems: dotItems
   };
 
 }
@@ -11717,24 +11600,93 @@ function annotation(node, obj, rendered) {
 }
 
 function highlight(node, obj, rendered) {
+
+  var h = obj.annotations.highlight;
+
   var ref;
-  if (obj.options.type === 'bar') {
-    ref = rendered.plot.barItems[0];
-  } else if (obj.options.type === 'column') {
-    ref = rendered.plot.columnItems[0];
+
+  if (obj.options.type === 'bar' || obj.options.type === 'column') {
+    ref = rendered.plot[((obj.options.type) + "Items")][0];
+
+    if (ref && obj.data.seriesAmount === 1) {
+      var loop = function ( i ) {
+        ref
+          .filter(function (d) { return d.key.toString() === h[i].key; })
+          .select('rect')
+          .style('fill', h[i].color);
+      };
+
+      for (var i = 0; i < h.length; i++) loop( i );
+    }
   }
-  if (ref && obj.data.seriesAmount === 1) {
-    var h = obj.annotations.highlight;
-    var loop = function ( i ) {
-      ref.filter(function (d) {
-        return d.key.toString() === h[i].key;
-      })
-        .select('rect')
-        .style('fill', h[i].color);
+
+  if (obj.options.type === 'scatterplot') {
+    ref = rendered.plot.dotItems;
+
+    var svgNode = select(node.node().parentNode);
+
+    var annoNode = svgNode.append('g')
+      .attrs({
+        'transform': ("translate(" + (obj.dimensions.margin.left) + "," + (obj.dimensions.margin.top) + ")"),
+        'class': ((obj.prefix) + "annotations")
+      });
+
+    var loop$1 = function ( i ) {
+
+      var currRef = ref
+        .filter(function (d) { return d.key.toString() === h[i].key; })
+        .style('opacity', 1);
+
+      var y = Number(currRef.attr('cy')),
+        x = Number(currRef.attr('cx'));
+
+      if (y < 12) {
+        y += 12;
+      } else {
+        y -= 12;
+      }
+
+      var textNode = annoNode
+        .append('text')
+        .text(h[i].text || h[i].key)
+        .attrs({
+          'class': ((obj.prefix) + "annotation_text"),
+          'x': currRef.attr('cx'),
+          'y': y,
+          'text-anchor': 'middle',
+          'dominant-baseline': 'middle'
+        });
+
+      // check horizontal text placement by checking width
+      var halfText = textNode.node().getBoundingClientRect().width / 2,
+        offset = rendered.plot.xScaleObj.scale.range()[0];
+
+      if ((x - offset) < halfText) {
+        textNode
+          .attr('text-anchor', 'start')
+          .attr('x', x - obj.dimensions.scatterplotRadius);
+      } else if ((obj.dimensions.computedWidth() - x) < halfText) {
+        textNode
+          .attr('text-anchor', 'end')
+          .attr('x', x + obj.dimensions.scatterplotRadius);
+      }
+
+      if ((h[i].text || h[i].key).indexOf('\n') !== -1) {
+        textNode.call(wrapAnnoText);
+      }
+
     };
 
-    for (var i = 0; i < h.length; i++) loop( i );
+    for (var i$1 = 0; i$1 < h.length; i$1++) loop$1( i$1 );
+
   }
+
+  // if (obj.options.type === 'bar') {
+  //   ref = rendered.plot.barItems[0];
+  // } else if (obj.options.type === 'column') {
+  //   ref = rendered.plot.columnItems[0];
+  // }
+
 }
 
 function text(node, obj, rendered) {
@@ -12169,7 +12121,7 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
         if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
         if ((d.val || d.val === 0) && d.val !== '__undefined__') {
-          return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+          return obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
         } else {
           return 'n/a';
         }
@@ -12216,7 +12168,9 @@ function lineChartTips(tipNodes, innerTipEls, obj) {
         .attrs({
           'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
           'cy': function (d) {
-            if (d.val) { return obj.rendered.plot.yScaleObj.scale(d.val); }
+            if (d.val && d.val !== '__undefined__') {
+              return obj.rendered.plot.yScaleObj.scale(d.val);
+            }
           }
         });
 
@@ -12408,7 +12362,7 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
         if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
         if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
           if (d.val || d.val === 0) {
-            return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+            return obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
           } else {
             return 'n/a';
           }
@@ -12417,7 +12371,7 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
           for (var k = 0; k < tipData.length; k++) {
             if (i === 0) {
               if (!isNaN(d[0] + d[1])) {
-                text = obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
+                text = obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
                 break;
               } else {
                 text = 'n/a';
@@ -12432,7 +12386,7 @@ function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
                 }
               }
               if (!hasUndefined && !isNaN(d[0] + d[1])) {
-                text = obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
+                text = obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
                 break;
               } else {
                 text = 'n/a';
@@ -12600,7 +12554,7 @@ function columnChartTips(tipNodes, innerTipEls, obj) {
       if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
       if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
       if ((d.val || d.val === 0) && d.val !== '__undefined__') {
-        return obj.yAxis.prefix + setTickFormatY(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+        return obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
       } else {
         return 'n/a';
       }

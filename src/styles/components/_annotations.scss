@@ -1,0 +1,8 @@
+.#{$prefix}annotation_text {
+  fill: $color-black;
+  @include utility-font;
+  text-shadow: 1px 1px 0px rgba($color-white, 0.7), -1px -1px 0px rgba($color-white, 0.7), -1px 1px 0px rgba($color-white, 0.7), 1px -1px 0px rgba($color-white, 0.7);
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    text-shadow: 2px 2px 0px rgba($color-white, 0.7), -2px -2px 0px rgba($color-white, 0.7), -2px 2px 0px rgba($color-white, 0.7), 2px -2px 0px rgba($color-white, 0.7);
+  }
+}

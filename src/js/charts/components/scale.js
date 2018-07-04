@@ -108,7 +108,7 @@ export function setDateDomain(data, min, max) {
     startDate = min;
     endDate = max;
   } else {
-    const dateRange = extent(data.data, d => { return d.key; });
+    const dateRange = extent(data.data, d => d.key);
     startDate = min || new Date(dateRange[0]);
     endDate = max || new Date(dateRange[1]);
   }

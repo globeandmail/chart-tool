@@ -1,6 +1,6 @@
 import { bisector } from 'd3-array';
 import { select, mouse } from 'd3-selection';
-import { setTickFormatY as yFormatter } from './axis';
+import { setTickFormat as yFormatter } from './axis';
 import { timeDiff } from '../../utils/utils';
 import { tipRadius } from '../../../../custom/chart-tool-config.json';
 

@@ -44,7 +44,9 @@
                 "orient": "bottom",
                 "format": "auto",
                 "rescale": false,
-                "nice": false
+                "nice": false,
+                "prefix": "$",
+                "ticks": 4
               },
               "y_axis": {
                 "display": true,
@@ -53,7 +55,27 @@
                 "orient": "right",
                 "format": "comma",
                 "rescale": false,
-                "nice": true
+                "nice": true,
+                "min": 300,
+                "ticks": 5,
+                "prefix": "$"
+              },
+              "annotations": {
+                "highlight": [
+                  {
+                    "key": "White Rock",
+                    "text": "White Rock"
+                  },
+                  {
+                    "key": "West Vancouver",
+                    "text": "West\nVancouver"
+                  },
+                  {
+                    "key": "Shawinigan"
+                  }
+                ],
+                "range": [],
+                "text": []
               },
               "options": {
                 "type": "scatterplot",
@@ -67,7 +89,7 @@
                 "x_axis": true,
                 "y_axis": true,
                 "tips": false,
-                "annotations": false,
+                "annotations": true,
                 "range": false,
                 "series": false,
                 "indexed": false,

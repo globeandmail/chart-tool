@@ -67,7 +67,7 @@ export default function recipe(obj) {
   t.dateFormat = chart.dateFormat || t.dateFormat;
 
   t.dateFormat = inputDate(t.xAxis.scale, t.dateFormat, chart.date_format);
-  t.data = parse(chart.data, t.dateFormat, o.index, o.stacked) || t.data;
+  t.data = parse(chart.data, t.dateFormat, o.index, o.stacked, o.type) || t.data;
 
   t.annotations = chart.annotations || t.annotations;
 

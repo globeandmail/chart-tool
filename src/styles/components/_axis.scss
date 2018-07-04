@@ -70,3 +70,8 @@
   stroke: $color-black;
   stroke-linecap: square;
 }
+
+.#{$prefix}type_scatterplot .#{$prefix}yAxis line,
+.#{$prefix}type_scatterplot .#{$prefix}xAxis line {
+  opacity: 0.25;
+}
