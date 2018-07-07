@@ -69,10 +69,9 @@ export function wrapAnnoText(textNode) {
   textNode.each(function() {
 
     const text = select(this),
-      y = text.attr('y'),
       lineHeight = 1.0, // ems
       x = text.attr('x'),
-      dy = parseFloat(text.attr('dy')) || 0.1;
+      dy = parseFloat(text.attr('dy')) || 0;
 
     let words = text.text().split('\n').reverse(),
       line = [],
@@ -80,7 +79,6 @@ export function wrapAnnoText(textNode) {
       word,
       tspan = text.text(null).append('tspan')
         .attr('x', x)
-        .attr('y', y)
         .attr('dy', `${dy}em`);
 
     while (word = words.pop()) {
@@ -92,8 +90,8 @@ export function wrapAnnoText(textNode) {
         line = [word];
         tspan = text.append('tspan')
           .attr('x', x)
-          .attr('y', y)
-          .attr('dy', `${++lineNumber * lineHeight + dy}em`)
+          // .attr('y', y)
+          .attr('dy', `${++lineNumber > 0 ? lineHeight : 0}em`)
           .text(word);
       }
     }
@@ -299,10 +297,3 @@ export function isElement(el) {
   const isString = typeof cont === 'string';
   return !isString && el.nodeName;
 }
-
-// export function createVoronoi(x, y, width, height) {
-//   return voronoi()
-//     .extent([[x,y], [width, height]])
-//     .x(d => d[0].x)
-//     .y(d => d[0].y);
-// }

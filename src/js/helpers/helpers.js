@@ -2,6 +2,10 @@ export function isInteger(x) {
   return x % 1 === 0;
 }
 
+export function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 export function isFloat(n) {
   return n === +n && n !== (n|0);
 }

@@ -1,4 +1,4 @@
-.#{$prefix}annotation_text {
+.#{$prefix}annotation_text, .#{$prefix}annotation_highlight-text {
   fill: $color-black;
   @include utility-font;
   text-shadow: 1px 1px 0px rgba($color-white, 0.7), -1px -1px 0px rgba($color-white, 0.7), -1px 1px 0px rgba($color-white, 0.7), 1px -1px 0px rgba($color-white, 0.7);
