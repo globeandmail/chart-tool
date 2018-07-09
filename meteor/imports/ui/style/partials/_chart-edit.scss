@@ -43,7 +43,7 @@ select {
   outline: none;
   background: transparent;
   width: auto;
-  padding: 0.3em 1em 0.3em 0.5em;
+  padding: 0.3em 1.2em 0.3em 0.5em;
   @include appearance(none);
   @include transition (all 0.1s ease-out);
   @include placeholder {
@@ -358,62 +358,62 @@ select {
   display: block;
 }
 
-.selectize-input {
-  font-size: 0.8em;
-  font-family: "Monaco", "Lucida Console", monospace;
-  background-color: $color-gray-light;
-  border: 2px solid $color-gray-light;
-  box-sizing: border-box;
-  box-shadow: none;
-  border-radius: 0;
-  white-space: nowrap;
-  @include transition (all 0.1s ease-out);
-  &.focus {
-    box-shadow: none;
-    outline: none;
-    border: 2px solid $color-black;
-    border-radius: 0;
-    @include transition (all 0.1s ease-in);
-  }
-}
-
-.selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input [data-value].active {
-  font-family: "Monaco", "Lucida Console", monospace;
-  background: none;
-  text-shadow: none;
-  border: 1px solid $color-black;
-  border-radius: 4px;
-  box-shadow: none;
-  color: $color-black;
-  float: left;
-}
-
-.selectize-control.multi .selectize-input > div {
-  margin: 0 5px 5px 0;
-}
-
-.selectize-control.multi .selectize-input [data-value].active {
-  background-color: $color-black;
-  color: $color-gray-light;
-}
-
-.selectize-dropdown {
-  margin-top: -2px;
-}
-
-.selectize-dropdown .active {
-  background-color: lighten($primary-color, 60%);
-  color: $color-black;
-}
-
-.selectize-dropdown [data-selectable] .highlight {
-  background: lighten($primary-color, 50%);
-  color: $color-black;
-}
-
-.selectize-dropdown .active.create {
-  color: $color-black;
-}
+// .selectize-input {
+//   font-size: 0.8em;
+//   font-family: "Monaco", "Lucida Console", monospace;
+//   background-color: $color-gray-light;
+//   border: 2px solid $color-gray-light;
+//   box-sizing: border-box;
+//   box-shadow: none;
+//   border-radius: 0;
+//   white-space: nowrap;
+//   @include transition (all 0.1s ease-out);
+//   &.focus {
+//     box-shadow: none;
+//     outline: none;
+//     border: 2px solid $color-black;
+//     border-radius: 0;
+//     @include transition (all 0.1s ease-in);
+//   }
+// }
+//
+// .selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input [data-value].active {
+//   font-family: "Monaco", "Lucida Console", monospace;
+//   background: none;
+//   text-shadow: none;
+//   border: 1px solid $color-black;
+//   border-radius: 4px;
+//   box-shadow: none;
+//   color: $color-black;
+//   float: left;
+// }
+//
+// .selectize-control.multi .selectize-input > div {
+//   margin: 0 5px 5px 0;
+// }
+//
+// .selectize-control.multi .selectize-input [data-value].active {
+//   background-color: $color-black;
+//   color: $color-gray-light;
+// }
+//
+// .selectize-dropdown {
+//   margin-top: -2px;
+// }
+//
+// .selectize-dropdown .active {
+//   background-color: lighten($primary-color, 60%);
+//   color: $color-black;
+// }
+//
+// .selectize-dropdown [data-selectable] .highlight {
+//   background: lighten($primary-color, 50%);
+//   color: $color-black;
+// }
+//
+// .selectize-dropdown .active.create {
+//   color: $color-black;
+// }
 
 // Title, qualifier and source contentEditable fields
 
@@ -529,7 +529,7 @@ select {
   color: $color-gray-medium;
 }
 
-.chart-preview-annotation {
+.chart-preview-annotation-highlight {
   rect {
     &:hover {
       cursor: url('/images/cursor.cur') 0 15, auto;
@@ -541,6 +541,21 @@ select {
   box-shadow: none !important;
   > div {
     padding: 0 !important;
+  }
+}
+
+.unit-anno h4 {
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid $color-black;
+  cursor: pointer;
+  span {
+    color: $color-black;
+  }
+  &:hover {
+    border-color: $primary-color;
+    span {
+      color: $primary-color;
+    }
   }
 }
 
@@ -612,4 +627,50 @@ select {
     @include span-columns(9 of 10);
   }
 
+}
+
+.add-range {
+  background-color: darken($color-gray-light, 2%);
+  padding: 0.5em;
+  p {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+  }
+  > p {
+    @include interface-font-bold;
+  }
+  li {
+    padding-bottom: 0.3em;
+    p {
+      font-size: 0.9rem;
+      margin-right: 0.5em;
+    }
+    select {
+      font-size: 1rem;
+      text-transform: uppercase;
+      padding-right: 1.4em;
+      letter-spacing: 1.2px;
+    }
+    > * {
+      display: inline-block;
+    }
+  }
+  .range-value {
+    @include interface-font-light;
+    border: 1px solid $color-black;
+    outline: none;
+    background: transparent;
+    width: auto;
+    padding: 0.3em 0.5em 0.3em 0.5em;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    &:empty:after {
+      opacity: 0.3;
+      content: 'N/A';
+    }
+  }
 }

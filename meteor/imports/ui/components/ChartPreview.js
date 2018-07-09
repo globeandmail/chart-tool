@@ -9,8 +9,11 @@ export default class ChartPreview extends Component {
   }
 
   render() {
+    const previewClass = this.props.annotationMode ?
+      `chart-preview chart-preview-annotation chart-preview-annotation-${this.props.currentAnnotation.type}` :
+      'chart-preview';
     return (
-      <div className={this.props.annotationMode ? 'chart-preview chart-preview-annotation' : 'chart-preview'}>
+      <div className={previewClass}>
         <div className='desktop-preview'>
           <h5>Desktop</h5>
           { !this.props.loading ?
@@ -18,6 +21,7 @@ export default class ChartPreview extends Component {
               type={'desktop'}
               chart={this.props.chart}
               annotationMode={this.props.annotationMode}
+              currentAnnotation={this.props.currentAnnotation}
               editable={true}
               exportable={false}
               share_data={false}
@@ -34,6 +38,7 @@ export default class ChartPreview extends Component {
               type={'mobile'}
               chart={this.props.chart}
               annotationMode={this.props.annotationMode}
+              currentAnnotation={this.props.currentAnnotation}
               editable={true}
               exportable={false}
               share_data={false}

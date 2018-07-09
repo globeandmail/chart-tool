@@ -28,6 +28,7 @@ class EditChart extends Component {
     this.toggleOverlay = this.toggleOverlay.bind(this);
     this.toggleAnnotationMode = this.toggleAnnotationMode.bind(this);
     this.handleHighlightColor = this.handleHighlightColor.bind(this);
+    this.handleCurrentAnnotation = this.handleCurrentAnnotation.bind(this);
     Presence.state = () => {
       return { currentChartId: this.props.match.params._id, user: animalName };
     };
@@ -37,7 +38,11 @@ class EditChart extends Component {
       annotationMode: false,
       currentAnnotation: {
         highlight: '',
-        type: null,
+        type: 'range',
+        rangeType: 'area',
+        rangeAxis: 'x',
+        rangeStart: '',
+        rangeEnd: '',
         text: [],
         range: []
       }
@@ -53,8 +58,18 @@ class EditChart extends Component {
     this.setState({ annotationMode });
   }
 
+  handleCurrentAnnotation(key, value) {
+    const currentAnnotation = Object.assign({}, this.state.currentAnnotation);
+    currentAnnotation[key] = value;
+    this.setState({ currentAnnotation });
+  }
+
+  handleRangeState(event) {
+    debugger;
+  }
+
   handleHighlightColor(event) {
-    const currentAnnotation = this.state.currentAnnotation;
+    const currentAnnotation = Object.assign({}, this.state.currentAnnotation);
     currentAnnotation.highlight = event.hex;
     this.setState({ currentAnnotation });
   }
@@ -101,6 +116,7 @@ class EditChart extends Component {
               annotationMode={this.state.annotationMode}
               toggleAnnotationMode={this.toggleAnnotationMode}
               handleHighlightColor={this.handleHighlightColor}
+              handleCurrentAnnotation={this.handleCurrentAnnotation}
               currentAnnotation={this.state.currentAnnotation}
               {...this.props}
             />

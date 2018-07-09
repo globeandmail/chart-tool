@@ -1,6 +1,8 @@
-import { select } from 'd3-selection';
+import { select, event } from 'd3-selection';
+import { brushX, brushY } from 'd3-brush';
 import { wrapAnnoText } from '../../utils/utils';
 import { isNumeric } from '../../helpers/helpers';
+import { getTipData } from './tips';
 
 export default function annotation(node, obj, rendered) {
 
@@ -22,6 +24,10 @@ export default function annotation(node, obj, rendered) {
       });
   }
 
+  if (annoData.range && annoData.range.length) {
+    range(annoNode, obj, rendered);
+  }
+
   if (annoData.highlight && annoData.highlight.length) {
     highlight(annoNode, obj, rendered);
   }
@@ -30,9 +36,25 @@ export default function annotation(node, obj, rendered) {
     text(annoNode, obj, rendered);
   }
 
-  if (annoData.range && annoData.range.length) {
-    range(annoNode, obj, rendered);
+  if (obj.editable) {
+    const annoEditable = select(node.node().parentNode)
+      .append('g')
+      .attrs({
+        transform: `translate(${obj.dimensions.margin.left},${obj.dimensions.margin.top})`,
+        class: `${obj.prefix}annotation-editable-group`
+      });
+
+    if (obj.annotationHandlers && obj.annotationHandlers.type && obj.annotationHandlers.type === 'range') {
+      annoEditable
+        .append('g')
+        .attr('class', `${obj.prefix}brush`)
+        .call(getBrush(obj.annotationHandlers.axis, obj));
+    }
   }
+
+  return {
+    annoNode
+  };
 
 }
 
@@ -82,10 +104,53 @@ function text(annoNode, obj) {
 
 function range(annoNode, obj, rendered) {
   const r = obj.annotations.range;
+
   r.map((rangeObj, i) => {
-    console.log(rendered.plot);
-    debugger;
-    // const scale = rangeObj.
+    const scale = rendered.plot[`${rangeObj.type}ScaleObj`].scale;
+
+    if (obj.data.inputDateFormat) {
+      rangeObj.start = new Date(rangeObj.start);
+      if ('end' in rangeObj) rangeObj.end = new Date(rangeObj.end);
+    }
+
+    const attrs = {
+      'class': () => {
+        let output = `${obj.prefix}annotation_range ${obj.prefix}annotation_range-${i}`;
+        if ('end' in rangeObj) {
+          output += ` ${obj.prefix}annotation_range-rect`;
+        } else {
+          output += ` ${obj.prefix}annotation_range-line`;
+        }
+        return output;
+      },
+      transform: `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`
+    };
+
+    let type, rangeNode;
+
+    if ('end' in rangeObj) {
+      // need to test with bar chart
+      type = 'rect';
+      const rangeVals = [scale(rangeObj.start), scale(rangeObj.end)].sort((a, b) => a - b);
+      attrs.x = rangeObj.type === 'x' ? rangeVals[0] : 0;
+      attrs.y = rangeObj.type === 'x' ? 0 : rangeVals[0];
+      attrs.width = rangeObj.type === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
+      attrs.height = rangeObj.type === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
+      rangeNode = select(rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
+    } else {
+      type = 'line';
+      attrs.x1 = rangeObj.type === 'x' ? scale(rangeObj.start) : 0;
+      attrs.x2 = rangeObj.type === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
+      attrs.y1 = rangeObj.type === 'x' ? 0 : scale(rangeObj.start);
+      attrs.y2 = rangeObj.type === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
+      rangeNode = annoNode.append(type);
+    }
+
+    rangeNode.attrs(attrs);
+
+    if (rangeObj.color) {
+      rangeNode.style('end' in rangeObj ? 'fill' : 'stroke', rangeObj.color);
+    }
 
   });
 }
@@ -148,7 +213,7 @@ function drawTextAnnotation(x, y, i, config, obj) {
     .attrs({
       'class': () => {
         if (config.key) {
-          return `${obj.prefix}annotation_highlight-text ${obj.prefix}annotation_highlight-text-${i}`;
+          return `${obj.prefix}annotation_highlight-text ${obj.prefix}annotation_highlight-text-${i} `;
         } else {
           return `${obj.prefix}annotation_text ${obj.prefix}annotation_text-${i}`;
         }
@@ -220,5 +285,60 @@ function drawTextAnnotation(x, y, i, config, obj) {
       textNode.attr('x', textMeasurement.width);
       textNode.selectAll('tspan').attr('x', textMeasurement.width);
     }
+  }
+}
+
+function getBrush(type, obj) {
+
+  const extent = [
+    [obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), 0],
+    [obj.dimensions.computedWidth(), obj.dimensions.yAxisHeight()]
+  ];
+
+  if (type === 'x') {
+    return brushX()
+      .extent(extent)
+      .on('end', () => {
+        if (obj.annotationHandlers && obj.annotationHandlers.rangeHandler) {
+          if (!event.selection) {
+            // it's a line
+            obj.annotationHandlers.rangeHandler({
+              type,
+              start: getTipData(obj, { x: event.sourceEvent.layerX - (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) }).key,
+            });
+          } else {
+            // it's a range
+            obj.annotationHandlers.rangeHandler({
+              type,
+              start: getTipData(obj, { x: event.selection[0] }).key,
+              end: getTipData(obj, { x: event.selection[1] }).key,
+            });
+          }
+        }
+      });
+  }
+
+  if (type === 'y') {
+    return brushY()
+      .extent(extent)
+      .on('end', () => {
+        if (obj.annotationHandlers && obj.annotationHandlers.rangeHandler) {
+          if (!event.selection) {
+            // it's a line
+            debugger;
+            obj.annotationHandlers.rangeHandler({
+              type,
+              // start: getTipData(obj, { x: event.sourceEvent.layerX - (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) }).key,
+            });
+          } else {
+            // it's a range
+            obj.annotationHandlers.rangeHandler({
+              type,
+              start: getTipData(obj, { y: event.selection[0] }).key,
+              end: getTipData(obj, { y: event.selection[1] }).key,
+            });
+          }
+        }
+      });
   }
 }

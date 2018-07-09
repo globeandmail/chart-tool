@@ -50,7 +50,7 @@ export default class ChartData extends Component {
     this.handleHasHours = this.handleHasHours.bind(this);
     this.handleIndex = this.handleIndex.bind(this);
     this.state = {
-      expanded: true
+      expanded: false
     };
   }
 

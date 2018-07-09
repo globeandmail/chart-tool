@@ -13,13 +13,13 @@ export default function recipe(obj) {
   // in this case because my eyes were bleeding
 
   t.dispatch    = obj.dispatch;
-  t.version     = embed.version                           || t.version;
-  t.id          = obj.id                                  || t.id;
-  t.heading     = embed.heading                           || t.heading;
-  t.qualifier   = embed.qualifier                         || t.qualifier;
-  t.source      = embed.source                            || t.source;
-  t.deck        = embed.deck                              || t.deck;
-  t.customClass = chart.class                             || t.customClass;
+  t.version     = embed.version                 || t.version;
+  t.id          = obj.id                        || t.id;
+  t.heading     = embed.heading                 || t.heading;
+  t.qualifier   = embed.qualifier               || t.qualifier;
+  t.source      = embed.source                  || t.source;
+  t.deck        = embed.deck                    || t.deck;
+  t.customClass = chart.class                   || t.customClass;
   t.xAxis       = extend(t.xAxis, chart.x_axis) || t.xAxis;
   t.yAxis       = extend(t.yAxis, chart.y_axis) || t.yAxis;
 
@@ -54,14 +54,12 @@ export default function recipe(obj) {
   t.editable         = chart.editable   || t.editable;
 
   if (t.exportable) {
-    t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
-    if (chart.exportable.height) {
-      t.dimensions.height = function() { return chart.exportable.height; };
-    }
     t.dimensions.margin = chart.exportable.margin || t.dimensions.margin;
+    t.dimensions.width = chart.exportable.width || embed.width || t.dimensions.width;
+    if (chart.exportable.height) t.dimensions.height = () => chart.exportable.height;
   }
 
-  if (chart.hasHours) { t.dateFormat += ` ${t.timeFormat}`; }
+  if (chart.hasHours) t.dateFormat += ` ${t.timeFormat}`;
 
   t.hasHours   = chart.hasHours   || t.hasHours;
   t.dateFormat = chart.dateFormat || t.dateFormat;
@@ -70,8 +68,9 @@ export default function recipe(obj) {
   t.data = parse(chart.data, t.dateFormat, o.index, o.stacked, o.type) || t.data;
 
   t.annotations = chart.annotations || t.annotations;
+  if (chart.annotationHandlers) t.annotationHandlers = chart.annotationHandlers;
 
-  if (!t.data.stackedData) { o.stacked = false; }
+  if (!t.data.stackedData) o.stacked = false;
 
   t.seriesHighlight = () => {
     return (t.data.seriesAmount && t.data.seriesAmount <= 1) ? 1 : 0;

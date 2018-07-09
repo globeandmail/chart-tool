@@ -1,5 +1,6 @@
 import { bisector } from 'd3-array';
 import { select, mouse } from 'd3-selection';
+import { voronoi } from 'd3-voronoi';
 import { setTickFormat as yFormatter } from './axis';
 import { timeDiff } from '../../utils/utils';
 import { tipRadius } from '../../../../custom/chart-tool-config.json';
@@ -135,20 +136,18 @@ export function showTips(tipNodes, obj) {
     tipNodes.tipPathCircles.classed(`${obj.prefix}active`, true);
   }
 
-  if (obj.options.type === 'scatterplot') {
-    obj.rendered.container
-      .select(`.${obj.prefix}series_group`)
-        .selectAll('circle')
-        .classed('muted', true);
-  }
-
 }
 
 export function hideTips(tipNodes, obj) {
 
-  if (obj.options.type === 'column' || obj.options.type === 'bar') {
-    obj.rendered.plot.seriesGroup.selectAll(`.${obj.prefix}muted`)
+  if (obj.options.type === 'column' || obj.options.type === 'bar' || obj.options.type === 'scatterplot') {
+    obj.rendered.plot.seriesGroup
+      .selectAll(`.${obj.prefix}muted`)
       .classed(`${obj.prefix}muted`, false);
+
+    obj.rendered.plot.seriesGroup
+      .selectAll(`.${obj.prefix}active`)
+      .classed(`${obj.prefix}active`, false);
   }
 
   if (tipNodes.xTipLine) {
@@ -171,13 +170,6 @@ export function hideTips(tipNodes, obj) {
     tipNodes.tipPathCircles.classed(`${obj.prefix}active`, false);
   }
 
-  if (obj.options.type === 'scatterplot') {
-    obj.rendered.container
-      .select(`.${obj.prefix}series_group`)
-        .selectAll('circle')
-        .classed('muted', false);
-  }
-
 }
 
 export function mouseIdle(tipNodes, obj) {
@@ -189,7 +181,7 @@ export function mouseIdle(tipNodes, obj) {
 let timeout;
 
 export function tipsManager(node, obj) {
-  const tipNodes = appendTipGroup(node, obj);
+
   const fns = {
     line: lineChartTips,
     multiline: lineChartTips,
@@ -207,7 +199,25 @@ export function tipsManager(node, obj) {
     dataReference = obj.data.data[0].series;
   }
 
-  const innerTipElements = appendTipElements(node, obj, tipNodes, dataReference);
+  const tipNodes = appendTipGroup(node, obj),
+    innerTipElements = appendTipElements(node, obj, tipNodes, dataReference);
+
+  if (obj.options.type === 'bar') {
+    tipNodes.tipGroup.remove();
+    tipNodes.xTipLine.remove();
+    tipNodes.yTipLine.remove();
+    tipNodes.tipBox.remove();
+    tipNodes.tipPathCircles.remove();
+  }
+
+  let voronoiDiagram;
+
+  if (obj.options.type === 'scatterplot') {
+    voronoiDiagram = voronoi()
+      .x(d => obj.rendered.plot.xScaleObj.scale(d.series[0].val))
+      .y(d => obj.rendered.plot.yScaleObj.scale(d.series[1].val))(obj.data.data);
+
+  }
 
   switch (obj.options.type) {
     case 'line':
@@ -215,48 +225,24 @@ export function tipsManager(node, obj) {
     case 'area':
     case 'column':
     case 'bar':
-      tipNodes.overlay = tipNodes.tipNode.append('rect')
+    case 'scatterplot':
+      tipNodes.overlay = tipNodes.tipNode
+        .append('rect')
         .attrs({
           'class': `${obj.prefix}tip_overlay`,
           'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
           'width': obj.dimensions.tickWidth(),
-          'height': obj.dimensions.computedHeight()
+          'height': obj.dimensions.yAxisHeight()
         });
-
       tipNodes.overlay
-        .on('mouseover', () => { showTips(tipNodes, obj); })
-        .on('mouseout', () => { hideTips(tipNodes, obj); })
+        .on('mouseover', () => showTips(tipNodes, obj))
+        .on('mouseout', () => hideTips(tipNodes, obj))
         .on('mousemove', () => {
           showTips(tipNodes, obj);
           clearTimeout(timeout);
           timeout = mouseIdle(tipNodes, obj);
-          return fns[obj.options.type](tipNodes, innerTipElements, obj);
+          return fns[obj.options.type](tipNodes, innerTipElements, obj, voronoiDiagram);
         });
-
-      break;
-    case 'scatterplot':
-      // THIS CAN PROBABLY BE SIMPLIFIED?
-      // append Voronoi grid to Tip Group
-      tipNodes.tipNode.node().appendChild(obj.voronoi.grid.node());
-      //remove Circles from Tip group;
-      tipNodes.tipNode.selectAll(`.${obj.prefix}tip_circle`).remove();
-
-      obj.voronoi.grid.attr('class', `${obj.prefix}${obj.options.type}-voronoi`)
-        .selectAll(`${obj.prefix}${obj.options.type}-voronoi-polygon`)
-        .data(obj.voronoi.polygons(obj.voronoi.data))
-        .enter().append('path')
-        .attrs({
-          'd': d => d ? `M${d.join('L')}Z` : null,
-          'class': `${obj.prefix}${obj.options.type}-voronoi-polygon`,
-        })
-        .on('mouseover', () => { showTips(tipNodes, obj); })
-        .on('mouseout', () => { hideTips(tipNodes, obj); })
-        .on('mousemove', (d) => {
-          clearTimeout(timeout);
-          timeout = mouseIdle(tipNodes, obj);
-          return fns[obj.options.type](tipNodes, innerTipElements, obj, d.data[0]);
-        });
-
       break;
   }
 
@@ -264,10 +250,10 @@ export function tipsManager(node, obj) {
 
 export function appendTipGroup(node, obj) {
 
-  const svgNode = select(node.node().parentNode),
+  const svg = select(node.node().parentNode),
     chartNode = select(node.node().parentNode.parentNode);
 
-  const tipNode = svgNode.append('g')
+  const tipNode = svg.append('g')
     .attrs({
       'transform': `translate(${obj.dimensions.margin.left},${obj.dimensions.margin.top})`,
       'class': `${obj.prefix}tip`
@@ -288,10 +274,10 @@ export function appendTipGroup(node, obj) {
 
   yTipLine.append('line');
 
-  const tipCircle = tipNode.append('g')
-    .attr('class', `${obj.prefix}tip_xy`);
-
-  tipCircle.append('circle');
+  // const tipCircle = tipNode.append('g')
+  //   .attr('class', `${obj.prefix}tip_xy`);
+  //
+  // tipCircle.append('circle');
 
   const tipBox = tipNode.append('g')
     .attrs({
@@ -329,18 +315,18 @@ export function appendTipGroup(node, obj) {
     });
 
   return {
-    svg: svgNode,
-    tipNode: tipNode,
-    xTipLine: xTipLine,
-    yTipLine: yTipLine,
-    tipCircle: tipCircle,
-    tipBox: tipBox,
-    tipRect: tipRect,
-    tipGroup: tipGroup,
-    legendIcon: legendIcon,
-    tipPathCircles: tipPathCircles,
-    radius: radius,
-    tipTextDate: tipTextDate
+    svg,
+    tipNode,
+    xTipLine,
+    yTipLine,
+    // tipCircle,
+    tipBox,
+    tipRect,
+    tipGroup,
+    legendIcon,
+    tipPathCircles,
+    radius,
+    tipTextDate
   };
 
 }
@@ -363,15 +349,16 @@ export function appendTipElements(node, obj, tipNodes, dataRef) {
   let lineHeight;
 
   tipTextGroups.append('text')
-    .text(d => { return d.val; })
+    .text(d => d.val)
     .attrs({
       'class': (d, i) => {
         return `${obj.prefix}tip_text ${obj.prefix}tip_text-${i}`;
       },
-      'data-series': d => { return d.key; },
+      'data-series': d => d.key,
       'x': (tipNodes.radius * 2) + (tipNodes.radius / 1.5),
       'y': function(d, i) {
         lineHeight = lineHeight || parseInt(select(this).style('line-height'));
+        // console.log(i, lineHeight)
         return (i + 1) * lineHeight;
       },
       'dy': '1em'
@@ -451,7 +438,7 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
     tipNodes.tipGroup
       .selectAll(`.${obj.prefix}tip_text-group`)
       .data(tipData.series)
-      .classed(`${obj.prefix}active`, d => { return d.val ? true : false; });
+      .classed(`${obj.prefix}active`, d => d.val ? true : false);
 
     tipNodes.tipGroup
       .attr('transform', () => {
@@ -510,125 +497,6 @@ export function lineChartTips(tipNodes, innerTipEls, obj) {
 
   }
 
-}
-
-export function scatterplotChartTips(tipNodes, innerTipEls, obj, data) {
-//   const tipData = data;
-//   const circle = data.obj;
-//   const cX = circle.getAttribute('cx');
-//   const cY = circle.getAttribute('cy');
-//   const tipRectWidth = tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right;
-//   const tipRectHeight = tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom;
-//   const cursor = cursorPos(obj.voronoi.grid);
-//   const voronoiGridX = obj.voronoi.grid.node().getBBox().x;
-//   const voronoiGridWidth = voronoiGridX + obj.voronoi.grid.node().getBBox().width;
-//   const category = data.category, tipLabelData = [data.xd, data.yd];
-//   const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-//         ctx = timeDiff(domain[0], domain[domain.length - 1], 8);
-//   let lineHeight, noDateText = false;
-//   circle.parentNode.appendChild(circle);
-//
-//   select(circle).classed('active', true);
-//   select(circle).classed('muted', false);
-//
-//   tipNodes.tipGroup
-//     .attr('transform', () => {
-//       let x = cX;
-//       if (cursor.x > obj.dimensions.tickWidth() / 2) {
-//         // tipbox pointing left
-//         x = obj.dimensions.tipPadding.left;
-//       } else {
-//         // tipbox pointing right
-//         x = obj.dimensions.tipPadding.right;
-//       }
-//       return `translate(${x},${obj.dimensions.tipPadding.top})`;
-//     });
-//
-//   if(category !== undefined){
-//     tipNodes.tipTextDate.text(category);
-//   }else{
-//     tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group`).append('text')
-//     noDateText = true;
-//     tipNodes.tipGroup.select()
-//   }
-//
-//   let tipLabels = tipNodes.tipGroup
-//     .selectAll(`.${obj.prefix}tip_text-group text`)
-//     .data(tipLabelData);
-//
-//   tipLabels
-//     .enter()
-//     .append('text')
-//   .merge(tipLabels)
-//     .text(function(d,i,o){
-//         let axis = (i === 0) ? 'xAxis' : 'yAxis';
-//         if (!obj[axis].prefix) { obj[axis].prefix = ''; }
-//         if (!obj[axis].suffix) { obj[axis].suffix = ''; }
-//         if (obj.rendered.plot.xScaleObj.obj.type === 'time' && axis === 'xAxis') {
-//           tipDateFormatter( select(o[i]), ctx, obj.monthsAbr, d.val );
-//           return d.key + ': ' +select(o[i]).text();
-//         }else{
-//           return d.key + ': ' + obj[axis].prefix + yFormatter(obj[axis].format, d.val) + obj[axis].suffix;
-//         }
-//     })
-//     .attrs({
-//       'x':0,
-//       'y': function(d,i,o) {
-//         if(noDateText){
-//           lineHeight = lineHeight || parseInt(select(o[i]).style('line-height'));
-//           return (i) * lineHeight;
-//         }else{
-//           return select(o[i]).attr('y');
-//         }
-//       },
-//       'dy': '1em'
-//     });
-//
-//   tipLabels.exit().remove();
-//
-//   tipNodes.tipBox
-//     .attr('transform', function() {
-//       let x = cX, y = cY;
-//       if (cursor.x-voronoiGridX > obj.dimensions.tickWidth() / 2) {
-//         // tipbox pointing left
-//         x = x-tipRectWidth;
-//       }
-//
-//       if((cursor.y + tipRectHeight) > obj.dimensions.yAxisHeight()){
-//         // tipbox pointing up
-//         y = y - tipRectHeight;
-//       }
-//       return `translate(${x},${y})`;
-//     })
-//
-//   tipNodes.tipRect
-//     .attrs({
-//       'width': tipRectWidth,
-//       'height': tipRectHeight
-//     })
-//
-//   tipNodes.xTipLine.select('line')
-//     .attrs({
-//       'x1': cX,
-//       'x2': cX,
-//       'y1': 0,
-//       'y2': obj.dimensions.yAxisHeight()
-//     });
-//
-//   tipNodes.yTipLine.select('line')
-//     .attrs({
-//       'x1': voronoiGridX,
-//       'x2': voronoiGridWidth,
-//       'y1': cY,
-//       'y2': cY
-//     });
-//   tipNodes.tipCircle.select('circle')
-//     .attrs({
-//       'cx': cX,
-//       'cy': cY,
-//       'class' : circle.getAttribute('class'),
-//     })
-//
 }
 
 export function areaChartTips(tipNodes, innerTipEls, obj) {
@@ -954,18 +822,20 @@ export function barChartTips(tipNodes, innerTipEls, obj) {
   const cursor = cursorPos(tipNodes.overlay),
     tipData = getTipData(obj, cursor);
 
-  tipNodes.tipGroup.style('display', 'none');
-
-  obj.rendered.plot.seriesGroup.selectAll('rect')
+  obj.rendered.plot.seriesGroup
+    .selectAll('rect')
     .classed(`${obj.prefix}muted`, true);
 
-  obj.rendered.plot.seriesGroup.selectAll(`.${obj.prefix}bar-label`)
+  obj.rendered.plot.seriesGroup
+    .selectAll(`.${obj.prefix}bar-label`)
     .classed(`${obj.prefix}muted`, true);
 
-  obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"] rect`)
+  obj.rendered.plot.seriesGroup
+    .selectAll(`[data-key="${tipData.key}"] rect`)
     .classed(`${obj.prefix}muted`, false);
 
-  obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"] .${obj.prefix}bar-label`)
+  obj.rendered.plot.seriesGroup
+    .selectAll(`[data-key="${tipData.key}"] .${obj.prefix}bar-label`)
     .classed(`${obj.prefix}muted`, false);
 
 }
@@ -975,20 +845,156 @@ export function stackedBarChartTips(tipNodes, innerTipEls, obj) {
   const cursor = cursorPos(tipNodes.overlay),
     tipData = getTipData(obj, cursor);
 
-  tipNodes.tipGroup.style('display', 'none');
-
-  obj.rendered.plot.seriesGroup.selectAll('rect')
+  obj.rendered.plot.seriesGroup
+    .selectAll('rect')
     .classed(`${obj.prefix}muted`, true);
 
-  obj.rendered.plot.seriesGroup.selectAll(`.${obj.prefix}bar-label`)
+  obj.rendered.plot.seriesGroup
+    .selectAll(`.${obj.prefix}bar-label`)
     .classed(`${obj.prefix}muted`, true);
 
-  obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"]`)
+  obj.rendered.plot.seriesGroup
+    .selectAll(`[data-key="${tipData.key}"]`)
     .classed(`${obj.prefix}muted`, false);
 
-  obj.rendered.plot.seriesGroup.selectAll(`[data-legend="${tipData.key}"]`)
+  obj.rendered.plot.seriesGroup
+    .selectAll(`[data-legend="${tipData.key}"]`)
     .classed(`${obj.prefix}muted`, false);
 
+}
+
+export function scatterplotChartTips(tipNodes, innerTipEls, obj, voronoiDiagram) {
+  const cursor = cursorPos(tipNodes.overlay),
+    voronoiRadius = obj.dimensions.tickWidth() / 3,
+    tipData = voronoiDiagram.find(cursor.x, cursor.y, voronoiRadius);
+
+  if (tipData) {
+
+    obj.rendered.plot.seriesGroup
+      .selectAll(`.${obj.prefix}dot`)
+      .classed(`${obj.prefix}muted`, true)
+      .classed(`${obj.prefix}active`, false);
+
+    obj.rendered.plot.seriesGroup
+      .selectAll(`[data-key="${tipData.data.key}"]`)
+      .classed(`${obj.prefix}muted`, false)
+      .classed(`${obj.prefix}active`, true);
+
+    if (obj.annotations.highlight && obj.annotations.highlight.length) {
+      obj.rendered.annotations.annoNode
+        .selectAll(`.${obj.prefix}annotation_highlight-text`)
+        .classed(`${obj.prefix}muted`, true);
+
+      obj.rendered.annotations.annoNode
+        .selectAll(`[data-key="${tipData.data.key}"]`)
+        .classed(`${obj.prefix}muted`, false)
+        .classed(`${obj.prefix}active`, true);
+    }
+
+    let xPos;
+
+    if (obj.rendered.plot.xScaleObj.obj.type === 'time') {
+      // need to check if this would still work with x-axis as dates
+      xPos = tipData[0].data[obj.data.keys[0]];
+    } else {
+      xPos = tipData.data.series[0].val;
+    }
+
+    tipNodes.xTipLine.select('line')
+      .attrs({
+        'x1': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'x2': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'y1': 0,
+        'y2': obj.dimensions.yAxisHeight()
+      });
+
+    tipNodes.yTipLine.select('line')
+      .attrs({
+        'x1': obj.dimensions.computedWidth() - obj.dimensions.tickWidth(),
+        'x2': obj.dimensions.computedWidth(),
+        'y1': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val),
+        'y2': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val)
+      });
+
+    // tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
+    //   .data(tipData.data.series)
+    //   .text(d => {
+    //     if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
+    //     if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
+    //     if ((d.val || d.val === 0) && d.val !== '__undefined__') {
+    //       return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+    //     } else {
+    //       return 'n/a';
+    //     }
+    //   })
+    //   .classed(`${obj.prefix}muted`, d => {
+    //     return (!(d.val || d.val === 0) || d.val === '__undefined__');
+    //   });
+
+    // if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+    //   const domain = obj.rendered.plot.xScaleObj.scale.domain(),
+    //     ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
+    //
+    //   tipNodes.tipTextDate
+    //     .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.data.key);
+    // } else {
+    //   tipNodes.tipTextDate
+    //     .text(tipData.data.key);
+    // }
+
+    tipNodes.tipGroup
+      .selectAll(`.${obj.prefix}tip_text-group`)
+      .data(tipData.data.series)
+      .classed(`${obj.prefix}active`, d => d.val ? true : false);
+
+    tipNodes.tipGroup
+      .attr('transform', () => {
+        let x;
+        if (cursor.x > obj.dimensions.tickWidth() / 2) {
+          // tipbox pointing left
+          x = obj.dimensions.tipPadding.left;
+        } else {
+          // tipbox pointing right
+          x = obj.dimensions.tipPadding.right;
+        }
+        return `translate(${x},${obj.dimensions.tipPadding.top})`;
+      });
+
+    // tipNodes.tipPathCircles
+    //   .selectAll(`.${obj.prefix}tip_path-circle`)
+    //     .data(tipData.series)
+    //     .classed(`${obj.prefix}active`, d => {
+    //       return d.val && d.val !== '__undefined__';
+    //     })
+    //     .attrs({
+    //       'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+    //       'cy': d => {
+    //         if (d.val && d.val !== '__undefined__') {
+    //           return obj.rendered.plot.yScaleObj.scale(d.val);
+    //         }
+    //       }
+    //     });
+
+    tipNodes.tipRect
+      .attrs({
+        'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+        'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+      });
+
+    tipNodes.tipBox
+      .attr('transform', function() {
+        let x;
+        if (cursor.x > obj.dimensions.tickWidth() / 2) {
+          // tipbox pointing left
+          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+        } else {
+          // tipbox pointing right
+          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+        }
+        return `translate(${x},${obj.dimensions.tipOffset.vertical})`;
+      });
+
+  }
 
 }
 

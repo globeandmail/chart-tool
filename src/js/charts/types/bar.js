@@ -26,7 +26,7 @@ export default function barChart(node, obj) {
     const step = obj.dimensions.barHeight / ((bands.padding * -1) + 1);
     totalBarHeight = (step * obj.data.data.length * obj.data.seriesAmount) - (step * bands.padding) + (step * bands.outerPadding * 2);
     yScale.range([totalBarHeight, 0]);
-    obj.dimensions.yAxisHeight = totalBarHeight;
+    obj.dimensions.yAxisHeight = () => totalBarHeight;
   }
 
   const yAxisObj = new Axis(node, obj, yScale, 'yAxis');

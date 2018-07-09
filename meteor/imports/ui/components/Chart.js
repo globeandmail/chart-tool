@@ -41,6 +41,11 @@ function chartPresentationalString(props) {
     'exportable': data.exportable
   };
 
+  if (props.annotationMode) {
+    obj.annotationType = props.currentAnnotation.type;
+    obj.annotationAxis = props.currentAnnotation.axis;
+  }
+
   return JSON.stringify(obj);
 }
 
@@ -52,7 +57,9 @@ export default class Chart extends Component {
     this.titleBlur = this.titleBlur.bind(this);
     this.qualifierBlur = this.qualifierBlur.bind(this);
     this.sourceBlur = this.sourceBlur.bind(this);
-    this.handleHighlight = this.handleHighlight.bind(this);
+    this.handleHighlightAnnotation = this.handleHighlightAnnotation.bind(this);
+    this.handleRangeAnnotation = this.handleRangeAnnotation.bind(this);
+    this.handleTextAnnotation = this.handleTextAnnotation.bind(this);
   }
 
   componentDidMount() {
@@ -122,7 +129,7 @@ export default class Chart extends Component {
     window.cursorManager.setEndOfContenteditable(event.target);
   }
 
-  handleHighlight(event) {
+  handleHighlightAnnotation(event) {
 
     const chart = this.props.chart,
       key = event.target.parentElement.dataset.key,
@@ -156,6 +163,24 @@ export default class Chart extends Component {
 
   }
 
+  handleRangeAnnotation(event) {
+
+    const chart = this.props.chart;
+      // key = event.target.parentElement.dataset.key,
+      // color = this.props.currentAnnotation.highlight;
+
+    debugger;
+  }
+
+  handleTextAnnotation(event) {
+
+    const chart = this.props.chart;
+      // key = event.target.parentElement.dataset.key,
+      // color = this.props.currentAnnotation.highlight;
+
+    debugger;
+  }
+
   chartEditable() {
     const title = this.chartRef.current.querySelector('.editable-chart_title'),
       qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
@@ -169,13 +194,16 @@ export default class Chart extends Component {
 
   chartAnnotatable() {
     const prefix = app_settings.chart.prefix;
-    const rectBar = this.chartRef.current.querySelectorAll(`.${prefix}series_group g.${prefix}bar`),
-      rectCol = this.chartRef.current.querySelectorAll(`.${prefix}series_group g.${prefix}column`);
-    for (let i = 0; i < rectBar.length; i++) {
-      rectBar[i].addEventListener('click', this.handleHighlight);
-    }
-    for (let i = 0; i < rectCol.length; i++) {
-      rectCol[i].addEventListener('click', this.handleHighlight);
+
+    if (this.props.currentAnnotation.type === 'highlight') {
+      const rectBar = this.chartRef.current.querySelectorAll(`.${prefix}series_group g.${prefix}bar`),
+        rectCol = this.chartRef.current.querySelectorAll(`.${prefix}series_group g.${prefix}column`);
+      for (let i = 0; i < rectBar.length; i++) {
+        rectBar[i].addEventListener('click', this.handleHighlightAnnotation);
+      }
+      for (let i = 0; i < rectCol.length; i++) {
+        rectCol[i].addEventListener('click', this.handleHighlightAnnotation);
+      }
     }
   }
 
@@ -219,7 +247,16 @@ export default class Chart extends Component {
       }
     }
 
-    if (this.props.annotationMode) chart.options.tips = false;
+    if (this.props.annotationMode) {
+      chart.options.tips = false;
+      chart.annotationHandlers = {
+        rangeHandler: this.handleRangeAnnotation,
+        textHandler: this.handleTextAnnotation,
+        highlightHandler: this.handleHighlightAnnotation,
+        type: this.props.currentAnnotation.type,
+        axis: this.props.currentAnnotation.axis
+      };
+    }
 
     const errors = drawChart(this.chartRef.current, chart);
 

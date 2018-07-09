@@ -43,11 +43,8 @@ gulp.task('move-meteor:build', () => {
     .pipe(gulp.dest(gulpConfig.meteorBundle));
 });
 
-let cache;
-
-gulp.task('rollup:dev', () => {
+gulp.task('rollup:dev', async function() {
   const rConfig = new RollupConfig();
-  rConfig.cache = cache;
   const replaceObj = {};
   replaceObj[chartToolConfig.embedJS] = '../dist/dev/chart-tool.js';
   replaceObj[chartToolConfig.embedCSS] = '../dist/dev/chart-tool.css';
@@ -57,22 +54,19 @@ gulp.task('rollup:dev', () => {
       values: replaceObj
     })
   );
-  return rollup(rConfig).then(bundle => {
-    cache = bundle;
-    return bundle.write({
-      banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
-      format: 'umd',
-      sourceMap: true,
-      dest: `${gulpConfig.buildPathDev}/chart-tool.js`,
-      moduleName: 'ChartToolInit'
-    });
+  const bundle = await rollup(rConfig);
+  await bundle.write({
+    file: `${gulpConfig.buildPathDev}/chart-tool.js`,
+    format: 'umd',
+    name: 'ChartToolInit',
+    sourcemap: true,
+    banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`
   });
 });
 
-gulp.task('rollup-meteor:dev', () => {
+gulp.task('rollup-meteor:dev', async function() {
   const rConfig = new RollupConfig();
-  rConfig.entry = `${gulpConfig.customPath}/meteor-config.js`;
-  rConfig.cache = cache;
+  rConfig.input = `${gulpConfig.customPath}/meteor-config.js`;
   const replaceObj = {};
   replaceObj[chartToolConfig.embedJS] = '../dist/dev/chart-tool.js';
   replaceObj[chartToolConfig.embedCSS] = '../dist/dev/chart-tool.css';
@@ -82,17 +76,15 @@ gulp.task('rollup-meteor:dev', () => {
       values: replaceObj
     })
   );
-  return rollup(rConfig).then(bundle => {
-    cache = bundle;
-    return bundle.write({
-      format: 'es',
-      dest: `${gulpConfig.meteorSettings}`,
-      moduleName: 'meteorSettings'
-    });
+  const bundle = await rollup(rConfig);
+  await bundle.write({
+    format: 'es',
+    file: `${gulpConfig.meteorSettings}`,
+    name: 'meteorSettings'
   });
 });
 
-gulp.task('rollup:build', () => {
+gulp.task('rollup:build', async function() {
   const rConfig = new RollupConfig();
   rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
   rConfig.plugins.push(
@@ -107,19 +99,18 @@ gulp.task('rollup:build', () => {
       }
     })
   );
-  return rollup(rConfig).then(bundle => {
-    return bundle.write({
-      banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
-      format: 'umd',
-      dest: `${gulpConfig.buildPath}/chart-tool.min.js`,
-      moduleName: 'ChartToolInit'
-    });
+  const bundle = await rollup(rConfig);
+  await bundle.write({
+    banner: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | MIT */`,
+    format: 'umd',
+    file: `${gulpConfig.buildPath}/chart-tool.min.js`,
+    name: 'ChartToolInit'
   });
 });
 
-gulp.task('rollup-meteor:build', () => {
+gulp.task('rollup-meteor:build', async function() {
   const rConfig = new RollupConfig();
-  rConfig.entry = `${gulpConfig.customPath}/meteor-config.js`;
+  rConfig.input = `${gulpConfig.customPath}/meteor-config.js`;
   rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
   rConfig.plugins.push(
     strip({
@@ -128,11 +119,10 @@ gulp.task('rollup-meteor:build', () => {
       sourceMap: false
     })
   );
-  return rollup(rConfig).then(bundle => {
-    return bundle.write({
-      format: 'es',
-      dest: `${gulpConfig.meteorSettings}`,
-      moduleName: 'meteorSettings'
-    });
+  const bundle = await rollup(rConfig);
+  await bundle.write({
+    format: 'es',
+    file: `${gulpConfig.meteorSettings}`,
+    name: 'meteorSettings'
   });
 });

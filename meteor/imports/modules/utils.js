@@ -559,7 +559,7 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'options.indexed': false,
-        'charts.update.annotations.highlight.reset': []
+        'annotations.highlight': []
       };
     case 'multiline':
       return {
@@ -571,7 +571,7 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'options.indexed': false,
-        'charts.update.annotations.highlight.reset': []
+        'annotations.highlight': []
       };
     case 'area':
       return {
@@ -583,7 +583,7 @@ export function chartTypeFieldReset(type) {
         'y_axis.nice': true,
         'y_axis.min': '',
         'options.indexed': false,
-        'charts.update.annotations.highlight.reset': []
+        'annotations.highlight': []
       };
     case 'column':
       return {

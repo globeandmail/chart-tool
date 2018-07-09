@@ -112,6 +112,7 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
 
   return {
     csv,
+    inputDateFormat,
     data,
     seriesAmount,
     keys,

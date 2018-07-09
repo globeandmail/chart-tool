@@ -15,8 +15,6 @@ export default function scatterplotChart(node, obj) {
 
   addZeroLine(obj, node, yAxisObj, 'yAxis');
 
-  xScale.range([obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), obj.dimensions.tickWidth()]);
-
   const seriesGroup = node.append('g')
     .attr('class', `${obj.prefix}series_group`);
 
@@ -25,6 +23,7 @@ export default function scatterplotChart(node, obj) {
     .data(obj.data.data).enter()
     .append('circle')
     .attrs({
+      'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
       'class': d => {
         let output = `${obj.prefix}dot`;
         if (obj.data.groups) {

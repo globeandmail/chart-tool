@@ -1,16 +1,5 @@
-// .#{$prefix}type_scatterplot .#{$prefix}scatterplot-voronoi path.#{$prefix}scatterplot-voronoi-polygon {
-// 	fill: #FFFFFF;
-// 	stroke: #d3d3d3;
-// 	opacity: 0;
-// }
-
 .#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot {
   opacity: 0.5;
-}
-
-.#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot.muted {
-	transition: 0.3s;
-	opacity: 0.3;
 }
 
 @for $pcounter from 1 through $palette-count {

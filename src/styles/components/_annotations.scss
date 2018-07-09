@@ -6,3 +6,23 @@
     text-shadow: 2px 2px 0px rgba($color-white, 0.7), -2px -2px 0px rgba($color-white, 0.7), -2px 2px 0px rgba($color-white, 0.7), 2px -2px 0px rgba($color-white, 0.7);
   }
 }
+
+.#{$prefix}annotation_range {
+  opacity: 0.15;
+  fill: $color-gray-medium;
+  shape-rendering: crispEdges;
+}
+
+.#{$prefix}annotation_range-line {
+  opacity: 1;
+  stroke: $color-black;
+  stroke-width: 1.5px;
+  shape-rendering: crispEdges;
+}
+
+.#{$prefix}brush {
+  .selection {
+    shape-rendering: crispEdges;
+    stroke-width: 0;
+  }
+}

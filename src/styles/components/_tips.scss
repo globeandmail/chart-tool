@@ -108,7 +108,13 @@
   }
 }
 
-.#{$prefix}muted {
+.#{$prefix}muted,
+.#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot.#{$prefix}muted {
   transition: opacity 0.3s;
-  opacity: 0.3;
+  opacity: 0.2;
+}
+
+.#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot.#{$prefix}active {
+  transition: opacity 0.3s;
+  opacity: 1;
 }
