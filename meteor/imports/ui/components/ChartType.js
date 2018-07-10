@@ -28,7 +28,7 @@ export default class ChartType extends Component {
                 onChange={this.handleSelectChange}
                 value={this.props.chart.options.type}
                 >
-                {['Line', 'Multiline', 'Area', 'Column', 'Bar'].map(t => {
+                {['Line', 'Multiline', 'Area', 'Column', 'Bar', 'Scatterplot'].map(t => {
                   const lower = t.toLowerCase();
                   return <option key={t} value={lower}>{t}</option>;
                 })}

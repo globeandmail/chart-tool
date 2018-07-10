@@ -884,11 +884,6 @@ export function scatterplotChartTips(tipNodes, innerTipEls, obj, voronoiDiagram)
       obj.rendered.annotations.annoNode
         .selectAll(`.${obj.prefix}annotation_highlight-text`)
         .classed(`${obj.prefix}muted`, true);
-
-      obj.rendered.annotations.annoNode
-        .selectAll(`[data-key="${tipData.data.key}"]`)
-        .classed(`${obj.prefix}muted`, false)
-        .classed(`${obj.prefix}active`, true);
     }
 
     let xPos;

@@ -607,6 +607,16 @@ export function chartTypeFieldReset(type) {
         'y_axis.min': '',
         'options.indexed': false,
       };
+    case 'scatterplot':
+      return {
+        'options.type': type,
+        'options.interpolation': false,
+        'x_axis.scale': 'linear',
+        'x_axis.nice': false,
+        'y_axis.scale': 'linear',
+        'y_axis.nice': false,
+        'options.indexed': false,
+      };
   }
 
 }

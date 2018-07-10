@@ -17,11 +17,13 @@ export default class ChartAnnotations extends Component {
     this.resetAnnotations = this.resetAnnotations.bind(this);
     this.removeHighlight = this.removeHighlight.bind(this);
     this.addRange = this.addRange.bind(this);
+    this.setRangeConfig = this.setRangeConfig.bind(this);
+    this.formatRangeValue = this.formatRangeValue.bind(this);
     this.state = {
-      expanded: true,
-      highlightExpanded: false,
+      expanded: false,
+      highlightExpanded: true,
       textExpanded: false,
-      rangeExpanded: true
+      rangeExpanded: false
     };
   }
 
@@ -112,6 +114,25 @@ export default class ChartAnnotations extends Component {
     updateAndSave('charts.update.annotation.highlight', this.props.chart._id, h);
   }
 
+  setRangeConfig(event) {
+    this.props.handleCurrentAnnotation(event.target.name, event.target.value);
+  }
+
+  formatRangeValue(range) {
+    const data = this.props.currentAnnotation[range];
+
+    if (!data) return '';
+
+    const axis = this.props.chart[`${this.props.currentAnnotation.rangeAxis}_axis`];
+
+    if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
+      const formatTime = timeFormat(this.props.chart.date_format);
+      return formatTime(data);
+    } else {
+      return data;
+    }
+  }
+
   addRange(event) {
 
   }
@@ -129,7 +150,11 @@ export default class ChartAnnotations extends Component {
   }
 
   helpRanges() {
-
+    Swal({
+      title: 'Ranges?',
+      text: 'You can click and drag on a chart to create a custom range annotation across the x- or y-axis.',
+      type: 'info'
+    });
   }
 
   helpText() {
@@ -226,18 +251,17 @@ export default class ChartAnnotations extends Component {
           <div className='unit-edit unit-anno anno-text-edit'>
             <h4><span className='anno-subhed' onClick={this.toggleRangeExpand}>Ranges</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('rangeExpanded')}`}>
-
               <form className='add-range' onSubmit={this.addRange}>
                 <p>Add a new range</p>
-                <ul>
-                  <li>
+                <div className='range-select-group'>
+                  <div className='range-select'>
                     <p>Axis</p>
                     <div className='select-wrapper'>
                       <select
                         className='select-rangeaxis'
                         name='rangeAxis'
                         defaultValue={this.props.currentAnnotation.rangeAxis}
-                        onChange={this.props.handleRangeState}
+                        onChange={this.setRangeConfig}
                         >
                         {['x', 'y'].map(f => {
                           const str = `${f.toUpperCase()}-axis`;
@@ -245,31 +269,33 @@ export default class ChartAnnotations extends Component {
                         })}
                       </select>
                     </div>
-                  </li>
-                  <li>
+                  </div>
+                  <div className='range-select'>
                     <p>Type</p>
                     <div className='select-wrapper'>
                       <select
                         className='select-rangetype'
                         name='rangeType'
                         defaultValue={this.props.currentAnnotation.rangeType}
-                        onChange={this.props.handleRangeState}
+                        onChange={this.setRangeConfig}
                         >
                         {['Area', 'Line'].map(f => {
                           return <option key={f} value={f.toLowerCase()}>{f}</option>;
                         })}
                       </select>
                     </div>
-                  </li>
-                  <li>
+                  </div>
+                </div>
+                <div className='range-start-end-group'>
+                  <div className='range-start-end'>
                     <p>Start</p>
-                    <p className='range-value'>{this.props.currentAnnotation.rangeStart}</p>
-                  </li>
-                  <li>
+                    <p className='range-value'>{this.formatRangeValue('rangeStart')}</p>
+                  </div>
+                  <div className='range-start-end'>
                     <p>End</p>
-                    <p className='range-value'>{this.props.currentAnnotation.rangeEnd}</p>
-                  </li>
-                </ul>
+                    <p className='range-value'>{this.formatRangeValue('rangeEnd')}</p>
+                  </div>
+                </div>
                 <button>Add range</button>
               </form>
 

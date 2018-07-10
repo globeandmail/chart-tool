@@ -38,7 +38,7 @@ class EditChart extends Component {
       annotationMode: false,
       currentAnnotation: {
         highlight: '',
-        type: 'range',
+        type: 'highlight',
         rangeType: 'area',
         rangeAxis: 'x',
         rangeStart: '',
@@ -61,11 +61,11 @@ class EditChart extends Component {
   handleCurrentAnnotation(key, value) {
     const currentAnnotation = Object.assign({}, this.state.currentAnnotation);
     currentAnnotation[key] = value;
+    if (key === 'rangeAxis' || key === 'rangeType') {
+      currentAnnotation.rangeStart = '';
+      currentAnnotation.rangeEnd = '';
+    }
     this.setState({ currentAnnotation });
-  }
-
-  handleRangeState(event) {
-    debugger;
   }
 
   handleHighlightColor(event) {
@@ -86,6 +86,8 @@ class EditChart extends Component {
             <ChartPreview
               annotationMode={this.state.annotationMode}
               currentAnnotation={this.state.currentAnnotation}
+              handleRangeState={this.handleRangeState}
+              handleCurrentAnnotation={this.handleCurrentAnnotation}
               {...this.props}
             />
             <ChartOutput
@@ -117,6 +119,7 @@ class EditChart extends Component {
               toggleAnnotationMode={this.toggleAnnotationMode}
               handleHighlightColor={this.handleHighlightColor}
               handleCurrentAnnotation={this.handleCurrentAnnotation}
+              handleRangeState={this.handleRangeState}
               currentAnnotation={this.state.currentAnnotation}
               {...this.props}
             />
@@ -137,9 +140,7 @@ class EditChart extends Component {
   }
 
   render() {
-    if (!this.props.loading && !this.props.chart) {
-      return <Redirect to='/404' />;
-    }
+    if (!this.props.loading && !this.props.chart) return <Redirect to='/404' />;
     return !this.props.loading ? this.renderPage() : null;
   }
 

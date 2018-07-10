@@ -641,36 +641,71 @@ select {
   > p {
     @include interface-font-bold;
   }
-  li {
-    padding-bottom: 0.3em;
+  .range-select-group {
+    @include clearfix;
+    margin: 0.5rem 0;
     p {
-      font-size: 0.9rem;
       margin-right: 0.5em;
     }
+    .select-wrapper, select {
+      width: 100%;
+    }
     select {
-      font-size: 1rem;
+      font-size: 0.9rem;
       text-transform: uppercase;
-      padding-right: 1.4em;
+      padding-right: 1.8em;
       letter-spacing: 1.2px;
+      border-radius: 3px;
+      vertical-align: middle;
+      width: 100%;
     }
     > * {
       display: inline-block;
     }
   }
-  .range-value {
-    @include interface-font-light;
+  div p, .range-value {
+    font-size: 0.8rem;
+  }
+  .range-select {
+    display: inline-block;
+    width: 48%;
+    float: left;
+    ~ .range-select {
+      float: right;
+    }
+  }
+  .range-start-end-group {
+    p {
+      display: inline-block;
+    }
+    .range-start-end > p:not(.range-value) {
+      width: 4em;
+      display: inline-block;
+    }
+    .range-value {
+      font-size: 0.9rem;
+      width: auto;
+      &:empty:after {
+        opacity: 0.3;
+        content: 'N/A';
+      }
+    }
+  }
+  button {
+    @include appearance(none);
+    background: none;
     border: 1px solid $color-black;
-    outline: none;
-    background: transparent;
-    width: auto;
-    padding: 0.3em 0.5em 0.3em 0.5em;
+    color: $color-black;
+    font-size: 1em;
+    margin-top: 0.5em;
+    padding: 0.3em 0.5em 0.35em 0.5em;
     border-radius: 4px;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    &:empty:after {
-      opacity: 0.3;
-      content: 'N/A';
+    @include transition (all 0.1s ease-out);
+    text-decoration: none;
+    &:hover {
+      border-color: $primary-color;
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
     }
   }
 }

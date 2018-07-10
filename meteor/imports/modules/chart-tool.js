@@ -12979,11 +12979,6 @@
 	      obj.rendered.annotations.annoNode
 	        .selectAll(("." + (obj.prefix) + "annotation_highlight-text"))
 	        .classed(((obj.prefix) + "muted"), true);
-
-	      obj.rendered.annotations.annoNode
-	        .selectAll(("[data-key=\"" + (tipData.data.key) + "\"]"))
-	        .classed(((obj.prefix) + "muted"), false)
-	        .classed(((obj.prefix) + "active"), true);
 	    }
 
 	    var xPos;
@@ -13208,10 +13203,52 @@
 	      });
 
 	    if (obj.annotationHandlers && obj.annotationHandlers.type && obj.annotationHandlers.type === 'range') {
+
+	      var axis = obj.annotationHandlers.rangeAxis,
+	        brush$$1 = getBrush(axis, obj);
+
 	      annoEditable
 	        .append('g')
 	        .attr('class', ((obj.prefix) + "brush"))
-	        .call(getBrush(obj.annotationHandlers.axis, obj));
+	        .call(brush$$1);
+
+	      // if (obj.annotationHandlers.rangeType === 'area') {
+	      //   brushes
+	      //     .call(getBrush(axis, obj));
+	      // }
+
+	      // if (obj.annotationHandlers.rangeType === 'line') {
+	      //   brushes.call(getBrush(axis, obj));
+	        // const d = drag()
+	        //   .on('start drag end', () => {
+	        //     getBrush(axis, obj);
+	        //   });
+	        //
+	        //   // x1: axis === 'x' ? scale(rangeObj.start) : 0;
+	        //   // x2: axis === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
+	        //   // y1: axis === 'x' ? 0 : scale(rangeObj.start);
+	        //   // y2: axis === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
+	        //
+	        // brushes
+	        //   .append('line')
+	        //   .attrs({
+	        //     class: 'handle',
+	        //     // x1,
+	        //     // x2,
+	        //     // x3,
+	        //     // x4
+	        //   })
+	        //   .on('mousedown', function(event) {
+	        //     debugger;
+	        //     // const mouse = event.sourceEvent.layerX
+	        //     select(this)
+	        //       .attrs({
+	        //
+	        //       })
+	        //   })
+	        //   .call(d);
+
+	      // }
 	    }
 	  }
 
@@ -13460,11 +13497,13 @@
 
 	  if (type === 'x') {
 	    return brushX()
+	      .handleSize(2)
 	      .extent(extent)
 	      .on('end', function () {
 	        if (obj.annotationHandlers && obj.annotationHandlers.rangeHandler) {
 	          if (!event.selection) {
 	            // it's a line
+	            debugger;
 	            obj.annotationHandlers.rangeHandler({
 	              type: type,
 	              start: getTipData(obj, { x: event.sourceEvent.layerX - (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) }).key,
@@ -13483,6 +13522,7 @@
 
 	  if (type === 'y') {
 	    return brushY()
+	      .handleSize(2)
 	      .extent(extent)
 	      .on('end', function () {
 	        if (obj.annotationHandlers && obj.annotationHandlers.rangeHandler) {
@@ -13491,14 +13531,14 @@
 	            debugger;
 	            obj.annotationHandlers.rangeHandler({
 	              type: type,
-	              // start: getTipData(obj, { x: event.sourceEvent.layerX - (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) }).key,
+	              start: obj.rendered.plot.yScaleObj.scale.invert(event.sourceEvent.layerX - (obj.dimensions.computedWidth() - obj.dimensions.tickWidth())),
 	            });
 	          } else {
 	            // it's a range
 	            obj.annotationHandlers.rangeHandler({
 	              type: type,
-	              start: getTipData(obj, { y: event.selection[0] }).key,
-	              end: getTipData(obj, { y: event.selection[1] }).key,
+	              start: obj.rendered.plot.yScaleObj.scale.invert(event.selection[0]),
+	              end: obj.rendered.plot.yScaleObj.scale.invert(event.selection[1])
 	            });
 	          }
 	        }

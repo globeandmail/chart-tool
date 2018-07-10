@@ -43,7 +43,8 @@ function chartPresentationalString(props) {
 
   if (props.annotationMode) {
     obj.annotationType = props.currentAnnotation.type;
-    obj.annotationAxis = props.currentAnnotation.axis;
+    obj.annotationRangeType = props.currentAnnotation.rangeType;
+    obj.annotationRangeAxis = props.currentAnnotation.rangeAxis;
   }
 
   return JSON.stringify(obj);
@@ -163,13 +164,9 @@ export default class Chart extends Component {
 
   }
 
-  handleRangeAnnotation(event) {
-
-    const chart = this.props.chart;
-      // key = event.target.parentElement.dataset.key,
-      // color = this.props.currentAnnotation.highlight;
-
-    debugger;
+  handleRangeAnnotation(data) {
+    this.props.handleCurrentAnnotation('rangeStart', data.start);
+    if (data.end) this.props.handleCurrentAnnotation('rangeEnd', data.end);
   }
 
   handleTextAnnotation(event) {
@@ -254,7 +251,8 @@ export default class Chart extends Component {
         textHandler: this.handleTextAnnotation,
         highlightHandler: this.handleHighlightAnnotation,
         type: this.props.currentAnnotation.type,
-        axis: this.props.currentAnnotation.axis
+        rangeType: this.props.currentAnnotation.rangeType,
+        rangeAxis: this.props.currentAnnotation.rangeAxis
       };
     }
 
