@@ -1,4 +1,4 @@
-import { select, event } from 'd3-selection';
+import { select, event, mouse } from 'd3-selection';
 import { brushX, brushY } from 'd3-brush';
 import { wrapAnnoText } from '../../utils/utils';
 import { isNumeric } from '../../helpers/helpers';
@@ -14,7 +14,7 @@ export default function annotation(node, obj, rendered) {
     (annoData.range && annoData.range.length)
   );
 
-  let annoNode;
+  let annoNode, annoEditable, brushSel;
 
   if (hasAnnotations) {
     annoNode = select(node.node().parentNode).append('g')
@@ -37,7 +37,7 @@ export default function annotation(node, obj, rendered) {
   }
 
   if (obj.editable) {
-    const annoEditable = select(node.node().parentNode)
+    annoEditable = select(node.node().parentNode)
       .append('g')
       .attrs({
         transform: `translate(${obj.dimensions.margin.left},${obj.dimensions.margin.top})`,
@@ -46,56 +46,56 @@ export default function annotation(node, obj, rendered) {
 
     if (obj.annotationHandlers && obj.annotationHandlers.type && obj.annotationHandlers.type === 'range') {
 
-      const axis = obj.annotationHandlers.rangeAxis,
-        brush = getBrush(axis, obj);
+      const brush = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
+        .handleSize(2)
+        .extent([
+          [obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), 0],
+          [obj.dimensions.computedWidth(), obj.dimensions.yAxisHeight()]
+        ])
+        .on('end', () => brushed(event, obj));
 
-      annoEditable
+      brushSel = annoEditable
         .append('g')
-        .attr('class', `${obj.prefix}brush`)
+        .attr('class', `${obj.prefix}brush ${obj.prefix}brush-${obj.annotationHandlers.rangeType}`)
         .call(brush);
 
-      // if (obj.annotationHandlers.rangeType === 'area') {
-      //   brushes
-      //     .call(getBrush(axis, obj));
-      // }
+      const scale = rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].scale;
 
-      // if (obj.annotationHandlers.rangeType === 'line') {
-      //   brushes.call(getBrush(axis, obj));
-        // const d = drag()
-        //   .on('start drag end', () => {
-        //     getBrush(axis, obj);
-        //   });
-        //
-        //   // x1: axis === 'x' ? scale(rangeObj.start) : 0;
-        //   // x2: axis === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
-        //   // y1: axis === 'x' ? 0 : scale(rangeObj.start);
-        //   // y2: axis === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
-        //
-        // brushes
-        //   .append('line')
-        //   .attrs({
-        //     class: 'handle',
-        //     // x1,
-        //     // x2,
-        //     // x3,
-        //     // x4
-        //   })
-        //   .on('mousedown', function(event) {
-        //     debugger;
-        //     // const mouse = event.sourceEvent.layerX
-        //     select(this)
-        //       .attrs({
-        //
-        //       })
-        //   })
-        //   .call(d);
+      const hasRangePassedFromInterface =
+        (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
+        (obj.annotationHandlers.rangeType === 'line' && obj.annotationHandlers.rangeStart);
 
-      // }
+      if (hasRangePassedFromInterface) {
+        let move;
+
+        if (obj.annotationHandlers.rangeType === 'line') {
+          move = getBrushFromCenter(obj, scale(Number(obj.annotationHandlers.rangeStart)));
+        } else {
+          move = [
+            scale(Number(obj.annotationHandlers.rangeStart)),
+            scale(Number(obj.annotationHandlers.rangeEnd))
+          ];
+        }
+
+        brushSel.call(brush.move, move);
+      }
+
+      if (obj.annotationHandlers.rangeType === 'line') {
+        brushSel
+          .selectAll('.overlay')
+          .each(d => d.type = 'selection') // Treat overlay interaction as move
+          .on('mousedown touchstart', function() {
+            brushCentered(this, obj, brush); // Recenter before brushing
+          });
+      }
+
     }
   }
 
   return {
-    annoNode
+    annoNode,
+    annoEditable,
+    brushSel
   };
 
 }
@@ -330,60 +330,43 @@ export function drawTextAnnotation(x, y, i, config, obj) {
   }
 }
 
-export function getBrush(type, obj) {
+function getBrushFromCenter(obj, centerValue) {
+  const d = 2, // Use a fixed width when recentering
+    axis = obj.annotationHandlers.rangeAxis,
+    dim = axis === 'x' ? obj.dimensions.tickWidth() : obj.dimensions.yAxisHeight(),
+    d0 = centerValue - d / 2,
+    d1 = centerValue + d / 2,
+    move = d1 > dim ? [dim - d, dim] : d0 < 0 ? [0, d] : [d0, d1];
 
-  const extent = [
-    [obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), 0],
-    [obj.dimensions.computedWidth(), obj.dimensions.yAxisHeight()]
-  ];
+  return move;
+}
 
-  if (type === 'x') {
-    return brushX()
-      .handleSize(2)
-      .extent(extent)
-      .on('end', () => {
-        if (obj.annotationHandlers && obj.annotationHandlers.rangeHandler) {
-          if (!event.selection) {
-            // it's a line
-            debugger;
-            obj.annotationHandlers.rangeHandler({
-              type,
-              start: getTipData(obj, { x: event.sourceEvent.layerX - (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) }).key,
-            });
-          } else {
-            // it's a range
-            obj.annotationHandlers.rangeHandler({
-              type,
-              start: getTipData(obj, { x: event.selection[0] }).key,
-              end: getTipData(obj, { x: event.selection[1] }).key,
-            });
-          }
-        }
-      });
-  }
+export function brushCentered(node, obj, brush) {
+  const axis = obj.annotationHandlers.rangeAxis,
+    cursor = axis === 'x' ? mouse(node)[0] : mouse(node)[1],
+    move = getBrushFromCenter(obj, cursor);
 
-  if (type === 'y') {
-    return brushY()
-      .handleSize(2)
-      .extent(extent)
-      .on('end', () => {
-        if (obj.annotationHandlers && obj.annotationHandlers.rangeHandler) {
-          if (!event.selection) {
-            // it's a line
-            debugger;
-            obj.annotationHandlers.rangeHandler({
-              type,
-              start: obj.rendered.plot.yScaleObj.scale.invert(event.sourceEvent.layerX - (obj.dimensions.computedWidth() - obj.dimensions.tickWidth())),
-            });
-          } else {
-            // it's a range
-            obj.annotationHandlers.rangeHandler({
-              type,
-              start: obj.rendered.plot.yScaleObj.scale.invert(event.selection[0]),
-              end: obj.rendered.plot.yScaleObj.scale.invert(event.selection[1])
-            });
-          }
-        }
-      });
-  }
+  select(node.parentNode).call(brush.move, move);
+}
+
+export function brushed(e, obj) {
+
+  const r = obj.annotationHandlers,
+    axis = r.rangeAxis,
+    sel = e.selection,
+    yScale = obj.rendered.plot.yScaleObj.scale,
+    startVal = r.rangeType === 'line' ? sel[0] + ((sel[1] - sel[0]) / 2) : sel[0],
+    endVal = sel[1];
+
+  let start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal),
+    end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(sel[1]);
+
+  const data = {
+    axis,
+    start
+  };
+
+  if (r.rangeType === 'area') data.end = end;
+  if (r && r.rangeHandler) r.rangeHandler(data);
+
 }

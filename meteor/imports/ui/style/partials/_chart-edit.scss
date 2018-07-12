@@ -632,64 +632,57 @@ select {
 .add-range {
   background-color: darken($color-gray-light, 2%);
   padding: 0.5em;
-  p {
+  .note {
+    color: $color-black;
     margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.8rem;
   }
-  > p {
+  .note, .range-row {
+    margin-bottom: 0.5em;
+  }
+  label {
     @include interface-font-bold;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.2rem;
   }
-  .range-select-group {
+  .select-wrapper, select {
+    width: 100%;
+  }
+  select {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    padding-right: 1.8em;
+    letter-spacing: 1.2px;
+    border-radius: 3px;
+    vertical-align: middle;
+    width: 100%;
+  }
+  .range-row {
     @include clearfix;
-    margin: 0.5rem 0;
-    p {
-      margin-right: 0.5em;
-    }
-    .select-wrapper, select {
-      width: 100%;
-    }
-    select {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      padding-right: 1.8em;
-      letter-spacing: 1.2px;
-      border-radius: 3px;
-      vertical-align: middle;
-      width: 100%;
-    }
-    > * {
-      display: inline-block;
-    }
   }
-  div p, .range-value {
-    font-size: 0.8rem;
-  }
-  .range-select {
+  .range-row-item {
     display: inline-block;
     width: 48%;
     float: left;
-    ~ .range-select {
+    ~ .range-row-item {
       float: right;
     }
+    &.muted {
+      opacity: 0.2;
+      pointer-events: none;
+    }
   }
-  .range-start-end-group {
-    p {
-      display: inline-block;
-    }
-    .range-start-end > p:not(.range-value) {
-      width: 4em;
-      display: inline-block;
-    }
-    .range-value {
-      font-size: 0.9rem;
-      width: auto;
-      &:empty:after {
-        opacity: 0.3;
-        content: 'N/A';
-      }
-    }
+  .range-value {
+    pointer-events: none;
+  }
+  .editable {
+    pointer-events: all;
+  }
+  input {
+    @extend %input;
+    width: 100%;
+    font-size: 0.9rem;
+    background: none;
   }
   button {
     @include appearance(none);
