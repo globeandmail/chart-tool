@@ -46,38 +46,51 @@ export default function annotation(node, obj, rendered) {
 
     if (obj.annotationHandlers && obj.annotationHandlers.type && obj.annotationHandlers.type === 'range') {
 
-      const brush = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
-        .handleSize(2)
-        .extent([
-          [obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), 0],
-          [obj.dimensions.computedWidth(), obj.dimensions.yAxisHeight()]
-        ])
-        .on('end', () => brushed(event, obj));
-
-      brushSel = annoEditable
-        .append('g')
-        .attr('class', `${obj.prefix}brush ${obj.prefix}brush-${obj.annotationHandlers.rangeType}`)
-        .call(brush);
-
-      const scale = rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].scale;
-
       const hasRangePassedFromInterface =
         (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
         (obj.annotationHandlers.rangeType === 'line' && obj.annotationHandlers.rangeStart);
 
+      const brush = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
+        .handleSize(2)
+        .extent([
+          [0, 0],
+          [obj.dimensions.tickWidth(), obj.dimensions.yAxisHeight()]
+        ])
+        .on('brush', function() {
+          select(this).classed('inuse', true);
+        })
+        .on('end', function() {
+          brushed(event, obj, this);
+        });
+
+      brushSel = annoEditable
+        .append('g')
+        .attrs({
+          'class': `${obj.prefix}brush ${obj.prefix}brush-${obj.annotationHandlers.rangeType}`,
+          'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
+        })
+        .call(brush);
+
+      const scale = rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].scale,
+        scaleType = rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].obj.type,
+        isTime = scaleType === 'time' || scaleType === 'ordinal-time';
+
       if (hasRangePassedFromInterface) {
         let move;
 
+        const start = obj.annotationHandlers.rangeStart,
+          end = obj.annotationHandlers.rangeEnd;
+
         if (obj.annotationHandlers.rangeType === 'line') {
-          move = getBrushFromCenter(obj, scale(Number(obj.annotationHandlers.rangeStart)));
+          move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)));
         } else {
           move = [
-            scale(Number(obj.annotationHandlers.rangeStart)),
-            scale(Number(obj.annotationHandlers.rangeEnd))
+            scale(isTime ? new Date(start) : Number(start)),
+            scale(isTime ? new Date(end) : Number(end))
           ];
         }
 
-        brushSel.call(brush.move, move);
+        brushSel = brushSel.call(brush.move, move);
       }
 
       if (obj.annotationHandlers.rangeType === 'line') {
@@ -148,7 +161,8 @@ export function range(annoNode, obj, rendered) {
   const r = obj.annotations.range;
 
   r.map((rangeObj, i) => {
-    const scale = rendered.plot[`${rangeObj.type}ScaleObj`].scale;
+
+    const scale = rendered.plot[`${rangeObj.axis}ScaleObj`].scale;
 
     if (obj.data.inputDateFormat) {
       rangeObj.start = new Date(rangeObj.start);
@@ -174,17 +188,17 @@ export function range(annoNode, obj, rendered) {
       // need to test with bar chart
       type = 'rect';
       const rangeVals = [scale(rangeObj.start), scale(rangeObj.end)].sort((a, b) => a - b);
-      attrs.x = rangeObj.type === 'x' ? rangeVals[0] : 0;
-      attrs.y = rangeObj.type === 'x' ? 0 : rangeVals[0];
-      attrs.width = rangeObj.type === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
-      attrs.height = rangeObj.type === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
+      attrs.x = rangeObj.axis === 'x' ? rangeVals[0] : 0;
+      attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
+      attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
+      attrs.height = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
       rangeNode = select(rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
     } else {
       type = 'line';
-      attrs.x1 = rangeObj.type === 'x' ? scale(rangeObj.start) : 0;
-      attrs.x2 = rangeObj.type === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
-      attrs.y1 = rangeObj.type === 'x' ? 0 : scale(rangeObj.start);
-      attrs.y2 = rangeObj.type === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
+      attrs.x1 = rangeObj.axis === 'x' ? scale(rangeObj.start) : 0;
+      attrs.x2 = rangeObj.axis === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
+      attrs.y1 = rangeObj.axis === 'x' ? 0 : scale(rangeObj.start);
+      attrs.y2 = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
       rangeNode = annoNode.append(type);
     }
 
@@ -349,24 +363,32 @@ export function brushCentered(node, obj, brush) {
   select(node.parentNode).call(brush.move, move);
 }
 
-export function brushed(e, obj) {
+export function brushed(e, obj, node) {
+
+  if (!e.selection || !select(node).classed('inuse') || !event.sourceEvent || event.sourceEvent.type !== 'mouseup') {
+    return;
+  }
+
+  select(node).classed('inuse', false);
 
   const r = obj.annotationHandlers,
     axis = r.rangeAxis,
     sel = e.selection,
     yScale = obj.rendered.plot.yScaleObj.scale,
     startVal = r.rangeType === 'line' ? sel[0] + ((sel[1] - sel[0]) / 2) : sel[0],
-    endVal = sel[1];
+    endVal = sel[1],
+    start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal),
+    data = {
+      axis,
+    };
 
-  let start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal),
-    end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(sel[1]);
+  if (r.rangeType === 'area') {
+    data.start = start;
+    data.end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(endVal);
+  } else {
+    data.start = start;
+  }
 
-  const data = {
-    axis,
-    start
-  };
-
-  if (r.rangeType === 'area') data.end = end;
   if (r && r.rangeHandler) r.rangeHandler(data);
 
 }

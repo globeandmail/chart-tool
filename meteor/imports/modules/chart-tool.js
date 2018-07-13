@@ -595,7 +595,7 @@
 	  return [min, max];
 	}
 
-	function range(start, stop, step) {
+	function sequence(start, stop, step) {
 	  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
 	  var i = -1,
@@ -914,7 +914,7 @@
 	    start += (stop - start - step * (n - paddingInner)) * align;
 	    bandwidth = step * (1 - paddingInner);
 	    if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-	    var values = range(n).map(function(i) { return start + step * i; });
+	    var values = sequence(n).map(function(i) { return start + step * i; });
 	    return ordinalRange(reverse ? values.reverse() : values);
 	  }
 
@@ -1824,15 +1824,15 @@
 	  };
 	}
 
-	function bimap(domain, range$$1, deinterpolate, reinterpolate) {
-	  var d0 = domain[0], d1 = domain[1], r0 = range$$1[0], r1 = range$$1[1];
+	function bimap(domain, range, deinterpolate, reinterpolate) {
+	  var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
 	  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
 	  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
 	  return function(x) { return r0(d0(x)); };
 	}
 
-	function polymap(domain, range$$1, deinterpolate, reinterpolate) {
-	  var j = Math.min(domain.length, range$$1.length) - 1,
+	function polymap(domain, range, deinterpolate, reinterpolate) {
+	  var j = Math.min(domain.length, range.length) - 1,
 	      d = new Array(j),
 	      r = new Array(j),
 	      i = -1;
@@ -1840,12 +1840,12 @@
 	  // Reverse descending domains.
 	  if (domain[j] < domain[0]) {
 	    domain = domain.slice().reverse();
-	    range$$1 = range$$1.slice().reverse();
+	    range = range.slice().reverse();
 	  }
 
 	  while (++i < j) {
 	    d[i] = deinterpolate(domain[i], domain[i + 1]);
-	    r[i] = reinterpolate(range$$1[i], range$$1[i + 1]);
+	    r[i] = reinterpolate(range[i], range[i + 1]);
 	  }
 
 	  return function(x) {
@@ -1866,7 +1866,7 @@
 	// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
-	      range$$1 = unit,
+	      range = unit,
 	      interpolate$$1 = value,
 	      clamp = false,
 	      piecewise,
@@ -1874,17 +1874,17 @@
 	      input;
 
 	  function rescale() {
-	    piecewise = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
+	    piecewise = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
 	    output = input = null;
 	    return scale;
 	  }
 
 	  function scale(x) {
-	    return (output || (output = piecewise(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+	    return (output || (output = piecewise(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
 	  }
 
 	  scale.invert = function(y) {
-	    return (input || (input = piecewise(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+	    return (input || (input = piecewise(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	  };
 
 	  scale.domain = function(_) {
@@ -1892,11 +1892,11 @@
 	  };
 
 	  scale.range = function(_) {
-	    return arguments.length ? (range$$1 = slice$1.call(_), rescale()) : range$$1.slice();
+	    return arguments.length ? (range = slice$1.call(_), rescale()) : range.slice();
 	  };
 
 	  scale.rangeRound = function(_) {
-	    return range$$1 = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
+	    return range = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
 	  };
 
 	  scale.clamp = function(_) {
@@ -2418,7 +2418,6 @@
 	    return (end - start) / k;
 	  });
 	};
-	var milliseconds = millisecond.range;
 
 	var durationSecond = 1e3;
 	var durationMinute = 6e4;
@@ -2435,7 +2434,6 @@
 	}, function(date) {
 	  return date.getUTCSeconds();
 	});
-	var seconds = second.range;
 
 	var minute = newInterval(function(date) {
 	  date.setTime(Math.floor(date / durationMinute) * durationMinute);
@@ -2539,7 +2537,6 @@
 	}, function(date) {
 	  return date.getUTCMinutes();
 	});
-	var utcMinutes = utcMinute.range;
 
 	var utcHour = newInterval(function(date) {
 	  date.setUTCMinutes(0, 0, 0);
@@ -2550,7 +2547,6 @@
 	}, function(date) {
 	  return date.getUTCHours();
 	});
-	var utcHours = utcHour.range;
 
 	var utcDay = newInterval(function(date) {
 	  date.setUTCHours(0, 0, 0, 0);
@@ -2561,7 +2557,6 @@
 	}, function(date) {
 	  return date.getUTCDate() - 1;
 	});
-	var utcDays = utcDay.range;
 
 	function utcWeekday(i) {
 	  return newInterval(function(date) {
@@ -2596,7 +2591,6 @@
 	}, function(date) {
 	  return date.getUTCMonth();
 	});
-	var utcMonths = utcMonth.range;
 
 	var utcYear = newInterval(function(date) {
 	  date.setUTCMonth(0, 1);
@@ -2619,7 +2613,6 @@
 	    date.setUTCFullYear(date.getUTCFullYear() + step * k);
 	  });
 	};
-	var utcYears = utcYear.range;
 
 	function localDate(d) {
 	  if (0 <= d.y && d.y < 100) {
@@ -6954,7 +6947,7 @@
 
 	  if (stacked && keys.length > 2) {
 	    var stackFn = stack().keys(keys.slice(1));
-	    stackedData = stackFn(range(data.length).map(function (i) {
+	    stackedData = stackFn(sequence(data.length).map(function (i) {
 	      var o = {};
 	      o[keys[0]] = data[i].key;
 	      for (var j = 0; j < data[i].series.length; j++) {
@@ -8450,15 +8443,15 @@
 
 	function setRange(obj, axisType) {
 
-	  var range$$1;
+	  var range;
 
 	  if (axisType === 'xAxis') {
-	    range$$1 = [0, obj.dimensions.tickWidth()]; // operating on width
+	    range = [0, obj.dimensions.tickWidth()]; // operating on width
 	  } else if (axisType === 'yAxis') {
-	    range$$1 = [obj.dimensions.yAxisHeight(), 0]; // operating on height
+	    range = [obj.dimensions.yAxisHeight(), 0]; // operating on height
 	  }
 
-	  return range$$1;
+	  return range;
 
 	}
 
@@ -8704,12 +8697,12 @@
 
 	function linearAxis(obj, axis, axisNode, axisSettings) {
 
-	  var range$$1;
+	  var range;
 
-	  if (axisSettings.axisType === 'xAxis') { range$$1 = [0, obj.dimensions.tickWidth()]; }
-	  if (axisSettings.axisType === 'yAxis') { range$$1 = [obj.dimensions.yAxisHeight(), 0]; }
+	  if (axisSettings.axisType === 'xAxis') { range = [0, obj.dimensions.tickWidth()]; }
+	  if (axisSettings.axisType === 'yAxis') { range = [obj.dimensions.yAxisHeight(), 0]; }
 
-	  axis.scale().range(range$$1);
+	  axis.scale().range(range);
 
 	  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
@@ -13183,7 +13176,7 @@
 	  }
 
 	  if (annoData.range && annoData.range.length) {
-	    range$1(annoNode, obj, rendered);
+	    range(annoNode, obj, rendered);
 	  }
 
 	  if (annoData.highlight && annoData.highlight.length) {
@@ -13204,38 +13197,51 @@
 
 	    if (obj.annotationHandlers && obj.annotationHandlers.type && obj.annotationHandlers.type === 'range') {
 
-	      var brush$$1 = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
-	        .handleSize(2)
-	        .extent([
-	          [obj.dimensions.computedWidth() - obj.dimensions.tickWidth(), 0],
-	          [obj.dimensions.computedWidth(), obj.dimensions.yAxisHeight()]
-	        ])
-	        .on('end', function () { return brushed(event, obj); });
-
-	      brushSel = annoEditable
-	        .append('g')
-	        .attr('class', ((obj.prefix) + "brush " + (obj.prefix) + "brush-" + (obj.annotationHandlers.rangeType)))
-	        .call(brush$$1);
-
-	      var scale = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale;
-
 	      var hasRangePassedFromInterface =
 	        (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
 	        (obj.annotationHandlers.rangeType === 'line' && obj.annotationHandlers.rangeStart);
 
+	      var brush$$1 = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
+	        .handleSize(2)
+	        .extent([
+	          [0, 0],
+	          [obj.dimensions.tickWidth(), obj.dimensions.yAxisHeight()]
+	        ])
+	        .on('brush', function() {
+	          select(this).classed('inuse', true);
+	        })
+	        .on('end', function() {
+	          brushed(event, obj, this);
+	        });
+
+	      brushSel = annoEditable
+	        .append('g')
+	        .attrs({
+	          'class': ((obj.prefix) + "brush " + (obj.prefix) + "brush-" + (obj.annotationHandlers.rangeType)),
+	          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+	        })
+	        .call(brush$$1);
+
+	      var scale = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale,
+	        scaleType = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].obj.type,
+	        isTime = scaleType === 'time' || scaleType === 'ordinal-time';
+
 	      if (hasRangePassedFromInterface) {
 	        var move;
 
+	        var start = obj.annotationHandlers.rangeStart,
+	          end = obj.annotationHandlers.rangeEnd;
+
 	        if (obj.annotationHandlers.rangeType === 'line') {
-	          move = getBrushFromCenter(obj, scale(Number(obj.annotationHandlers.rangeStart)));
+	          move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)));
 	        } else {
 	          move = [
-	            scale(Number(obj.annotationHandlers.rangeStart)),
-	            scale(Number(obj.annotationHandlers.rangeEnd))
+	            scale(isTime ? new Date(start) : Number(start)),
+	            scale(isTime ? new Date(end) : Number(end))
 	          ];
 	        }
 
-	        brushSel.call(brush$$1.move, move);
+	        brushSel = brushSel.call(brush$$1.move, move);
 	      }
 
 	      if (obj.annotationHandlers.rangeType === 'line') {
@@ -13302,11 +13308,12 @@
 	  });
 	}
 
-	function range$1(annoNode, obj, rendered) {
+	function range(annoNode, obj, rendered) {
 	  var r = obj.annotations.range;
 
 	  r.map(function (rangeObj, i) {
-	    var scale = rendered.plot[((rangeObj.type) + "ScaleObj")].scale;
+
+	    var scale = rendered.plot[((rangeObj.axis) + "ScaleObj")].scale;
 
 	    if (obj.data.inputDateFormat) {
 	      rangeObj.start = new Date(rangeObj.start);
@@ -13332,17 +13339,17 @@
 	      // need to test with bar chart
 	      type = 'rect';
 	      var rangeVals = [scale(rangeObj.start), scale(rangeObj.end)].sort(function (a, b) { return a - b; });
-	      attrs.x = rangeObj.type === 'x' ? rangeVals[0] : 0;
-	      attrs.y = rangeObj.type === 'x' ? 0 : rangeVals[0];
-	      attrs.width = rangeObj.type === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
-	      attrs.height = rangeObj.type === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
+	      attrs.x = rangeObj.axis === 'x' ? rangeVals[0] : 0;
+	      attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
+	      attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
+	      attrs.height = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
 	      rangeNode = select(rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
 	    } else {
 	      type = 'line';
-	      attrs.x1 = rangeObj.type === 'x' ? scale(rangeObj.start) : 0;
-	      attrs.x2 = rangeObj.type === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
-	      attrs.y1 = rangeObj.type === 'x' ? 0 : scale(rangeObj.start);
-	      attrs.y2 = rangeObj.type === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
+	      attrs.x1 = rangeObj.axis === 'x' ? scale(rangeObj.start) : 0;
+	      attrs.x2 = rangeObj.axis === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
+	      attrs.y1 = rangeObj.axis === 'x' ? 0 : scale(rangeObj.start);
+	      attrs.y2 = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
 	      rangeNode = annoNode.append(type);
 	    }
 
@@ -13507,24 +13514,32 @@
 	  select(node.parentNode).call(brush$$1.move, move);
 	}
 
-	function brushed(e, obj) {
+	function brushed(e, obj, node) {
+
+	  if (!e.selection || !select(node).classed('inuse') || !event.sourceEvent || event.sourceEvent.type !== 'mouseup') {
+	    return;
+	  }
+
+	  select(node).classed('inuse', false);
 
 	  var r = obj.annotationHandlers,
 	    axis = r.rangeAxis,
 	    sel = e.selection,
 	    yScale = obj.rendered.plot.yScaleObj.scale,
 	    startVal = r.rangeType === 'line' ? sel[0] + ((sel[1] - sel[0]) / 2) : sel[0],
-	    endVal = sel[1];
+	    endVal = sel[1],
+	    start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal),
+	    data = {
+	      axis: axis,
+	    };
 
-	  var start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal),
-	    end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(sel[1]);
+	  if (r.rangeType === 'area') {
+	    data.start = start;
+	    data.end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(endVal);
+	  } else {
+	    data.start = start;
+	  }
 
-	  var data = {
-	    axis: axis,
-	    start: start
-	  };
-
-	  if (r.rangeType === 'area') { data.end = end; }
 	  if (r && r.rangeHandler) { r.rangeHandler(data); }
 
 	}

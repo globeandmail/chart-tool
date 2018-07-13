@@ -167,8 +167,13 @@ export default class Chart extends Component {
   }
 
   handleRangeAnnotation(data) {
-    this.props.handleCurrentAnnotation('rangeStart', data.start);
-    if (data.end) this.props.handleCurrentAnnotation('rangeEnd', data.end);
+    const keyArr = ['rangeStart'],
+      valueArr = [data.start];
+    if (data.end) {
+      keyArr.push('rangeEnd');
+      valueArr.push(data.end);
+    }
+    this.props.handleCurrentAnnotation(keyArr, valueArr);
   }
 
   handleTextAnnotation(event) {
@@ -255,8 +260,8 @@ export default class Chart extends Component {
         type: this.props.currentAnnotation.type,
         rangeType: this.props.currentAnnotation.rangeType,
         rangeAxis: this.props.currentAnnotation.rangeAxis,
-        rangeStart: this.props.currentAnnotation.rangeStart,
-        rangeEnd: this.props.currentAnnotation.rangeEnd
+        rangeStart: this.props.currentAnnotation.rangeStart.toString(),
+        rangeEnd: this.props.currentAnnotation.rangeEnd.toString()
       };
     }
 

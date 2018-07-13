@@ -162,7 +162,9 @@ export default class ChartAnnotations extends Component {
 
     return (
       <div className={`range-row-item ${rangeType === 'line' && type === 'rangeEnd' ? 'muted' : ''}`}>
-        <label htmlFor={type}>{labelText}</label>
+        <label
+          className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
+          htmlFor={type}>{labelText}</label>
         <input
           id={type}
           className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
@@ -174,8 +176,16 @@ export default class ChartAnnotations extends Component {
 
   }
 
-  addRange(event) {
-
+  addRange() {
+    const data = {
+      axis: this.props.currentAnnotation.rangeAxis,
+      start: this.props.currentAnnotation.rangeStart.toString(),
+      end: this.props.currentAnnotation.rangeEnd.toString()
+    };
+    const range = this.props.chart.annotations.range || [];
+    range.push(data);
+    updateAndSave('charts.update.annotation.range', this.props.chart._id, range);
+    this.props.handleCurrentAnnotation(['rangeStart', 'rangeEnd'], ['', '']);
   }
 
   resetAnnotations() {
@@ -252,7 +262,7 @@ export default class ChartAnnotations extends Component {
           <div className='unit-edit unit-anno anno-text-edit'>
             <h4><span className='anno-subhed' onClick={this.toggleRangeExpand}>Ranges</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('rangeExpanded')}`}>
-              <form className='add-range' onSubmit={this.addRange}>
+              <div className='add-range'>
                 <p className='note'>Select a start date (and optionally an end date) by filling in the fields below or clicking and dragging on the chart.</p>
                 <div className='range-row'>
                   <div className='range-row-item'>
@@ -293,27 +303,47 @@ export default class ChartAnnotations extends Component {
                   { this.renderRangeValueInput('rangeStart') }
                   { this.renderRangeValueInput('rangeEnd') }
                 </div>
-                <button>Add range</button>
-              </form>
+                <button
+                  className={this.props.currentAnnotation.rangeStart ? 'active' : ''}
+                  onClick={this.addRange}
+                >Add range</button>
+              </div>
 
               {this.currentAnno('range') ?
                 <div className='current-ranges'>
                   <p>Current ranges</p>
                   <ul>
-                    {this.props.chart.annotations.range.map(d => {
-                      // const formatTime = timeFormat(this.props.chart.date_format);
-                      // let keyText = d.key;
-                      // if (this.props.chart.x_axis.scale === 'time' || this.props.chart.x_axis.scale === 'ordinal-time') {
-                      //   keyText = formatTime(new Date(d.key));
-                      // }
-                      // return (
-                      //   <li className='highlight-item' key={d.key}>
-                      //     <div className='highlight-color' style={{ backgroundColor: d.color }}>
-                      //       <button className='highlight-remove' value={d.key} onClick={this.removeHighlight}>&times;</button>
-                      //     </div>
-                      //     <div className='highlight-key'>{keyText}</div>
-                      //   </li>
-                      // );
+                    {this.props.chart.annotations.range.map((d, i) => {
+                      const axis = this.props.chart[`${d.axis}_axis`];
+                      const data = {};
+                      if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
+                        const formatTime = timeFormat(this.props.chart.date_format);
+                        data.start = formatTime(d.start);
+                        data.end = formatTime(d.end);
+                      } else {
+                        const rangeFormatting = {
+                          comma: 100,
+                          general: 100,
+                          round1: 10,
+                          round2: 100,
+                          round3: 1000,
+                          round4: 10000,
+                        };
+                        data.start = Math.round(Number(d.start) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
+                        data.end = Math.round(Number(d.end) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
+                      }
+                      return (
+                        <li className='range-item' key={i}>
+                          <button className='range-remove' value={i} onClick={this.removeRange}>&times;</button>
+                          <p>{d.axis}, {d.end ? 'Area' : 'Line'}</p>
+                          <p>{d.start}</p>
+                          <p>{d.end}</p>
+                          {/* <div className='range' style={{ backgroundColor: d.color }}> */}
+
+                          {/* </div> */}
+                          {/* <div className='highlight-key'>{keyText}</div> */}
+                        </li>
+                      );
                     })}
                 </ul>
                 </div>
