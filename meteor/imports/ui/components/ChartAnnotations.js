@@ -141,7 +141,7 @@ export default class ChartAnnotations extends Component {
         round1: 10,
         round2: 100,
         round3: 1000,
-        round4: 10000,
+        round4: 10000
       };
 
       return Math.round(Number(data) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
@@ -253,9 +253,9 @@ export default class ChartAnnotations extends Component {
                           </li>
                         );
                       })}
-                  </ul>
+                    </ul>
                   </div>
-                : null }
+                  : null }
               </div> : null }
           </div>
 
@@ -274,7 +274,7 @@ export default class ChartAnnotations extends Component {
                         name='rangeAxis'
                         defaultValue={this.props.currentAnnotation.rangeAxis}
                         onChange={this.setRangeConfig}
-                        >
+                      >
                         {['x', 'y'].map(f => {
                           const str = `${f.toUpperCase()}-axis`;
                           return <option key={f} value={f}>{str}</option>;
@@ -327,7 +327,7 @@ export default class ChartAnnotations extends Component {
                           round1: 10,
                           round2: 100,
                           round3: 1000,
-                          round4: 10000,
+                          round4: 10000
                         };
                         data.start = Math.round(Number(d.start) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
                         data.end = Math.round(Number(d.end) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
@@ -345,9 +345,9 @@ export default class ChartAnnotations extends Component {
                         </li>
                       );
                     })}
-                </ul>
+                  </ul>
                 </div>
-              : null }
+                : null }
             </div>
           </div>
 
