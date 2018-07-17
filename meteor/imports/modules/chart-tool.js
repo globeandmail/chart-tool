@@ -12290,6 +12290,9 @@
 
 	  if (obj.options.type === 'multiline') {
 	    dataReference = [obj.data.data[0].series[0]];
+	  } else if (obj.options.type === 'scatterplot'){
+	    //Murat: If it's a scatterplot, give the 'series' array an extra object.
+	    dataReference = [{val:'', key:''}].concat(obj.data.data[0].series);
 	  } else {
 	    dataReference = obj.data.data[0].series;
 	  }
@@ -12964,7 +12967,7 @@
 	    tipData = voronoiDiagram.find(cursor.x, cursor.y, voronoiRadius);
 
 	  if (tipData) {
-
+	    // console.log(tipData)
 	    obj.rendered.plot.seriesGroup
 	      .selectAll(("." + (obj.prefix) + "dot"))
 	      .classed(((obj.prefix) + "muted"), true)
@@ -13005,32 +13008,52 @@
 	        'y1': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val),
 	        'y2': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val)
 	      });
-
-	    // tipNodes.tipGroup.selectAll(`.${obj.prefix}tip_text-group text`)
-	    //   .data(tipData.data.series)
-	    //   .text(d => {
-	    //     if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-	    //     if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-	    //     if ((d.val || d.val === 0) && d.val !== '__undefined__') {
-	    //       return obj.yAxis.prefix + yFormatter(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-	    //     } else {
-	    //       return 'n/a';
-	    //     }
-	    //   })
-	    //   .classed(`${obj.prefix}muted`, d => {
-	    //     return (!(d.val || d.val === 0) || d.val === '__undefined__');
-	    //   });
-
-	    // if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
-	    //   const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-	    //     ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
-	    //
-	    //   tipNodes.tipTextDate
-	    //     .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.data.key);
-	    // } else {
-	    //   tipNodes.tipTextDate
-	    //     .text(tipData.data.key);
-	    // }
+	    
+	    //Murat: Get 'group' data belongs to
+	    var dataGroup = obj.data.groups.indexOf(tipData.data.group);
+	    
+	    //Murat: Fill the first circle based on group identification, hide the rest.
+	    tipNodes.tipGroup.selectAll('circle')
+	      .data([dataGroup, null, null])
+	      .attr('class', function (d,i,o) {
+	      if(d === null){o[i].setAttribute('fill', 'none');}
+	      return (d === null) ? '' : ((obj.prefix) + "tip_circle " + (obj.prefix) + "tip_circle-" + d);
+	    });
+	    
+	    //Murat: Make new series to match the dataReference from tip build.
+	    var newSeries = [{key: dataGroup, val:tipData.data.key}].concat(tipData.data.series);
+	    
+	    //Murat: Use newSeries instead of tipData.data.series
+	    tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
+	      .data(newSeries)
+	      .text(function (d,i) {
+	        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
+	        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
+	        //Murat: Skip the first value for formatting.
+	        if ((d.val || d.val === 0) && d.val !== '__undefined__' && i > 0) {
+	          //Murat: Label data?
+	          return (d.key) + ": " + obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+	        } else if (i === 0){
+	        //Murat: Get the first value.
+	          return d.val;
+	        } else {
+	          return 'n/a';
+	        }
+	      })
+	      .classed(((obj.prefix) + "muted"), function (d) {
+	        return (!(d.val || d.val === 0) || d.val === '__undefined__');
+	      });
+	/*
+	    if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+	      const domain = obj.rendered.plot.xScaleObj.scale.domain(),
+	        ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
+	    
+	      tipNodes.tipTextDate
+	        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.data.key);
+	    }/* else {
+	      tipNodes.tipTextDate
+	        .text(tipData.data.key);
+	    }*/
 
 	    tipNodes.tipGroup
 	      .selectAll(("." + (obj.prefix) + "tip_text-group"))
