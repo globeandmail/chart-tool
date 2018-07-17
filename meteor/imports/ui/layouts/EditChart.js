@@ -49,8 +49,8 @@ class EditChart extends Component {
         textX: '',
         textY: '',
         pointerX1: '',
-        pointerX2: '',
         pointerY1: '',
+        pointerX2: '',
         pointerY2: '',
         pointerCurve: ''
       }

@@ -97,3 +97,13 @@
     content: 'Start typing…';
   }
 }
+
+.#{$prefix}pointer-handle {
+  display: none;
+}
+
+.#{$prefix}pointer-handle-path, .#{$prefix}pointer-path {
+  fill: none;
+  stroke: $color-black;
+  stroke-width: 1px;
+}

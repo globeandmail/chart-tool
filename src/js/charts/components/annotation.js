@@ -4,8 +4,10 @@ import { drag } from 'd3-drag';
 import { wrapAnnoText } from '../../utils/utils';
 import { isNumeric, roundToPrecision } from '../../helpers/helpers';
 import { cursorPos, getTipData } from './tips';
+import { interpolateObject } from 'd3-interpolate';
+import { line, curveBasis } from 'd3-shape';
 
-export default function annotation(node, obj, rendered) {
+export default function annotation(node, obj) {
 
   const annoData = obj.annotations;
 
@@ -18,28 +20,18 @@ export default function annotation(node, obj, rendered) {
   let annoNode, annoEditable;
 
   if (hasAnnotations) {
-    annoNode = select(node.node().parentNode).append('g')
+    annoNode = select(node.node().parentNode)
+      .append('g')
       .attrs({
         'transform': `translate(${obj.dimensions.margin.left},${obj.dimensions.margin.top})`,
         'class': `${obj.prefix}annotations`
       });
   }
 
-  if (annoData.range && annoData.range.length) {
-    range(annoNode, obj, rendered);
-  }
-
-  if (annoData.highlight && annoData.highlight.length) {
-    highlight(annoNode, obj, rendered);
-  }
-
-  if (annoData.pointer && annoData.pointer.length) {
-    pointer(annoNode, obj, rendered);
-  }
-
-  if (annoData.text && annoData.text.length) {
-    text(annoNode, obj, rendered);
-  }
+  if (annoData.range && annoData.range.length) range(annoNode, obj);
+  if (annoData.highlight && annoData.highlight.length) highlight(annoNode, obj);
+  if (annoData.pointer && annoData.pointer.length) pointer(annoNode, obj);
+  if (annoData.text && annoData.text.length) text(annoNode, obj);
 
   if (obj.editable && obj.annotationHandlers && obj.annotationHandlers.type) {
     annoEditable = select(node.node().parentNode)
@@ -49,11 +41,9 @@ export default function annotation(node, obj, rendered) {
         class: `${obj.prefix}annotation-editable-group`
       });
 
-    if (obj.annotationHandlers.type === 'range') editableRange(annoEditable, obj, rendered);
-    if (obj.annotationHandlers.type === 'text') editableText(annoEditable, obj, rendered);
-    if (obj.annotationHandlers.type === 'pointer') editablePointer(annoEditable, obj, rendered);
-
-    // still need to handle 'highlight' annotations for scatterplot
+    if (obj.annotationHandlers.type === 'range') editableRange(annoEditable, obj);
+    if (obj.annotationHandlers.type === 'text') editableText(annoEditable, obj);
+    if (obj.annotationHandlers.type === 'pointer') editablePointer(annoEditable, obj);
 
   }
 
@@ -64,12 +54,12 @@ export default function annotation(node, obj, rendered) {
 
 }
 
-export function highlight(annoNode, obj, rendered) {
+export function highlight(annoNode, obj) {
 
   const h = obj.annotations.highlight;
 
   if (obj.options.type === 'bar' || obj.options.type === 'column') {
-    const ref = rendered.plot[`${obj.options.type}Items`][0];
+    const ref = obj.rendered.plot[`${obj.options.type}Items`][0];
     if (ref && obj.data.seriesAmount === 1) {
       h.map(highlightObj => {
         ref
@@ -83,7 +73,7 @@ export function highlight(annoNode, obj, rendered) {
   if (obj.options.type === 'scatterplot') {
     h.map((highlightObj, i) => {
 
-      const currRef = rendered.plot.dotItems
+      const currRef = obj.rendered.plot.dotItems
         .filter(d => d.key.toString() === highlightObj.key)
         .style('opacity', 1);
 
@@ -101,13 +91,13 @@ export function highlight(annoNode, obj, rendered) {
 
 }
 
-export function range(annoNode, obj, rendered) {
+export function range(annoNode, obj) {
   const r = obj.annotations.range;
 
   r.map((rangeObj, i) => {
 
-    const scale = rendered.plot[`${rangeObj.axis}ScaleObj`].scale,
-      scaleType = rendered.plot[`${rangeObj.axis}ScaleObj`].obj.type;
+    const scale = obj.rendered.plot[`${rangeObj.axis}ScaleObj`].scale,
+      scaleType = obj.rendered.plot[`${rangeObj.axis}ScaleObj`].obj.type;
 
     let start, end;
 
@@ -142,7 +132,7 @@ export function range(annoNode, obj, rendered) {
       attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
       attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
       attrs.height = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
-      rangeNode = select(rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
+      rangeNode = select(obj.rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
     } else {
       type = 'line';
       attrs.x1 = rangeObj.axis === 'x' ? scale(start) : 0;
@@ -161,7 +151,7 @@ export function range(annoNode, obj, rendered) {
   });
 }
 
-export function editableRange(annoEditable, obj, rendered) {
+export function editableRange(annoEditable, obj) {
 
   const hasRangePassedFromInterface =
     (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
@@ -188,8 +178,8 @@ export function editableRange(annoEditable, obj, rendered) {
     })
     .call(brush);
 
-  const scale = rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].scale,
-    scaleType = rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].obj.type,
+  const scale = obj.rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].scale,
+    scaleType = obj.rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].obj.type,
     isTime = scaleType === 'time' || scaleType === 'ordinal-time';
 
   if (hasRangePassedFromInterface) {
@@ -509,6 +499,7 @@ export function appendTextInput(obj, node) {
     .attr('contentEditable', true)
     .on('focusout', function() {
       textDragEnd(obj, this.parentNode);
+      if (!this.innerText) editableTextBox.remove();
     })
     .on('click', setEditableTextCaret);
 
@@ -517,6 +508,18 @@ export function appendTextInput(obj, node) {
   } else{
     editableText.each(setEditableTextCaret);
   }
+
+  // TODO
+  // add drawing functionality for pointers stored in currentAnnotation
+  // if focus is lost and text is empty, delete
+  // make note of 'annotation mode' in chart preview headings
+  // collapse all other tabs on click
+  // make currently selected text/range pink
+  // get rid of save button
+  // directly click on text to edit
+  // editable-group rect goes behind ct-annotations
+  // add listeners to text
+  // still need to handle 'highlight' annotations for scatterplot
 
 }
 
@@ -651,11 +654,37 @@ export function textDragEnd(obj, node) {
 
 }
 
-export function pointer(annoNode, obj, rendered) {
+export function pointer(annoNode, obj) {
+  const p = obj.annotations.pointer;
 
+  if (p.length) appendMarker(annoNode.node().parentNode, obj);
+
+  p.map((pointerObj, i) => {
+    const data = pointerObj.position.map(d => {
+      return {
+        x: d.x * obj.dimensions.tickWidth(),
+        y: d.y * obj.dimensions.yAxisHeight()
+      };
+    });
+    const midpoint = calculateMidpoint(data, parseFloat(pointerObj.curve));
+
+    annoNode
+      .append('path')
+      .datum([data[0], midpoint, data[1]])
+      .attrs({
+        'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
+        class: `${obj.prefix}pointer-path ${obj.prefix}pointer-path-${i}`,
+        'marker-end': `url(#${obj.prefix}arrow)`,
+        d: pointerLine()
+      });
+  });
 }
 
-export function editablePointer(annoEditable, obj, rendered) {
+export function editablePointer(annoEditable, obj) {
+
+  const p = obj.annotationHandlers;
+
+  appendMarker(annoEditable.node().parentNode, obj);
 
   const pointerSel = annoEditable
     .append('g')
@@ -673,60 +702,144 @@ export function editablePointer(annoEditable, obj, rendered) {
       height: obj.dimensions.yAxisHeight()
     });
 
-  const pointerSelHandles = pointerSel
+  pointerSel
     .selectAll(`.${obj.prefix}pointer-handle`)
     .data(['start', 'end']).enter()
     .append('circle')
     .attrs({
       class: d => `${obj.prefix}pointer-handle ${obj.prefix}pointer-handle_${d}`,
-      r: 4,
+      r: 2,
       cx: 0,
       cy: 0
     });
 
-  // const pointerSelPath = pointerSel
-  //   .append('path')
-  //   .attrs({
-  //     class: `${obj.prefix}pointer-handle-path`,
-  //
-  //   })
+  pointerSel
+    .append('path')
+    .datum(Object)
+    .attrs({
+      class: `${obj.prefix}pointer-handle-path`,
+      'marker-end': `url(#${obj.prefix}arrow)`,
+      d: pointerLine()
+    });
 
   const dragFn = drag()
-    .on('start', () => pointerDragStart(obj, pointerSelHandles))
-    .on('drag', () => pointerDrag(obj, pointerSelHandles))
-    .on('end', () => pointerDragEnd(obj, pointerSelHandles));
+    .on('start', () => {
+      pointerDragStart(obj, pointerSel);
+    })
+    .on('drag', () => {
+      pointerDrag(obj, pointerSel);
+    })
+    .on('end', () => {
+      pointerDragEnd(obj, pointerSel);
+    });
 
   pointerSelRect.call(dragFn);
 
-  // if (isNumeric(obj.annotationHandlers.textX) && isNumeric(obj.annotationHandlers.textY) && obj.annotationHandlers.textText) {
+  if (isNumeric(p.pointerX1) &&
+      isNumeric(p.pointerX2) &&
+      isNumeric(p.pointerY1) &&
+      isNumeric(p.pointerY2)) {
   //   appendTextInput(obj, this);
-  // }
+  }
 
 }
 
 export function pointerDragStart(obj, node) {
-  node.select(`.${obj.prefix}pointer-handle_start`)
+  node
+    .selectAll(`.${obj.prefix}pointer-handle`)
+    .datum({ x: event.x, y: event.y })
     .attrs({
-      cx: event.x,
-      cy: event.y,
+      cx: d => d.x,
+      cy: d => d.y
     });
 }
 
 export function pointerDrag(obj, node) {
 
-  const startPointer = node.select(`.${obj.prefix}pointer-handle_start`);
+  const p = obj.annotationHandlers;
 
   node.select(`.${obj.prefix}pointer-handle_end`)
+    .datum(function() {
+      return {
+        x: parseFloat(select(this).attr('cx')) + event.dx,
+        y: parseFloat(select(this).attr('cy')) + event.dy
+      };
+    })
     .attrs({
-      cx: parseFloat(startPointer.attr('cx')) + event.dx,
-      cy: parseFloat(startPointer.attr('cy')) + event.dy,
+      cx: d => d.x,
+      cy: d => d.y
     });
+
+  const data = node.selectAll(`.${obj.prefix}pointer-handle`).data(),
+    midpoint = calculateMidpoint(data, Number(p.pointerCurve));
+
+  node.select(`.${obj.prefix}pointer-handle-path`)
+    .datum([data[0], midpoint, data[1]])
+    .attr('d', pointerLine());
 }
 
 export function pointerDragEnd(obj, node) {
-  // node.select(`.${obj.prefix}pointer-handle_end`)
-  //   .attrs({
-  //     cx: event.x,
-  //     cy: event.y,
-  //   });
+
+  const p = obj.annotationHandlers;
+
+  node.select(`.${obj.prefix}pointer-handle_end`)
+    .datum({ x: event.x, y: event.y })
+    .attrs({
+      cx: d => d.x,
+      cy: d => d.y
+    });
+
+  const data = node.selectAll(`.${obj.prefix}pointer-handle`).data(),
+    midpoint = calculateMidpoint(data, Number(p.pointerCurve));
+
+  node.select(`.${obj.prefix}pointer-handle-path`)
+    .datum([data[0], midpoint, data[1]])
+    .attr('d', pointerLine());
+
+  if (p && p.pointerHandler) p.pointerHandler(data.map(d => {
+    return {
+      x: roundToPrecision(d.x / obj.dimensions.tickWidth(), 4),
+      y: roundToPrecision(d.y / obj.dimensions.yAxisHeight(), 4)
+    };
+  }));
+
+}
+
+export function calculateMidpoint(d, pct) {
+
+  const sign = d[1].x > d[0].x ? -1 * Math.sign(pct) : 1 * Math.sign(pct),
+    minMid = {
+      x: ((d[1].x - d[0].x) / 2) + d[0].x,
+      y: ((d[1].y - d[0].y) / 2) + d[0].y
+    },
+    maxMid = {
+      x: minMid.x + (sign * ((d[1].y - d[0].y) / 2)),
+      y: minMid.y + (sign * -1 * ((d[1].x - d[0].x) / 2))
+    };
+  return interpolateObject(minMid, maxMid)(Math.abs(pct));
+}
+
+export function pointerLine() {
+  return line()
+    .curve(curveBasis)
+    .x(d => d.x)
+    .y(d => d.y);
+}
+
+export function appendMarker(node, obj) {
+  select(node)
+    .append('defs')
+    .append('marker')
+    .attrs({
+      'id': `${obj.prefix}arrow`,
+      'viewBox': '0 0 100 80',
+      'refX': 20,
+      'refY': 40,
+      'markerWidth': 8,
+      'markerHeight': 6.4,
+      'orient': 'auto'
+    })
+    .append('path')
+    .attr('d', 'M100,40L0 80 23.7 40 0 0 z')
+    .attr('class', `${obj.prefix}arrow-head`);
 }

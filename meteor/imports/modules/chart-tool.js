@@ -1549,7 +1549,7 @@
 	function array$2(a, b) {
 	  var nb = b ? b.length : 0,
 	      na = a ? Math.min(nb, a.length) : 0,
-	      x = new Array(nb),
+	      x = new Array(na),
 	      c = new Array(nb),
 	      i;
 
@@ -1668,7 +1668,7 @@
 	      : b instanceof color ? interpolateRgb
 	      : b instanceof Date ? date
 	      : Array.isArray(b) ? array$2
-	      : isNaN(b) ? object
+	      : typeof b.valueOf !== "function" && typeof b.toString !== "function" || isNaN(b) ? object
 	      : interpolateNumber)(a, b);
 	}
 
@@ -1869,22 +1869,22 @@
 	      range$$1 = unit,
 	      interpolate$$1 = value,
 	      clamp = false,
-	      piecewise,
+	      piecewise$$1,
 	      output,
 	      input;
 
 	  function rescale() {
-	    piecewise = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
+	    piecewise$$1 = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
 	    output = input = null;
 	    return scale;
 	  }
 
 	  function scale(x) {
-	    return (output || (output = piecewise(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+	    return (output || (output = piecewise$$1(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
 	  }
 
 	  scale.invert = function(y) {
-	    return (input || (input = piecewise(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+	    return (input || (input = piecewise$$1(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	  };
 
 	  scale.domain = function(_) {
@@ -5110,6 +5110,58 @@
 
 	var slice$2 = Array.prototype.slice;
 
+	function point$2(that, x, y) {
+	  that._context.bezierCurveTo(
+	    (2 * that._x0 + that._x1) / 3,
+	    (2 * that._y0 + that._y1) / 3,
+	    (that._x0 + 2 * that._x1) / 3,
+	    (that._y0 + 2 * that._y1) / 3,
+	    (that._x0 + 4 * that._x1 + x) / 6,
+	    (that._y0 + 4 * that._y1 + y) / 6
+	  );
+	}
+
+	function Basis(context) {
+	  this._context = context;
+	}
+
+	Basis.prototype = {
+	  areaStart: function() {
+	    this._line = 0;
+	  },
+	  areaEnd: function() {
+	    this._line = NaN;
+	  },
+	  lineStart: function() {
+	    this._x0 = this._x1 =
+	    this._y0 = this._y1 = NaN;
+	    this._point = 0;
+	  },
+	  lineEnd: function() {
+	    switch (this._point) {
+	      case 3: point$2(this, this._x1, this._y1); // proceed
+	      case 2: this._context.lineTo(this._x1, this._y1); break;
+	    }
+	    if (this._line || (this._line !== 0 && this._point === 1)) this._context.closePath();
+	    this._line = 1 - this._line;
+	  },
+	  point: function(x, y) {
+	    x = +x, y = +y;
+	    switch (this._point) {
+	      case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
+	      case 1: this._point = 2; break;
+	      case 2: this._point = 3; this._context.lineTo((5 * this._x0 + this._x1) / 6, (5 * this._y0 + this._y1) / 6); // proceed
+	      default: point$2(this, x, y); break;
+	    }
+	    this._x0 = this._x1, this._x1 = x;
+	    this._y0 = this._y1, this._y1 = y;
+	  }
+	};
+
+	function curveBasis(context) {
+	  return new Basis(context);
+	}
+
 	function sign(x) {
 	  return x < 0 ? -1 : 1;
 	}
@@ -5420,6 +5472,8 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
+	var _library$1 = false;
+
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5428,7 +5482,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: 'global',
+	  mode: _library$1 ? 'pure' : 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -13389,7 +13443,7 @@
 
 	}
 
-	function annotation(node, obj, rendered) {
+	function annotation(node, obj) {
 
 	  var annoData = obj.annotations;
 
@@ -13402,26 +13456,18 @@
 	  var annoNode, annoEditable;
 
 	  if (hasAnnotations) {
-	    annoNode = select(node.node().parentNode).append('g')
+	    annoNode = select(node.node().parentNode)
+	      .append('g')
 	      .attrs({
 	        'transform': ("translate(" + (obj.dimensions.margin.left) + "," + (obj.dimensions.margin.top) + ")"),
 	        'class': ((obj.prefix) + "annotations")
 	      });
 	  }
 
-	  if (annoData.range && annoData.range.length) {
-	    range$1(annoNode, obj, rendered);
-	  }
-
-	  if (annoData.highlight && annoData.highlight.length) {
-	    highlight(annoNode, obj, rendered);
-	  }
-
-	  if (annoData.pointer && annoData.pointer.length) ;
-
-	  if (annoData.text && annoData.text.length) {
-	    text(annoNode, obj, rendered);
-	  }
+	  if (annoData.range && annoData.range.length) { range$1(annoNode, obj); }
+	  if (annoData.highlight && annoData.highlight.length) { highlight(annoNode, obj); }
+	  if (annoData.pointer && annoData.pointer.length) { pointer(annoNode, obj); }
+	  if (annoData.text && annoData.text.length) { text(annoNode, obj); }
 
 	  if (obj.editable && obj.annotationHandlers && obj.annotationHandlers.type) {
 	    annoEditable = select(node.node().parentNode)
@@ -13431,11 +13477,9 @@
 	        class: ((obj.prefix) + "annotation-editable-group")
 	      });
 
-	    if (obj.annotationHandlers.type === 'range') { editableRange(annoEditable, obj, rendered); }
-	    if (obj.annotationHandlers.type === 'text') { editableText(annoEditable, obj, rendered); }
-	    if (obj.annotationHandlers.type === 'pointer') { editablePointer(annoEditable, obj, rendered); }
-
-	    // still need to handle 'highlight' annotations for scatterplot
+	    if (obj.annotationHandlers.type === 'range') { editableRange(annoEditable, obj); }
+	    if (obj.annotationHandlers.type === 'text') { editableText(annoEditable, obj); }
+	    if (obj.annotationHandlers.type === 'pointer') { editablePointer(annoEditable, obj); }
 
 	  }
 
@@ -13446,12 +13490,12 @@
 
 	}
 
-	function highlight(annoNode, obj, rendered) {
+	function highlight(annoNode, obj) {
 
 	  var h = obj.annotations.highlight;
 
 	  if (obj.options.type === 'bar' || obj.options.type === 'column') {
-	    var ref = rendered.plot[((obj.options.type) + "Items")][0];
+	    var ref = obj.rendered.plot[((obj.options.type) + "Items")][0];
 	    if (ref && obj.data.seriesAmount === 1) {
 	      h.map(function (highlightObj) {
 	        ref
@@ -13465,7 +13509,7 @@
 	  if (obj.options.type === 'scatterplot') {
 	    h.map(function (highlightObj, i) {
 
-	      var currRef = rendered.plot.dotItems
+	      var currRef = obj.rendered.plot.dotItems
 	        .filter(function (d) { return d.key.toString() === highlightObj.key; })
 	        .style('opacity', 1);
 
@@ -13483,13 +13527,13 @@
 
 	}
 
-	function range$1(annoNode, obj, rendered) {
+	function range$1(annoNode, obj) {
 	  var r = obj.annotations.range;
 
 	  r.map(function (rangeObj, i) {
 
-	    var scale = rendered.plot[((rangeObj.axis) + "ScaleObj")].scale,
-	      scaleType = rendered.plot[((rangeObj.axis) + "ScaleObj")].obj.type;
+	    var scale = obj.rendered.plot[((rangeObj.axis) + "ScaleObj")].scale,
+	      scaleType = obj.rendered.plot[((rangeObj.axis) + "ScaleObj")].obj.type;
 
 	    var start, end;
 
@@ -13524,7 +13568,7 @@
 	      attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
 	      attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
 	      attrs.height = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
-	      rangeNode = select(rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
+	      rangeNode = select(obj.rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
 	    } else {
 	      type = 'line';
 	      attrs.x1 = rangeObj.axis === 'x' ? scale(start) : 0;
@@ -13543,7 +13587,7 @@
 	  });
 	}
 
-	function editableRange(annoEditable, obj, rendered) {
+	function editableRange(annoEditable, obj) {
 
 	  var hasRangePassedFromInterface =
 	    (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
@@ -13570,8 +13614,8 @@
 	    })
 	    .call(brush$$1);
 
-	  var scale = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale,
-	    scaleType = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].obj.type,
+	  var scale = obj.rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale,
+	    scaleType = obj.rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].obj.type,
 	    isTime = scaleType === 'time' || scaleType === 'ordinal-time';
 
 	  if (hasRangePassedFromInterface) {
@@ -13891,6 +13935,7 @@
 	    .attr('contentEditable', true)
 	    .on('focusout', function() {
 	      textDragEnd(obj, this.parentNode);
+	      if (!this.innerText) { editableTextBox.remove(); }
 	    })
 	    .on('click', setEditableTextCaret);
 
@@ -13899,6 +13944,18 @@
 	  } else{
 	    editableText.each(setEditableTextCaret);
 	  }
+
+	  // TODO
+	  // add drawing functionality for pointers stored in currentAnnotation
+	  // if focus is lost and text is empty, delete
+	  // make note of 'annotation mode' in chart preview headings
+	  // collapse all other tabs on click
+	  // make currently selected text/range pink
+	  // get rid of save button
+	  // directly click on text to edit
+	  // editable-group rect goes behind ct-annotations
+	  // add listeners to text
+	  // still need to handle 'highlight' annotations for scatterplot
 
 	}
 
@@ -14033,7 +14090,37 @@
 
 	}
 
-	function editablePointer(annoEditable, obj, rendered) {
+	function pointer(annoNode, obj) {
+	  var p = obj.annotations.pointer;
+
+	  if (p.length) { appendMarker(annoNode.node().parentNode, obj); }
+
+	  p.map(function (pointerObj, i) {
+	    var data = pointerObj.position.map(function (d) {
+	      return {
+	        x: d.x * obj.dimensions.tickWidth(),
+	        y: d.y * obj.dimensions.yAxisHeight()
+	      };
+	    });
+	    var midpoint = calculateMidpoint(data, parseFloat(pointerObj.curve));
+
+	    annoNode
+	      .append('path')
+	      .datum([data[0], midpoint, data[1]])
+	      .attrs({
+	        'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+	        class: ((obj.prefix) + "pointer-path " + (obj.prefix) + "pointer-path-" + i),
+	        'marker-end': ("url(#" + (obj.prefix) + "arrow)"),
+	        d: pointerLine()
+	      });
+	  });
+	}
+
+	function editablePointer(annoEditable, obj) {
+
+	  var p = obj.annotationHandlers;
+
+	  appendMarker(annoEditable.node().parentNode, obj);
 
 	  var pointerSel = annoEditable
 	    .append('g')
@@ -14051,62 +14138,144 @@
 	      height: obj.dimensions.yAxisHeight()
 	    });
 
-	  var pointerSelHandles = pointerSel
+	  pointerSel
 	    .selectAll(("." + (obj.prefix) + "pointer-handle"))
 	    .data(['start', 'end']).enter()
 	    .append('circle')
 	    .attrs({
 	      class: function (d) { return ((obj.prefix) + "pointer-handle " + (obj.prefix) + "pointer-handle_" + d); },
-	      r: 4,
+	      r: 2,
 	      cx: 0,
 	      cy: 0
 	    });
 
-	  // const pointerSelPath = pointerSel
-	  //   .append('path')
-	  //   .attrs({
-	  //     class: `${obj.prefix}pointer-handle-path`,
-	  //
-	  //   })
+	  pointerSel
+	    .append('path')
+	    .datum(Object)
+	    .attrs({
+	      class: ((obj.prefix) + "pointer-handle-path"),
+	      'marker-end': ("url(#" + (obj.prefix) + "arrow)"),
+	      d: pointerLine()
+	    });
 
 	  var dragFn = drag()
-	    .on('start', function () { return pointerDragStart(obj, pointerSelHandles); })
-	    .on('drag', function () { return pointerDrag(obj, pointerSelHandles); })
-	    .on('end', function () { return pointerDragEnd(obj, pointerSelHandles); });
+	    .on('start', function () {
+	      pointerDragStart(obj, pointerSel);
+	    })
+	    .on('drag', function () {
+	      pointerDrag(obj, pointerSel);
+	    })
+	    .on('end', function () {
+	      pointerDragEnd(obj, pointerSel);
+	    });
 
 	  pointerSelRect.call(dragFn);
 
-	  // if (isNumeric(obj.annotationHandlers.textX) && isNumeric(obj.annotationHandlers.textY) && obj.annotationHandlers.textText) {
-	  //   appendTextInput(obj, this);
-	  // }
+	  if (isNumeric(p.pointerX1) &&
+	      isNumeric(p.pointerX2) &&
+	      isNumeric(p.pointerY1) &&
+	      isNumeric(p.pointerY2)) ;
 
 	}
 
 	function pointerDragStart(obj, node) {
-	  node.select(("." + (obj.prefix) + "pointer-handle_start"))
+	  node
+	    .selectAll(("." + (obj.prefix) + "pointer-handle"))
+	    .datum({ x: event.x, y: event.y })
 	    .attrs({
-	      cx: event.x,
-	      cy: event.y,
+	      cx: function (d) { return d.x; },
+	      cy: function (d) { return d.y; }
 	    });
 	}
 
 	function pointerDrag(obj, node) {
 
-	  var startPointer = node.select(("." + (obj.prefix) + "pointer-handle_start"));
+	  var p = obj.annotationHandlers;
 
 	  node.select(("." + (obj.prefix) + "pointer-handle_end"))
+	    .datum(function() {
+	      return {
+	        x: parseFloat(select(this).attr('cx')) + event.dx,
+	        y: parseFloat(select(this).attr('cy')) + event.dy
+	      };
+	    })
 	    .attrs({
-	      cx: parseFloat(startPointer.attr('cx')) + event.dx,
-	      cy: parseFloat(startPointer.attr('cy')) + event.dy,
+	      cx: function (d) { return d.x; },
+	      cy: function (d) { return d.y; }
 	    });
+
+	  var data = node.selectAll(("." + (obj.prefix) + "pointer-handle")).data(),
+	    midpoint = calculateMidpoint(data, Number(p.pointerCurve));
+
+	  node.select(("." + (obj.prefix) + "pointer-handle-path"))
+	    .datum([data[0], midpoint, data[1]])
+	    .attr('d', pointerLine());
 	}
 
 	function pointerDragEnd(obj, node) {
-	  // node.select(`.${obj.prefix}pointer-handle_end`)
-	  //   .attrs({
-	  //     cx: event.x,
-	  //     cy: event.y,
-	  //   });
+
+	  var p = obj.annotationHandlers;
+
+	  node.select(("." + (obj.prefix) + "pointer-handle_end"))
+	    .datum({ x: event.x, y: event.y })
+	    .attrs({
+	      cx: function (d) { return d.x; },
+	      cy: function (d) { return d.y; }
+	    });
+
+	  var data = node.selectAll(("." + (obj.prefix) + "pointer-handle")).data(),
+	    midpoint = calculateMidpoint(data, Number(p.pointerCurve));
+
+	  node.select(("." + (obj.prefix) + "pointer-handle-path"))
+	    .datum([data[0], midpoint, data[1]])
+	    .attr('d', pointerLine());
+
+	  if (p && p.pointerHandler) { p.pointerHandler(data.map(function (d) {
+	    return {
+	      x: roundToPrecision(d.x / obj.dimensions.tickWidth(), 4),
+	      y: roundToPrecision(d.y / obj.dimensions.yAxisHeight(), 4)
+	    };
+	  })); }
+
+	}
+
+	function calculateMidpoint(d, pct) {
+
+	  var sign = d[1].x > d[0].x ? -1 * Math.sign(pct) : 1 * Math.sign(pct),
+	    minMid = {
+	      x: ((d[1].x - d[0].x) / 2) + d[0].x,
+	      y: ((d[1].y - d[0].y) / 2) + d[0].y
+	    },
+	    maxMid = {
+	      x: minMid.x + (sign * ((d[1].y - d[0].y) / 2)),
+	      y: minMid.y + (sign * -1 * ((d[1].x - d[0].x) / 2))
+	    };
+	  return object(minMid, maxMid)(Math.abs(pct));
+	}
+
+	function pointerLine() {
+	  return line()
+	    .curve(curveBasis)
+	    .x(function (d) { return d.x; })
+	    .y(function (d) { return d.y; });
+	}
+
+	function appendMarker(node, obj) {
+	  select(node)
+	    .append('defs')
+	    .append('marker')
+	    .attrs({
+	      'id': ((obj.prefix) + "arrow"),
+	      'viewBox': '0 0 100 80',
+	      'refX': 20,
+	      'refY': 40,
+	      'markerWidth': 8,
+	      'markerHeight': 6.4,
+	      'orient': 'auto'
+	    })
+	    .append('path')
+	    .attr('d', 'M100,40L0 80 23.7 40 0 0 z')
+	    .attr('class', ((obj.prefix) + "arrow-head"));
 	}
 
 	function shareData(node, obj) {
