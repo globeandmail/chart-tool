@@ -12,12 +12,13 @@
 }
 
 .edit-box {
-  margin-bottom: 1.6em;
+  margin-bottom: 1em;
   h3 {
     border-bottom: 1px solid $color-black;
     padding-bottom: 0.1em;
     margin: 0 0 0.3em 0;
     cursor: pointer;
+    font-size: 1.4em;
     @include user-select(none);
     @include interface-font-light;
     @include transition (all 0.1s ease-out);
@@ -29,7 +30,7 @@
   }
   h4 {
     @include interface-font-bold;
-    font-size: 1em;
+    font-size: 0.9em;
     margin: 0.7em 0 0.5em 0;
   }
   span {
@@ -577,7 +578,7 @@ select {
   }
 }
 
-.currently-highlighted {
+.currently-highlighted, .current-ranges {
   p {
     text-transform: uppercase;
     font-size: 0.8em;
@@ -606,7 +607,7 @@ select {
     @include span-columns(1 of 10);
   }
 
-  .highlight-remove {
+  .highlight-remove, .range-remove {
     @include appearance(none);
     opacity: 0;
     background: none;
@@ -632,64 +633,57 @@ select {
 .add-range {
   background-color: darken($color-gray-light, 2%);
   padding: 0.5em;
-  p {
+  .note {
+    color: $color-black;
     margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.8rem;
   }
-  > p {
+  .note, .range-row {
+    margin-bottom: 0.5em;
+  }
+  label {
     @include interface-font-bold;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.2rem;
   }
-  .range-select-group {
+  .select-wrapper, select {
+    width: 100%;
+  }
+  select {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    padding-right: 1.8em;
+    letter-spacing: 1.2px;
+    border-radius: 3px;
+    vertical-align: middle;
+    width: 100%;
+  }
+  .range-row {
     @include clearfix;
-    margin: 0.5rem 0;
-    p {
-      margin-right: 0.5em;
-    }
-    .select-wrapper, select {
-      width: 100%;
-    }
-    select {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      padding-right: 1.8em;
-      letter-spacing: 1.2px;
-      border-radius: 3px;
-      vertical-align: middle;
-      width: 100%;
-    }
-    > * {
-      display: inline-block;
-    }
   }
-  div p, .range-value {
-    font-size: 0.8rem;
-  }
-  .range-select {
+  .range-row-item {
     display: inline-block;
     width: 48%;
     float: left;
-    ~ .range-select {
+    ~ .range-row-item {
       float: right;
     }
+    &.muted {
+      opacity: 0.2;
+      pointer-events: none;
+    }
   }
-  .range-start-end-group {
-    p {
-      display: inline-block;
-    }
-    .range-start-end > p:not(.range-value) {
-      width: 4em;
-      display: inline-block;
-    }
-    .range-value {
-      font-size: 0.9rem;
-      width: auto;
-      &:empty:after {
-        opacity: 0.3;
-        content: 'N/A';
-      }
-    }
+  .range-value {
+    pointer-events: none;
+  }
+  .editable {
+    pointer-events: all;
+  }
+  input {
+    @extend %input;
+    width: 100%;
+    font-size: 0.9rem;
+    background: none;
   }
   button {
     @include appearance(none);
@@ -697,15 +691,21 @@ select {
     border: 1px solid $color-black;
     color: $color-black;
     font-size: 1em;
-    margin-top: 0.5em;
+    margin-top: 0.3em;
     padding: 0.3em 0.5em 0.35em 0.5em;
     border-radius: 4px;
     @include transition (all 0.1s ease-out);
     text-decoration: none;
+    opacity: 0.3;
+    pointer-events: none;
     &:hover {
       border-color: $primary-color;
       color: $primary-color;
       @include transition (all 0.1s ease-in);
+    }
+    &.active {
+      opacity: 1;
+      pointer-events: all;
     }
   }
 }

@@ -60,7 +60,11 @@ class EditChart extends Component {
 
   handleCurrentAnnotation(key, value) {
     const currentAnnotation = Object.assign({}, this.state.currentAnnotation);
-    currentAnnotation[key] = value;
+    if (typeof key === 'string') {
+      currentAnnotation[key] = value;
+    } else {
+      key.map((k, i) => currentAnnotation[k] = value[i]);
+    }
     if (key === 'rangeAxis' || key === 'rangeType') {
       currentAnnotation.rangeStart = '';
       currentAnnotation.rangeEnd = '';

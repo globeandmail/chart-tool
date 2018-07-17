@@ -528,6 +528,38 @@ Meteor.methods({
     });
   },
 
+  'charts.update.annotation.range'(chartId, range) {
+    let anno = Charts.findOne(chartId).annotations;
+
+    if (isObject(anno)) {
+      anno.range = range;
+    } else {
+      anno = {
+        highlight: [],
+        range: range,
+        text: []
+      };
+    }
+
+    return Charts.update(chartId, {
+      $set: {
+        annotations: anno,
+        'options.annotations': true,
+        lastEdited: new Date()
+      }
+    });
+  },
+
+  'charts.update.annotation.range.reset'(chartId) {
+    return Charts.update(chartId, {
+      $set: {
+        'annotations.range': [],
+        'options.annotations': true,
+        lastEdited: new Date()
+      }
+    });
+  },
+
   // removeHighlightAnnotation: function(chartId, key) {
   //   var anno = Charts.findOne(chartId).annotations,
   //     filtered = anno.highlight.filter(function(h) {

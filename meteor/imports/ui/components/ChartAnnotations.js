@@ -19,6 +19,8 @@ export default class ChartAnnotations extends Component {
     this.addRange = this.addRange.bind(this);
     this.setRangeConfig = this.setRangeConfig.bind(this);
     this.formatRangeValue = this.formatRangeValue.bind(this);
+    this.renderRangeValueInput = this.renderRangeValueInput.bind(this);
+    this.setRangeValue = this.setRangeValue.bind(this);
     this.state = {
       expanded: false,
       highlightExpanded: true,
@@ -129,12 +131,61 @@ export default class ChartAnnotations extends Component {
       const formatTime = timeFormat(this.props.chart.date_format);
       return formatTime(data);
     } else {
-      return data;
+
+      // if it's direct input, let it be whatever the user wants
+      if (event.type === 'input') return data;
+
+      const rangeFormatting = {
+        comma: 100,
+        general: 100,
+        round1: 10,
+        round2: 100,
+        round3: 1000,
+        round4: 10000
+      };
+
+      return Math.round(Number(data) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
     }
   }
 
-  addRange(event) {
+  setRangeValue(event) {
+    // need to add the reverse capability, to change displayed range based on input
+    this.props.handleCurrentAnnotation(event.target.id, event.target.value);
+  }
 
+  renderRangeValueInput(type) {
+
+    const rangeAxis = this.props.currentAnnotation.rangeAxis,
+      rangeType = this.props.currentAnnotation.rangeType,
+      scaleType = this.props.chart[`${rangeAxis}_axis`].scale,
+      labelText = type === 'rangeStart' ? 'Start' : 'End (optional)';
+
+    return (
+      <div className={`range-row-item ${rangeType === 'line' && type === 'rangeEnd' ? 'muted' : ''}`}>
+        <label
+          className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
+          htmlFor={type}>{labelText}</label>
+        <input
+          id={type}
+          className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
+          value={this.formatRangeValue(type)}
+          onChange={this.setRangeValue}
+        />
+      </div>
+    );
+
+  }
+
+  addRange() {
+    const data = {
+      axis: this.props.currentAnnotation.rangeAxis,
+      start: this.props.currentAnnotation.rangeStart.toString(),
+      end: this.props.currentAnnotation.rangeEnd.toString()
+    };
+    const range = this.props.chart.annotations.range || [];
+    range.push(data);
+    updateAndSave('charts.update.annotation.range', this.props.chart._id, range);
+    this.props.handleCurrentAnnotation(['rangeStart', 'rangeEnd'], ['', '']);
   }
 
   resetAnnotations() {
@@ -160,46 +211,6 @@ export default class ChartAnnotations extends Component {
   helpText() {
 
   }
-
-  // RANGES
-  // Should include a field where you can type the minimum and maximum value
-  // How do I handle ordinal-time data?
-  //
-  // LINE OR AREA
-  // column headings
-  //
-  // annotations = {
-  //   highlight: [
-  //     {
-  //       key: 'Canada',
-  //       color: '#HEX'
-  //     }
-  //   ],
-  //   range: [
-  //     {
-  //       axis: 'x|y',
-  //       style: '',
-  //       start: 'DATE',
-  //       end: 'DATE' // optional
-  //     }
-  //   ],
-  //   text: [
-  //     {
-  //       type: 'point',
-  //       x: '12%',
-  //       y: '14%',
-  //       alignment: 'tl'
-  //     },
-  //     {
-  //       type: 'area',
-  //       x1: '12%',
-  //       y1: 'derp',
-  //       x2: 'derp',
-  //       y2: 'derp',
-  //       alignment: 'tl'
-  //     }
-  //   ]
-  // };
 
   render() {
     return (
@@ -242,27 +253,28 @@ export default class ChartAnnotations extends Component {
                           </li>
                         );
                       })}
-                  </ul>
+                    </ul>
                   </div>
-                : null }
+                  : null }
               </div> : null }
           </div>
 
           <div className='unit-edit unit-anno anno-text-edit'>
             <h4><span className='anno-subhed' onClick={this.toggleRangeExpand}>Ranges</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('rangeExpanded')}`}>
-              <form className='add-range' onSubmit={this.addRange}>
-                <p>Add a new range</p>
-                <div className='range-select-group'>
-                  <div className='range-select'>
-                    <p>Axis</p>
+              <div className='add-range'>
+                <p className='note'>Select a start date (and optionally an end date) by filling in the fields below or clicking and dragging on the chart.</p>
+                <div className='range-row'>
+                  <div className='range-row-item'>
+                    <label htmlFor='rangeAxis'>Range axis</label>
                     <div className='select-wrapper'>
                       <select
+                        id='rangeAxis'
                         className='select-rangeaxis'
                         name='rangeAxis'
                         defaultValue={this.props.currentAnnotation.rangeAxis}
                         onChange={this.setRangeConfig}
-                        >
+                      >
                         {['x', 'y'].map(f => {
                           const str = `${f.toUpperCase()}-axis`;
                           return <option key={f} value={f}>{str}</option>;
@@ -270,15 +282,16 @@ export default class ChartAnnotations extends Component {
                       </select>
                     </div>
                   </div>
-                  <div className='range-select'>
-                    <p>Type</p>
+                  <div className='range-row-item'>
+                    <label htmlFor='rangeType'>Type</label>
                     <div className='select-wrapper'>
                       <select
+                        id='rangeType'
                         className='select-rangetype'
                         name='rangeType'
                         defaultValue={this.props.currentAnnotation.rangeType}
                         onChange={this.setRangeConfig}
-                        >
+                      >
                         {['Area', 'Line'].map(f => {
                           return <option key={f} value={f.toLowerCase()}>{f}</option>;
                         })}
@@ -286,43 +299,55 @@ export default class ChartAnnotations extends Component {
                     </div>
                   </div>
                 </div>
-                <div className='range-start-end-group'>
-                  <div className='range-start-end'>
-                    <p>Start</p>
-                    <p className='range-value'>{this.formatRangeValue('rangeStart')}</p>
-                  </div>
-                  <div className='range-start-end'>
-                    <p>End</p>
-                    <p className='range-value'>{this.formatRangeValue('rangeEnd')}</p>
-                  </div>
+                <div className='range-row'>
+                  { this.renderRangeValueInput('rangeStart') }
+                  { this.renderRangeValueInput('rangeEnd') }
                 </div>
-                <button>Add range</button>
-              </form>
+                <button
+                  className={this.props.currentAnnotation.rangeStart ? 'active' : ''}
+                  onClick={this.addRange}
+                >Add range</button>
+              </div>
 
               {this.currentAnno('range') ?
                 <div className='current-ranges'>
                   <p>Current ranges</p>
                   <ul>
-                    {this.props.chart.annotations.range.map(d => {
-                      // const formatTime = timeFormat(this.props.chart.date_format);
-                      // let keyText = d.key;
-                      // if (this.props.chart.x_axis.scale === 'time' || this.props.chart.x_axis.scale === 'ordinal-time') {
-                      //   keyText = formatTime(new Date(d.key));
-                      // }
-                      // return (
-                      //   <li className='highlight-item' key={d.key}>
-                      //     <div className='highlight-color' style={{ backgroundColor: d.color }}>
-                      //       <button className='highlight-remove' value={d.key} onClick={this.removeHighlight}>&times;</button>
-                      //     </div>
-                      //     <div className='highlight-key'>{keyText}</div>
-                      //   </li>
-                      // );
+                    {this.props.chart.annotations.range.map((d, i) => {
+                      const axis = this.props.chart[`${d.axis}_axis`];
+                      const data = {};
+                      if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
+                        const formatTime = timeFormat(this.props.chart.date_format);
+                        data.start = formatTime(d.start);
+                        data.end = formatTime(d.end);
+                      } else {
+                        const rangeFormatting = {
+                          comma: 100,
+                          general: 100,
+                          round1: 10,
+                          round2: 100,
+                          round3: 1000,
+                          round4: 10000
+                        };
+                        data.start = Math.round(Number(d.start) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
+                        data.end = Math.round(Number(d.end) * rangeFormatting[axis.format]) / rangeFormatting[axis.format];
+                      }
+                      return (
+                        <li className='range-item' key={i}>
+                          <button className='range-remove' value={i} onClick={this.removeRange}>&times;</button>
+                          <p>{d.axis}, {d.end ? 'Area' : 'Line'}</p>
+                          <p>{d.start}</p>
+                          <p>{d.end}</p>
+                          {/* <div className='range' style={{ backgroundColor: d.color }}> */}
+
+                          {/* </div> */}
+                          {/* <div className='highlight-key'>{keyText}</div> */}
+                        </li>
+                      );
                     })}
-                </ul>
+                  </ul>
                 </div>
-              : null }
-              {/* Add line|range
-              Current range elements */}
+                : null }
             </div>
           </div>
 

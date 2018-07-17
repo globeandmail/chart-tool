@@ -24,6 +24,7 @@
 .#{$prefix}axis-group g.tick line {
   stroke: $axis-stroke-color;
   stroke-width: $axis-stroke-width;
+  stroke-linecap: butt;
 }
 
 .#{$prefix}yAxis g.tick text {
