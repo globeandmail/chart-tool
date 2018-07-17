@@ -1,9 +1,17 @@
-.#{$prefix}annotation_text, .#{$prefix}annotation_highlight-text {
+.#{$prefix}annotation_text, .#{$prefix}annotation_highlight-text, .#{$prefix}annotation-text-edit {
   fill: $color-black;
   @include utility-font;
+}
+.#{$prefix}annotation_text, .#{$prefix}annotation_highlight-text {
   text-shadow: 1px 1px 0px rgba($color-white, 0.7), -1px -1px 0px rgba($color-white, 0.7), -1px 1px 0px rgba($color-white, 0.7), 1px -1px 0px rgba($color-white, 0.7);
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     text-shadow: 2px 2px 0px rgba($color-white, 0.7), -2px -2px 0px rgba($color-white, 0.7), -2px 2px 0px rgba($color-white, 0.7), 2px -2px 0px rgba($color-white, 0.7);
+  }
+}
+
+.annotation-text-editing {
+  .#{$prefix}annotation_text, .#{$prefix}annotation_highlight-text {
+    opacity: 0.2;
   }
 }
 
@@ -21,22 +29,71 @@
   shape-rendering: crispEdges;
 }
 
-.#{$prefix}brush {
-  .selection {
-    shape-rendering: crispEdges;
-    stroke-width: 0;
+.#{$prefix}annotation-editable-group {
+  .#{$prefix}brush {
+    .selection {
+      shape-rendering: crispEdges;
+      stroke-width: 0;
+    }
+    .handle {
+      fill: $color-gray-medium;
+      stroke-linecap: butt;
+    }
   }
-  .handle {
-    fill: $color-gray-medium;
-    stroke-linecap: butt;
+  .#{$prefix}brush-line {
+    .handle {
+      display: none;
+    }
+    .selection {
+      fill-opacity: 0.7;
+    }
+  }
+  .#{$prefix}text, .#{$prefix}pointer {
+    rect {
+      fill: $color-white;
+      opacity: 0;
+    }
   }
 }
 
-.#{$prefix}brush-line {
-  .handle {
-    display: none;
+.#{$prefix}annotation-text-input,
+.#{$prefix}annotation-text-edit-box,
+.#{$prefix}annotation-text-edit {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+.#{$prefix}annotation-text-input {
+  position: absolute;
+}
+
+.#{$prefix}annotation-text-edit-box {
+  position: absolute;
+  display: inline-block;
+  min-width: 10px;
+  line-height: 0;
+  margin-top: -2px;
+  &:focus {
+    outline: none;
   }
-  .selection {
-    fill-opacity: 0.7;
+}
+
+.#{$prefix}annotation-text-edit {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  &:focus {
+    outline: rgba($primary-color, 0.4) solid 1px;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  &:empty:before {
+    content: 'Click here';
+    color: lighten($color-gray-medium, 10%);
+  }
+  &:focus:empty:before {
+    content: 'Start typing…';
   }
 }

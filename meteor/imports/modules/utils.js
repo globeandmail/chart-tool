@@ -16,6 +16,10 @@ export function mode(arr) {
     .pop();
 }
 
+export function isUndefined(val) {
+  return val === undefined ? true : false;
+}
+
 export function extend(from, to) {
 
   let target;

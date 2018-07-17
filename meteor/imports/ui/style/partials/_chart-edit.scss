@@ -18,7 +18,7 @@
     padding-bottom: 0.1em;
     margin: 0 0 0.3em 0;
     cursor: pointer;
-    font-size: 1.4em;
+    font-size: 1.5em;
     @include user-select(none);
     @include interface-font-light;
     @include transition (all 0.1s ease-out);
@@ -274,7 +274,7 @@ select {
     margin-bottom: 0.75em;
     padding-bottom: 0.2em;
   }
-  .preview-container {
+  .chart-wrapper, .preview-container {
     height: auto;
     position: relative;
   }
@@ -538,6 +538,14 @@ select {
   }
 }
 
+.chart-preview-annotation-text {
+  .ct-annotation-editable-group {
+    &:hover {
+      cursor: crosshair;
+    }
+  }
+}
+
 .twitter-picker {
   box-shadow: none !important;
   > div {
@@ -578,7 +586,7 @@ select {
   }
 }
 
-.currently-highlighted, .current-ranges {
+.currently-highlighted, .current-ranges, .current-text {
   p {
     text-transform: uppercase;
     font-size: 0.8em;
@@ -607,7 +615,7 @@ select {
     @include span-columns(1 of 10);
   }
 
-  .highlight-remove, .range-remove {
+  .highlight-remove {
     @include appearance(none);
     opacity: 0;
     background: none;
@@ -628,16 +636,89 @@ select {
     @include span-columns(9 of 10);
   }
 
+  .range-item, .text-item {
+    background-color: darken($color-gray-light, 2%);
+    padding: 0.4rem 0.5rem;
+    position: relative;
+    margin-bottom: 0.4rem;
+    p {
+      margin: 0;
+      line-height: 1.3;
+    }
+    &:hover {
+      .range-tools, .text-tools {
+        opacity: 1;
+        pointer-events: all;
+        background-color: darken($color-gray-light, 2%);
+        padding-left: 0.5em;
+        @include transition (all 0.1s ease-in);
+      }
+    }
+  }
+
+  .text-item p {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.9rem;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .range-tools, .text-tools {
+    position: absolute;
+    right: 0.3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    pointer-events: none;
+    @include transition (all 0.1s ease-out);
+  }
+
+  .range-remove, .range-edit, .text-remove, .text-edit {
+    height: 1.3rem;
+    vertical-align: bottom;
+    &:hover {
+      border-color: $primary-color;
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+
+  .range-remove, .text-remove {
+    @include appearance(none);
+    background: none;
+    border: 1px solid $color-black;
+    border-radius: 3px;
+    font-size: 1.2em;
+    line-height: 0.7;
+    padding: 0 0.2em 0.1em 0.2em;
+    margin-left: 0.25em;
+  }
+
+  .range-edit, .text-edit {
+    @include appearance(none);
+    background: none;
+    border: 1px solid $color-black;
+    border-radius: 3px;
+    line-height: 1.2rem;
+    padding: 0 0.25em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+
 }
 
-.add-range {
+.add-text, .add-range {
   background-color: darken($color-gray-light, 2%);
-  padding: 0.5em;
+  padding: 0.4em 0.5em;
   .note {
     color: $color-black;
     margin: 0;
   }
-  .note, .range-row {
+  .note, .range-row, .text-row {
     margin-bottom: 0.5em;
   }
   label {
@@ -658,14 +739,14 @@ select {
     vertical-align: middle;
     width: 100%;
   }
-  .range-row {
+  .range-row, .text-row {
     @include clearfix;
   }
-  .range-row-item {
+  .range-row-item, .text-row-item {
     display: inline-block;
     width: 48%;
     float: left;
-    ~ .range-row-item {
+    ~ .range-row-item, ~ .text-row-item {
       float: right;
     }
     &.muted {
@@ -675,6 +756,7 @@ select {
   }
   .range-value {
     pointer-events: none;
+    @include user-select(none);
   }
   .editable {
     pointer-events: all;

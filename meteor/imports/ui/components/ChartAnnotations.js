@@ -14,17 +14,25 @@ export default class ChartAnnotations extends Component {
     this.toggleHighlightExpand = this.toggleHighlightExpand.bind(this);
     this.toggleTextExpand = this.toggleTextExpand.bind(this);
     this.toggleRangeExpand = this.toggleRangeExpand.bind(this);
+    this.togglePointerExpand = this.togglePointerExpand.bind(this);
     this.resetAnnotations = this.resetAnnotations.bind(this);
     this.removeHighlight = this.removeHighlight.bind(this);
     this.addRange = this.addRange.bind(this);
+    this.editRange = this.editRange.bind(this);
+    this.removeRange = this.removeRange.bind(this);
     this.setRangeConfig = this.setRangeConfig.bind(this);
     this.formatRangeValue = this.formatRangeValue.bind(this);
     this.renderRangeValueInput = this.renderRangeValueInput.bind(this);
     this.setRangeValue = this.setRangeValue.bind(this);
+    this.setTextConfig = this.setTextConfig.bind(this);
+    this.addText = this.addText.bind(this);
+    this.editText = this.editText.bind(this);
+    this.removeText = this.removeText.bind(this);
     this.state = {
       expanded: false,
-      highlightExpanded: true,
-      textExpanded: false,
+      textExpanded: true,
+      pointerExpanded: false,
+      highlightExpanded: false,
       rangeExpanded: false
     };
   }
@@ -42,7 +50,7 @@ export default class ChartAnnotations extends Component {
   toggleHighlightExpand() {
     const highlightExpanded = !this.state.highlightExpanded;
     if (highlightExpanded) {
-      this.setState({ textExpanded: false, rangeExpanded: false });
+      this.setState({ textExpanded: false, rangeExpanded: false, pointerExpanded: false });
       this.props.handleCurrentAnnotation('type', 'highlight');
     }
     this.setState({ highlightExpanded });
@@ -50,23 +58,29 @@ export default class ChartAnnotations extends Component {
 
   toggleTextExpand() {
     const textExpanded = !this.state.textExpanded;
-    const modObj = {};
     if (textExpanded) {
-      modObj.highlightExpanded = false;
-      modObj.rangeExpanded = false;
+      this.setState({ highlightExpanded: false, rangeExpanded: false, pointerExpanded: false });
       this.props.handleCurrentAnnotation('type', 'text');
     }
-    modObj.textExpanded = textExpanded;
-    this.setState(modObj);
+    this.setState({ textExpanded });
   }
 
   toggleRangeExpand() {
     const rangeExpanded = !this.state.rangeExpanded;
     if (rangeExpanded) {
-      this.setState({ highlightExpanded: false, textExpanded: false });
+      this.setState({ highlightExpanded: false, textExpanded: false, pointerExpanded: false });
       this.props.handleCurrentAnnotation('type', 'range');
     }
     this.setState({ rangeExpanded });
+  }
+
+  togglePointerExpand() {
+    const pointerExpanded = !this.state.pointerExpanded;
+    if (pointerExpanded) {
+      this.setState({ highlightExpanded: false, rangeExpanded: false, textExpanded: false });
+      this.props.handleCurrentAnnotation('type', 'pointer');
+    }
+    this.setState({ pointerExpanded });
   }
 
   displayHighlight() {
@@ -129,7 +143,7 @@ export default class ChartAnnotations extends Component {
 
     if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
       const formatTime = timeFormat(this.props.chart.date_format);
-      return formatTime(data);
+      return formatTime(new Date(data));
     } else {
 
       // if it's direct input, let it be whatever the user wants
@@ -149,7 +163,6 @@ export default class ChartAnnotations extends Component {
   }
 
   setRangeValue(event) {
-    // need to add the reverse capability, to change displayed range based on input
     this.props.handleCurrentAnnotation(event.target.id, event.target.value);
   }
 
@@ -188,6 +201,84 @@ export default class ChartAnnotations extends Component {
     this.props.handleCurrentAnnotation(['rangeStart', 'rangeEnd'], ['', '']);
   }
 
+  editRange(event) {
+    const range = this.props.chart.annotations.range.slice(),
+      item = range[Number(event.target.value)];
+
+    const keyArr = [
+      'rangeStart',
+      'rangeEnd',
+      'rangeAxis',
+      'rangeType'
+    ];
+
+    const valueArr = [
+      item.start,
+      item.end,
+      item.axis,
+      item.end ? 'area' : 'line'
+    ];
+
+    this.props.handleCurrentAnnotation(keyArr, valueArr);
+    this.removeRange(event);
+  }
+
+  removeRange(event) {
+    const range = this.props.chart.annotations.range.slice();
+    range.splice(Number(event.target.value), 1);
+    updateAndSave('charts.update.annotation.range', this.props.chart._id, range);
+  }
+
+  setTextConfig(event) {
+    this.props.handleCurrentAnnotation(event.target.id, event.target.value);
+  }
+
+  addText() {
+    const data = {
+      text: this.props.currentAnnotation.textText,
+      valign: this.props.currentAnnotation.textValign,
+      'text-align': this.props.currentAnnotation.textAlign,
+      position: {
+        x: Number(this.props.currentAnnotation.textX),
+        y: Number(this.props.currentAnnotation.textY),
+      }
+    };
+    const text = this.props.chart.annotations.text || [];
+    text.push(data);
+    updateAndSave('charts.update.annotation.text', this.props.chart._id, text);
+    this.props.handleCurrentAnnotation(['textText', 'textAlign', 'textValign', 'textX', 'textY'], ['', 'left', 'top', '', '']);
+  }
+
+  editText(event) {
+    const text = this.props.chart.annotations.text.slice(),
+      item = text[Number(event.target.value)];
+
+    const keyArr = [
+      'textText',
+      'textAlign',
+      'textValign',
+      'textX',
+      'textY'
+    ];
+
+    const valueArr = [
+      item.text,
+      item['text-align'],
+      item.valign,
+      Number(item.position.x),
+      Number(item.position.y)
+    ];
+
+    this.props.handleCurrentAnnotation(keyArr, valueArr);
+    this.removeText(event);
+  }
+
+  removeText(event) {
+    const text = this.props.chart.annotations.text.slice();
+    text.splice(Number(event.target.value), 1);
+    updateAndSave('charts.update.annotation.text', this.props.chart._id, text);
+  }
+
   resetAnnotations() {
     updateAndSave('charts.update.annotation.reset', this.props.chart._id);
   }
@@ -200,16 +291,28 @@ export default class ChartAnnotations extends Component {
     });
   }
 
+  helpPointer() {
+    Swal({
+      title: 'Pointers?',
+      text: 'Use pointer annotations to draw an arrow from one point to another.',
+      type: 'info'
+    });
+  }
+
   helpRanges() {
     Swal({
-      title: 'Ranges?',
-      text: 'You can click and drag on a chart to create a custom range annotation across the x- or y-axis.',
+      title: 'Ranges and lines?',
+      text: 'You can click and drag on the chart to create a custom range annotation across the x- or y-axis.',
       type: 'info'
     });
   }
 
   helpText() {
-
+    Swal({
+      title: 'Text?',
+      text: 'You can click on the chart to create a custom text annotation.',
+      type: 'info'
+    });
   }
 
   render() {
@@ -221,6 +324,137 @@ export default class ChartAnnotations extends Component {
           {this.props.annotationMode ?
             <p className='note'>Note: While the Annotation tab is open, previewed chart tips will be disabled.</p> : null
           }
+
+          <div className='unit-edit unit-anno anno-text-edit'>
+            <h4><span className='anno-subhed' onClick={this.toggleTextExpand}>Text annotations</span> <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('textExpanded')}`}>
+              <div className='add-text'>
+                <div className='text-row'>
+                  <div className='text-row-item'>
+                    <label htmlFor='textAlign'>Text alignment</label>
+                    <div className='select-wrapper'>
+                      <select
+                        id='textAlign'
+                        className='select-textalign'
+                        name='textAlign'
+                        value={this.props.currentAnnotation.textAlign}
+                        onChange={this.setTextConfig}
+                      >
+                        {['Left', 'Middle', 'Right'].map(f => {
+                          return <option key={f} value={f.toLowerCase()}>{f}</option>;
+                        })}
+                      </select>
+                    </div>
+                  </div>
+                  <div className='text-row-item'>
+                    <label htmlFor='textValign'>Vertical align</label>
+                    <div className='select-wrapper'>
+                      <select
+                        id='textValign'
+                        className='select-textvalign'
+                        name='textValign'
+                        value={this.props.currentAnnotation.textValign}
+                        onChange={this.setTextConfig}
+                      >
+                        {['Top', 'Middle', 'Bottom'].map(f => {
+                          return <option key={f} value={f.toLowerCase()}>{f}</option>;
+                        })}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className={this.props.currentAnnotation.textText ? 'active' : ''}
+                  onClick={this.addText}
+                >Save text</button>
+              </div>
+
+              {this.currentAnno('text') ?
+                <div className='current-text'>
+                  <p>Current text annotations</p>
+                  <ul>
+                    {this.props.chart.annotations.text.map((d, i) => {
+                      return (
+                        <li className='text-item' key={i}>
+                          <p>{d.text}</p>
+                          <div className='text-tools'>
+                            <button className='text-edit' value={i} onClick={this.editText}>Edit</button>
+                            <button className='text-remove' value={i} onClick={this.removeText}>&times;</button>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+                : null }
+            </div>
+          </div>
+
+
+          <div className='unit-edit unit-anno anno-pointer-edit'>
+            <h4><span className='anno-subhed' onClick={this.togglePointerExpand}>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('pointerExpanded')}`}>
+              <div className='add-pointer'>
+                <div className='pointer-row'>
+                  <div className='pointer-row-item'>
+                    {/* <label htmlFor='textAlign'>Text alignment</label>
+                    <div className='select-wrapper'>
+                      <select
+                        id='textAlign'
+                        className='select-textalign'
+                        name='textAlign'
+                        value={this.props.currentAnnotation.textAlign}
+                        onChange={this.setTextConfig}
+                      >
+                        {['Left', 'Middle', 'Right'].map(f => {
+                          return <option key={f} value={f.toLowerCase()}>{f}</option>;
+                        })}
+                      </select>
+                    </div> */}
+                  </div>
+                  <div className='pointer-row-item'>
+                    {/* <label htmlFor='textValign'>Vertical align</label>
+                    <div className='select-wrapper'>
+                      <select
+                        id='textValign'
+                        className='select-textvalign'
+                        name='textValign'
+                        value={this.props.currentAnnotation.textValign}
+                        onChange={this.setTextConfig}
+                      >
+                        {['Top', 'Middle', 'Bottom'].map(f => {
+                          return <option key={f} value={f.toLowerCase()}>{f}</option>;
+                        })}
+                      </select>
+                    </div> */}
+                  </div>
+                </div>
+                <button
+                  // className={this.props.currentAnnotation.textText ? 'active' : ''}
+                  onClick={this.addPointer}
+                >Save pointer</button>
+              </div>
+
+              {this.currentAnno('pointer') ?
+                <div className='current-pointer'>
+                  <p>Current pointers</p>
+                  <ul>
+                    {this.props.chart.annotations.pointer.map((d, i) => {
+                      // return (
+                      //   <li className='text-item' key={i}>
+                      //     <p>{d.text}</p>
+                      //     <div className='text-tools'>
+                      //       <button className='text-edit' value={i} onClick={this.editText}>Edit</button>
+                      //       <button className='text-remove' value={i} onClick={this.removeText}>&times;</button>
+                      //     </div>
+                      //   </li>
+                      // );
+                    })}
+                  </ul>
+                </div>
+                : null }
+            </div>
+          </div>
 
           <div className='unit-edit unit-anno anno-highlight-edit'>
             <h4><span className='anno-subhed' onClick={this.toggleHighlightExpand}>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
@@ -260,13 +494,13 @@ export default class ChartAnnotations extends Component {
           </div>
 
           <div className='unit-edit unit-anno anno-text-edit'>
-            <h4><span className='anno-subhed' onClick={this.toggleRangeExpand}>Ranges</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
+            <h4><span className='anno-subhed' onClick={this.toggleRangeExpand}>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('rangeExpanded')}`}>
               <div className='add-range'>
-                <p className='note'>Select a start date (and optionally an end date) by filling in the fields below or clicking and dragging on the chart.</p>
+                <p className='note'>Select a start value (and optionally an end value) by clicking and dragging on the chart or editing the fields below.</p>
                 <div className='range-row'>
                   <div className='range-row-item'>
-                    <label htmlFor='rangeAxis'>Range axis</label>
+                    <label htmlFor='rangeAxis'>Axis</label>
                     <div className='select-wrapper'>
                       <select
                         id='rangeAxis'
@@ -306,7 +540,7 @@ export default class ChartAnnotations extends Component {
                 <button
                   className={this.props.currentAnnotation.rangeStart ? 'active' : ''}
                   onClick={this.addRange}
-                >Add range</button>
+                >Save range</button>
               </div>
 
               {this.currentAnno('range') ?
@@ -318,8 +552,8 @@ export default class ChartAnnotations extends Component {
                       const data = {};
                       if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
                         const formatTime = timeFormat(this.props.chart.date_format);
-                        data.start = formatTime(d.start);
-                        data.end = formatTime(d.end);
+                        data.start = formatTime(new Date(d.start));
+                        data.end = formatTime(new Date(d.end));
                       } else {
                         const rangeFormatting = {
                           comma: 100,
@@ -334,14 +568,11 @@ export default class ChartAnnotations extends Component {
                       }
                       return (
                         <li className='range-item' key={i}>
-                          <button className='range-remove' value={i} onClick={this.removeRange}>&times;</button>
-                          <p>{d.axis}, {d.end ? 'Area' : 'Line'}</p>
-                          <p>{d.start}</p>
-                          <p>{d.end}</p>
-                          {/* <div className='range' style={{ backgroundColor: d.color }}> */}
-
-                          {/* </div> */}
-                          {/* <div className='highlight-key'>{keyText}</div> */}
+                          <p>{d.axis}, {d.end ? 'Area' : 'Line'} <span>{data.start}</span>{d.end ? ' to ' : ''}{d.end ? <span>{data.end}</span> : null}</p>
+                          <div className='range-tools'>
+                            <button className='range-edit' value={i} onClick={this.editRange}>Edit</button>
+                            <button className='range-remove' value={i} onClick={this.removeRange}>&times;</button>
+                          </div>
                         </li>
                       );
                     })}
@@ -349,13 +580,6 @@ export default class ChartAnnotations extends Component {
                 </div>
                 : null }
             </div>
-          </div>
-
-          <div className='unit-edit anno-text-edit' style={{ opacity: 0.2 }}>
-            <h4>Text annotations (coming soon) <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
-            {/* Add point|area text
-            Current text elements
-            Alignment */}
           </div>
 
           <button className='annotation-reset' onClick={this.resetAnnotations}>Reset all annotations</button>

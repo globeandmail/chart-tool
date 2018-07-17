@@ -504,6 +504,7 @@ Meteor.methods({
     } else {
       anno = {
         highlight: highlight,
+        pointer: [],
         range: [],
         text: []
       };
@@ -518,15 +519,15 @@ Meteor.methods({
     });
   },
 
-  'charts.update.annotation.highlight.reset'(chartId) {
-    return Charts.update(chartId, {
-      $set: {
-        'annotations.highlight': [],
-        'options.annotations': true,
-        lastEdited: new Date()
-      }
-    });
-  },
+  // 'charts.update.annotation.highlight.reset'(chartId) {
+  //   return Charts.update(chartId, {
+  //     $set: {
+  //       'annotations.highlight': [],
+  //       'options.annotations': true,
+  //       lastEdited: new Date()
+  //     }
+  //   });
+  // },
 
   'charts.update.annotation.range'(chartId, range) {
     let anno = Charts.findOne(chartId).annotations;
@@ -536,6 +537,7 @@ Meteor.methods({
     } else {
       anno = {
         highlight: [],
+        pointer: [],
         range: range,
         text: []
       };
@@ -550,10 +552,56 @@ Meteor.methods({
     });
   },
 
-  'charts.update.annotation.range.reset'(chartId) {
+  // 'charts.update.annotation.range.reset'(chartId) {
+  //   return Charts.update(chartId, {
+  //     $set: {
+  //       'annotations.range': [],
+  //       'options.annotations': true,
+  //       lastEdited: new Date()
+  //     }
+  //   });
+  // },
+
+  'charts.update.annotation.text'(chartId, text) {
+    let anno = Charts.findOne(chartId).annotations;
+
+    if (isObject(anno)) {
+      anno.text = text;
+    } else {
+      anno = {
+        highlight: [],
+        pointer: [],
+        range: [],
+        text: text
+      };
+    }
+
     return Charts.update(chartId, {
       $set: {
-        'annotations.range': [],
+        annotations: anno,
+        'options.annotations': true,
+        lastEdited: new Date()
+      }
+    });
+  },
+
+  'charts.update.annotation.pointer'(chartId, pointer) {
+    let anno = Charts.findOne(chartId).annotations;
+
+    if (isObject(anno)) {
+      anno.pointer = pointer;
+    } else {
+      anno = {
+        highlight: [],
+        text: [],
+        range: [],
+        pointer: pointer
+      };
+    }
+
+    return Charts.update(chartId, {
+      $set: {
+        annotations: anno,
         'options.annotations': true,
         lastEdited: new Date()
       }

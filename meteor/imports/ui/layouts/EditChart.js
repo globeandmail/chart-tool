@@ -37,14 +37,22 @@ class EditChart extends Component {
       overlay: false,
       annotationMode: false,
       currentAnnotation: {
+        type: 'text',
         highlight: '',
-        type: 'highlight',
         rangeType: 'area',
         rangeAxis: 'x',
         rangeStart: '',
         rangeEnd: '',
-        text: [],
-        range: []
+        textAlign: 'left',
+        textValign: 'top',
+        textText: '',
+        textX: '',
+        textY: '',
+        pointerX1: '',
+        pointerX2: '',
+        pointerY1: '',
+        pointerY2: '',
+        pointerCurve: ''
       }
     };
   }

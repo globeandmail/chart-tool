@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { drawChart, removeNbsp, generateMeasurements, updateAndSave, extend } from '../../modules/utils';
+import { drawChart, removeNbsp, generateMeasurements, updateAndSave, extend, isNumber } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import '../../modules/cursorManager';
 import ChartTool from '../../modules/chart-tool';
@@ -47,6 +47,11 @@ function chartPresentationalString(props) {
     obj.annotationRangeAxis = props.currentAnnotation.rangeAxis;
     obj.annotationRangeStart = props.currentAnnotation.rangeStart;
     obj.annotationRangeEnd = props.currentAnnotation.rangeEnd;
+    obj.annotationTextAlign = props.currentAnnotation.textAlign;
+    obj.annotationTextValign = props.currentAnnotation.textValign;
+    obj.annotationTextText = props.currentAnnotation.textText;
+    obj.annotationTextX = props.currentAnnotation.textX;
+    obj.annotationTextY = props.currentAnnotation.textY;
   }
 
   return JSON.stringify(obj);
@@ -176,13 +181,22 @@ export default class Chart extends Component {
     this.props.handleCurrentAnnotation(keyArr, valueArr);
   }
 
-  handleTextAnnotation(event) {
+  handleTextAnnotation(data) {
+    const keyArr = [],
+      valArr = [];
 
-    const chart = this.props.chart;
-      // key = event.target.parentElement.dataset.key,
-      // color = this.props.currentAnnotation.highlight;
+    if (data.text) {
+      keyArr.push('textText');
+      valArr.push(data.text);
+    }
 
-    debugger;
+    if (data.position && isNumber(data.position.x) && isNumber(data.position.y)) {
+      keyArr.push('textX', 'textY');
+      valArr.push(data.position.x, data.position.y);
+    }
+
+    this.props.handleCurrentAnnotation(keyArr, valArr);
+
   }
 
   chartEditable() {
@@ -261,7 +275,12 @@ export default class Chart extends Component {
         rangeType: this.props.currentAnnotation.rangeType,
         rangeAxis: this.props.currentAnnotation.rangeAxis,
         rangeStart: this.props.currentAnnotation.rangeStart.toString(),
-        rangeEnd: this.props.currentAnnotation.rangeEnd.toString()
+        rangeEnd: this.props.currentAnnotation.rangeEnd.toString(),
+        'text-align': this.props.currentAnnotation.textAlign,
+        valign: this.props.currentAnnotation.textValign,
+        textText: this.props.currentAnnotation.textText,
+        textX: this.props.currentAnnotation.textX,
+        textY: this.props.currentAnnotation.textY
       };
     }
 

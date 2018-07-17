@@ -595,7 +595,7 @@
 	  return [min, max];
 	}
 
-	function sequence(start, stop, step) {
+	function range(start, stop, step) {
 	  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
 	  var i = -1,
@@ -914,7 +914,7 @@
 	    start += (stop - start - step * (n - paddingInner)) * align;
 	    bandwidth = step * (1 - paddingInner);
 	    if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-	    var values = sequence(n).map(function(i) { return start + step * i; });
+	    var values = range(n).map(function(i) { return start + step * i; });
 	    return ordinalRange(reverse ? values.reverse() : values);
 	  }
 
@@ -1824,15 +1824,15 @@
 	  };
 	}
 
-	function bimap(domain, range, deinterpolate, reinterpolate) {
-	  var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
+	function bimap(domain, range$$1, deinterpolate, reinterpolate) {
+	  var d0 = domain[0], d1 = domain[1], r0 = range$$1[0], r1 = range$$1[1];
 	  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
 	  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
 	  return function(x) { return r0(d0(x)); };
 	}
 
-	function polymap(domain, range, deinterpolate, reinterpolate) {
-	  var j = Math.min(domain.length, range.length) - 1,
+	function polymap(domain, range$$1, deinterpolate, reinterpolate) {
+	  var j = Math.min(domain.length, range$$1.length) - 1,
 	      d = new Array(j),
 	      r = new Array(j),
 	      i = -1;
@@ -1840,12 +1840,12 @@
 	  // Reverse descending domains.
 	  if (domain[j] < domain[0]) {
 	    domain = domain.slice().reverse();
-	    range = range.slice().reverse();
+	    range$$1 = range$$1.slice().reverse();
 	  }
 
 	  while (++i < j) {
 	    d[i] = deinterpolate(domain[i], domain[i + 1]);
-	    r[i] = reinterpolate(range[i], range[i + 1]);
+	    r[i] = reinterpolate(range$$1[i], range$$1[i + 1]);
 	  }
 
 	  return function(x) {
@@ -1866,7 +1866,7 @@
 	// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
-	      range = unit,
+	      range$$1 = unit,
 	      interpolate$$1 = value,
 	      clamp = false,
 	      piecewise,
@@ -1874,17 +1874,17 @@
 	      input;
 
 	  function rescale() {
-	    piecewise = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
+	    piecewise = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
 	    output = input = null;
 	    return scale;
 	  }
 
 	  function scale(x) {
-	    return (output || (output = piecewise(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+	    return (output || (output = piecewise(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
 	  }
 
 	  scale.invert = function(y) {
-	    return (input || (input = piecewise(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+	    return (input || (input = piecewise(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	  };
 
 	  scale.domain = function(_) {
@@ -1892,11 +1892,11 @@
 	  };
 
 	  scale.range = function(_) {
-	    return arguments.length ? (range = slice$1.call(_), rescale()) : range.slice();
+	    return arguments.length ? (range$$1 = slice$1.call(_), rescale()) : range$$1.slice();
 	  };
 
 	  scale.rangeRound = function(_) {
-	    return range = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
+	    return range$$1 = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
 	  };
 
 	  scale.clamp = function(_) {
@@ -2418,6 +2418,7 @@
 	    return (end - start) / k;
 	  });
 	};
+	var milliseconds = millisecond.range;
 
 	var durationSecond = 1e3;
 	var durationMinute = 6e4;
@@ -2434,6 +2435,7 @@
 	}, function(date) {
 	  return date.getUTCSeconds();
 	});
+	var seconds = second.range;
 
 	var minute = newInterval(function(date) {
 	  date.setTime(Math.floor(date / durationMinute) * durationMinute);
@@ -2537,6 +2539,7 @@
 	}, function(date) {
 	  return date.getUTCMinutes();
 	});
+	var utcMinutes = utcMinute.range;
 
 	var utcHour = newInterval(function(date) {
 	  date.setUTCMinutes(0, 0, 0);
@@ -2547,6 +2550,7 @@
 	}, function(date) {
 	  return date.getUTCHours();
 	});
+	var utcHours = utcHour.range;
 
 	var utcDay = newInterval(function(date) {
 	  date.setUTCHours(0, 0, 0, 0);
@@ -2557,6 +2561,7 @@
 	}, function(date) {
 	  return date.getUTCDate() - 1;
 	});
+	var utcDays = utcDay.range;
 
 	function utcWeekday(i) {
 	  return newInterval(function(date) {
@@ -2591,6 +2596,7 @@
 	}, function(date) {
 	  return date.getUTCMonth();
 	});
+	var utcMonths = utcMonth.range;
 
 	var utcYear = newInterval(function(date) {
 	  date.setUTCMonth(0, 1);
@@ -2613,6 +2619,7 @@
 	    date.setUTCFullYear(date.getUTCFullYear() + step * k);
 	  });
 	};
+	var utcYears = utcYear.range;
 
 	function localDate(d) {
 	  if (0 <= d.y && d.y < 100) {
@@ -4539,6 +4546,18 @@
 	  return point$1(node, event);
 	}
 
+	function touch(node, touches, identifier) {
+	  if (arguments.length < 3) identifier = touches, touches = sourceEvent().changedTouches;
+
+	  for (var i = 0, n = touches ? touches.length : 0, touch; i < n; ++i) {
+	    if ((touch = touches[i]).identifier === identifier) {
+	      return point$1(node, touch);
+	    }
+	  }
+
+	  return null;
+	}
+
 	var noop = {value: function() {}};
 
 	function dispatch() {
@@ -5401,8 +5420,6 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
-	var _library$1 = false;
-
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5411,7 +5428,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: _library$1 ? 'pure' : 'global',
+	  mode: 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -6947,7 +6964,7 @@
 
 	  if (stacked && keys.length > 2) {
 	    var stackFn = stack().keys(keys.slice(1));
-	    stackedData = stackFn(sequence(data.length).map(function (i) {
+	    stackedData = stackFn(range(data.length).map(function (i) {
 	      var o = {};
 	      o[keys[0]] = data[i].key;
 	      for (var j = 0; j < data[i].series.length; j++) {
@@ -7011,6 +7028,11 @@
 	  }
 
 	  return target;
+	}
+
+	function roundToPrecision(number, precision) {
+	  var p = Math.pow(10, precision);
+	  return Math.round(number * p) / p;
 	}
 
 	function recipe(obj) {
@@ -8443,15 +8465,15 @@
 
 	function setRange(obj, axisType) {
 
-	  var range;
+	  var range$$1;
 
 	  if (axisType === 'xAxis') {
-	    range = [0, obj.dimensions.tickWidth()]; // operating on width
+	    range$$1 = [0, obj.dimensions.tickWidth()]; // operating on width
 	  } else if (axisType === 'yAxis') {
-	    range = [obj.dimensions.yAxisHeight(), 0]; // operating on height
+	    range$$1 = [obj.dimensions.yAxisHeight(), 0]; // operating on height
 	  }
 
-	  return range;
+	  return range$$1;
 
 	}
 
@@ -8697,12 +8719,12 @@
 
 	function linearAxis(obj, axis, axisNode, axisSettings) {
 
-	  var range;
+	  var range$$1;
 
-	  if (axisSettings.axisType === 'xAxis') { range = [0, obj.dimensions.tickWidth()]; }
-	  if (axisSettings.axisType === 'yAxis') { range = [obj.dimensions.yAxisHeight(), 0]; }
+	  if (axisSettings.axisType === 'xAxis') { range$$1 = [0, obj.dimensions.tickWidth()]; }
+	  if (axisSettings.axisType === 'yAxis') { range$$1 = [obj.dimensions.yAxisHeight(), 0]; }
 
-	  axis.scale().range(range);
+	  axis.scale().range(range$$1);
 
 	  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
@@ -10539,6 +10561,10 @@
 	  }
 	}
 
+	function nopropagation() {
+	  event.stopImmediatePropagation();
+	}
+
 	function noevent() {
 	  event.preventDefault();
 	  event.stopImmediatePropagation();
@@ -10568,6 +10594,191 @@
 	    root.style.MozUserSelect = root.__noselect;
 	    delete root.__noselect;
 	  }
+	}
+
+	function constant$5(x) {
+	  return function() {
+	    return x;
+	  };
+	}
+
+	function DragEvent(target, type, subject, id, active, x, y, dx, dy, dispatch) {
+	  this.target = target;
+	  this.type = type;
+	  this.subject = subject;
+	  this.identifier = id;
+	  this.active = active;
+	  this.x = x;
+	  this.y = y;
+	  this.dx = dx;
+	  this.dy = dy;
+	  this._ = dispatch;
+	}
+
+	DragEvent.prototype.on = function() {
+	  var value = this._.on.apply(this._, arguments);
+	  return value === this._ ? this : value;
+	};
+
+	// Ignore right-click, since that should open the context menu.
+	function defaultFilter() {
+	  return !event.button;
+	}
+
+	function defaultContainer() {
+	  return this.parentNode;
+	}
+
+	function defaultSubject(d) {
+	  return d == null ? {x: event.x, y: event.y} : d;
+	}
+
+	function defaultTouchable() {
+	  return "ontouchstart" in this;
+	}
+
+	function drag() {
+	  var filter = defaultFilter,
+	      container = defaultContainer,
+	      subject = defaultSubject,
+	      touchable = defaultTouchable,
+	      gestures = {},
+	      listeners = dispatch("start", "drag", "end"),
+	      active = 0,
+	      mousedownx,
+	      mousedowny,
+	      mousemoving,
+	      touchending,
+	      clickDistance2 = 0;
+
+	  function drag(selection$$1) {
+	    selection$$1
+	        .on("mousedown.drag", mousedowned)
+	      .filter(touchable)
+	        .on("touchstart.drag", touchstarted)
+	        .on("touchmove.drag", touchmoved)
+	        .on("touchend.drag touchcancel.drag", touchended)
+	        .style("touch-action", "none")
+	        .style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
+	  }
+
+	  function mousedowned() {
+	    if (touchending || !filter.apply(this, arguments)) return;
+	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
+	    if (!gesture) return;
+	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
+	    nodrag(event.view);
+	    nopropagation();
+	    mousemoving = false;
+	    mousedownx = event.clientX;
+	    mousedowny = event.clientY;
+	    gesture("start");
+	  }
+
+	  function mousemoved() {
+	    noevent();
+	    if (!mousemoving) {
+	      var dx = event.clientX - mousedownx, dy = event.clientY - mousedowny;
+	      mousemoving = dx * dx + dy * dy > clickDistance2;
+	    }
+	    gestures.mouse("drag");
+	  }
+
+	  function mouseupped() {
+	    select(event.view).on("mousemove.drag mouseup.drag", null);
+	    yesdrag(event.view, mousemoving);
+	    noevent();
+	    gestures.mouse("end");
+	  }
+
+	  function touchstarted() {
+	    if (!filter.apply(this, arguments)) return;
+	    var touches$$1 = event.changedTouches,
+	        c = container.apply(this, arguments),
+	        n = touches$$1.length, i, gesture;
+
+	    for (i = 0; i < n; ++i) {
+	      if (gesture = beforestart(touches$$1[i].identifier, c, touch, this, arguments)) {
+	        nopropagation();
+	        gesture("start");
+	      }
+	    }
+	  }
+
+	  function touchmoved() {
+	    var touches$$1 = event.changedTouches,
+	        n = touches$$1.length, i, gesture;
+
+	    for (i = 0; i < n; ++i) {
+	      if (gesture = gestures[touches$$1[i].identifier]) {
+	        noevent();
+	        gesture("drag");
+	      }
+	    }
+	  }
+
+	  function touchended() {
+	    var touches$$1 = event.changedTouches,
+	        n = touches$$1.length, i, gesture;
+
+	    if (touchending) clearTimeout(touchending);
+	    touchending = setTimeout(function() { touchending = null; }, 500); // Ghost clicks are delayed!
+	    for (i = 0; i < n; ++i) {
+	      if (gesture = gestures[touches$$1[i].identifier]) {
+	        nopropagation();
+	        gesture("end");
+	      }
+	    }
+	  }
+
+	  function beforestart(id, container, point, that, args) {
+	    var p = point(container, id), s, dx, dy,
+	        sublisteners = listeners.copy();
+
+	    if (!customEvent(new DragEvent(drag, "beforestart", s, id, active, p[0], p[1], 0, 0, sublisteners), function() {
+	      if ((event.subject = s = subject.apply(that, args)) == null) return false;
+	      dx = s.x - p[0] || 0;
+	      dy = s.y - p[1] || 0;
+	      return true;
+	    })) return;
+
+	    return function gesture(type) {
+	      var p0 = p, n;
+	      switch (type) {
+	        case "start": gestures[id] = gesture, n = active++; break;
+	        case "end": delete gestures[id], --active; // nobreak
+	        case "drag": p = point(container, id), n = active; break;
+	      }
+	      customEvent(new DragEvent(drag, type, s, id, n, p[0] + dx, p[1] + dy, p[0] - p0[0], p[1] - p0[1], sublisteners), sublisteners.apply, sublisteners, [type, that, args]);
+	    };
+	  }
+
+	  drag.filter = function(_) {
+	    return arguments.length ? (filter = typeof _ === "function" ? _ : constant$5(!!_), drag) : filter;
+	  };
+
+	  drag.container = function(_) {
+	    return arguments.length ? (container = typeof _ === "function" ? _ : constant$5(_), drag) : container;
+	  };
+
+	  drag.subject = function(_) {
+	    return arguments.length ? (subject = typeof _ === "function" ? _ : constant$5(_), drag) : subject;
+	  };
+
+	  drag.touchable = function(_) {
+	    return arguments.length ? (touchable = typeof _ === "function" ? _ : constant$5(!!_), drag) : touchable;
+	  };
+
+	  drag.on = function() {
+	    var value = listeners.on.apply(listeners, arguments);
+	    return value === listeners ? drag : value;
+	  };
+
+	  drag.clickDistance = function(_) {
+	    return arguments.length ? (clickDistance2 = (_ = +_) * _, drag) : Math.sqrt(clickDistance2);
+	  };
+
+	  return drag;
 	}
 
 	function constant$6(x) {
@@ -13165,7 +13376,7 @@
 	    (annoData.range && annoData.range.length)
 	  );
 
-	  var annoNode, annoEditable, brushSel;
+	  var annoNode, annoEditable;
 
 	  if (hasAnnotations) {
 	    annoNode = select(node.node().parentNode).append('g')
@@ -13176,18 +13387,20 @@
 	  }
 
 	  if (annoData.range && annoData.range.length) {
-	    range(annoNode, obj, rendered);
+	    range$1(annoNode, obj, rendered);
 	  }
 
 	  if (annoData.highlight && annoData.highlight.length) {
 	    highlight(annoNode, obj, rendered);
 	  }
 
+	  if (annoData.pointer && annoData.pointer.length) ;
+
 	  if (annoData.text && annoData.text.length) {
 	    text(annoNode, obj, rendered);
 	  }
 
-	  if (obj.editable) {
+	  if (obj.editable && obj.annotationHandlers && obj.annotationHandlers.type) {
 	    annoEditable = select(node.node().parentNode)
 	      .append('g')
 	      .attrs({
@@ -13195,71 +13408,17 @@
 	        class: ((obj.prefix) + "annotation-editable-group")
 	      });
 
-	    if (obj.annotationHandlers && obj.annotationHandlers.type && obj.annotationHandlers.type === 'range') {
+	    if (obj.annotationHandlers.type === 'range') { editableRange(annoEditable, obj, rendered); }
+	    if (obj.annotationHandlers.type === 'text') { editableText(annoEditable, obj, rendered); }
+	    if (obj.annotationHandlers.type === 'pointer') { editablePointer(annoEditable, obj, rendered); }
 
-	      var hasRangePassedFromInterface =
-	        (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
-	        (obj.annotationHandlers.rangeType === 'line' && obj.annotationHandlers.rangeStart);
+	    // still need to handle 'highlight' annotations for scatterplot
 
-	      var brush$$1 = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
-	        .handleSize(2)
-	        .extent([
-	          [0, 0],
-	          [obj.dimensions.tickWidth(), obj.dimensions.yAxisHeight()]
-	        ])
-	        .on('brush', function() {
-	          select(this).classed('inuse', true);
-	        })
-	        .on('end', function() {
-	          brushed(event, obj, this);
-	        });
-
-	      brushSel = annoEditable
-	        .append('g')
-	        .attrs({
-	          'class': ((obj.prefix) + "brush " + (obj.prefix) + "brush-" + (obj.annotationHandlers.rangeType)),
-	          'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
-	        })
-	        .call(brush$$1);
-
-	      var scale = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale,
-	        scaleType = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].obj.type,
-	        isTime = scaleType === 'time' || scaleType === 'ordinal-time';
-
-	      if (hasRangePassedFromInterface) {
-	        var move;
-
-	        var start = obj.annotationHandlers.rangeStart,
-	          end = obj.annotationHandlers.rangeEnd;
-
-	        if (obj.annotationHandlers.rangeType === 'line') {
-	          move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)));
-	        } else {
-	          move = [
-	            scale(isTime ? new Date(start) : Number(start)),
-	            scale(isTime ? new Date(end) : Number(end))
-	          ];
-	        }
-
-	        brushSel = brushSel.call(brush$$1.move, move);
-	      }
-
-	      if (obj.annotationHandlers.rangeType === 'line') {
-	        brushSel
-	          .selectAll('.overlay')
-	          .each(function (d) { return d.type = 'selection'; }) // Treat overlay interaction as move
-	          .on('mousedown touchstart', function() {
-	            brushCentered(this, obj, brush$$1); // Recenter before brushing
-	          });
-	      }
-
-	    }
 	  }
 
 	  return {
 	    annoNode: annoNode,
-	    annoEditable: annoEditable,
-	    brushSel: brushSel
+	    annoEditable: annoEditable
 	  };
 
 	}
@@ -13287,37 +13446,36 @@
 	        .filter(function (d) { return d.key.toString() === highlightObj.key; })
 	        .style('opacity', 1);
 
-	      var y = Number(currRef.attr('cy')),
-	        x = Number(currRef.attr('cx')),
-	        config = generateTextAnnotationConfig(highlightObj, annoNode, obj);
+	      var config = generateTextAnnotationConfig(highlightObj, annoNode, obj, {
+	        x: Number(currRef.attr('cy')),
+	        y: Number(currRef.attr('cx'))
+	      });
 
-	      drawTextAnnotation(x, y, i, config, obj);
+	      // need to revisit x and y stuff here since it's fractional right now for text annos
+
+	      drawTextAnnotation(i, config, obj);
 	    });
 
 	  }
 
 	}
 
-	function text(annoNode, obj) {
-	  var t = obj.annotations.text;
-	  t.map(function (textObj, i) {
-	    var y = Number(obj.dimensions.computedHeight() * textObj.position.y),
-	      x = Number(obj.dimensions.computedWidth() * textObj.position.x),
-	      config = generateTextAnnotationConfig(textObj, annoNode, obj);
-	    drawTextAnnotation(x, y, i, config, obj);
-	  });
-	}
-
-	function range(annoNode, obj, rendered) {
+	function range$1(annoNode, obj, rendered) {
 	  var r = obj.annotations.range;
 
 	  r.map(function (rangeObj, i) {
 
-	    var scale = rendered.plot[((rangeObj.axis) + "ScaleObj")].scale;
+	    var scale = rendered.plot[((rangeObj.axis) + "ScaleObj")].scale,
+	      scaleType = rendered.plot[((rangeObj.axis) + "ScaleObj")].obj.type;
 
-	    if (obj.data.inputDateFormat) {
-	      rangeObj.start = new Date(rangeObj.start);
-	      if ('end' in rangeObj) { rangeObj.end = new Date(rangeObj.end); }
+	    var start, end;
+
+	    if (scaleType === 'linear') {
+	      start = Number(rangeObj.start);
+	      if ('end' in rangeObj) { end = Number(rangeObj.end); }
+	    } else {
+	      start = new Date(rangeObj.start);
+	      if ('end' in rangeObj) { end = new Date(rangeObj.end); }
 	    }
 
 	    var attrs = {
@@ -13338,7 +13496,7 @@
 	    if ('end' in rangeObj) {
 	      // need to test with bar chart
 	      type = 'rect';
-	      var rangeVals = [scale(rangeObj.start), scale(rangeObj.end)].sort(function (a, b) { return a - b; });
+	      var rangeVals = [scale(start), scale(end)].sort(function (a, b) { return a - b; });
 	      attrs.x = rangeObj.axis === 'x' ? rangeVals[0] : 0;
 	      attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
 	      attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
@@ -13346,10 +13504,10 @@
 	      rangeNode = select(rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
 	    } else {
 	      type = 'line';
-	      attrs.x1 = rangeObj.axis === 'x' ? scale(rangeObj.start) : 0;
-	      attrs.x2 = rangeObj.axis === 'x' ? scale(rangeObj.start) : obj.dimensions.tickWidth();
-	      attrs.y1 = rangeObj.axis === 'x' ? 0 : scale(rangeObj.start);
-	      attrs.y2 = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : scale(rangeObj.start);
+	      attrs.x1 = rangeObj.axis === 'x' ? scale(start) : 0;
+	      attrs.x2 = rangeObj.axis === 'x' ? scale(start) : obj.dimensions.tickWidth();
+	      attrs.y1 = rangeObj.axis === 'x' ? 0 : scale(start);
+	      attrs.y2 = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : scale(start);
 	      rangeNode = annoNode.append(type);
 	    }
 
@@ -13362,7 +13520,131 @@
 	  });
 	}
 
-	function generateTextAnnotationConfig(d, annoNode, obj) {
+	function editableRange(annoEditable, obj, rendered) {
+
+	  var hasRangePassedFromInterface =
+	    (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
+	    (obj.annotationHandlers.rangeType === 'line' && obj.annotationHandlers.rangeStart);
+
+	  var brush$$1 = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
+	    .handleSize(3)
+	    .extent([
+	      [0, 0],
+	      [obj.dimensions.tickWidth(), obj.dimensions.yAxisHeight()]
+	    ])
+	    .on('brush', function() {
+	      select(this).classed('inuse', true);
+	    })
+	    .on('end', function() {
+	      brushed(event, obj, this);
+	    });
+
+	  var brushSel = annoEditable
+	    .append('g')
+	    .attrs({
+	      'class': ((obj.prefix) + "brush " + (obj.prefix) + "brush-" + (obj.annotationHandlers.rangeType)),
+	      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+	    })
+	    .call(brush$$1);
+
+	  var scale = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale,
+	    scaleType = rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].obj.type,
+	    isTime = scaleType === 'time' || scaleType === 'ordinal-time';
+
+	  if (hasRangePassedFromInterface) {
+	    var move;
+
+	    var start = obj.annotationHandlers.rangeStart,
+	      end = obj.annotationHandlers.rangeEnd;
+
+	    if (obj.annotationHandlers.rangeType === 'line') {
+	      move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)));
+	    } else {
+	      move = [
+	        scale(isTime ? new Date(start) : Number(start)),
+	        scale(isTime ? new Date(end) : Number(end))
+	      ];
+	    }
+
+	    brushSel = brushSel.call(brush$$1.move, move);
+	  }
+
+	  if (obj.annotationHandlers.rangeType === 'line') {
+	    brushSel
+	      .selectAll('.overlay')
+	      .each(function (d) { return d.type = 'selection'; }) // Treat overlay interaction as move
+	      .on('mousedown touchstart', function() {
+	        brushCentered(this, obj, brush$$1); // Recenter before brushing
+	      });
+	  }
+
+	}
+
+	function getBrushFromCenter(obj, centerValue) {
+	  var d = 2, // Use a fixed width when recentering
+	    axis = obj.annotationHandlers.rangeAxis,
+	    dim = axis === 'x' ? obj.dimensions.tickWidth() : obj.dimensions.yAxisHeight(),
+	    d0 = centerValue - d / 2,
+	    d1 = centerValue + d / 2,
+	    move = d1 > dim ? [dim - d, dim] : d0 < 0 ? [0, d] : [d0, d1];
+
+	  return move;
+	}
+
+	function brushCentered(node, obj, brush$$1) {
+	  var axis = obj.annotationHandlers.rangeAxis,
+	    cursor = cursorPos(select(node))[axis],
+	    move = getBrushFromCenter(obj, cursor);
+
+	  select(node.parentNode).call(brush$$1.move, move);
+	}
+
+	function brushed(e, obj, node) {
+
+	  if (!e.selection || !select(node).classed('inuse') || !event.sourceEvent || event.sourceEvent.type !== 'mouseup') {
+	    return;
+	  }
+
+	  select(node).classed('inuse', false);
+
+	  var r = obj.annotationHandlers,
+	    axis = r.rangeAxis,
+	    sel = e.selection,
+	    yScale = obj.rendered.plot.yScaleObj.scale,
+	    startVal = r.rangeType === 'line' ? sel[0] + ((sel[1] - sel[0]) / 2) : sel[0],
+	    endVal = sel[1],
+	    start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal),
+	    data = {
+	      axis: axis,
+	    };
+
+	  if (r.rangeType === 'area') {
+	    data.start = start;
+	    data.end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(endVal);
+	  } else {
+	    data.start = start;
+	  }
+
+	  if (r && r.rangeHandler) { r.rangeHandler(data); }
+
+	}
+
+	function text(annoNode, obj) {
+	  var t = obj.annotations.text;
+	  t.map(function (textObj, i) {
+	    var config = generateTextAnnotationConfig(textObj, annoNode, obj);
+	    drawTextAnnotation(i, config, obj);
+	  });
+	}
+
+	function generateTextAnnotationConfig(d, annoNode, obj, pos) {
+
+	  var position = pos || {};
+
+	  if (d.position) {
+	    position.x = d.position.x * obj.dimensions.tickWidth();
+	    position.y = d.position.y * obj.dimensions.yAxisHeight();
+	  }
 
 	  var config = {
 	    annoNode: annoNode,
@@ -13372,7 +13654,7 @@
 	      x: d.offset && isNumeric(d.offset.x) ? d.offset.x : null,
 	      y: d.offset && isNumeric(d.offset.y) ? d.offset.y : null,
 	    },
-	    position: d.position || null,
+	    position: position || null,
 	    'text-align': d['text-align'] || 'middle',
 	    valign: d.valign || 'top',
 	    color: d.color
@@ -13412,7 +13694,7 @@
 
 	}
 
-	function drawTextAnnotation(x, y, i, config, obj) {
+	function drawTextAnnotation(i, config, obj) {
 
 	  var textNode = config.annoNode
 	    .append('text')
@@ -13425,8 +13707,9 @@
 	          return ((obj.prefix) + "annotation_text " + (obj.prefix) + "annotation_text-" + i);
 	        }
 	      },
-	      'x': x + (config.offset.x || 0),
-	      'y': y + (config.offset.y || 0),
+	      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+	      'x': config.position.x + (config.offset.x || 0),
+	      'y': config.position.y + (config.offset.y || 0),
 	      'text-anchor': config['text-align'],
 	      'dominant-baseline': config.valign
 	    });
@@ -13495,53 +13778,312 @@
 	  }
 	}
 
-	function getBrushFromCenter(obj, centerValue) {
-	  var d = 2, // Use a fixed width when recentering
-	    axis = obj.annotationHandlers.rangeAxis,
-	    dim = axis === 'x' ? obj.dimensions.tickWidth() : obj.dimensions.yAxisHeight(),
-	    d0 = centerValue - d / 2,
-	    d1 = centerValue + d / 2,
-	    move = d1 > dim ? [dim - d, dim] : d0 < 0 ? [0, d] : [d0, d1];
+	function editableText(annoEditable, obj) {
 
-	  return move;
-	}
+	  var textSel = annoEditable
+	    .append('g')
+	    .attrs({
+	      'class': ((obj.prefix) + "text"),
+	      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+	    });
 
-	function brushCentered(node, obj, brush$$1) {
-	  var axis = obj.annotationHandlers.rangeAxis,
-	    cursor = axis === 'x' ? mouse(node)[0] : mouse(node)[1],
-	    move = getBrushFromCenter(obj, cursor);
+	  textSel
+	    .append('rect')
+	    .attrs({
+	      x: 0,
+	      y: 0,
+	      width: obj.dimensions.tickWidth(),
+	      height: obj.dimensions.yAxisHeight()
+	    })
+	    .on('click', function() {
+	      appendTextInput(obj, this);
+	    });
 
-	  select(node.parentNode).call(brush$$1.move, move);
-	}
-
-	function brushed(e, obj, node) {
-
-	  if (!e.selection || !select(node).classed('inuse') || !event.sourceEvent || event.sourceEvent.type !== 'mouseup') {
-	    return;
+	  if (isNumeric(obj.annotationHandlers.textX) && isNumeric(obj.annotationHandlers.textY) && obj.annotationHandlers.textText) {
+	    appendTextInput(obj, this);
 	  }
 
-	  select(node).classed('inuse', false);
+	}
 
-	  var r = obj.annotationHandlers,
-	    axis = r.rangeAxis,
-	    sel = e.selection,
-	    yScale = obj.rendered.plot.yScaleObj.scale,
-	    startVal = r.rangeType === 'line' ? sel[0] + ((sel[1] - sel[0]) / 2) : sel[0],
-	    endVal = sel[1],
-	    start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal),
-	    data = {
-	      axis: axis,
+	function appendTextInput(obj, node) {
+
+	  var dragFn = drag()
+	    .on('drag', function() {
+	      textDrag(obj, this);
+	    })
+	    .on('end', function() {
+	      textDragEnd(obj, this);
+	    });
+
+	  var position = { x: 0, y: 0 };
+
+	  if (isNumeric(obj.annotationHandlers.textX) && isNumeric(obj.annotationHandlers.textY)) {
+	    position.x = Number(obj.annotationHandlers.textX) * obj.dimensions.tickWidth();
+	    position.y = Number(obj.annotationHandlers.textY) * obj.dimensions.yAxisHeight();
+	  } else {
+	    var cursor = cursorPos(select(node));
+	    position.x = cursor.x;
+	    position.y = cursor.y;
+	  }
+
+	  var parentContainer = select(obj.rendered.container.node().parentNode.parentNode);
+
+	  var htmlContainer = parentContainer.select(("." + (obj.prefix) + "annotation-text-input"));
+
+	  if (!htmlContainer.node()) {
+	    htmlContainer = parentContainer
+	      .insert('div', ("." + (obj.prefix) + "chart_source"))
+	      .attr('class', ((obj.prefix) + "annotation-text-input"));
+	  }
+
+	  htmlContainer
+	    .styles({
+	      top: ((obj.dimensions.headerHeight + obj.dimensions.margin.top) + "px"),
+	      left: ((obj.dimensions.computedWidth() - obj.dimensions.tickWidth() + obj.dimensions.margin.left) + "px"),
+	      width: ((obj.dimensions.tickWidth()) + "px"),
+	      height: ((obj.dimensions.yAxisHeight()) + "px")
+	    });
+
+	  var editableTextBox = htmlContainer.select(("." + (obj.prefix) + "annotation-text-edit-box"));
+
+	  if (!editableTextBox.node()) {
+	    editableTextBox = htmlContainer
+	      .append('div')
+	      .attr('class', ((obj.prefix) + "annotation-text-edit-box"));
+	  }
+
+	  editableTextBox
+	    .styles(setTextPosition(obj, position))
+	    .call(dragFn);
+
+	  var editableText = editableTextBox.select(("." + (obj.prefix) + "annotation-text-edit"));
+
+	  if (!editableText.node()) {
+	    editableText = editableTextBox
+	      .append('p')
+	      .attr('class', ((obj.prefix) + "annotation-text-edit"));
+	  }
+
+	  editableText
+	    .attr('contentEditable', true)
+	    .on('focusout', function() {
+	      textDragEnd(obj, this.parentNode);
+	    })
+	    .on('click', setEditableTextCaret);
+
+	  if (obj.annotationHandlers.textText) {
+	    editableText.node().innerText = obj.annotationHandlers.textText;
+	  } else{
+	    editableText.each(setEditableTextCaret);
+	  }
+
+	}
+
+	function setTextPosition(obj, position) {
+
+	  var styles = {},
+	    origin = { x: '0%', y: '0%' },
+	    translate = { x: '0px', y: '0px' };
+
+	  switch (obj.annotationHandlers['text-align']) {
+	    case 'left':
+	      styles[obj.annotationHandlers['text-align']] = (position.x) + "px";
+	      styles['text-align'] = obj.annotationHandlers['text-align'];
+	      break;
+	    case 'middle':
+	      styles.left = (position.x) + "px";
+	      origin.x = '50%';
+	      translate.x = '-50%';
+	      styles['text-align'] = 'center';
+	      break;
+	    case 'right':
+	      styles[obj.annotationHandlers['text-align']] = (obj.dimensions.tickWidth() - position.x) + "px";
+	      styles['text-align'] = obj.annotationHandlers['text-align'];
+	      break;
+	  }
+
+	  switch (obj.annotationHandlers.valign) {
+	    case 'top':
+	      styles[obj.annotationHandlers.valign] = (position.y) + "px";
+	      break;
+	    case 'middle':
+	      styles.top = (position.y) + "px";
+	      origin.y = '50%';
+	      translate.y = '-50%';
+	      break;
+	    case 'bottom':
+	      styles[obj.annotationHandlers.valign] = (obj.dimensions.yAxisHeight() - position.y) + "px";
+	      break;
+	  }
+
+	  styles['transform-origin'] = (origin.x) + " " + (origin.y);
+	  styles.transform = "translate(" + (translate.x) + "," + (translate.y) + ")";
+
+	  return styles;
+	}
+
+	function setEditableTextCaret() {
+	  if (event && event.defaultPrevented) { return; }
+	  var range = document.createRange();
+	  range.selectNodeContents(this);
+	  range.collapse(false);
+	  var selection$$1 = window.getSelection();
+	  selection$$1.removeAllRanges();
+	  selection$$1.addRange(range);
+	}
+
+	function textDrag(obj, node) {
+
+	  var styles = {};
+
+	  switch (obj.annotationHandlers['text-align']) {
+	    case 'left':
+	    case 'middle':
+	      styles.left = (parseFloat(node.style.left) + event.dx) + "px";
+	      break;
+	    case 'right':
+	      styles.right = (parseFloat(node.style.right) - event.dx) + "px";
+	      break;
+	  }
+
+	  switch (obj.annotationHandlers.valign) {
+	    case 'top':
+	    case 'middle':
+	      styles.top = (parseFloat(node.style.top) + event.dy) + "px";
+	      break;
+	    case 'bottom':
+	      styles.bottom = (parseFloat(node.style.bottom) - event.dy) + "px";
+	      break;
+	  }
+
+	  select(node).styles(styles);
+	}
+
+	function textDragEnd(obj, node) {
+
+	  if (!node.innerText) { return; }
+
+	  var t = obj.annotationHandlers,
+	    position = {
+	      x: null,
+	      y: null
 	    };
 
-	  if (r.rangeType === 'area') {
-	    data.start = start;
-	    data.end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(endVal);
-	  } else {
-	    data.start = start;
+	  switch (t['text-align']) {
+	    case 'left':
+	      position.x = parseFloat(node.style[t['text-align']]);
+	      break;
+	    case 'middle':
+	      position.x = parseFloat(node.style.left);
+	      break;
+	    case 'right':
+	      position.x = obj.dimensions.tickWidth() - parseFloat(node.style[t['text-align']]);
+	      break;
 	  }
 
-	  if (r && r.rangeHandler) { r.rangeHandler(data); }
+	  switch (t.valign) {
+	    case 'top':
+	      position.y = parseFloat(node.style[t.valign]);
+	      break;
+	    case 'middle':
+	      position.y = parseFloat(node.style.top);
+	      break;
+	    case 'bottom':
+	      position.y = obj.dimensions.yAxisHeight() - parseFloat(node.style[t.valign]);
+	      break;
+	  }
 
+	  position.x = roundToPrecision(position.x / obj.dimensions.tickWidth(), 4);
+	  position.y = roundToPrecision(position.y / obj.dimensions.yAxisHeight(), 4);
+
+	  if (position.x > 1) { position.x = 1; }
+	  if (position.x < 0) { position.x = 0; }
+	  if (position.y > 1) { position.y = 1; }
+	  if (position.y < 0) { position.y = 0; }
+
+	  var data = {
+	    text: node.innerText.trim(),
+	    position: position
+	  };
+
+	  if (t && t.textHandler) { t.textHandler(data); }
+
+	}
+
+	function editablePointer(annoEditable, obj, rendered) {
+
+	  var pointerSel = annoEditable
+	    .append('g')
+	    .attrs({
+	      'class': ((obj.prefix) + "pointer"),
+	      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+	    });
+
+	  var pointerSelRect = pointerSel
+	    .append('rect')
+	    .attrs({
+	      x: 0,
+	      y: 0,
+	      width: obj.dimensions.tickWidth(),
+	      height: obj.dimensions.yAxisHeight()
+	    });
+
+	  var pointerSelHandles = pointerSel
+	    .selectAll(("." + (obj.prefix) + "pointer-handle"))
+	    .data(['start', 'end']).enter()
+	    .append('circle')
+	    .attrs({
+	      class: function (d) { return ((obj.prefix) + "pointer-handle " + (obj.prefix) + "pointer-handle_" + d); },
+	      r: 4,
+	      cx: 0,
+	      cy: 0
+	    });
+
+	  // const pointerSelPath = pointerSel
+	  //   .append('path')
+	  //   .attrs({
+	  //     class: `${obj.prefix}pointer-handle-path`,
+	  //
+	  //   })
+
+	  var dragFn = drag()
+	    .on('start', function () { return pointerDragStart(obj, pointerSelHandles); })
+	    .on('drag', function () { return pointerDrag(obj, pointerSelHandles); })
+	    .on('end', function () { return pointerDragEnd(obj, pointerSelHandles); });
+
+	  pointerSelRect.call(dragFn);
+
+	  // if (isNumeric(obj.annotationHandlers.textX) && isNumeric(obj.annotationHandlers.textY) && obj.annotationHandlers.textText) {
+	  //   appendTextInput(obj, this);
+	  // }
+
+	}
+
+	function pointerDragStart(obj, node) {
+	  node.select(("." + (obj.prefix) + "pointer-handle_start"))
+	    .attrs({
+	      cx: event.x,
+	      cy: event.y,
+	    });
+	}
+
+	function pointerDrag(obj, node) {
+
+	  var startPointer = node.select(("." + (obj.prefix) + "pointer-handle_start"));
+
+	  node.select(("." + (obj.prefix) + "pointer-handle_end"))
+	    .attrs({
+	      cx: parseFloat(startPointer.attr('cx')) + event.dx,
+	      cy: parseFloat(startPointer.attr('cy')) + event.dy,
+	    });
+	}
+
+	function pointerDragEnd(obj, node) {
+	  // node.select(`.${obj.prefix}pointer-handle_end`)
+	  //   .attrs({
+	  //     cx: event.x,
+	  //     cy: event.y,
+	  //   });
 	}
 
 	function shareData(node, obj) {

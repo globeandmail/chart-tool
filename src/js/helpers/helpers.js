@@ -76,3 +76,8 @@ export function extend(from, to) {
 
   return target;
 }
+
+export function roundToPrecision(number, precision) {
+  const p = Math.pow(10, precision);
+  return Math.round(number * p) / p;
+}

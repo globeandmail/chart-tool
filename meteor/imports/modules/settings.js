@@ -253,7 +253,8 @@ var app_settings = {
     annotations: {
       highlight: [],
       range: [],
-      text: []
+      text: [],
+      pointer: []
     },
 
     public: false,
