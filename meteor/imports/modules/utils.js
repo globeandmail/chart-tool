@@ -8,7 +8,7 @@ import ChartTool from './chart-tool';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
-}
+} 
 
 export function mode(arr) {
   return arr
@@ -219,7 +219,6 @@ export function dataParse(data) {
 }
 
 export function cleanData(data) {
-
   const start = [],
     end = [];
 
@@ -241,6 +240,7 @@ export function cleanData(data) {
       if (line_output.end.length) end.push(line_output.end);
       return line_output.data;
     });
+
 
     const re = /^\d*\/\d*\/\d*$/;
 
@@ -274,6 +274,7 @@ export function formatDate(data, format) {
 export function cleanNumber(data) {
   // remove everything that isnt a number, decimal, or negative
   // and do some checking for characters we can use for prefix/suffix
+  // fix the scatterplot group problem
   return {
     data: data.toString().replace(/[^0-9\.-]/g, ''),
     start: data.match(/^[^0-9\.-]+/g) || [],
