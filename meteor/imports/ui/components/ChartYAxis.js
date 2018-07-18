@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { dataParse, updateAndSave, isNumber } from '../../modules/utils';
-import { app_settings } from '../../modules/settings';
 import { min } from 'd3-array';
 import Swal from 'sweetalert2';
 import { parse } from '../../modules/chart-tool';
@@ -18,7 +17,6 @@ export default class ChartYAxis extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.handlePrefix = this.handlePrefix.bind(this);
     this.handleSuffix = this.handleSuffix.bind(this);
     this.handleFormatVal = this.handleFormatVal.bind(this);
@@ -26,18 +24,6 @@ export default class ChartYAxis extends Component {
     this.handleMax = this.handleMax.bind(this);
     this.handleTicks = this.handleTicks.bind(this);
     this.handleNice = this.handleNice.bind(this);
-    this.state = {
-      expanded: false
-    };
-  }
-
-  expandStatus() {
-    return this.state.expanded ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
   }
 
   displayMin() {
@@ -194,8 +180,8 @@ export default class ChartYAxis extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>Y-axis</h3>
-          <div className={`unit-edit ${this.expandStatus()}`}>
+        <h3 id='ChartYAxis' onClick={this.props.toggleCollapseExpand}>Y-axis</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartYAxis')}`}>
           { this.props.chart.options.type !== 'bar' ?
             <div>
               <div className='unit-edit'>
@@ -216,7 +202,7 @@ export default class ChartYAxis extends Component {
                       className='select-formatval-y'
                       value={this.props.chart.y_axis.format}
                       onChange={this.handleFormatVal}
-                      >
+                    >
                       {formats.map(f => {
                         return <option key={f.pretty} value={f.format}>{f.pretty}</option>;
                       })}
@@ -246,7 +232,7 @@ export default class ChartYAxis extends Component {
                       defaultValue={this.props.chart.y_axis.min}
                       onBlur={this.handleMin}
                     /> : null }
-                    { this.displayMin() === true ? <span className='axisval-to'> to </span> : null }
+                  { this.displayMin() === true ? <span className='axisval-to'> to </span> : null }
                   <input
                     type='number'
                     name='max'
@@ -269,17 +255,17 @@ export default class ChartYAxis extends Component {
                 />
               </div>
             </div>
-          : null }
-            <div className='unit-edit unit-edit-half y-nice-edit'>
-              <h4>Niceify <a onClick={this.helpNice} className='help-toggle help-y-nice-edit'>?</a></h4>
-              <input
-                className='input-checkbox-y-nice'
-                type='checkbox'
-                name='yNice'
-                checked={this.props.chart.y_axis.nice}
-                onChange={this.handleNice}
-              />
-            </div>
+            : null }
+          <div className='unit-edit unit-edit-half y-nice-edit'>
+            <h4>Niceify <a onClick={this.helpNice} className='help-toggle help-y-nice-edit'>?</a></h4>
+            <input
+              className='input-checkbox-y-nice'
+              type='checkbox'
+              name='yNice'
+              checked={this.props.chart.y_axis.nice}
+              onChange={this.handleNice}
+            />
+          </div>
         </div>
       </div>
     );

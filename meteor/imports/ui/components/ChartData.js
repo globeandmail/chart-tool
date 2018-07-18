@@ -44,23 +44,10 @@ export default class ChartData extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.handleData = this.handleData.bind(this);
     this.handleDateConstruction = this.handleDateConstruction.bind(this);
     this.handleHasHours = this.handleHasHours.bind(this);
     this.handleIndex = this.handleIndex.bind(this);
-    this.state = {
-      expanded: true
-    };
-  }
-
-  expandStatus() {
-    return this.state.expanded ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
   }
 
   handleData(event) {
@@ -179,9 +166,8 @@ export default class ChartData extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>Data</h3>
-
-        <div className={`unit-edit ${this.expandStatus()}`}>
+        <h3 id='ChartData' onClick={this.props.toggleCollapseExpand}>Data</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartData')}`}>
 
           <div className='unit-edit'>
             <h4>Data</h4>
@@ -192,7 +178,7 @@ export default class ChartData extends Component {
               className='input-data-edit'
               onBlur={this.handleData}
               defaultValue={this.props.chart.data}
-              ></textarea>
+            ></textarea>
           </div>
 
           { this.props.chart.x_axis.scale === 'time' || this.props.chart.x_axis.scale === 'ordinal-time' ?
@@ -204,7 +190,7 @@ export default class ChartData extends Component {
                     className='select-date-construction'
                     value={this.props.chart.date_format.replace('%H:%M', '').trim()}
                     onChange={this.handleDateConstruction}
-                    >
+                  >
                     {formats.map(f => {
                       return <option key={f.pretty} value={f.format}>{f.pretty}</option>;
                     })}

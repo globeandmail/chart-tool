@@ -29,6 +29,8 @@ class EditChart extends Component {
     this.toggleAnnotationMode = this.toggleAnnotationMode.bind(this);
     this.handleHighlightColor = this.handleHighlightColor.bind(this);
     this.handleCurrentAnnotation = this.handleCurrentAnnotation.bind(this);
+    this.expandStatus = this.expandStatus.bind(this);
+    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     Presence.state = () => {
       return { currentChartId: this.props.match.params._id, user: animalName };
     };
@@ -36,6 +38,7 @@ class EditChart extends Component {
       animalName,
       overlay: false,
       annotationMode: false,
+      expanded: 'ChartData',
       currentAnnotation: {
         type: 'text',
         highlight: '',
@@ -55,6 +58,15 @@ class EditChart extends Component {
         pointerCurve: ''
       }
     };
+  }
+
+  expandStatus(type) {
+    return this.state.expanded === type ? 'expanded' : 'collapsed';
+  }
+
+  toggleCollapseExpand(event) {
+    const expanded = this.state.expanded === event.target.id ? false : event.target.id;
+    this.setState({ expanded });
   }
 
   toggleOverlay(event) {
@@ -118,15 +130,23 @@ class EditChart extends Component {
               {...this.props}
             />
             <ChartData
+              expandStatus={this.expandStatus}
+              toggleCollapseExpand={this.toggleCollapseExpand}
               {...this.props}
             />
             <ChartXAxis
+              expandStatus={this.expandStatus}
+              toggleCollapseExpand={this.toggleCollapseExpand}
               {...this.props}
             />
             <ChartYAxis
+              expandStatus={this.expandStatus}
+              toggleCollapseExpand={this.toggleCollapseExpand}
               {...this.props}
             />
             <ChartAnnotations
+              expandStatus={this.expandStatus}
+              toggleCollapseExpand={this.toggleCollapseExpand}
               annotationMode={this.state.annotationMode}
               toggleAnnotationMode={this.toggleAnnotationMode}
               handleHighlightColor={this.handleHighlightColor}
@@ -136,12 +156,19 @@ class EditChart extends Component {
               {...this.props}
             />
             <ChartTags
+              expandStatus={this.expandStatus}
+              toggleCollapseExpand={this.toggleCollapseExpand}
+              expanded={this.state.expanded}
               {...this.props}
             />
             <ChartStyling
+              expandStatus={this.expandStatus}
+              toggleCollapseExpand={this.toggleCollapseExpand}
               {...this.props}
             />
             <ChartOptions
+              expandStatus={this.expandStatus}
+              toggleCollapseExpand={this.toggleCollapseExpand}
               {...this.props}
             />
           </aside>

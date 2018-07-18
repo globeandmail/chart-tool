@@ -7,23 +7,10 @@ export default class ChartOptions extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.handleShareData = this.handleShareData.bind(this);
     this.handleSocial = this.handleSocial.bind(this);
     this.handleTips = this.handleTips.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.state = {
-      expanded: false
-    };
-  }
-
-  expandStatus() {
-    return this.state.expanded ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
   }
 
   handleShareData(event) {
@@ -94,8 +81,8 @@ export default class ChartOptions extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>Options</h3>
-        <div className={`unit-edit ${this.expandStatus()}`}>
+        <h3 id='ChartOptions' onClick={this.props.toggleCollapseExpand}>Options</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartOptions')}`}>
           <div className='unit-edit share-data-edit'>
             <h4>Share data <a onClick={this.helpShareData} className='help-toggle help-share-data'>?</a></h4>
             <input

@@ -20,23 +20,10 @@ export default class ChartXAxis extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.handlePrefix = this.handlePrefix.bind(this);
     this.handleSuffix = this.handleSuffix.bind(this);
     this.handleFormatVal = this.handleFormatVal.bind(this);
     this.handleScale = this.handleScale.bind(this);
-    this.state = {
-      expanded: false
-    };
-  }
-
-  expandStatus() {
-    return this.state.expanded ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
   }
 
   handlePrefix(event) {
@@ -62,8 +49,8 @@ export default class ChartXAxis extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>X-axis</h3>
-        <div className={`unit-edit ${this.expandStatus()}`}>
+        <h3 id='ChartXAxis' onClick={this.props.toggleCollapseExpand}>X-axis</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartXAxis')}`}>
           { this.props.chart.options.type === 'bar' ?
             <div className='unit-edit'>
               <h4>Formatting</h4>
@@ -83,7 +70,7 @@ export default class ChartXAxis extends Component {
                     className='select-formatval-x'
                     value={this.props.chart.x_axis.format}
                     onChange={this.handleFormatVal}
-                    >
+                  >
                     {formats.map(f => {
                       return <option key={f.pretty} value={f.format}>{f.pretty}</option>;
                     })}

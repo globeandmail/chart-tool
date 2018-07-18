@@ -13471,7 +13471,7 @@
 
 	  if (obj.editable && obj.annotationHandlers && obj.annotationHandlers.type) {
 	    annoEditable = select(node.node().parentNode)
-	      .append('g')
+	      .insert('g', ("." + (obj.prefix) + "annotations"))
 	      .attrs({
 	        transform: ("translate(" + (obj.dimensions.margin.left) + "," + (obj.dimensions.margin.top) + ")"),
 	        class: ((obj.prefix) + "annotation-editable-group")
@@ -13857,6 +13857,7 @@
 	  textSel
 	    .append('rect')
 	    .attrs({
+	      class: ((obj.prefix) + "text-rect"),
 	      x: 0,
 	      y: 0,
 	      width: obj.dimensions.tickWidth(),
@@ -13875,12 +13876,8 @@
 	function appendTextInput(obj, node) {
 
 	  var dragFn = drag()
-	    .on('drag', function() {
-	      textDrag(obj, this);
-	    })
-	    .on('end', function() {
-	      textDragEnd(obj, this);
-	    });
+	    .on('drag', function() { textDrag(obj, this); })
+	    .on('end', function() { textDragEnd(obj, this); });
 
 	  var position = { x: 0, y: 0 };
 
@@ -13935,7 +13932,7 @@
 	    .attr('contentEditable', true)
 	    .on('focusout', function() {
 	      textDragEnd(obj, this.parentNode);
-	      if (!this.innerText) { editableTextBox.remove(); }
+	      if (!this.innerText) { htmlContainer.remove(); }
 	    })
 	    .on('click', setEditableTextCaret);
 
@@ -13946,15 +13943,11 @@
 	  }
 
 	  // TODO
-	  // add drawing functionality for pointers stored in currentAnnotation
-	  // if focus is lost and text is empty, delete
 	  // make note of 'annotation mode' in chart preview headings
-	  // collapse all other tabs on click
 	  // make currently selected text/range pink
 	  // get rid of save button
-	  // directly click on text to edit
+	  // directly click on text to edit / add listeners to text
 	  // editable-group rect goes behind ct-annotations
-	  // add listeners to text
 	  // still need to handle 'highlight' annotations for scatterplot
 
 	}
@@ -14076,10 +14069,8 @@
 	  position.x = roundToPrecision(position.x / obj.dimensions.tickWidth(), 4);
 	  position.y = roundToPrecision(position.y / obj.dimensions.yAxisHeight(), 4);
 
-	  if (position.x > 1) { position.x = 1; }
-	  if (position.x < 0) { position.x = 0; }
-	  if (position.y > 1) { position.y = 1; }
-	  if (position.y < 0) { position.y = 0; }
+	  position.x = Math.max(0, Math.min(1, position.x));
+	  position.y = Math.max(0, Math.min(1, position.y));
 
 	  var data = {
 	    text: node.innerText.trim(),
@@ -14096,12 +14087,14 @@
 	  if (p.length) { appendMarker(annoNode.node().parentNode, obj); }
 
 	  p.map(function (pointerObj, i) {
+
 	    var data = pointerObj.position.map(function (d) {
 	      return {
-	        x: d.x * obj.dimensions.tickWidth(),
-	        y: d.y * obj.dimensions.yAxisHeight()
+	        x: Math.max(0, Math.min(obj.dimensions.tickWidth(), d.x * obj.dimensions.tickWidth())),
+	        y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), d.y * obj.dimensions.yAxisHeight()))
 	      };
 	    });
+
 	    var midpoint = calculateMidpoint(data, parseFloat(pointerObj.curve));
 
 	    annoNode
@@ -14129,6 +14122,21 @@
 	      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
 	    });
 
+	  var pointerPositions = [{
+	    x: isNumeric(p.pointerX1) ? Number(p.pointerX1) : 0,
+	    y: isNumeric(p.pointerY1) ? Number(p.pointerY1) : 0
+	  }, {
+	    x: isNumeric(p.pointerX2) ? Number(p.pointerX2) : 0,
+	    y: isNumeric(p.pointerY2) ? Number(p.pointerY2) : 0
+	  }].map(function (d) {
+	    return {
+	      x: Math.max(0, Math.min(obj.dimensions.tickWidth(), d.x * obj.dimensions.tickWidth())),
+	      y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), d.y * obj.dimensions.yAxisHeight()))
+	    };
+	  });
+
+	  var midpoint = calculateMidpoint(pointerPositions, Number(p.pointerCurve));
+
 	  var pointerSelRect = pointerSel
 	    .append('rect')
 	    .attrs({
@@ -14144,14 +14152,14 @@
 	    .append('circle')
 	    .attrs({
 	      class: function (d) { return ((obj.prefix) + "pointer-handle " + (obj.prefix) + "pointer-handle_" + d); },
-	      r: 2,
-	      cx: 0,
-	      cy: 0
+	      cx: function (d) { return d === 'start' ? pointerPositions[0].x : pointerPositions[1].x; },
+	      cy: function (d) { return d === 'start' ? pointerPositions[0].y : pointerPositions[1].y; },
+	      r: 2
 	    });
 
 	  pointerSel
 	    .append('path')
-	    .datum(Object)
+	    .datum([pointerPositions[0], midpoint, pointerPositions[1]])
 	    .attrs({
 	      class: ((obj.prefix) + "pointer-handle-path"),
 	      'marker-end': ("url(#" + (obj.prefix) + "arrow)"),
@@ -14159,29 +14167,21 @@
 	    });
 
 	  var dragFn = drag()
-	    .on('start', function () {
-	      pointerDragStart(obj, pointerSel);
-	    })
-	    .on('drag', function () {
-	      pointerDrag(obj, pointerSel);
-	    })
-	    .on('end', function () {
-	      pointerDragEnd(obj, pointerSel);
-	    });
+	    .on('start', function () { return pointerDragStart(obj, pointerSel); })
+	    .on('drag', function () { return pointerDrag(obj, pointerSel); })
+	    .on('end', function () { return pointerDragEnd(obj, pointerSel); });
 
 	  pointerSelRect.call(dragFn);
-
-	  if (isNumeric(p.pointerX1) &&
-	      isNumeric(p.pointerX2) &&
-	      isNumeric(p.pointerY1) &&
-	      isNumeric(p.pointerY2)) ;
 
 	}
 
 	function pointerDragStart(obj, node) {
 	  node
 	    .selectAll(("." + (obj.prefix) + "pointer-handle"))
-	    .datum({ x: event.x, y: event.y })
+	    .datum({
+	      x: Math.max(0, Math.min(obj.dimensions.tickWidth(), event.x)),
+	      y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), event.y))
+	    })
 	    .attrs({
 	      cx: function (d) { return d.x; },
 	      cy: function (d) { return d.y; }
@@ -14194,9 +14194,11 @@
 
 	  node.select(("." + (obj.prefix) + "pointer-handle_end"))
 	    .datum(function() {
+	      var x = parseFloat(select(this).attr('cx')) + event.dx,
+	        y = parseFloat(select(this).attr('cy')) + event.dy;
 	      return {
-	        x: parseFloat(select(this).attr('cx')) + event.dx,
-	        y: parseFloat(select(this).attr('cy')) + event.dy
+	        x: Math.max(0, Math.min(obj.dimensions.tickWidth(), x)),
+	        y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), y))
 	      };
 	    })
 	    .attrs({
@@ -14217,7 +14219,10 @@
 	  var p = obj.annotationHandlers;
 
 	  node.select(("." + (obj.prefix) + "pointer-handle_end"))
-	    .datum({ x: event.x, y: event.y })
+	    .datum({
+	      x: Math.max(0, Math.min(obj.dimensions.tickWidth(), event.x)),
+	      y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), event.y))
+	    })
 	    .attrs({
 	      cx: function (d) { return d.x; },
 	      cy: function (d) { return d.y; }
@@ -14262,7 +14267,7 @@
 
 	function appendMarker(node, obj) {
 	  select(node)
-	    .append('defs')
+	    .insert('defs', ':first-child')
 	    .append('marker')
 	    .attrs({
 	      'id': ((obj.prefix) + "arrow"),

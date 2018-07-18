@@ -10,7 +10,6 @@ export default class ChartAnnotations extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.toggleHighlightExpand = this.toggleHighlightExpand.bind(this);
     this.toggleTextExpand = this.toggleTextExpand.bind(this);
     this.toggleRangeExpand = this.toggleRangeExpand.bind(this);
@@ -29,7 +28,6 @@ export default class ChartAnnotations extends Component {
     this.editText = this.editText.bind(this);
     this.removeText = this.removeText.bind(this);
     this.state = {
-      expanded: false,
       textExpanded: true,
       pointerExpanded: false,
       highlightExpanded: false,
@@ -39,12 +37,6 @@ export default class ChartAnnotations extends Component {
 
   expandStatus(category) {
     return this.state[category] ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
-    this.props.toggleAnnotationMode(expanded);
   }
 
   toggleHighlightExpand() {
@@ -318,8 +310,8 @@ export default class ChartAnnotations extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>Annotations</h3>
-        <div className={`unit-edit ${this.expandStatus('expanded')}`}>
+        <h3 id='ChartAnnotations' onClick={this.props.toggleCollapseExpand}>Annotations</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartAnnotations')}`}>
 
           {this.props.annotationMode ?
             <p className='note'>Note: While the Annotation tab is open, previewed chart tips will be disabled.</p> : null
