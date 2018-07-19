@@ -55,7 +55,7 @@ class EditChart extends Component {
         pointerY1: '',
         pointerX2: '',
         pointerY2: '',
-        pointerCurve: ''
+        pointerCurve: 0.3
       }
     };
   }
@@ -66,7 +66,10 @@ class EditChart extends Component {
 
   toggleCollapseExpand(event) {
     const expanded = this.state.expanded === event.target.id ? false : event.target.id;
-    this.setState({ expanded });
+    this.setState({
+      expanded,
+      annotationMode: expanded === 'ChartAnnotations'
+    });
   }
 
   toggleOverlay(event) {

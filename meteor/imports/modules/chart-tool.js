@@ -13942,14 +13942,6 @@
 	    editableText.each(setEditableTextCaret);
 	  }
 
-	  // TODO
-	  // make note of 'annotation mode' in chart preview headings
-	  // make currently selected text/range pink
-	  // get rid of save button
-	  // directly click on text to edit / add listeners to text
-	  // editable-group rect goes behind ct-annotations
-	  // still need to handle 'highlight' annotations for scatterplot
-
 	}
 
 	function setTextPosition(obj, position) {
@@ -14101,7 +14093,7 @@
 	      .append('path')
 	      .datum([data[0], midpoint, data[1]])
 	      .attrs({
-	        'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
+	        transform: ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
 	        class: ((obj.prefix) + "pointer-path " + (obj.prefix) + "pointer-path-" + i),
 	        'marker-end': ("url(#" + (obj.prefix) + "arrow)"),
 	        d: pointerLine()
@@ -14114,6 +14106,11 @@
 	  var p = obj.annotationHandlers;
 
 	  appendMarker(annoEditable.node().parentNode, obj);
+
+	  var dragFn = drag()
+	    .on('start', function() { pointerDragStart(obj, pointerSel, this); })
+	    .on('drag', function() { pointerDrag(obj, pointerSel, this); })
+	    .on('end', function() { pointerDragEnd(obj, pointerSel, this); });
 
 	  var pointerSel = annoEditable
 	    .append('g')
@@ -14146,6 +14143,17 @@
 	      height: obj.dimensions.yAxisHeight()
 	    });
 
+	  var pointerHasData = pointerPositions[0].x || pointerPositions[0].y || pointerPositions[1].x || pointerPositions[1].y;
+
+	  pointerSel
+	    .append('path')
+	    .datum([pointerPositions[0], midpoint, pointerPositions[1]])
+	    .attrs({
+	      class: ((obj.prefix) + "pointer-handle-path"),
+	      'marker-end': ("url(#" + (obj.prefix) + "arrow)"),
+	      d: pointerHasData ? pointerLine() : null
+	    });
+
 	  pointerSel
 	    .selectAll(("." + (obj.prefix) + "pointer-handle"))
 	    .data(['start', 'end']).enter()
@@ -14154,30 +14162,27 @@
 	      class: function (d) { return ((obj.prefix) + "pointer-handle " + (obj.prefix) + "pointer-handle_" + d); },
 	      cx: function (d) { return d === 'start' ? pointerPositions[0].x : pointerPositions[1].x; },
 	      cy: function (d) { return d === 'start' ? pointerPositions[0].y : pointerPositions[1].y; },
-	      r: 2
-	    });
-
-	  pointerSel
-	    .append('path')
-	    .datum([pointerPositions[0], midpoint, pointerPositions[1]])
-	    .attrs({
-	      class: ((obj.prefix) + "pointer-handle-path"),
-	      'marker-end': ("url(#" + (obj.prefix) + "arrow)"),
-	      d: pointerLine()
-	    });
-
-	  var dragFn = drag()
-	    .on('start', function () { return pointerDragStart(obj, pointerSel); })
-	    .on('drag', function () { return pointerDrag(obj, pointerSel); })
-	    .on('end', function () { return pointerDragEnd(obj, pointerSel); });
+	      r: 3
+	    })
+	    .style('opacity', pointerHasData ? 1 : 0)
+	    .call(dragFn);
 
 	  pointerSelRect.call(dragFn);
 
 	}
 
-	function pointerDragStart(obj, node) {
-	  node
-	    .selectAll(("." + (obj.prefix) + "pointer-handle"))
+	function pointerDragStart(obj, node, currNode) {
+
+	  var selection$$1;
+
+	  if (select(currNode).classed(((obj.prefix) + "pointer-handle"))) {
+	    selection$$1 = select(currNode);
+	  } else {
+	    selection$$1 = node.selectAll(("." + (obj.prefix) + "pointer-handle"));
+	  }
+
+	  selection$$1
+	    .style('opacity', null)
 	    .datum({
 	      x: Math.max(0, Math.min(obj.dimensions.tickWidth(), event.x)),
 	      y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), event.y))
@@ -14188,11 +14193,19 @@
 	    });
 	}
 
-	function pointerDrag(obj, node) {
+	function pointerDrag(obj, node, currNode) {
 
 	  var p = obj.annotationHandlers;
 
-	  node.select(("." + (obj.prefix) + "pointer-handle_end"))
+	  var selection$$1;
+
+	  if (select(currNode).classed(((obj.prefix) + "pointer-handle"))) {
+	    selection$$1 = select(currNode);
+	  } else {
+	    selection$$1 = node.select(("." + (obj.prefix) + "pointer-handle_end"));
+	  }
+
+	  selection$$1
 	    .datum(function() {
 	      var x = parseFloat(select(this).attr('cx')) + event.dx,
 	        y = parseFloat(select(this).attr('cy')) + event.dy;
@@ -14214,11 +14227,19 @@
 	    .attr('d', pointerLine());
 	}
 
-	function pointerDragEnd(obj, node) {
+	function pointerDragEnd(obj, node, currNode) {
 
 	  var p = obj.annotationHandlers;
 
-	  node.select(("." + (obj.prefix) + "pointer-handle_end"))
+	  var selection$$1;
+
+	  if (select(currNode).classed(((obj.prefix) + "pointer-handle"))) {
+	    selection$$1 = select(currNode);
+	  } else {
+	    selection$$1 = node.select(("." + (obj.prefix) + "pointer-handle_end"));
+	  }
+
+	  selection$$1
 	    .datum({
 	      x: Math.max(0, Math.min(obj.dimensions.tickWidth(), event.x)),
 	      y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), event.y))
@@ -14270,13 +14291,14 @@
 	    .insert('defs', ':first-child')
 	    .append('marker')
 	    .attrs({
-	      'id': ((obj.prefix) + "arrow"),
-	      'viewBox': '0 0 100 80',
-	      'refX': 20,
-	      'refY': 40,
-	      'markerWidth': 8,
-	      'markerHeight': 6.4,
-	      'orient': 'auto'
+	      id: ((obj.prefix) + "arrow"),
+	      viewBox: '0 0 100 80',
+	      refX: 20,
+	      refY: 40,
+	      markerWidth: 8,
+	      markerHeight: 6.4,
+	      orient: 'auto',
+	      class: obj.editable ? ((obj.prefix) + "editable") : null
 	    })
 	    .append('path')
 	    .attr('d', 'M100,40L0 80 23.7 40 0 0 z')

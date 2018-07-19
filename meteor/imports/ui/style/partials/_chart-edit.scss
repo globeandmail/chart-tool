@@ -530,6 +530,21 @@ select {
   color: $color-gray-medium;
 }
 
+span.note-anno-color {
+  color: $color-annotation-mode;
+}
+
+.chart-preview-annotation {
+  h5 span {
+    float: right;
+    color: $color-annotation-mode;
+    vertical-align: bottom;
+    font-size: 0.7rem;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+}
+
 .chart-preview-annotation-highlight {
   rect {
     &:hover {
@@ -790,4 +805,16 @@ select {
       pointer-events: all;
     }
   }
+}
+
+.rc-slider-track {
+  background: none !important;
+}
+
+.rc-slider-handle {
+  border-color: $color-black !important;
+}
+
+.rc-slider-rail {
+  background-color: darken($color-gray-light, 20%) !important;
 }

@@ -52,6 +52,11 @@ function chartPresentationalString(props) {
     obj.annotationTextText = props.currentAnnotation.textText;
     obj.annotationTextX = props.currentAnnotation.textX;
     obj.annotationTextY = props.currentAnnotation.textY;
+    obj.annotationPointerX1 = props.currentAnnotation.pointerX1;
+    obj.annotationPointerY1 = props.currentAnnotation.pointerY1;
+    obj.annotationPointerX2 = props.currentAnnotation.pointerX2;
+    obj.annotationPointerY2 = props.currentAnnotation.pointerY2;
+    obj.annotationPointerCurve = props.currentAnnotation.pointerCurve;
   }
 
   return JSON.stringify(obj);
@@ -68,6 +73,7 @@ export default class Chart extends Component {
     this.handleHighlightAnnotation = this.handleHighlightAnnotation.bind(this);
     this.handleRangeAnnotation = this.handleRangeAnnotation.bind(this);
     this.handleTextAnnotation = this.handleTextAnnotation.bind(this);
+    this.handlePointerAnnotation = this.handlePointerAnnotation.bind(this);
   }
 
   componentDidMount() {
@@ -199,6 +205,13 @@ export default class Chart extends Component {
 
   }
 
+  handlePointerAnnotation(data) {
+    this.props.handleCurrentAnnotation(
+      ['pointerX1', 'pointerY1', 'pointerX2', 'pointerY2'],
+      [data[0].x, data[0].y, data[1].x, data[1].y]
+    );
+  }
+
   chartEditable() {
     const title = this.chartRef.current.querySelector('.editable-chart_title'),
       qualifier = this.chartRef.current.querySelector('.editable-chart_qualifier'),
@@ -271,6 +284,7 @@ export default class Chart extends Component {
         rangeHandler: this.handleRangeAnnotation,
         textHandler: this.handleTextAnnotation,
         highlightHandler: this.handleHighlightAnnotation,
+        pointerHandler: this.handlePointerAnnotation,
         type: this.props.currentAnnotation.type,
         rangeType: this.props.currentAnnotation.rangeType,
         rangeAxis: this.props.currentAnnotation.rangeAxis,
@@ -280,7 +294,12 @@ export default class Chart extends Component {
         valign: this.props.currentAnnotation.textValign,
         textText: this.props.currentAnnotation.textText,
         textX: this.props.currentAnnotation.textX,
-        textY: this.props.currentAnnotation.textY
+        textY: this.props.currentAnnotation.textY,
+        pointerCurve: this.props.currentAnnotation.pointerCurve,
+        pointerX1: this.props.currentAnnotation.pointerX1,
+        pointerY1: this.props.currentAnnotation.pointerY1,
+        pointerX2: this.props.currentAnnotation.pointerX2,
+        pointerY2: this.props.currentAnnotation.pointerY2
       };
     }
 

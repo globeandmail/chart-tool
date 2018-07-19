@@ -5,6 +5,7 @@ import { app_settings } from '../../modules/settings';
 import { parse } from '../../modules/chart-tool';
 import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
+import Slider from 'rc-slider';
 
 export default class ChartAnnotations extends Component {
 
@@ -27,6 +28,7 @@ export default class ChartAnnotations extends Component {
     this.addText = this.addText.bind(this);
     this.editText = this.editText.bind(this);
     this.removeText = this.removeText.bind(this);
+    this.handlePointerCurve = this.handlePointerCurve.bind(this);
     this.state = {
       textExpanded: true,
       pointerExpanded: false,
@@ -271,6 +273,10 @@ export default class ChartAnnotations extends Component {
     updateAndSave('charts.update.annotation.text', this.props.chart._id, text);
   }
 
+  handlePointerCurve(value) {
+    this.props.handleCurrentAnnotation('pointerCurve', value);
+  }
+
   resetAnnotations() {
     updateAndSave('charts.update.annotation.reset', this.props.chart._id);
   }
@@ -307,6 +313,12 @@ export default class ChartAnnotations extends Component {
     });
   }
 
+  // TODO
+  // get rid of save button
+  // finish pointer UI stuff
+  // directly click on text to edit / add listeners to text
+  // still need to handle 'highlight' annotations for scatterplot
+
   render() {
     return (
       <div className='edit-box'>
@@ -314,7 +326,7 @@ export default class ChartAnnotations extends Component {
         <div className={`unit-edit ${this.props.expandStatus('ChartAnnotations')}`}>
 
           {this.props.annotationMode ?
-            <p className='note'>Note: While the Annotation tab is open, previewed chart tips will be disabled.</p> : null
+            <p className='note'>While the Annotation tab is open, previewed chart tips are disabled. Annotations being edited will appear in <span className='note-anno-color'>this color</span>.</p> : null
           }
 
           <div className='unit-edit unit-anno anno-text-edit'>
@@ -382,27 +394,20 @@ export default class ChartAnnotations extends Component {
             </div>
           </div>
 
-
           <div className='unit-edit unit-anno anno-pointer-edit'>
             <h4><span className='anno-subhed' onClick={this.togglePointerExpand}>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('pointerExpanded')}`}>
               <div className='add-pointer'>
                 <div className='pointer-row'>
                   <div className='pointer-row-item'>
-                    {/* <label htmlFor='textAlign'>Text alignment</label>
-                    <div className='select-wrapper'>
-                      <select
-                        id='textAlign'
-                        className='select-textalign'
-                        name='textAlign'
-                        value={this.props.currentAnnotation.textAlign}
-                        onChange={this.setTextConfig}
-                      >
-                        {['Left', 'Middle', 'Right'].map(f => {
-                          return <option key={f} value={f.toLowerCase()}>{f}</option>;
-                        })}
-                      </select>
-                    </div> */}
+                    <label>Pointer curviness</label>
+                    <Slider
+                      min={-1}
+                      max={1}
+                      value={this.props.currentAnnotation.pointerCurve}
+                      step={0.1}
+                      onChange={this.handlePointerCurve}
+                    />
                   </div>
                   <div className='pointer-row-item'>
                     {/* <label htmlFor='textValign'>Vertical align</label>

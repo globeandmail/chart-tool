@@ -15,6 +15,7 @@ import 'react-select/dist/react-select.css';
 import '../../ui/style/main.scss';
 import 'sweetalert2/dist/sweetalert2.css';
 import '../../ui/style/chart-tool.css';
+import 'rc-slider/assets/index.css';
 
 // cribbed from here: https://stackoverflow.com/questions/43399740/react-router-redirect-drops-param
 const RedirectWithParams = ({ exact, from, push, to }) => {

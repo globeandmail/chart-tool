@@ -25,6 +25,7 @@
     "puppeteer": "^1.2.0",
     "query-string": "^6.0.0",
     "random-animal-name-generator": "^0.1.0",
+    "rc-slider": "^8.6.1",
     "react": "^16.3.0",
     "react-color": "^2.14.0",
     "react-dom": "^16.3.0",
