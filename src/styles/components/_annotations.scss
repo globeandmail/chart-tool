@@ -34,9 +34,10 @@
     .selection {
       shape-rendering: crispEdges;
       stroke-width: 0;
+      fill: $color-annotation-mode;
     }
     .handle {
-      fill: $color-gray-medium;
+      fill: rgba($color-annotation-mode, 0.8);
       stroke-linecap: butt;
     }
   }
@@ -83,8 +84,9 @@
   display: inline-block;
   width: 100%;
   height: 100%;
+  color: $color-annotation-mode;
   &:focus {
-    outline: rgba($primary-color, 0.4) solid 1px;
+    outline: rgba($color-annotation-mode, 0.4) solid 1px;
   }
   &:hover {
     cursor: pointer;
@@ -99,11 +101,30 @@
 }
 
 .#{$prefix}pointer-handle {
-  display: none;
+  fill: $color-annotation-mode;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.#{$prefix}pointer-handle_end {
+  opacity: 0;
 }
 
 .#{$prefix}pointer-handle-path, .#{$prefix}pointer-path {
   fill: none;
   stroke: $color-black;
   stroke-width: 1px;
+}
+
+##{$prefix}arrow {
+  fill: $color-black;
+}
+
+##{$prefix}arrow-editable {
+  fill: $color-annotation-mode;
+}
+
+.#{$prefix}pointer-handle-path {
+  stroke: $color-annotation-mode;
 }

@@ -506,14 +506,6 @@ export function appendTextInput(obj, node) {
     editableText.each(setEditableTextCaret);
   }
 
-  // TODO
-  // make note of 'annotation mode' in chart preview headings
-  // make currently selected text/range pink
-  // get rid of save button
-  // directly click on text to edit / add listeners to text
-  // editable-group rect goes behind ct-annotations
-  // still need to handle 'highlight' annotations for scatterplot
-
 }
 
 export function setTextPosition(obj, position) {
@@ -665,7 +657,7 @@ export function pointer(annoNode, obj) {
       .append('path')
       .datum([data[0], midpoint, data[1]])
       .attrs({
-        'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
+        transform: `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
         class: `${obj.prefix}pointer-path ${obj.prefix}pointer-path-${i}`,
         'marker-end': `url(#${obj.prefix}arrow)`,
         d: pointerLine()
@@ -677,7 +669,12 @@ export function editablePointer(annoEditable, obj) {
 
   const p = obj.annotationHandlers;
 
-  appendMarker(annoEditable.node().parentNode, obj);
+  appendMarker(annoEditable.node().parentNode, obj, true);
+
+  const dragFn = drag()
+    .on('start', function() { pointerDragStart(obj, pointerSel, this); })
+    .on('drag', function() { pointerDrag(obj, pointerSel, this); })
+    .on('end', function() { pointerDragEnd(obj, pointerSel, this); });
 
   const pointerSel = annoEditable
     .append('g')
@@ -710,6 +707,17 @@ export function editablePointer(annoEditable, obj) {
       height: obj.dimensions.yAxisHeight()
     });
 
+  const pointerHasData = pointerPositions[0].x || pointerPositions[0].y || pointerPositions[1].x || pointerPositions[1].y;
+
+  pointerSel
+    .append('path')
+    .datum([pointerPositions[0], midpoint, pointerPositions[1]])
+    .attrs({
+      class: `${obj.prefix}pointer-handle-path`,
+      'marker-end': `url(#${obj.prefix}arrow-editable)`,
+      d: pointerHasData ? pointerLine() : null
+    });
+
   pointerSel
     .selectAll(`.${obj.prefix}pointer-handle`)
     .data(['start', 'end']).enter()
@@ -718,30 +726,27 @@ export function editablePointer(annoEditable, obj) {
       class: d => `${obj.prefix}pointer-handle ${obj.prefix}pointer-handle_${d}`,
       cx: d => d === 'start' ? pointerPositions[0].x : pointerPositions[1].x,
       cy: d => d === 'start' ? pointerPositions[0].y : pointerPositions[1].y,
-      r: 2
-    });
-
-  pointerSel
-    .append('path')
-    .datum([pointerPositions[0], midpoint, pointerPositions[1]])
-    .attrs({
-      class: `${obj.prefix}pointer-handle-path`,
-      'marker-end': `url(#${obj.prefix}arrow)`,
-      d: pointerLine()
-    });
-
-  const dragFn = drag()
-    .on('start', () => pointerDragStart(obj, pointerSel))
-    .on('drag', () => pointerDrag(obj, pointerSel))
-    .on('end', () => pointerDragEnd(obj, pointerSel));
+      r: 2.5
+    })
+    .style('opacity', pointerHasData ? 1 : 0)
+    .call(dragFn);
 
   pointerSelRect.call(dragFn);
 
 }
 
-export function pointerDragStart(obj, node) {
-  node
-    .selectAll(`.${obj.prefix}pointer-handle`)
+export function pointerDragStart(obj, node, currNode) {
+
+  let selection;
+
+  if (select(currNode).classed(`${obj.prefix}pointer-handle`)) {
+    selection = select(currNode);
+  } else {
+    selection = node.selectAll(`.${obj.prefix}pointer-handle`);
+  }
+
+  selection
+    .style('opacity', null)
     .datum({
       x: Math.max(0, Math.min(obj.dimensions.tickWidth(), event.x)),
       y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), event.y))
@@ -752,11 +757,19 @@ export function pointerDragStart(obj, node) {
     });
 }
 
-export function pointerDrag(obj, node) {
+export function pointerDrag(obj, node, currNode) {
 
   const p = obj.annotationHandlers;
 
-  node.select(`.${obj.prefix}pointer-handle_end`)
+  let selection;
+
+  if (select(currNode).classed(`${obj.prefix}pointer-handle`)) {
+    selection = select(currNode);
+  } else {
+    selection = node.select(`.${obj.prefix}pointer-handle_end`);
+  }
+
+  selection
     .datum(function() {
       const x = parseFloat(select(this).attr('cx')) + event.dx,
         y = parseFloat(select(this).attr('cy')) + event.dy;
@@ -778,11 +791,19 @@ export function pointerDrag(obj, node) {
     .attr('d', pointerLine());
 }
 
-export function pointerDragEnd(obj, node) {
+export function pointerDragEnd(obj, node, currNode) {
 
   const p = obj.annotationHandlers;
 
-  node.select(`.${obj.prefix}pointer-handle_end`)
+  let selection;
+
+  if (select(currNode).classed(`${obj.prefix}pointer-handle`)) {
+    selection = select(currNode);
+  } else {
+    selection = node.select(`.${obj.prefix}pointer-handle_end`);
+  }
+
+  selection
     .datum({
       x: Math.max(0, Math.min(obj.dimensions.tickWidth(), event.x)),
       y: Math.max(0, Math.min(obj.dimensions.yAxisHeight(), event.y))
@@ -811,14 +832,18 @@ export function pointerDragEnd(obj, node) {
 export function calculateMidpoint(d, pct) {
 
   const sign = d[1].x > d[0].x ? -1 * Math.sign(pct) : 1 * Math.sign(pct),
+    // plots a point at the center of a line between start and end points
     minMid = {
       x: ((d[1].x - d[0].x) / 2) + d[0].x,
       y: ((d[1].y - d[0].y) / 2) + d[0].y
     },
+    // plots a point at the 90deg point (i.e. an isoceles right triangle) between start and end points
     maxMid = {
       x: minMid.x + (sign * ((d[1].y - d[0].y) / 2)),
       y: minMid.y + (sign * -1 * ((d[1].x - d[0].x) / 2))
     };
+
+  // interpolate between two positions
   return interpolateObject(minMid, maxMid)(Math.abs(pct));
 }
 
@@ -829,18 +854,18 @@ export function pointerLine() {
     .y(d => d.y);
 }
 
-export function appendMarker(node, obj) {
+export function appendMarker(node, obj, editActive) {
   select(node)
     .insert('defs', ':first-child')
     .append('marker')
     .attrs({
-      'id': `${obj.prefix}arrow`,
-      'viewBox': '0 0 100 80',
-      'refX': 20,
-      'refY': 40,
-      'markerWidth': 8,
-      'markerHeight': 6.4,
-      'orient': 'auto'
+      id: `${obj.prefix}arrow${editActive ? '-editable' : ''}`,
+      viewBox: '0 0 100 80',
+      refX: 20,
+      refY: 40,
+      markerWidth: 8,
+      markerHeight: 6.4,
+      orient: 'auto'
     })
     .append('path')
     .attr('d', 'M100,40L0 80 23.7 40 0 0 z')
