@@ -554,12 +554,29 @@ span.note-anno-color {
 }
 
 .chart-preview-annotation-text {
-  .ct-annotation-editable-group {
+  .#{$prefix}annotation-editable-group {
     &:hover {
-      cursor: crosshair;
+      cursor: pointer;
     }
   }
 }
+
+.chart-preview-annotation-pointer {
+  .#{$prefix}annotations .#{$prefix}pointer-path {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.chart-preview-annotation-range {
+  .#{$prefix}annotations .#{$prefix}annotation_range {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 
 .twitter-picker {
   box-shadow: none !important;
@@ -601,7 +618,7 @@ span.note-anno-color {
   }
 }
 
-.currently-highlighted, .current-ranges, .current-text {
+.current-highlight, .current-ranges, .current-text, .current-pointer {
   p {
     text-transform: uppercase;
     font-size: 0.8em;
@@ -651,7 +668,7 @@ span.note-anno-color {
     @include span-columns(9 of 10);
   }
 
-  .range-item, .text-item {
+  .range-item, .text-item, .pointer-item {
     background-color: darken($color-gray-light, 2%);
     padding: 0.4rem 0.5rem;
     position: relative;
@@ -661,17 +678,33 @@ span.note-anno-color {
       line-height: 1.3;
     }
     &:hover {
-      .range-tools, .text-tools {
+      .range-tools, .text-tools, .pointer-tools {
         opacity: 1;
         pointer-events: all;
-        background-color: darken($color-gray-light, 2%);
         padding-left: 0.5em;
+        background-color: darken($color-gray-light, 2%);
         @include transition (all 0.1s ease-in);
       }
     }
   }
 
-  .text-item p {
+  .text-item-selected, .pointer-item-selected, .range-item-selected {
+    background-color: lighten($color-annotation-mode, 40%);
+    .text-edit, .pointer-edit, .range-edit {
+      display: none;
+    }
+    &:hover {
+      .range-tools, .text-tools, .pointer-tools {
+        opacity: 1;
+        pointer-events: all;
+        padding-left: 0.5em;
+        background-color: lighten($color-annotation-mode, 40%);
+        @include transition (all 0.1s ease-in);
+      }
+    }
+  }
+
+  .text-item p, .range-item p {
     text-transform: none;
     letter-spacing: 0;
     font-size: 0.9rem;
@@ -681,7 +714,7 @@ span.note-anno-color {
     overflow: hidden;
   }
 
-  .range-tools, .text-tools {
+  .range-tools, .text-tools, .pointer-tools {
     position: absolute;
     right: 0.3rem;
     top: 50%;
@@ -691,7 +724,7 @@ span.note-anno-color {
     @include transition (all 0.1s ease-out);
   }
 
-  .range-remove, .range-edit, .text-remove, .text-edit {
+  .range-remove, .range-edit, .text-remove, .text-edit, .pointer-remove, .pointer-edit {
     height: 1.3rem;
     vertical-align: bottom;
     &:hover {
@@ -701,7 +734,7 @@ span.note-anno-color {
     }
   }
 
-  .range-remove, .text-remove {
+  .range-remove, .text-remove, .pointer-remove {
     @include appearance(none);
     background: none;
     border: 1px solid $color-black;
@@ -712,7 +745,7 @@ span.note-anno-color {
     margin-left: 0.25em;
   }
 
-  .range-edit, .text-edit {
+  .range-edit, .text-edit, .pointer-edit {
     @include appearance(none);
     background: none;
     border: 1px solid $color-black;
@@ -726,9 +759,7 @@ span.note-anno-color {
 
 }
 
-.add-text, .add-range {
-  background-color: darken($color-gray-light, 2%);
-  padding: 0.4em 0.5em;
+.add-text, .add-range, .add-pointer {
   .note {
     color: $color-black;
     margin: 0;
@@ -737,7 +768,6 @@ span.note-anno-color {
     margin-bottom: 0.5em;
   }
   label {
-    @include interface-font-bold;
     font-size: 0.9rem;
     display: block;
     margin-bottom: 0.2rem;

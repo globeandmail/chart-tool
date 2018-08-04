@@ -73,6 +73,8 @@ export default class ChartData extends Component {
         }
       }
 
+      event.target.value = fields.data;
+
       updateAndSave('charts.update.multiple.fields', chart._id, fields, err => {
         if (err) console.log(err);
       });
@@ -84,7 +86,7 @@ export default class ChartData extends Component {
 
     const dateFormat = this.props.chart.date_format,
       str = ` ${app_settings.chart.time_format}`,
-      re = /\s\%H\:\%M/g;
+      re = /\s%H:%M/g;
 
     if (re.test(dateFormat)) { dateConstruction += str; }
 
@@ -96,7 +98,7 @@ export default class ChartData extends Component {
 
     const hasHours = event.target.checked,
       str = ` ${app_settings.chart.time_format}`,
-      re = /\s\%H\:\%M/g;
+      re = /\s%H:%M/g;
 
     const fields = {
       hasHours: hasHours,

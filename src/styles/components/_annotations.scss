@@ -67,10 +67,12 @@
 
 .#{$prefix}annotation-text-input {
   position: absolute;
+  pointer-events: none;
 }
 
 .#{$prefix}annotation-text-edit-box {
   position: absolute;
+  pointer-events: all;
   display: inline-block;
   min-width: 10px;
   line-height: 0;

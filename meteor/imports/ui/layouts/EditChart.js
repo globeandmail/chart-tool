@@ -41,6 +41,7 @@ class EditChart extends Component {
       expanded: 'ChartData',
       currentAnnotation: {
         type: 'text',
+        currId: '',
         highlight: '',
         rangeType: 'area',
         rangeAxis: 'x',

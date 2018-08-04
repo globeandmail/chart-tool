@@ -17,6 +17,7 @@ export async function generatePDF(chart, width, height) {
     pageRanges: '1',
     printBackground: true
   });
+  await page.close();
   await browser.close();
   return pdf;
 }
@@ -45,6 +46,7 @@ export async function generatePNG(chart, params) {
     },
     type: params.type ? params.type : 'png'
   });
+  await page.close();
   await browser.close();
   return png;
 }
@@ -79,6 +81,8 @@ export async function generateThumb(chart, params) {
     },
     type: params.type ? params.type : 'png'
   });
+
+  await page.close();
 
   await browser.close();
 
