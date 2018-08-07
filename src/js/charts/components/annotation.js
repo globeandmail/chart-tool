@@ -167,6 +167,10 @@ export function editableRange(annoEditable, obj) {
     (obj.annotationHandlers.rangeType === 'area' && obj.annotationHandlers.rangeStart && obj.annotationHandlers.rangeEnd) ||
     (obj.annotationHandlers.rangeType === 'line' && obj.annotationHandlers.rangeStart);
 
+  if (obj.rendered.plot[`${obj.annotationHandlers.rangeAxis}ScaleObj`].scale === 'ordinal') {
+    return;
+  }
+
   const brush = (obj.annotationHandlers.rangeAxis === 'x' ? brushX : brushY)()
     .handleSize(3)
     .extent([
@@ -247,9 +251,6 @@ export function brushCentered(node, obj, brush) {
 }
 
 export function brushed(e, obj, node) {
-
-  // issues with ranges:
-  // for line charts, in some cases when moving the line a new line is also added
 
   const r = obj.annotationHandlers;
 

@@ -9,8 +9,23 @@ export default class ChartType extends Component {
   }
 
   handleSelectChange(event) {
-    const type = event.target.value;
-    const fields = chartTypeFieldReset(type);
+    const type = event.target.value,
+      fields = chartTypeFieldReset(type),
+      resetAnno = this.props.resetCurrentAnnotation(),
+      keyArr = [],
+      valArr = [];
+
+    Object.keys(resetAnno).map(key => {
+      keyArr.push(key);
+      if (key === 'rangeAxis' && (fields['x_axis.scale'] === 'ordinal' || fields['y_axis.scale'] === 'ordinal')) {
+        valArr.push(fields['x_axis.scale'] === 'ordinal' ? 'y' : 'x');
+      } else {
+        valArr.push(resetAnno[key]);
+      }
+    });
+
+    this.props.handleCurrentAnnotation(keyArr, valArr);
+
     updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {
       if (err) console.log(err);
     });
@@ -27,7 +42,7 @@ export default class ChartType extends Component {
                 className='chart-types'
                 onChange={this.handleSelectChange}
                 value={this.props.chart.options.type}
-                >
+              >
                 {['Line', 'Multiline', 'Area', 'Column', 'Bar', 'Scatterplot'].map(t => {
                   const lower = t.toLowerCase();
                   return <option key={t} value={lower}>{t}</option>;

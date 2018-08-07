@@ -7,25 +7,6 @@ import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 import Slider from 'rc-slider';
 
-const defaultAnnoSettings = {
-  currId: '',
-  highlight: '',
-  rangeType: 'area',
-  rangeAxis: 'x',
-  rangeStart: '',
-  rangeEnd: '',
-  textAlign: 'left',
-  textValign: 'top',
-  textText: '',
-  textX: '',
-  textY: '',
-  pointerX1: '',
-  pointerY1: '',
-  pointerX2: '',
-  pointerY2: '',
-  pointerCurve: 0.3
-};
-
 export default class ChartAnnotations extends Component {
 
   constructor(props) {
@@ -67,9 +48,21 @@ export default class ChartAnnotations extends Component {
       this.setState({ textExpanded: false, rangeExpanded: false, pointerExpanded: false });
       const keyArr = ['type'],
         valArr = ['highlight'];
-      Object.keys(defaultAnnoSettings).map(key => {
+      Object.keys(this.props.defaultAnnoSettings).map(key => {
         keyArr.push(key);
-        valArr.push(defaultAnnoSettings[key]);
+        let val;
+        if (key === 'rangeAxis') {
+          const scaleTypeX = this.props.chart.x_axis.scale,
+            scaleTypeY = this.props.chart.y_axis.scale;
+          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
+            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
+          } else {
+            val = this.props.defaultAnnoSettings[key];
+          }
+        } else {
+          val = this.props.defaultAnnoSettings[key];
+        }
+        valArr.push(val);
       });
       this.props.handleCurrentAnnotation(keyArr, valArr);
     }
@@ -82,9 +75,21 @@ export default class ChartAnnotations extends Component {
       this.setState({ highlightExpanded: false, rangeExpanded: false, pointerExpanded: false });
       const keyArr = ['type'],
         valArr = ['text'];
-      Object.keys(defaultAnnoSettings).map(key => {
+      Object.keys(this.props.defaultAnnoSettings).map(key => {
         keyArr.push(key);
-        valArr.push(defaultAnnoSettings[key]);
+        let val;
+        if (key === 'rangeAxis') {
+          const scaleTypeX = this.props.chart.x_axis.scale,
+            scaleTypeY = this.props.chart.y_axis.scale;
+          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
+            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
+          } else {
+            val = this.props.defaultAnnoSettings[key];
+          }
+        } else {
+          val = this.props.defaultAnnoSettings[key];
+        }
+        valArr.push(val);
       });
       this.props.handleCurrentAnnotation(keyArr, valArr);
     }
@@ -97,9 +102,21 @@ export default class ChartAnnotations extends Component {
       this.setState({ highlightExpanded: false, textExpanded: false, pointerExpanded: false });
       const keyArr = ['type'],
         valArr = ['range'];
-      Object.keys(defaultAnnoSettings).map(key => {
+      Object.keys(this.props.defaultAnnoSettings).map(key => {
         keyArr.push(key);
-        valArr.push(defaultAnnoSettings[key]);
+        let val;
+        if (key === 'rangeAxis') {
+          const scaleTypeX = this.props.chart.x_axis.scale,
+            scaleTypeY = this.props.chart.y_axis.scale;
+          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
+            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
+          } else {
+            val = this.props.defaultAnnoSettings[key];
+          }
+        } else {
+          val = this.props.defaultAnnoSettings[key];
+        }
+        valArr.push(val);
       });
       this.props.handleCurrentAnnotation(keyArr, valArr);
     }
@@ -112,9 +129,21 @@ export default class ChartAnnotations extends Component {
       this.setState({ highlightExpanded: false, rangeExpanded: false, textExpanded: false });
       const keyArr = ['type'],
         valArr = ['pointer'];
-      Object.keys(defaultAnnoSettings).map(key => {
+      Object.keys(this.props.defaultAnnoSettings).map(key => {
         keyArr.push(key);
-        valArr.push(defaultAnnoSettings[key]);
+        let val;
+        if (key === 'rangeAxis') {
+          const scaleTypeX = this.props.chart.x_axis.scale,
+            scaleTypeY = this.props.chart.y_axis.scale;
+          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
+            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
+          } else {
+            val = this.props.defaultAnnoSettings[key];
+          }
+        } else {
+          val = this.props.defaultAnnoSettings[key];
+        }
+        valArr.push(val);
       });
       this.props.handleCurrentAnnotation(keyArr, valArr);
     }
@@ -379,7 +408,7 @@ export default class ChartAnnotations extends Component {
   }
 
   resetAnnotations() {
-    updateAndSave('charts.update.annotation.reset', this.props.chart._id);
+    updateAndSave('charts.reset.annotation', this.props.chart._id);
   }
 
   helpHighlighting(event) {
@@ -422,9 +451,6 @@ export default class ChartAnnotations extends Component {
     const anno = this.props.currentAnnotation;
     return anno.pointerX1 && anno.pointerY1 && anno.pointerX2 && anno.pointerY2;
   }
-
-  // TODO
-  // still need to handle 'highlight' annotations for scatterplot
 
   render() {
     return (
@@ -603,10 +629,14 @@ export default class ChartAnnotations extends Component {
                         value={this.props.currentAnnotation.rangeAxis}
                         onChange={this.setRangeConfig}
                       >
-                        {['x', 'y'].map(f => {
-                          const str = `${f.toUpperCase()}-axis`;
-                          return <option key={f} value={f}>{str}</option>;
-                        })}
+                        {['x', 'y']
+                          .filter(axis => {
+                            return this.props.chart[`${axis}_axis`].scale !== 'ordinal';
+                          })
+                          .map(f => {
+                            const str = `${f.toUpperCase()}-axis`;
+                            return <option key={f} value={f}>{str}</option>;
+                          })}
                       </select>
                     </div>
                   </div>

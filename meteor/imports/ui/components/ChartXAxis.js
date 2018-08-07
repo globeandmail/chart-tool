@@ -43,6 +43,11 @@ export default class ChartXAxis extends Component {
 
   handleScale(event) {
     const scale = event.target.value;
+
+    if (event.target.value === 'ordinal') {
+      this.props.handleCurrentAnnotation('rangeAxis', 'y');
+    }
+
     updateAndSave('charts.update.x_axis.scale', this.props.chart._id, scale);
   }
 

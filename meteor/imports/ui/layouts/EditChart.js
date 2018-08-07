@@ -20,45 +20,71 @@ import ChartTags from '../components/ChartTags';
 import ChartStyling from '../components/ChartStyling';
 import ChartOptions from '../components/ChartOptions';
 
+const defaultAnnoSettings = {
+  currId: '',
+  highlight: '',
+  rangeType: 'area',
+  rangeAxis: 'x',
+  rangeStart: '',
+  rangeEnd: '',
+  textAlign: 'left',
+  textValign: 'top',
+  textText: '',
+  textX: '',
+  textY: '',
+  pointerX1: '',
+  pointerY1: '',
+  pointerX2: '',
+  pointerY2: '',
+  pointerCurve: 0.3
+};
+
 class EditChart extends Component {
 
   constructor(props) {
     super(props);
-    const animalName = generateRandomAnimalName();
+    this.resetCurrentAnnotation = this.resetCurrentAnnotation.bind(this);
     this.toggleOverlay = this.toggleOverlay.bind(this);
-    this.toggleAnnotationMode = this.toggleAnnotationMode.bind(this);
     this.handleHighlightColor = this.handleHighlightColor.bind(this);
     this.handleCurrentAnnotation = this.handleCurrentAnnotation.bind(this);
     this.expandStatus = this.expandStatus.bind(this);
     this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
-    Presence.state = () => {
-      return { currentChartId: this.props.match.params._id, user: animalName };
-    };
     this.state = {
-      animalName,
+      animalName: generateRandomAnimalName(),
       overlay: false,
       annotationMode: false,
       expanded: 'ChartData',
-      currentAnnotation: {
-        type: 'text',
-        currId: '',
-        highlight: '',
-        rangeType: 'area',
-        rangeAxis: 'x',
-        rangeStart: '',
-        rangeEnd: '',
-        textAlign: 'left',
-        textValign: 'top',
-        textText: '',
-        textX: '',
-        textY: '',
-        pointerX1: '',
-        pointerY1: '',
-        pointerX2: '',
-        pointerY2: '',
-        pointerCurve: 0.3
-      }
+      currentAnnotation: this.resetCurrentAnnotation()
     };
+    Presence.state = () => ({
+      currentChartId: this.props.match.params._id,
+      user: this.state.animalName
+    });
+  }
+
+  resetCurrentAnnotation() {
+    const currentAnnotation = {
+      type: 'text'
+    };
+
+    Object.keys(defaultAnnoSettings).map(key => {
+      let val;
+      // need to handle ordinal chart instances
+      if (key === 'rangeAxis' && !this.props.loading) {
+        const scaleTypeX = this.props.chart.x_axis.scale,
+          scaleTypeY = this.props.chart.y_axis.scale;
+        if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
+          val = scaleTypeX === 'ordinal' ? 'y' : 'x';
+        } else {
+          val = defaultAnnoSettings[key];
+        }
+      } else {
+        val = defaultAnnoSettings[key];
+      }
+      currentAnnotation[key] = val;
+    });
+
+    return currentAnnotation;
   }
 
   expandStatus(type) {
@@ -67,19 +93,22 @@ class EditChart extends Component {
 
   toggleCollapseExpand(event) {
     const expanded = this.state.expanded === event.target.id ? false : event.target.id;
-    this.setState({
+
+    const state = {
       expanded,
       annotationMode: expanded === 'ChartAnnotations'
-    });
+    };
+
+    if (state.annotationMode) {
+      state.currentAnnotation = this.resetCurrentAnnotation();
+    }
+
+    this.setState(state);
   }
 
   toggleOverlay(event) {
     const overlay = event.target.value === this.state.overlay ? false : event.target.value;
     this.setState({ overlay });
-  }
-
-  toggleAnnotationMode(annotationMode) {
-    this.setState({ annotationMode });
   }
 
   handleCurrentAnnotation(key, value) {
@@ -109,6 +138,8 @@ class EditChart extends Component {
         <section>
           <article className='main-area'>
             <ChartType
+              handleCurrentAnnotation={this.handleCurrentAnnotation}
+              resetCurrentAnnotation={this.resetCurrentAnnotation}
               {...this.props}
             />
             <ChartPreview
@@ -141,22 +172,24 @@ class EditChart extends Component {
             <ChartXAxis
               expandStatus={this.expandStatus}
               toggleCollapseExpand={this.toggleCollapseExpand}
+              handleCurrentAnnotation={this.handleCurrentAnnotation}
               {...this.props}
             />
             <ChartYAxis
               expandStatus={this.expandStatus}
               toggleCollapseExpand={this.toggleCollapseExpand}
+              handleCurrentAnnotation={this.handleCurrentAnnotation}
               {...this.props}
             />
             <ChartAnnotations
               expandStatus={this.expandStatus}
               toggleCollapseExpand={this.toggleCollapseExpand}
               annotationMode={this.state.annotationMode}
-              toggleAnnotationMode={this.toggleAnnotationMode}
               handleHighlightColor={this.handleHighlightColor}
               handleCurrentAnnotation={this.handleCurrentAnnotation}
               handleRangeState={this.handleRangeState}
               currentAnnotation={this.state.currentAnnotation}
+              defaultAnnoSettings={defaultAnnoSettings}
               {...this.props}
             />
             <ChartTags

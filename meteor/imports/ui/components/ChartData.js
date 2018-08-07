@@ -75,9 +75,7 @@ export default class ChartData extends Component {
 
       event.target.value = fields.data;
 
-      updateAndSave('charts.update.multiple.fields', chart._id, fields, err => {
-        if (err) console.log(err);
-      });
+      updateAndSave('charts.update.multiple.fields', chart._id, fields);
     }
   }
 
@@ -110,9 +108,7 @@ export default class ChartData extends Component {
       fields.date_format = dateFormat.replace(str, '');
     }
 
-    updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {
-      if (err) console.log(err);
-    });
+    updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields);
 
   }
 

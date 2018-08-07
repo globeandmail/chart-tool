@@ -489,7 +489,7 @@ function generateThumb(id) {
   });
 }
 
-export function updateAndSave(method, id, data) {
+export function updateAndSave(method, id, data, cb) {
   const thumbnailMethods = [
     'charts.update.multiple.fields',
     'charts.update.data',
@@ -524,19 +524,22 @@ export function updateAndSave(method, id, data) {
     'charts.update.y_axis.nice',
     'charts.reset.x_axis',
     'charts.reset.y_axis',
-    'charts.update.annotations.reset',
-    'charts.update.annotations.highlight',
-    'charts.update.annotations.highlight.reset'
+    'charts.reset.annotation',
+    'charts.update.annotation.highlight',
+    'charts.update.annotation.pointer',
+    'charts.update.annotation.text',
+    'charts.update.annotation.range'
   ];
 
   const createThumbnail = thumbnailMethods.indexOf(method) !== -1 ? true : false;
 
-  Meteor.call(method, id, data, (err) => {
+  Meteor.call(method, id, data, (err, res) => {
     if (err) {
       console.log(err);
     } else if (createThumbnail) {
       debouncedThumb(id);
     }
+    if (cb) cb(err, res);
   });
 }
 
@@ -568,7 +571,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'options.indexed': false,
-        'annotations.highlight': []
+        'annotations.highlight': [],
+        'annotations.range': []
       };
     case 'multiline':
       return {
@@ -580,7 +584,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'options.indexed': false,
-        'annotations.highlight': []
+        'annotations.highlight': [],
+        'annotations.range': []
       };
     case 'area':
       return {
@@ -592,7 +597,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.nice': true,
         'y_axis.min': '',
         'options.indexed': false,
-        'annotations.highlight': []
+        'annotations.highlight': [],
+        'annotations.range': []
       };
     case 'column':
       return {
@@ -603,7 +609,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'y_axis.min': '',
-        'options.indexed': false
+        'options.indexed': false,
+        'annotations.range': []
       };
     case 'bar':
       return {
@@ -615,6 +622,7 @@ export function chartTypeFieldReset(type) {
         'y_axis.nice': false,
         'y_axis.min': '',
         'options.indexed': false,
+        'annotations.range': []
       };
     case 'scatterplot':
       return {
@@ -625,6 +633,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': false,
         'options.indexed': false,
+        'annotations.highlight': [],
+        'annotations.range': []
       };
   }
 

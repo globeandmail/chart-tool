@@ -486,7 +486,7 @@ Meteor.methods({
     });
   },
 
-  'charts.update.annotation.reset'(chartId) {
+  'charts.reset.annotation'(chartId) {
     return Charts.update(chartId, {
       $set: {
         annotations: app_settings.chart.annotations,
@@ -519,16 +519,6 @@ Meteor.methods({
     });
   },
 
-  // 'charts.update.annotation.highlight.reset'(chartId) {
-  //   return Charts.update(chartId, {
-  //     $set: {
-  //       'annotations.highlight': [],
-  //       'options.annotations': true,
-  //       lastEdited: new Date()
-  //     }
-  //   });
-  // },
-
   'charts.update.annotation.range'(chartId, range) {
     let anno = Charts.findOne(chartId).annotations;
 
@@ -551,16 +541,6 @@ Meteor.methods({
       }
     });
   },
-
-  // 'charts.update.annotation.range.reset'(chartId) {
-  //   return Charts.update(chartId, {
-  //     $set: {
-  //       'annotations.range': [],
-  //       'options.annotations': true,
-  //       lastEdited: new Date()
-  //     }
-  //   });
-  // },
 
   'charts.update.annotation.text'(chartId, text) {
     let anno = Charts.findOne(chartId).annotations;
