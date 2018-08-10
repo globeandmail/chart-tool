@@ -11,10 +11,8 @@ export default class ChartAnnotations extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleHighlightExpand = this.toggleHighlightExpand.bind(this);
-    this.toggleTextExpand = this.toggleTextExpand.bind(this);
-    this.toggleRangeExpand = this.toggleRangeExpand.bind(this);
-    this.togglePointerExpand = this.togglePointerExpand.bind(this);
+    this.resetDefaultAnnoSettings = this.resetDefaultAnnoSettings.bind(this);
+    this.toggleSubsectionExpand = this.toggleSubsectionExpand.bind(this);
     this.resetAnnotations = this.resetAnnotations.bind(this);
     this.removeHighlight = this.removeHighlight.bind(this);
     this.editRange = this.editRange.bind(this);
@@ -42,112 +40,46 @@ export default class ChartAnnotations extends Component {
     return this.state[category] ? 'expanded' : 'collapsed';
   }
 
-  toggleHighlightExpand() {
-    const highlightExpanded = !this.state.highlightExpanded;
-    if (highlightExpanded) {
-      this.setState({ textExpanded: false, rangeExpanded: false, pointerExpanded: false });
-      const keyArr = ['type'],
-        valArr = ['highlight'];
-      Object.keys(this.props.defaultAnnoSettings).map(key => {
-        keyArr.push(key);
-        let val;
-        if (key === 'rangeAxis') {
-          const scaleTypeX = this.props.chart.x_axis.scale,
-            scaleTypeY = this.props.chart.y_axis.scale;
-          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
-            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
-          } else {
-            val = this.props.defaultAnnoSettings[key];
-          }
+  resetDefaultAnnoSettings(key, val) {
+    const keyArr = [key],
+      valArr = [val];
+    Object.keys(this.props.defaultAnnoSettings).map(key => {
+      keyArr.push(key);
+      let val;
+      if (key === 'rangeAxis') {
+        const scaleTypeX = this.props.chart.x_axis.scale,
+          scaleTypeY = this.props.chart.y_axis.scale;
+        if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
+          val = scaleTypeX === 'ordinal' ? 'y' : 'x';
         } else {
           val = this.props.defaultAnnoSettings[key];
         }
-        valArr.push(val);
-      });
-      this.props.handleCurrentAnnotation(keyArr, valArr);
-    }
-    this.setState({ highlightExpanded });
+      } else {
+        val = this.props.defaultAnnoSettings[key];
+      }
+      valArr.push(val);
+    });
+    return [keyArr, valArr];
   }
 
-  toggleTextExpand() {
-    const textExpanded = !this.state.textExpanded;
-    if (textExpanded) {
-      this.setState({ highlightExpanded: false, rangeExpanded: false, pointerExpanded: false });
-      const keyArr = ['type'],
-        valArr = ['text'];
-      Object.keys(this.props.defaultAnnoSettings).map(key => {
-        keyArr.push(key);
-        let val;
-        if (key === 'rangeAxis') {
-          const scaleTypeX = this.props.chart.x_axis.scale,
-            scaleTypeY = this.props.chart.y_axis.scale;
-          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
-            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
-          } else {
-            val = this.props.defaultAnnoSettings[key];
-          }
-        } else {
-          val = this.props.defaultAnnoSettings[key];
-        }
-        valArr.push(val);
-      });
-      this.props.handleCurrentAnnotation(keyArr, valArr);
-    }
-    this.setState({ textExpanded });
-  }
+  toggleSubsectionExpand(event) {
+    const type = event.currentTarget.id,
+      isExpanded = !this.state[type],
+      newState = {},
+      possibleStates = [
+        'highlightExpanded',
+        'textExpanded',
+        'pointerExpanded',
+        'rangeExpanded'
+      ].filter(s => s !== type);
 
-  toggleRangeExpand() {
-    const rangeExpanded = !this.state.rangeExpanded;
-    if (rangeExpanded) {
-      this.setState({ highlightExpanded: false, textExpanded: false, pointerExpanded: false });
-      const keyArr = ['type'],
-        valArr = ['range'];
-      Object.keys(this.props.defaultAnnoSettings).map(key => {
-        keyArr.push(key);
-        let val;
-        if (key === 'rangeAxis') {
-          const scaleTypeX = this.props.chart.x_axis.scale,
-            scaleTypeY = this.props.chart.y_axis.scale;
-          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
-            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
-          } else {
-            val = this.props.defaultAnnoSettings[key];
-          }
-        } else {
-          val = this.props.defaultAnnoSettings[key];
-        }
-        valArr.push(val);
-      });
-      this.props.handleCurrentAnnotation(keyArr, valArr);
-    }
-    this.setState({ rangeExpanded });
-  }
+    if (isExpanded) possibleStates.map(p => newState[p] = false);
 
-  togglePointerExpand() {
-    const pointerExpanded = !this.state.pointerExpanded;
-    if (pointerExpanded) {
-      this.setState({ highlightExpanded: false, rangeExpanded: false, textExpanded: false });
-      const keyArr = ['type'],
-        valArr = ['pointer'];
-      Object.keys(this.props.defaultAnnoSettings).map(key => {
-        keyArr.push(key);
-        let val;
-        if (key === 'rangeAxis') {
-          const scaleTypeX = this.props.chart.x_axis.scale,
-            scaleTypeY = this.props.chart.y_axis.scale;
-          if (scaleTypeX === 'ordinal' || scaleTypeY === 'ordinal') {
-            val = scaleTypeX === 'ordinal' ? 'y' : 'x';
-          } else {
-            val = this.props.defaultAnnoSettings[key];
-          }
-        } else {
-          val = this.props.defaultAnnoSettings[key];
-        }
-        valArr.push(val);
-      });
-      this.props.handleCurrentAnnotation(keyArr, valArr);
-    }
-    this.setState({ pointerExpanded });
+    newState[type] = isExpanded;
+
+    const [keyArr, valArr] = this.resetDefaultAnnoSettings('type', type.replace('Expanded', ''));
+    this.props.handleCurrentAnnotation(keyArr, valArr);
+    this.setState(newState);
   }
 
   displayHighlight() {
@@ -220,6 +152,7 @@ export default class ChartAnnotations extends Component {
       if (event.type === 'input') return data;
 
       const rangeFormatting = {
+        auto: 100,
         comma: 100,
         general: 100,
         round1: 10,
@@ -463,7 +396,7 @@ export default class ChartAnnotations extends Component {
           }
 
           <div className='unit-edit unit-anno anno-text-edit'>
-            <h4 onClick={this.toggleTextExpand}><span className='anno-subhed'>Text annotations</span> <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
+            <h4 id='textExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Text annotations</span> <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('textExpanded')}`}>
               <div className='add-text'>
                 <div className='text-row'>
@@ -531,7 +464,7 @@ export default class ChartAnnotations extends Component {
           </div>
 
           <div className='unit-edit unit-anno anno-pointer-edit'>
-            <h4 onClick={this.togglePointerExpand}><span className='anno-subhed'>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
+            <h4 id='pointerExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('pointerExpanded')}`}>
               <div className='add-pointer'>
                 <div className='pointer-row'>
@@ -577,7 +510,7 @@ export default class ChartAnnotations extends Component {
           </div>
 
           <div className='unit-edit unit-anno anno-highlight-edit'>
-            <h4 onClick={this.toggleHighlightExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
+            <h4 id='highlightExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
             {this.displayHighlight() ?
               <div className={`unit-annotation-expand ${this.expandStatus('highlightExpanded')}`}>
                 <ColorPicker
@@ -614,7 +547,7 @@ export default class ChartAnnotations extends Component {
           </div>
 
           <div className='unit-edit unit-anno anno-text-edit'>
-            <h4 onClick={this.toggleRangeExpand}><span className='anno-subhed'>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
+            <h4 id='rangeExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
             <div className={`unit-annotation-expand ${this.expandStatus('rangeExpanded')}`}>
               <div className='add-range'>
                 <p className='note'>Select a start value (and optionally an end value) by clicking and dragging on the chart or editing the fields below.</p>
@@ -677,6 +610,7 @@ export default class ChartAnnotations extends Component {
                         data.end = formatTime(new Date(d.end));
                       } else {
                         const rangeFormatting = {
+                          auto: 100,
                           comma: 100,
                           general: 100,
                           round1: 10,

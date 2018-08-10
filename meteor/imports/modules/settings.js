@@ -65,7 +65,7 @@ var xAxis = {
 	scale: "time",
 	ticks: "auto",
 	orient: "bottom",
-	format: "auto",
+	format: "comma",
 	prefix: "",
 	suffix: "",
 	min: "",

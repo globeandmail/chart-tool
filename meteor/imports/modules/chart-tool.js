@@ -1553,7 +1553,7 @@
 	      c = new Array(nb),
 	      i;
 
-	  for (i = 0; i < na; ++i) x[i] = interpolate(a[i], b[i]);
+	  for (i = 0; i < na; ++i) x[i] = value(a[i], b[i]);
 	  for (; i < nb; ++i) c[i] = b[i];
 
 	  return function(t) {
@@ -1585,7 +1585,7 @@
 
 	  for (k in b) {
 	    if (k in a) {
-	      i[k] = interpolate(a[k], b[k]);
+	      i[k] = value(a[k], b[k]);
 	    } else {
 	      c[k] = b[k];
 	    }
@@ -1660,7 +1660,7 @@
 	        });
 	}
 
-	function interpolate(a, b) {
+	function value(a, b) {
 	  var t = typeof b, c;
 	  return b == null || t === "boolean" ? constant$1(b)
 	      : (t === "number" ? interpolateNumber
@@ -1867,7 +1867,7 @@
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
 	      range$$1 = unit,
-	      interpolate$$1 = interpolate,
+	      interpolate$$1 = value,
 	      clamp = false,
 	      piecewise$$1,
 	      output,
@@ -3488,7 +3488,7 @@
 		scale: "time",
 		ticks: "auto",
 		orient: "bottom",
-		format: "auto",
+		format: "comma",
 		prefix: "",
 		suffix: "",
 		min: "",
@@ -7550,7 +7550,7 @@
 	  };
 	}
 
-	function interpolate$1(a, b) {
+	function interpolate(a, b) {
 	  var c;
 	  return (typeof b === "number" ? interpolateNumber
 	      : b instanceof color ? interpolateRgb
@@ -7592,12 +7592,12 @@
 	  };
 	}
 
-	function attrFunction$1(name, interpolate$$1, value) {
+	function attrFunction$1(name, interpolate$$1, value$$1) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value(this);
+	    var value0, value1 = value$$1(this);
 	    if (value1 == null) return void this.removeAttribute(name);
 	    value0 = this.getAttribute(name);
 	    return value0 === value1 ? null
@@ -7606,12 +7606,12 @@
 	  };
 	}
 
-	function attrFunctionNS$1(fullname, interpolate$$1, value) {
+	function attrFunctionNS$1(fullname, interpolate$$1, value$$1) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value(this);
+	    var value0, value1 = value$$1(this);
 	    if (value1 == null) return void this.removeAttributeNS(fullname.space, fullname.local);
 	    value0 = this.getAttributeNS(fullname.space, fullname.local);
 	    return value0 === value1 ? null
@@ -7620,12 +7620,12 @@
 	  };
 	}
 
-	function transition_attr(name, value) {
-	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate$1;
-	  return this.attrTween(name, typeof value === "function"
-	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value))
-	      : value == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
-	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value));
+	function transition_attr(name, value$$1) {
+	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate;
+	  return this.attrTween(name, typeof value$$1 === "function"
+	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value$$1))
+	      : value$$1 == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
+	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value$$1));
 	}
 
 	function attrTweenNS(fullname, value) {
@@ -7872,14 +7872,14 @@
 	  };
 	}
 
-	function styleFunction$1(name, interpolate$$1, value) {
+	function styleFunction$1(name, interpolate$$1, value$$1) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
 	    var style = window$1(this).getComputedStyle(this, null),
 	        value0 = style.getPropertyValue(name),
-	        value1 = value(this);
+	        value1 = value$$1(this);
 	    if (value1 == null) value1 = (this.style.removeProperty(name), style.getPropertyValue(name));
 	    return value0 === value1 ? null
 	        : value0 === value00 && value1 === value10 ? interpolate0
@@ -7887,14 +7887,14 @@
 	  };
 	}
 
-	function transition_style(name, value, priority) {
-	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate$1;
-	  return value == null ? this
+	function transition_style(name, value$$1, priority) {
+	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate;
+	  return value$$1 == null ? this
 	          .styleTween(name, styleRemove$1(name, i))
 	          .on("end.style." + name, styleRemoveEnd(name))
-	      : this.styleTween(name, typeof value === "function"
-	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value))
-	          : styleConstant$1(name, i, value), priority);
+	      : this.styleTween(name, typeof value$$1 === "function"
+	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value$$1))
+	          : styleConstant$1(name, i, value$$1), priority);
 	}
 
 	function styleTween(name, value, priority) {
@@ -11030,7 +11030,7 @@
 	                emit = emitter(that, arguments),
 	                selection0 = state.selection,
 	                selection1 = dim.input(typeof selection$$1 === "function" ? selection$$1.apply(this, arguments) : selection$$1, state.extent),
-	                i = interpolate(selection0, selection1);
+	                i = value(selection0, selection1);
 
 	            function tween(t) {
 	              state.selection = t === 1 && empty$1(selection1) ? null : i(t);
@@ -11364,8 +11364,8 @@
 	  };
 
 	  brush.on = function() {
-	    var value = listeners.on.apply(listeners, arguments);
-	    return value === listeners ? brush : value;
+	    var value$$1 = listeners.on.apply(listeners, arguments);
+	    return value$$1 === listeners ? brush : value$$1;
 	  };
 
 	  return brush;
@@ -13572,10 +13572,16 @@
 
 	  var type, rangeNode;
 
+	  var isColumnAndX = obj.options.type === 'column' && rangeObj.axis === 'x';
+
+	  var offset = isColumnAndX ? obj.rendered.plot.singleColumn : 0;
+
 	  if ('end' in rangeObj) {
-	    // need to test with bar chart
 	    type = 'rect';
 	    var rangeVals = [scale(start), scale(end)].sort(function (a, b) { return a - b; });
+
+	    // adjust width to account for column width if necessary
+	    rangeVals[1] = rangeVals[1] + offset;
 	    attrs.x = rangeObj.axis === 'x' ? rangeVals[0] : 0;
 	    attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
 	    attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
@@ -13583,8 +13589,12 @@
 	    rangeNode = select(obj.rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
 	  } else {
 	    type = 'line';
-	    attrs.x1 = rangeObj.axis === 'x' ? scale(start) : 0;
-	    attrs.x2 = rangeObj.axis === 'x' ? scale(start) : obj.dimensions.tickWidth();
+
+	    // cancels out offsetting for leftmost column)
+	    var sameStarts = new Date(start).toString() === scale.domain()[0].toString();
+	    if (isColumnAndX && sameStarts) { offset = 0; }
+	    attrs.x1 = rangeObj.axis === 'x' ? scale(start) + offset : 0;
+	    attrs.x2 = rangeObj.axis === 'x' ? scale(start) + offset : obj.dimensions.tickWidth();
 	    attrs.y1 = rangeObj.axis === 'x' ? 0 : scale(start);
 	    attrs.y2 = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : scale(start);
 	    rangeNode = annoNode.append(type);
@@ -13642,15 +13652,21 @@
 	    var move;
 
 	    var start = obj.annotationHandlers.rangeStart,
-	      end = obj.annotationHandlers.rangeEnd;
+	      end = obj.annotationHandlers.rangeEnd,
+	      isColumnAndX = obj.options.type === 'column' && obj.annotationHandlers.rangeAxis === 'x';
+
+	    var offset = isColumnAndX ? obj.rendered.plot.singleColumn : 0;
 
 	    if (obj.annotationHandlers.rangeType === 'line') {
-	      move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)));
+	      var sameStarts = new Date(start).toString() === scale.domain()[0].toString();
+	      if (isColumnAndX && sameStarts) { offset = 0; }
+	      move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)) + offset);
 	    } else {
 	      move = [
 	        scale(isTime ? new Date(start) : Number(start)),
-	        scale(isTime ? new Date(end) : Number(end))
+	        scale(isTime ? new Date(end) : Number(end)) + offset
 	      ];
+
 	    }
 
 	    brushSel = brushSel.call(brush$$1.move, move);
@@ -13703,16 +13719,28 @@
 	  } else {
 
 	    var axis = r.rangeAxis,
+	      accessor = scaleAccessor(axis, obj),
 	      sel = e.selection,
-	      yScale = obj.rendered.plot.yScaleObj.scale,
+	      xScale = obj.rendered.plot.xScaleObj.scale,
 	      startVal = r.rangeType === 'line' ? sel[0] + ((sel[1] - sel[0]) / 2) : sel[0],
-	      endVal = sel[1],
-	      start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal);
+	      endVal = sel[1];
 
-	    var end;
+	    var start = accessor(startVal),
+	      end;
 
 	    if (r.rangeType === 'area') {
-	      end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(endVal);
+	      // if it's a column, need to nudge it over to cover the end of the column
+	      var xEndVal = obj.options.type === 'column' ? endVal - obj.rendered.plot.singleColumn : endVal;
+	      end = accessor(xEndVal);
+	    }
+
+	    if (r.rangeType === 'line') {
+	      var isFirstValue = start.toString() === xScale.domain()[0].toString();
+	      // need to nudge start value over if column, except if it's the very first col
+	      if (!isFirstValue) {
+	        var xStartVal = obj.options.type === 'column' ? startVal - obj.rendered.plot.singleColumn : startVal;
+	        start = accessor(xStartVal);
+	      }
 	    }
 
 	    data = { axis: axis };
@@ -13743,6 +13771,23 @@
 
 	  if (r && r.rangeHandler) { r.rangeHandler(data, id); }
 
+	}
+
+	function scaleAccessor(axis, obj) {
+
+	  var scaleObj = obj.rendered.plot[(axis + "ScaleObj")];
+
+	  var fn;
+
+	  if (scaleObj.obj.type === 'linear') {
+	    fn = function (d) { return scaleObj.scale.invert(d); };
+	  }
+
+	  if (scaleObj.obj.type === 'time' || scaleObj.obj.type === 'ordinal-time') {
+	    fn = function (d) { return getTipData(obj, { x: d }).key; };
+	  }
+
+	  return fn;
 	}
 
 	function text(annoNode, obj) {

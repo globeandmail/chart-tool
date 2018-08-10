@@ -136,10 +136,16 @@ export function drawRangeAnnotation(obj, rangeObj, i, annoNode) {
 
   let type, rangeNode;
 
+  const isColumnAndX = obj.options.type === 'column' && rangeObj.axis === 'x';
+
+  let offset = isColumnAndX ? obj.rendered.plot.singleColumn : 0;
+
   if ('end' in rangeObj) {
-    // need to test with bar chart
     type = 'rect';
     const rangeVals = [scale(start), scale(end)].sort((a, b) => a - b);
+
+    // adjust width to account for column width if necessary
+    rangeVals[1] = rangeVals[1] + offset;
     attrs.x = rangeObj.axis === 'x' ? rangeVals[0] : 0;
     attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
     attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
@@ -147,8 +153,12 @@ export function drawRangeAnnotation(obj, rangeObj, i, annoNode) {
     rangeNode = select(obj.rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
   } else {
     type = 'line';
-    attrs.x1 = rangeObj.axis === 'x' ? scale(start) : 0;
-    attrs.x2 = rangeObj.axis === 'x' ? scale(start) : obj.dimensions.tickWidth();
+
+    // cancels out offsetting for leftmost column)
+    const sameStarts = new Date(start).toString() === scale.domain()[0].toString();
+    if (isColumnAndX && sameStarts) offset = 0;
+    attrs.x1 = rangeObj.axis === 'x' ? scale(start) + offset : 0;
+    attrs.x2 = rangeObj.axis === 'x' ? scale(start) + offset : obj.dimensions.tickWidth();
     attrs.y1 = rangeObj.axis === 'x' ? 0 : scale(start);
     attrs.y2 = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : scale(start);
     rangeNode = annoNode.append(type);
@@ -206,15 +216,21 @@ export function editableRange(annoEditable, obj) {
     let move;
 
     const start = obj.annotationHandlers.rangeStart,
-      end = obj.annotationHandlers.rangeEnd;
+      end = obj.annotationHandlers.rangeEnd,
+      isColumnAndX = obj.options.type === 'column' && obj.annotationHandlers.rangeAxis === 'x';
+
+    let offset = isColumnAndX ? obj.rendered.plot.singleColumn : 0;
 
     if (obj.annotationHandlers.rangeType === 'line') {
-      move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)));
+      const sameStarts = new Date(start).toString() === scale.domain()[0].toString();
+      if (isColumnAndX && sameStarts) offset = 0;
+      move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)) + offset);
     } else {
       move = [
         scale(isTime ? new Date(start) : Number(start)),
-        scale(isTime ? new Date(end) : Number(end))
+        scale(isTime ? new Date(end) : Number(end)) + offset
       ];
+
     }
 
     brushSel = brushSel.call(brush.move, move);
@@ -267,16 +283,28 @@ export function brushed(e, obj, node) {
   } else {
 
     const axis = r.rangeAxis,
+      accessor = scaleAccessor(axis, obj),
       sel = e.selection,
-      yScale = obj.rendered.plot.yScaleObj.scale,
+      xScale = obj.rendered.plot.xScaleObj.scale,
       startVal = r.rangeType === 'line' ? sel[0] + ((sel[1] - sel[0]) / 2) : sel[0],
-      endVal = sel[1],
-      start = axis === 'x' ? getTipData(obj, { x: startVal }).key : yScale.invert(startVal);
+      endVal = sel[1];
 
-    let end;
+    let start = accessor(startVal),
+      end;
 
     if (r.rangeType === 'area') {
-      end = axis === 'x' ? getTipData(obj, { x: endVal }).key : yScale.invert(endVal);
+      // if it's a column, need to nudge it over to cover the end of the column
+      const xEndVal = obj.options.type === 'column' ? endVal - obj.rendered.plot.singleColumn : endVal;
+      end = accessor(xEndVal);
+    }
+
+    if (r.rangeType === 'line') {
+      const isFirstValue = start.toString() === xScale.domain()[0].toString();
+      // need to nudge start value over if column, except if it's the very first col
+      if (!isFirstValue) {
+        const xStartVal = obj.options.type === 'column' ? startVal - obj.rendered.plot.singleColumn : startVal;
+        start = accessor(xStartVal);
+      }
     }
 
     data = { axis };
@@ -307,6 +335,23 @@ export function brushed(e, obj, node) {
 
   if (r && r.rangeHandler) r.rangeHandler(data, id);
 
+}
+
+export function scaleAccessor(axis, obj) {
+
+  const scaleObj = obj.rendered.plot[`${axis}ScaleObj`];
+
+  let fn;
+
+  if (scaleObj.obj.type === 'linear') {
+    fn = d => scaleObj.scale.invert(d);
+  }
+
+  if (scaleObj.obj.type === 'time' || scaleObj.obj.type === 'ordinal-time') {
+    fn = d => getTipData(obj, { x: d }).key;
+  }
+
+  return fn;
 }
 
 export function text(annoNode, obj) {
