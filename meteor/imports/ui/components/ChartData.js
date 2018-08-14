@@ -44,10 +44,15 @@ export default class ChartData extends Component {
 
   constructor(props) {
     super(props);
+    this.shouldDisplayIndex = this.shouldDisplayIndex.bind(this);
     this.handleData = this.handleData.bind(this);
     this.handleDateConstruction = this.handleDateConstruction.bind(this);
     this.handleHasHours = this.handleHasHours.bind(this);
     this.handleIndex = this.handleIndex.bind(this);
+  }
+
+  shouldDisplayIndex() {
+    return this.props.chart.options.type !== 'scatterplot';
   }
 
   handleData(event) {
@@ -86,7 +91,7 @@ export default class ChartData extends Component {
       str = ` ${app_settings.chart.time_format}`,
       re = /\s%H:%M/g;
 
-    if (re.test(dateFormat)) { dateConstruction += str; }
+    if (re.test(dateFormat)) dateConstruction += str;
 
     updateAndSave('charts.update.dateformat', this.props.chart._id, dateConstruction);
   }
@@ -99,7 +104,7 @@ export default class ChartData extends Component {
       re = /\s%H:%M/g;
 
     const fields = {
-      hasHours: hasHours,
+      hasHours
     };
 
     if (!re.test(dateFormat)) {
@@ -211,16 +216,19 @@ export default class ChartData extends Component {
                 <div className='date-calculation'>{ this.dateCalc() }</div>
               </div>
 
-              <div className='unit-edit index-edit'>
-                <h4>Index <a onClick={this.helpIndex} className='help-toggle help-index-edit'>?</a></h4>
-                <input
-                  type='number'
-                  name='index'
-                  placeholder='100'
-                  className='input-index input-field'
-                  value={this.props.chart.options.indexed}
-                  onChange={this.handleIndex} />
-              </div>
+              { this.shouldDisplayIndex() ?
+                <div className='unit-edit index-edit'>
+                  <h4>Index <a onClick={this.helpIndex} className='help-toggle help-index-edit'>?</a></h4>
+                  <input
+                    type='number'
+                    name='index'
+                    placeholder='100'
+                    className='input-index input-field'
+                    value={this.props.chart.options.indexed}
+                    onChange={this.handleIndex} />
+                </div>
+                : null }
+
             </div>
             : null }
 

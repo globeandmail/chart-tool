@@ -154,7 +154,8 @@ export function csvFormat(obj) {
       let stdFormat = app_settings.chart.date_format;
       if (obj.hasHours) { stdFormat += ` ${app_settings.chart.time_format}`; }
       const currFormat = obj.date_format;
-      return standardizeDates(data, currFormat, stdFormat);
+      const isScatterplot = obj.options.type === 'scatterplot';
+      return standardizeDates(data, currFormat, stdFormat, isScatterplot);
     } else {
       return data;
     }
@@ -218,37 +219,71 @@ export function dataParse(data) {
 
 }
 
+export function dataTypeIndices(data) {
+  // determine if a column of data is likely to be "numeric" or not
+
+  const dataColumns = data[0]
+    .filter((d, i) => i !== 0)
+    .map(() => []);
+
+  // construct a list of all values in each column
+  data.map(arr => {
+    arr
+      .filter((d, i) => i !== 0)
+      .map((val, i) => dataColumns[i].push(val));
+  });
+
+  // count up number of digit and non-digit characters and determine
+  // whether column is numeric or non-numeric
+  const numericIndices = dataColumns.map(arr => {
+    const str = arr.join(''),
+      numeric = str.replace(/[^\d-]/g, '').length,
+      nonNumeric = str.replace(/[\d-]/g, '').length;
+
+    return numeric > nonNumeric ? 'numeric' : 'non-numeric';
+  });
+
+  return numericIndices;
+
+}
+
 export function cleanData(data) {
   const start = [],
     end = [];
 
-  // strip empty lines
-
-  //ignore the first item which would be the header row
+  // ignore the first item which would be the header row
   const headerRow = data.shift();
 
-  //step through each line in the csv
-  const output = data.map(obj => {
+  // build an index of whether data is likely to be "numeric", which requires cleaning
+  const numericIndices = dataTypeIndices(data);
 
-    //ignore the first row which would identify the series - everything following is a value
-    const headerCol = obj.shift();
+  // step through each line in the csv
+  const output = data.map(arr => {
 
-    //step through each value
-    const line = obj.map(arr => {
-      const line_output = cleanNumber(arr);
-      if (line_output.start.length) start.push(line_output.start);
-      if (line_output.end.length) end.push(line_output.end);
-      return line_output.data;
+    // ignore the first row which would identify the series - everything following is a value
+    const headerCol = arr.shift();
+
+    // step through each value
+    const line = arr.map((val, i) => {
+      let value;
+      if (numericIndices[i] === 'numeric') {
+        const lineOutput = cleanNumber(val);
+        if (lineOutput.start.length) start.push(lineOutput.start);
+        if (lineOutput.end.length) end.push(lineOutput.end);
+        value = lineOutput.data;
+      } else {
+        value = val;
+      }
+      return value;
     });
-
 
     const re = /^\d*\/\d*\/\d*$/;
 
-    // if it's all digits (i.e. a date)
+    // if first column's all digits with slashes (i.e. dates)
 
     if (re.test(headerCol)) {
-      const replace_slashes = /\//g;
-      line.unshift(headerCol.replace(replace_slashes,'-'));
+      const replaceSlashes = /\//g;
+      line.unshift(headerCol.replace(replaceSlashes, '-'));
     } else {
       line.unshift(headerCol);
     }
@@ -271,13 +306,12 @@ export function formatDate(data, format) {
   return output;
 }
 
-export function cleanNumber(data) {
+export function cleanNumber(inputString, isNumeric) {
   // remove everything that isnt a number, decimal, or negative
   // and do some checking for characters we can use for prefix/suffix
-  // fix the scatterplot group problem
 
   // fix weird dash characters into minus signs if necessary
-  const str = data.toString().replace(String.fromCharCode(8208), String.fromCharCode(45));
+  const str = inputString.toString().replace(String.fromCharCode(8208), String.fromCharCode(45));
 
   return {
     data: str.replace(/[^0-9.-]/g, ''),
@@ -295,7 +329,7 @@ export function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-export function standardizeDates(data, oldFormat, newFormat) {
+export function standardizeDates(data, oldFormat, newFormat, isScatterplot) {
 
   const stdFormat = timeFormat(newFormat),
     currFormat = timeParse(oldFormat);
@@ -303,9 +337,9 @@ export function standardizeDates(data, oldFormat, newFormat) {
   const jsonData = Papa.parse(data, { delimiter: ',' });
 
   for (let i = 1; i < jsonData.data.length; i++) {
-    const date = currFormat(jsonData.data[i][0]);
+    const date = currFormat(jsonData.data[i][isScatterplot ? 1 : 0]);
     if (date !== null) {
-      jsonData.data[i][0] = stdFormat(date);
+      jsonData.data[i][isScatterplot ? 1 : 0] = stdFormat(date);
     } else {
       throw new Meteor.Error('Incompatible date formatting', "Make sure your data's date style matches the formatting dropdown.");
     }

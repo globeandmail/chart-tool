@@ -873,7 +873,7 @@ export function scatterplotChartTips(tipNodes, obj, voronoiDiagram) {
 
   if (!tipData) return;
 
-  const dataGroup = obj.data.groups.indexOf(tipData.data.group);
+  const dataGroup = tipData.data.group ? obj.data.groups.indexOf(tipData.data.group) : 0;
 
   obj.rendered.plot.seriesGroup
     .selectAll(`.${obj.prefix}dot`)
