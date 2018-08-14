@@ -150,7 +150,7 @@ export function drawRangeAnnotation(obj, rangeObj, i, annoNode) {
     attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
     attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
     attrs.height = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
-    rangeNode = select(obj.rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
+    rangeNode = obj.rendered.container.insert(type, ':first-child');
   } else {
     type = 'line';
 

@@ -595,7 +595,7 @@
 	  return [min, max];
 	}
 
-	function range(start, stop, step) {
+	function sequence(start, stop, step) {
 	  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
 	  var i = -1,
@@ -914,7 +914,7 @@
 	    start += (stop - start - step * (n - paddingInner)) * align;
 	    bandwidth = step * (1 - paddingInner);
 	    if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-	    var values = range(n).map(function(i) { return start + step * i; });
+	    var values = sequence(n).map(function(i) { return start + step * i; });
 	    return ordinalRange(reverse ? values.reverse() : values);
 	  }
 
@@ -1553,7 +1553,7 @@
 	      c = new Array(nb),
 	      i;
 
-	  for (i = 0; i < na; ++i) x[i] = value(a[i], b[i]);
+	  for (i = 0; i < na; ++i) x[i] = interpolate(a[i], b[i]);
 	  for (; i < nb; ++i) c[i] = b[i];
 
 	  return function(t) {
@@ -1585,7 +1585,7 @@
 
 	  for (k in b) {
 	    if (k in a) {
-	      i[k] = value(a[k], b[k]);
+	      i[k] = interpolate(a[k], b[k]);
 	    } else {
 	      c[k] = b[k];
 	    }
@@ -1660,7 +1660,7 @@
 	        });
 	}
 
-	function value(a, b) {
+	function interpolate(a, b) {
 	  var t = typeof b, c;
 	  return b == null || t === "boolean" ? constant$1(b)
 	      : (t === "number" ? interpolateNumber
@@ -1824,15 +1824,15 @@
 	  };
 	}
 
-	function bimap(domain, range$$1, deinterpolate, reinterpolate) {
-	  var d0 = domain[0], d1 = domain[1], r0 = range$$1[0], r1 = range$$1[1];
+	function bimap(domain, range, deinterpolate, reinterpolate) {
+	  var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
 	  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
 	  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
 	  return function(x) { return r0(d0(x)); };
 	}
 
-	function polymap(domain, range$$1, deinterpolate, reinterpolate) {
-	  var j = Math.min(domain.length, range$$1.length) - 1,
+	function polymap(domain, range, deinterpolate, reinterpolate) {
+	  var j = Math.min(domain.length, range.length) - 1,
 	      d = new Array(j),
 	      r = new Array(j),
 	      i = -1;
@@ -1840,12 +1840,12 @@
 	  // Reverse descending domains.
 	  if (domain[j] < domain[0]) {
 	    domain = domain.slice().reverse();
-	    range$$1 = range$$1.slice().reverse();
+	    range = range.slice().reverse();
 	  }
 
 	  while (++i < j) {
 	    d[i] = deinterpolate(domain[i], domain[i + 1]);
-	    r[i] = reinterpolate(range$$1[i], range$$1[i + 1]);
+	    r[i] = reinterpolate(range[i], range[i + 1]);
 	  }
 
 	  return function(x) {
@@ -1866,25 +1866,25 @@
 	// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
-	      range$$1 = unit,
-	      interpolate$$1 = value,
+	      range = unit,
+	      interpolate$$1 = interpolate,
 	      clamp = false,
 	      piecewise$$1,
 	      output,
 	      input;
 
 	  function rescale() {
-	    piecewise$$1 = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
+	    piecewise$$1 = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
 	    output = input = null;
 	    return scale;
 	  }
 
 	  function scale(x) {
-	    return (output || (output = piecewise$$1(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+	    return (output || (output = piecewise$$1(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
 	  }
 
 	  scale.invert = function(y) {
-	    return (input || (input = piecewise$$1(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+	    return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	  };
 
 	  scale.domain = function(_) {
@@ -1892,11 +1892,11 @@
 	  };
 
 	  scale.range = function(_) {
-	    return arguments.length ? (range$$1 = slice$1.call(_), rescale()) : range$$1.slice();
+	    return arguments.length ? (range = slice$1.call(_), rescale()) : range.slice();
 	  };
 
 	  scale.rangeRound = function(_) {
-	    return range$$1 = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
+	    return range = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
 	  };
 
 	  scale.clamp = function(_) {
@@ -5472,8 +5472,6 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
-	var _library$1 = false;
-
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5482,7 +5480,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: _library$1 ? 'pure' : 'global',
+	  mode: 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -6914,12 +6912,18 @@
 	  return Array.from(new Set(data));
 	}
 
-	function getUniqueDateValues(data, type) {
+	function resolveObjectPath(path, obj) {
+	  return path.split('.').reduce(function (prev, curr) {
+	    return prev ? prev[curr] : undefined;
+	  }, obj || self);
+	}
+
+	function getUniqueDateValues(data, type, key) {
 	  var allDates = data.map(function (d) {
 	    switch (type) {
-	      case 'day': return d.key.getDate();
-	      case 'month': return d.key.getMonth();
-	      case 'year': return d.key.getFullYear();
+	      case 'day': return resolveObjectPath(key, d).getDate();
+	      case 'month': return resolveObjectPath(key, d).getMonth();
+	      case 'year': return resolveObjectPath(key, d).getFullYear();
 	    }
 	  });
 	  return getUniqueValues(allDates);
@@ -6953,7 +6957,9 @@
 
 	  var groupingKey, dotSizingKey;
 
-	  if (type && type === 'scatterplot') {
+	  var isScatterplot = type && type === 'scatterplot';
+
+	  if (isScatterplot) {
 	    if (keys.length > 3) { groupingKey = keys[3]; }
 	    if (keys.length >= 4) { dotSizingKey = keys[4]; }
 	  }
@@ -6967,7 +6973,13 @@
 
 	    if (inputDateFormat) {
 	      var dateFormat = timeParse(inputDateFormat);
-	      obj.key = dateFormat(d[keys[0]]);
+	      if (isScatterplot) {
+	        obj.key = d[keys[0]];
+	        // key will be along x-axis
+	        d[keys[1]] = dateFormat(d[keys[1]]);
+	      } else {
+	        obj.key = dateFormat(d[keys[0]]);
+	      }
 	    } else {
 	      obj.key = d[keys[0]];
 	    }
@@ -7018,7 +7030,7 @@
 
 	  if (stacked && keys.length > 2) {
 	    var stackFn = stack().keys(keys.slice(1));
-	    stackedData = stackFn(range(data.length).map(function (i) {
+	    stackedData = stackFn(sequence(data.length).map(function (i) {
 	      var o = {};
 	      o[keys[0]] = data[i].key;
 	      for (var j = 0; j < data[i].series.length; j++) {
@@ -7032,9 +7044,10 @@
 	    }));
 	  }
 
-	  var uniqueDayValues = inputDateFormat ? getUniqueDateValues(data, 'day') : undefined;
-	  var uniqueMonthValues = inputDateFormat ? getUniqueDateValues(data, 'month') : undefined;
-	  var uniqueYearValues = inputDateFormat ? getUniqueDateValues(data, 'year') : undefined;
+	  var dateKey = isScatterplot ? 'series.0.val' : 'key',
+	    uniqueDayValues = inputDateFormat ? getUniqueDateValues(data, 'day', dateKey) : undefined,
+	    uniqueMonthValues = inputDateFormat ? getUniqueDateValues(data, 'month', dateKey) : undefined,
+	    uniqueYearValues = inputDateFormat ? getUniqueDateValues(data, 'year', dateKey) : undefined;
 
 	  return {
 	    csv: csv,
@@ -7550,7 +7563,7 @@
 	  };
 	}
 
-	function interpolate(a, b) {
+	function interpolate$1(a, b) {
 	  var c;
 	  return (typeof b === "number" ? interpolateNumber
 	      : b instanceof color ? interpolateRgb
@@ -7592,12 +7605,12 @@
 	  };
 	}
 
-	function attrFunction$1(name, interpolate$$1, value$$1) {
+	function attrFunction$1(name, interpolate$$1, value) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value$$1(this);
+	    var value0, value1 = value(this);
 	    if (value1 == null) return void this.removeAttribute(name);
 	    value0 = this.getAttribute(name);
 	    return value0 === value1 ? null
@@ -7606,12 +7619,12 @@
 	  };
 	}
 
-	function attrFunctionNS$1(fullname, interpolate$$1, value$$1) {
+	function attrFunctionNS$1(fullname, interpolate$$1, value) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value$$1(this);
+	    var value0, value1 = value(this);
 	    if (value1 == null) return void this.removeAttributeNS(fullname.space, fullname.local);
 	    value0 = this.getAttributeNS(fullname.space, fullname.local);
 	    return value0 === value1 ? null
@@ -7620,12 +7633,12 @@
 	  };
 	}
 
-	function transition_attr(name, value$$1) {
-	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate;
-	  return this.attrTween(name, typeof value$$1 === "function"
-	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value$$1))
-	      : value$$1 == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
-	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value$$1));
+	function transition_attr(name, value) {
+	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate$1;
+	  return this.attrTween(name, typeof value === "function"
+	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value))
+	      : value == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
+	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value));
 	}
 
 	function attrTweenNS(fullname, value) {
@@ -7872,14 +7885,14 @@
 	  };
 	}
 
-	function styleFunction$1(name, interpolate$$1, value$$1) {
+	function styleFunction$1(name, interpolate$$1, value) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
 	    var style = window$1(this).getComputedStyle(this, null),
 	        value0 = style.getPropertyValue(name),
-	        value1 = value$$1(this);
+	        value1 = value(this);
 	    if (value1 == null) value1 = (this.style.removeProperty(name), style.getPropertyValue(name));
 	    return value0 === value1 ? null
 	        : value0 === value00 && value1 === value10 ? interpolate0
@@ -7887,14 +7900,14 @@
 	  };
 	}
 
-	function transition_style(name, value$$1, priority) {
-	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate;
-	  return value$$1 == null ? this
+	function transition_style(name, value, priority) {
+	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate$1;
+	  return value == null ? this
 	          .styleTween(name, styleRemove$1(name, i))
 	          .on("end.style." + name, styleRemoveEnd(name))
-	      : this.styleTween(name, typeof value$$1 === "function"
-	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value$$1))
-	          : styleConstant$1(name, i, value$$1), priority);
+	      : this.styleTween(name, typeof value === "function"
+	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value))
+	          : styleConstant$1(name, i, value), priority);
 	}
 
 	function styleTween(name, value, priority) {
@@ -8519,15 +8532,15 @@
 
 	function setRange(obj, axisType) {
 
-	  var range$$1;
+	  var range;
 
 	  if (axisType === 'xAxis') {
-	    range$$1 = [0, obj.dimensions.tickWidth()]; // operating on width
+	    range = [0, obj.dimensions.tickWidth()]; // operating on width
 	  } else if (axisType === 'yAxis') {
-	    range$$1 = [obj.dimensions.yAxisHeight(), 0]; // operating on height
+	    range = [obj.dimensions.yAxisHeight(), 0]; // operating on height
 	  }
 
-	  return range$$1;
+	  return range;
 
 	}
 
@@ -8548,7 +8561,7 @@
 
 	  switch(axis.scale) {
 	    case 'time':
-	      domain = setDateDomain(data, axis.min, axis.max);
+	      domain = setDateDomain(data, axis.min, axis.max, obj.options.type);
 	      break;
 	    case 'linear':
 	      domain = setNumericalDomain(data, axis.min, axis.max, {
@@ -8568,13 +8581,17 @@
 
 	}
 
-	function setDateDomain(data, min, max) {
+	function setDateDomain(data, min, max, type) {
 	  var startDate, endDate;
 	  if (min && max) {
 	    startDate = min;
 	    endDate = max;
 	  } else {
-	    var dateRange = extent(data.data, function (d) { return d.key; });
+
+	    var isScatterplot = type && type === 'scatterplot',
+	      dateKey = isScatterplot ? 'series.0.val' : 'key',
+	      dateRange = extent(data.data, function (d) { return resolveObjectPath(dateKey, d); });
+
 	    startDate = min || new Date(dateRange[0]);
 	    endDate = max || new Date(dateRange[1]);
 	  }
@@ -8773,12 +8790,12 @@
 
 	function linearAxis(obj, axis, axisNode, axisSettings) {
 
-	  var range$$1;
+	  var range;
 
-	  if (axisSettings.axisType === 'xAxis') { range$$1 = [0, obj.dimensions.tickWidth()]; }
-	  if (axisSettings.axisType === 'yAxis') { range$$1 = [obj.dimensions.yAxisHeight(), 0]; }
+	  if (axisSettings.axisType === 'xAxis') { range = [0, obj.dimensions.tickWidth()]; }
+	  if (axisSettings.axisType === 'yAxis') { range = [obj.dimensions.yAxisHeight(), 0]; }
 
-	  axis.scale().range(range$$1);
+	  axis.scale().range(range);
 
 	  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
@@ -10329,7 +10346,7 @@
 	    var step = obj.dimensions.barHeight / ((bands.padding * -1) + 1);
 	    totalBarHeight = (step * obj.data.data.length) - (step * bands.padding) + (step * bands.outerPadding * 2);
 	    yScale.range([totalBarHeight, 0]);
-	    obj.dimensions.yAxisHeight = totalBarHeight;
+	    obj.dimensions.yAxisHeight = function () { return totalBarHeight; };
 	  }
 
 	  var yAxisObj = new axisManager(node, obj, yScale, 'yAxis');
@@ -10624,7 +10641,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function nodrag(view) {
+	function dragDisable(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10721,7 +10738,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    nodrag(event.view);
+	    dragDisable(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11030,7 +11047,7 @@
 	                emit = emitter(that, arguments),
 	                selection0 = state.selection,
 	                selection1 = dim.input(typeof selection$$1 === "function" ? selection$$1.apply(this, arguments) : selection$$1, state.extent),
-	                i = value(selection0, selection1);
+	                i = interpolate(selection0, selection1);
 
 	            function tween(t) {
 	              state.selection = t === 1 && empty$1(selection1) ? null : i(t);
@@ -11181,7 +11198,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      nodrag(event.view);
+	      dragDisable(event.view);
 	    }
 
 	    nopropagation$1();
@@ -11364,8 +11381,8 @@
 	  };
 
 	  brush.on = function() {
-	    var value$$1 = listeners.on.apply(listeners, arguments);
-	    return value$$1 === listeners ? brush : value$$1;
+	    var value = listeners.on.apply(listeners, arguments);
+	    return value === listeners ? brush : value;
 	  };
 
 	  return brush;
@@ -12489,6 +12506,22 @@
 	    tipNodes.tipPathCircles.classed(((obj.prefix) + "active"), true);
 	  }
 
+	  var annoData = obj.annotations;
+
+	  var hasAnnotations = annoData && (
+	    (annoData.highlight && annoData.highlight.length) ||
+	    (annoData.text && annoData.text.length) ||
+	    (annoData.range && annoData.range.length) ||
+	    (annoData.pointer && annoData.pointer.length)
+	  );
+
+	  if (hasAnnotations) {
+	    obj.rendered.annotations.annoNode.classed(((obj.prefix) + "muted"), true);
+	    obj.rendered.container
+	      .selectAll(("." + (obj.prefix) + "annotation_range"))
+	      .classed(((obj.prefix) + "muted"), true);
+	  }
+
 	}
 
 	function hideTips(tipNodes, obj) {
@@ -12501,6 +12534,10 @@
 	    obj.rendered.plot.seriesGroup
 	      .selectAll(("." + (obj.prefix) + "active"))
 	      .classed(((obj.prefix) + "active"), false);
+
+	    obj.rendered.container
+	      .selectAll(("." + (obj.prefix) + "axis-group line"))
+	      .classed(((obj.prefix) + "muted"), false);
 	  }
 
 	  if (tipNodes.xTipLine) {
@@ -12521,6 +12558,22 @@
 
 	  if (tipNodes.tipPathCircles) {
 	    tipNodes.tipPathCircles.classed(((obj.prefix) + "active"), false);
+	  }
+
+	  var annoData = obj.annotations;
+
+	  var hasAnnotations = annoData && (
+	    (annoData.highlight && annoData.highlight.length) ||
+	    (annoData.text && annoData.text.length) ||
+	    (annoData.range && annoData.range.length) ||
+	    (annoData.pointer && annoData.pointer.length)
+	  );
+
+	  if (hasAnnotations) {
+	    obj.rendered.annotations.annoNode.classed(((obj.prefix) + "muted"), false);
+	    obj.rendered.container
+	      .selectAll(("." + (obj.prefix) + "annotation_range"))
+	      .classed(((obj.prefix) + "muted"), false);
 	  }
 
 	}
@@ -12544,19 +12597,10 @@
 	    scatterplot: scatterplotChartTips
 	  };
 
-	  var dataReference;
+	  var dataRef = obj.options.type === 'multiline' ? [obj.data.data[0].series[0]] : obj.data.data[0].series,
+	    tipNodes = appendTipGroup(node, obj);
 
-	  if (obj.options.type === 'multiline') {
-	    dataReference = [obj.data.data[0].series[0]];
-	  } else if (obj.options.type === 'scatterplot'){
-	    //Murat: If it's a scatterplot, give the 'series' array an extra object.
-	    dataReference = [{val:'', key:''}].concat(obj.data.data[0].series);
-	  } else {
-	    dataReference = obj.data.data[0].series;
-	  }
-
-	  var tipNodes = appendTipGroup(node, obj),
-	    innerTipElements = appendTipElements(node, obj, tipNodes, dataReference);
+	  appendTipElements(node, obj, tipNodes, dataRef);
 
 	  if (obj.options.type === 'bar') {
 	    tipNodes.tipGroup.remove();
@@ -12597,7 +12641,7 @@
 	          showTips(tipNodes, obj);
 	          clearTimeout(timeout$2);
 	          timeout$2 = mouseIdle(tipNodes, obj);
-	          return fns[obj.options.type](tipNodes, innerTipElements, obj, voronoiDiagram);
+	          return fns[obj.options.type](tipNodes, obj, voronoiDiagram);
 	        });
 	      break;
 	  }
@@ -12607,7 +12651,9 @@
 	function appendTipGroup(node, obj) {
 
 	  var svg = select(node.node().parentNode),
-	    chartNode = select(node.node().parentNode.parentNode);
+	    chartNode = select(node.node().parentNode.parentNode),
+	    legendIcon = chartNode.select(("." + (obj.prefix) + "legend_item_icon")).node(),
+	    radius = legendIcon ? legendIcon.getBoundingClientRect().width / 2 : 0;
 
 	  var tipNode = svg.append('g')
 	    .attrs({
@@ -12624,16 +12670,26 @@
 
 	  xTipLine.append('line');
 
-	  var yTipLine = tipNode.append('g')
-	    .attr('class', ((obj.prefix) + "tip_line-y"))
-	    .classed(((obj.prefix) + "active"), false);
+	  var yTipLine = select(null),
+	    tipCircle = select(null);
 
-	  yTipLine.append('line');
+	  if (obj.options.type === 'scatterplot') {
+	    yTipLine = tipNode.append('g')
+	      .attr('class', ((obj.prefix) + "tip_line-y"))
+	      .classed(((obj.prefix) + "active"), false);
 
-	  // const tipCircle = tipNode.append('g')
-	  //   .attr('class', `${obj.prefix}tip_xy`);
-	  //
-	  // tipCircle.append('circle');
+	    yTipLine.append('line');
+
+	    tipCircle = tipNode.append('g')
+	      .attrs({
+	        'class': ((obj.prefix) + "tip_circle-xy"),
+	        'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)")
+	      })
+	      .classed(((obj.prefix) + "active"), false);
+
+	    tipCircle.append('circle')
+	      .attr('r', obj.dimensions.scatterplotRadius);
+	  }
 
 	  var tipBox = tipNode.append('g')
 	    .attrs({
@@ -12644,7 +12700,7 @@
 	  var tipRect = tipBox.append('rect')
 	    .attrs({
 	      'class': ((obj.prefix) + "tip_rect"),
-	      'transform': 'translate(0,0)',
+	      'transform': ("translate(0, " + (obj.dimensions.tipOffset.horizontal) + ")"),
 	      'width': 1,
 	      'height': 1
 	    });
@@ -12652,19 +12708,15 @@
 	  var tipGroup = tipBox.append('g')
 	    .attr('class', ((obj.prefix) + "tip_group"));
 
-	  var legendIcon = chartNode.select(("." + (obj.prefix) + "legend_item_icon")).node();
-
-	  var radius = legendIcon ? legendIcon.getBoundingClientRect().width / 2 : 0;
-
 	  var tipPathCircles = tipNode.append('g')
 	    .attr('class', ((obj.prefix) + "tip_path-circle-group"));
 
-	  var tipTextDate = tipGroup
+	  var tipTextX = tipGroup
 	    .insert('g', ':first-child')
-	    .attr('class', ((obj.prefix) + "tip_text-date-group"))
+	    .attr('class', ((obj.prefix) + "tip_text-x-group"))
 	    .append('text')
 	    .attrs({
-	      'class': ((obj.prefix) + "tip_text-date"),
+	      'class': ((obj.prefix) + "tip_text-x"),
 	      'x': 0,
 	      'y': 0,
 	      'dy': '1em'
@@ -12675,14 +12727,14 @@
 	    tipNode: tipNode,
 	    xTipLine: xTipLine,
 	    yTipLine: yTipLine,
-	    // tipCircle,
+	    tipCircle: tipCircle,
 	    tipBox: tipBox,
 	    tipRect: tipRect,
 	    tipGroup: tipGroup,
 	    legendIcon: legendIcon,
 	    tipPathCircles: tipPathCircles,
 	    radius: radius,
-	    tipTextDate: tipTextDate
+	    tipTextX: tipTextX
 	  };
 
 	}
@@ -12714,27 +12766,29 @@
 	      'x': (tipNodes.radius * 2) + (tipNodes.radius / 1.5),
 	      'y': function(d, i) {
 	        lineHeight = lineHeight || parseInt(select(this).style('line-height'));
-	        // console.log(i, lineHeight)
 	        return (i + 1) * lineHeight;
 	      },
 	      'dy': '1em'
 	    });
 
-	  tipTextGroups
-	    .append('circle')
-	    .attrs({
-	      'class': function (d, i) {
-	        return ((obj.prefix) + "tip_circle " + (obj.prefix) + "tip_circle-" + i);
-	      },
-	      'r': tipNodes.radius,
-	      'cx': tipNodes.radius,
-	      'cy': function (d, i) {
-	        return ((i + 1) * lineHeight) + (tipNodes.radius * 1.5);
-	      }
-	    });
+	  if (obj.options.type !== 'scatterplot') {
+	    tipTextGroups
+	      .append('circle')
+	      .attrs({
+	        'class': function (d, i) {
+	          return ((obj.prefix) + "tip_circle " + (obj.prefix) + "tip_circle-" + i);
+	        },
+	        'r': tipNodes.radius,
+	        'cx': tipNodes.radius,
+	        'cy': function (d, i) {
+	          return ((i + 1) * lineHeight) + (tipNodes.radius * 1.5);
+	        }
+	      });
+	  }
 
 	  tipNodes.tipPathCircles.selectAll('circle')
-	    .data(dataRef).enter()
+	    .data(dataRef)
+	    .enter()
 	    .append('circle')
 	    .attrs({
 	      'class': function (d, i) {
@@ -12747,7 +12801,7 @@
 
 	}
 
-	function lineChartTips(tipNodes, innerTipEls, obj) {
+	function lineChartTips(tipNodes, obj) {
 	  var cursor = cursorPos(tipNodes.overlay),
 	    tipData = getTipData(obj, cursor);
 
@@ -12760,108 +12814,102 @@
 	    }
 	  }
 
-	  if (!isUndefined || isUndefined !== tipData.series.length) {
+	  var hasData = !isUndefined || isUndefined !== tipData.series.length;
 
-	    var domain = obj.rendered.plot.xScaleObj.scale.domain(),
-	      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
+	  if (!hasData) { return; }
 
-	    tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
-	      .data(tipData.series)
-	      .text(function (d) {
-	        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-	        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-	        if ((d.val || d.val === 0) && d.val !== '__undefined__') {
-	          return obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-	        } else {
-	          return 'n/a';
-	        }
-	      })
-	      .classed(((obj.prefix) + "muted"), function (d) {
-	        return (!(d.val || d.val === 0) || d.val === '__undefined__');
-	      });
+	  var domain = obj.rendered.plot.xScaleObj.scale.domain(),
+	    ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
-	    var bandwidth = 0;
+	  tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
+	    .data(tipData.series)
+	    .text(function (d) {
+	      if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
+	      if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
+	      if ((d.val || d.val === 0) && d.val !== '__undefined__') {
+	        return obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
+	      } else {
+	        return 'n/a';
+	      }
+	    })
+	    .classed(((obj.prefix) + "muted"), function (d) {
+	      return (!(d.val || d.val === 0) || d.val === '__undefined__');
+	    });
 
-	    if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
-	      tipNodes.tipTextDate
-	        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
-	    } else {
-	      tipNodes.tipTextDate
-	        .text(tipData.key);
-	      bandwidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
-	    }
+	  var bandwidth = 0;
 
-	    tipNodes.tipGroup
-	      .selectAll(("." + (obj.prefix) + "tip_text-group"))
-	      .data(tipData.series)
-	      .classed(((obj.prefix) + "active"), function (d) { return d.val ? true : false; });
-
-	    tipNodes.tipGroup
-	      .attr('transform', function () {
-	        var x;
-	        if (cursor.x > obj.dimensions.tickWidth() / 2) {
-	          // tipbox pointing left
-	          x = obj.dimensions.tipPadding.left;
-	        } else {
-	          // tipbox pointing right
-	          x = obj.dimensions.tipPadding.right;
-	        }
-	        return ("translate(" + x + "," + (obj.dimensions.tipPadding.top) + ")");
-	      });
-
-	    tipNodes.tipPathCircles
-	      .selectAll(("." + (obj.prefix) + "tip_path-circle"))
-	        .data(tipData.series)
-	        .classed(((obj.prefix) + "active"), function (d) {
-	          return d.val && d.val !== '__undefined__';
-	        })
-	        .attrs({
-	          'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
-	          'cy': function (d) {
-	            if (d.val && d.val !== '__undefined__') {
-	              return obj.rendered.plot.yScaleObj.scale(d.val);
-	            }
-	          }
-	        });
-
-	    tipNodes.tipRect
-	      .attrs({
-	        'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-	        'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-	      });
-
-	    tipNodes.xTipLine.select('line')
-	      .attrs({
-	        'x1': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
-	        'x2': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
-	        'y1': 0,
-	        'y2': obj.dimensions.yAxisHeight()
-	      });
-
-	    tipNodes.tipBox
-	      .attr('transform', function() {
-	        var x;
-	        if (cursor.x > obj.dimensions.tickWidth() / 2) {
-	          // tipbox pointing left
-	          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
-	        } else {
-	          // tipbox pointing right
-	          x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
-	        }
-	        return ("translate(" + x + "," + (obj.dimensions.tipOffset.vertical) + ")");
-	      });
-
+	  if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+	    tipNodes.tipTextX
+	      .text(function () { return tipDateFormatter(ctx, obj.monthsAbr, tipData.key); });
+	  } else {
+	    tipNodes.tipTextX
+	      .text(tipData.key);
+	    bandwidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
 	  }
 
+	  tipNodes.tipGroup
+	    .selectAll(("." + (obj.prefix) + "tip_text-group"))
+	    .data(tipData.series)
+	    .classed(((obj.prefix) + "active"), function (d) { return d.val ? true : false; });
+
+	  tipNodes.tipGroup
+	    .attr('transform', function () {
+	      // tipbox pointing left or right
+	      var xDirection = cursor.x > obj.dimensions.tickWidth() / 2 ? 'left' : 'right';
+	      return ("translate(" + (obj.dimensions.tipPadding[xDirection]) + "," + (obj.dimensions.tipPadding.top) + ")");
+	    });
+
+	  tipNodes.tipPathCircles
+	    .selectAll(("." + (obj.prefix) + "tip_path-circle"))
+	    .data(tipData.series)
+	    .classed(((obj.prefix) + "active"), function (d) {
+	      return d.val && d.val !== '__undefined__';
+	    })
+	    .attrs({
+	      'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
+	      'cy': function (d) {
+	        if (d.val && d.val !== '__undefined__') {
+	          return obj.rendered.plot.yScaleObj.scale(d.val);
+	        }
+	      }
+	    });
+
+	  tipNodes.tipRect
+	    .attrs({
+	      'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+	      'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+	    });
+
+	  tipNodes.xTipLine.select('line')
+	    .attrs({
+	      'x1': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
+	      'x2': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
+	      'y1': 0,
+	      'y2': obj.dimensions.yAxisHeight()
+	    });
+
+	  tipNodes.tipBox
+	    .attr('transform', function() {
+	      var x;
+	      if (cursor.x > obj.dimensions.tickWidth() / 2) {
+	        // tipbox pointing left
+	        x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
+	      } else {
+	        // tipbox pointing right
+	        x = obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
+	      }
+	      return ("translate(" + x + "," + (obj.dimensions.tipOffset.vertical) + ")");
+	    });
+
 	}
 
-	function areaChartTips(tipNodes, innerTipEls, obj) {
+	function areaChartTips(tipNodes, obj) {
 	  // area tips implementation is currently
 	  // *exactly* the same as line tips, so…
-	  lineChartTips(tipNodes, innerTipEls, obj);
+	  lineChartTips(tipNodes, obj);
 	}
 
-	function stackedAreaChartTips(tipNodes, innerTipEls, obj) {
+	function stackedAreaChartTips(tipNodes, obj) {
 
 	  var cursor = cursorPos(tipNodes.overlay),
 	    tipData = getTipData(obj, cursor);
@@ -12875,125 +12923,42 @@
 	    }
 	  }
 
-	  if (!isUndefined || isUndefined !== tipData.series.length) {
+	  var hasData = !isUndefined || isUndefined !== tipData.series.length;
 
-	    var domain = obj.rendered.plot.xScaleObj.scale.domain(),
-	      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
+	  if (!hasData) { return; }
 
-	    tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
-	      .data(function () {
-	        if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
-	          return tipData;
+	  var domain = obj.rendered.plot.xScaleObj.scale.domain(),
+	    ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
+
+	  tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
+	    .data(function () {
+	      if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+	        return tipData;
+	      } else {
+	        return tipData.series;
+	      }
+	    })
+	    .text(function (d, i) {
+	      if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
+	      if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
+	      if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+	        if (d.val || d.val === 0) {
+	          return obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
 	        } else {
-	          return tipData.series;
+	          return 'n/a';
 	        }
-	      })
-	      .text(function (d, i) {
-	        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-	        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-	        if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-	          if (d.val || d.val === 0) {
-	            return obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-	          } else {
-	            return 'n/a';
-	          }
-	        } else {
-	          var text;
-	          for (var k = 0; k < tipData.length; k++) {
-	            if (i === 0) {
-	              if (!isNaN(d[0] + d[1])) {
-	                text = obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
-	                break;
-	              } else {
-	                text = 'n/a';
-	                break;
-	              }
-	            } else if (k === i) {
-	              var hasUndefined = 0;
-	              for (var j = 0; j < i; j++) {
-	                if (isNaN(d[0] + d[1])) {
-	                  hasUndefined++;
-	                  break;
-	                }
-	              }
-	              if (!hasUndefined && !isNaN(d[0] + d[1])) {
-	                text = obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
-	                break;
-	              } else {
-	                text = 'n/a';
-	                break;
-	              }
-	            }
-	          }
-	          return text;
-	        }
-	      });
-
-	    var bandwidth = 0;
-
-	    if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
-	      tipNodes.tipTextDate
-	        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key ? tipData.key : tipData[0].data[obj.data.keys[0]]);
-	    } else {
-	      tipNodes.tipTextDate
-	        .text(tipData.key);
-	      bandwidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
-	    }
-
-	    tipNodes.tipGroup
-	      .selectAll(("." + (obj.prefix) + "tip_text-group"))
-	      .data(function () {
-	        if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
-	          return tipData;
-	        } else {
-	          return tipData.series;
-	        }
-	      })
-	      .classed(((obj.prefix) + "active"), function (d, i) {
-	        if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-	          return d.val ? true : false;
-	        } else {
-	          var hasUndefined = 0;
-	          for (var j = 0; j < i; j++) {
-	            if (isNaN(d[0] + d[1])) {
-	              hasUndefined++;
+	      } else {
+	        var text;
+	        for (var k = 0; k < tipData.length; k++) {
+	          if (i === 0) {
+	            if (!isNaN(d[0] + d[1])) {
+	              text = obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
+	              break;
+	            } else {
+	              text = 'n/a';
 	              break;
 	            }
-	          }
-	          if (!hasUndefined && !isNaN(d[0] + d[1])) {
-	            return true;
-	          } else {
-	            return false;
-	          }
-	        }
-	      });
-
-	    tipNodes.tipGroup
-	      .attr('transform', function () {
-	        var x;
-	        if (cursor.x > obj.dimensions.tickWidth() / 2) {
-	          // tipbox pointing left
-	          x = obj.dimensions.tipPadding.left;
-	        } else {
-	          // tipbox pointing right
-	          x = obj.dimensions.tipPadding.right;
-	        }
-	        return ("translate(" + x + "," + (obj.dimensions.tipPadding.top) + ")");
-	      });
-
-	    tipNodes.tipPathCircles
-	      .selectAll(("." + (obj.prefix) + "tip_path-circle"))
-	        .data(function () {
-	          if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
-	            return tipData;
-	          } else {
-	            return tipData.series;
-	          }
-	        })
-	        .classed(((obj.prefix) + "active"), function (d, i) {
-	          if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-	            return d.val ? true : false;
-	          } else {
+	          } else if (k === i) {
 	            var hasUndefined = 0;
 	            for (var j = 0; j < i; j++) {
 	              if (isNaN(d[0] + d[1])) {
@@ -13002,79 +12967,156 @@
 	              }
 	            }
 	            if (!hasUndefined && !isNaN(d[0] + d[1])) {
-	              return true;
+	              text = obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.data[obj.data.keys[i + 1]]) + obj.yAxis.suffix;
+	              break;
 	            } else {
-	              return false;
+	              text = 'n/a';
+	              break;
 	            }
 	          }
-	        })
-	        .attrs({
-	          'cx': function (d) {
-	            var xData;
-	            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
-	              xData = tipData.key;
-	            } else {
-	              xData = d.data[obj.data.keys[0]];
-	            }
-	            return obj.rendered.plot.xScaleObj.scale(xData) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2);
-	          },
-	          'cy': function (d) {
-	            var yData;
-	            if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
-	              var index = obj.data.data.indexOf(obj.data.data.filter(function (a) {
-	                return a.key === tipData.key;
-	              })[0]);
-	              var stackedPoint = obj.data.stackedData[obj.data.keys.indexOf(d.key) - 1];
-	              yData = stackedPoint[index][1];
-	            } else {
-	              yData = d[1];
-	            }
-	            if (!isNaN(yData)) {
-	              return obj.rendered.plot.yScaleObj.scale(yData);
-	            }
-	          }
-	        });
-
-	    tipNodes.tipRect
-	      .attrs({
-	        'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-	        'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-	      });
-
-	    var xPos;
-
-	    if (obj.rendered.plot.xScaleObj.obj.type === 'time') {
-	      xPos = tipData[0].data[obj.data.keys[0]];
-	    } else {
-	      xPos = tipData.key;
-	    }
-
-	    tipNodes.xTipLine.select('line')
-	      .attrs({
-	        'x1': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
-	        'x2': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
-	        'y1': 0,
-	        'y2': obj.dimensions.yAxisHeight()
-	      });
-
-	    tipNodes.tipBox
-	      .attr('transform', function() {
-	        var x;
-	        if (cursor.x > obj.dimensions.tickWidth() / 2) {
-	          // tipbox pointing left
-	          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
-	        } else {
-	          // tipbox pointing right
-	          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
 	        }
-	        return ("translate(" + x + "," + (obj.dimensions.tipOffset.vertical) + ")");
-	      });
+	        return text;
+	      }
+	    });
 
+	  var bandwidth = 0;
+
+	  if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+	    tipNodes.tipTextX
+	      .text(function () { return tipDateFormatter(ctx, obj.monthsAbr, tipData.key ? tipData.key : tipData[0].data[obj.data.keys[0]]); });
+	  } else {
+	    tipNodes.tipTextX
+	      .text(tipData.key);
+	    bandwidth = obj.rendered.plot.xScaleObj.scale.bandwidth();
 	  }
+
+	  tipNodes.tipGroup
+	    .selectAll(("." + (obj.prefix) + "tip_text-group"))
+	    .data(function () {
+	      if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+	        return tipData;
+	      } else {
+	        return tipData.series;
+	      }
+	    })
+	    .classed(((obj.prefix) + "active"), function (d, i) {
+	      if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+	        return d.val ? true : false;
+	      } else {
+	        var hasUndefined = 0;
+	        for (var j = 0; j < i; j++) {
+	          if (isNaN(d[0] + d[1])) {
+	            hasUndefined++;
+	            break;
+	          }
+	        }
+	        if (!hasUndefined && !isNaN(d[0] + d[1])) {
+	          return true;
+	        } else {
+	          return false;
+	        }
+	      }
+	    });
+
+	  tipNodes.tipGroup
+	    .attr('transform', function () {
+	      // tipbox pointing left or right
+	      var xDirection = cursor.x > obj.dimensions.tickWidth() / 2 ? 'left' : 'right';
+	      return ("translate(" + (obj.dimensions.tipPadding[xDirection]) + "," + (obj.dimensions.tipPadding.top) + ")");
+	    });
+
+	  tipNodes.tipPathCircles
+	    .selectAll(("." + (obj.prefix) + "tip_path-circle"))
+	    .data(function () {
+	      if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
+	        return tipData;
+	      } else {
+	        return tipData.series;
+	      }
+	    })
+	    .classed(((obj.prefix) + "active"), function (d, i) {
+	      if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
+	        return d.val ? true : false;
+	      } else {
+	        var hasUndefined = 0;
+	        for (var j = 0; j < i; j++) {
+	          if (isNaN(d[0] + d[1])) {
+	            hasUndefined++;
+	            break;
+	          }
+	        }
+	        if (!hasUndefined && !isNaN(d[0] + d[1])) {
+	          return true;
+	        } else {
+	          return false;
+	        }
+	      }
+	    })
+	    .attrs({
+	      'cx': function (d) {
+	        var xData;
+	        if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
+	          xData = tipData.key;
+	        } else {
+	          xData = d.data[obj.data.keys[0]];
+	        }
+	        return obj.rendered.plot.xScaleObj.scale(xData) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2);
+	      },
+	      'cy': function (d) {
+	        var yData;
+	        if (obj.rendered.plot.xScaleObj.obj.type !== 'time') {
+	          var index = obj.data.data.indexOf(obj.data.data.filter(function (a) {
+	            return a.key === tipData.key;
+	          })[0]);
+	          var stackedPoint = obj.data.stackedData[obj.data.keys.indexOf(d.key) - 1];
+	          yData = stackedPoint[index][1];
+	        } else {
+	          yData = d[1];
+	        }
+	        if (!isNaN(yData)) {
+	          return obj.rendered.plot.yScaleObj.scale(yData);
+	        }
+	      }
+	    });
+
+	  tipNodes.tipRect
+	    .attrs({
+	      'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+	      'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+	    });
+
+	  var xPos;
+
+	  if (obj.rendered.plot.xScaleObj.obj.type === 'time') {
+	    xPos = tipData[0].data[obj.data.keys[0]];
+	  } else {
+	    xPos = tipData.key;
+	  }
+
+	  tipNodes.xTipLine.select('line')
+	    .attrs({
+	      'x1': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
+	      'x2': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + (bandwidth / 2),
+	      'y1': 0,
+	      'y2': obj.dimensions.yAxisHeight()
+	    });
+
+	  tipNodes.tipBox
+	    .attr('transform', function() {
+	      var x;
+	      if (cursor.x > obj.dimensions.tickWidth() / 2) {
+	        // tipbox pointing left
+	        x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
+	      } else {
+	        // tipbox pointing right
+	        x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal + (bandwidth / 2);
+	      }
+	      return ("translate(" + x + "," + (obj.dimensions.tipOffset.vertical) + ")");
+	    });
 
 	}
 
-	function columnChartTips(tipNodes, innerTipEls, obj) {
+	function columnChartTips(tipNodes, obj) {
 
 	  var cursor = cursorPos(tipNodes.overlay),
 	    tipData = getTipData(obj, cursor);
@@ -13111,26 +13153,20 @@
 	    .classed(((obj.prefix) + "active"), function (d) { return d.val ? true : false; });
 
 	  if (obj.rendered.plot.xScaleObj.obj.type === 'ordinal') {
-	    tipNodes.tipTextDate.text(tipData.key);
+	    tipNodes.tipTextX.text(tipData.key);
 	  } else {
 	    var domain = obj.rendered.plot.xScaleObj.scale.domain(),
 	      ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 
-	    tipNodes.tipTextDate
-	    .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.key);
+	    tipNodes.tipTextX
+	      .text(function () { return tipDateFormatter(ctx, obj.monthsAbr, tipData.key); });
 	  }
 
 	  tipNodes.tipGroup
 	    .attr('transform', function () {
-	      var x;
-	      if (cursor.x > obj.dimensions.tickWidth() / 2) {
-	        // tipbox pointing left
-	        x = obj.dimensions.tipPadding.left;
-	      } else {
-	        // tipbox pointing right
-	        x = obj.dimensions.tipPadding.right;
-	      }
-	      return ("translate(" + x + "," + (obj.dimensions.tipPadding.top) + ")");
+	      // tipbox pointing left or right
+	      var xDirection = cursor.x > obj.dimensions.tickWidth() / 2 ? 'left' : 'right';
+	      return ("translate(" + (obj.dimensions.tipPadding[xDirection]) + "," + (obj.dimensions.tipPadding.top) + ")");
 	    });
 
 	  tipNodes.tipRect
@@ -13163,20 +13199,19 @@
 	      return ("translate(" + x + "," + (obj.dimensions.tipOffset.vertical) + ")");
 	    });
 
-
-
 	}
 
-	function stackedColumnChartTips(tipNodes, innerTipEls, obj) {
+	function stackedColumnChartTips(tipNodes, obj) {
 	  // stacked column tips implementation is the same
 	  // as column tips except for one line, so…
-	  columnChartTips(tipNodes, innerTipEls, obj);
+	  columnChartTips(tipNodes, obj);
 	}
 
-	function barChartTips(tipNodes, innerTipEls, obj) {
+	function barChartTips(tipNodes, obj) {
 
 	  var cursor = cursorPos(tipNodes.overlay),
-	    tipData = getTipData(obj, cursor);
+	    tipData = getTipData(obj, cursor),
+	    isStacked = obj.options.stacked;
 
 	  obj.rendered.plot.seriesGroup
 	    .selectAll('rect')
@@ -13187,259 +13222,219 @@
 	    .classed(((obj.prefix) + "muted"), true);
 
 	  obj.rendered.plot.seriesGroup
-	    .selectAll(("[data-key=\"" + (tipData.key) + "\"] rect"))
+	    .selectAll(("[data-key=\"" + (tipData.key) + "\"]" + (isStacked ? '' : ' rect')))
 	    .classed(((obj.prefix) + "muted"), false);
 
 	  obj.rendered.plot.seriesGroup
-	    .selectAll(("[data-key=\"" + (tipData.key) + "\"] ." + (obj.prefix) + "bar-label"))
-	    .classed(((obj.prefix) + "muted"), false);
-
-	}
-
-	function stackedBarChartTips(tipNodes, innerTipEls, obj) {
-
-	  var cursor = cursorPos(tipNodes.overlay),
-	    tipData = getTipData(obj, cursor);
-
-	  obj.rendered.plot.seriesGroup
-	    .selectAll('rect')
-	    .classed(((obj.prefix) + "muted"), true);
-
-	  obj.rendered.plot.seriesGroup
-	    .selectAll(("." + (obj.prefix) + "bar-label"))
-	    .classed(((obj.prefix) + "muted"), true);
-
-	  obj.rendered.plot.seriesGroup
-	    .selectAll(("[data-key=\"" + (tipData.key) + "\"]"))
-	    .classed(((obj.prefix) + "muted"), false);
-
-	  obj.rendered.plot.seriesGroup
-	    .selectAll(("[data-legend=\"" + (tipData.key) + "\"]"))
+	    .selectAll(("[data-" + (isStacked ? 'legend' : 'key') + "=\"" + (tipData.key) + "\"]" + (isStacked ? '' : (" ." + (obj.prefix) + "bar-label"))))
 	    .classed(((obj.prefix) + "muted"), false);
 
 	}
 
-	function scatterplotChartTips(tipNodes, innerTipEls, obj, voronoiDiagram) {
+	function stackedBarChartTips(tipNodes, obj) {
+	  // stacked bar tips implementation is almost exactly the same
+	  // as bar tips except for one condition, so…
+	  barChartTips(tipNodes, obj);
+	}
+
+	function scatterplotChartTips(tipNodes, obj, voronoiDiagram) {
 	  var cursor = cursorPos(tipNodes.overlay),
-	    voronoiRadius = obj.dimensions.tickWidth() / 3,
-	    tipData = voronoiDiagram.find(cursor.x, cursor.y, voronoiRadius);
+	    tipData = voronoiDiagram.find(cursor.x, cursor.y);
 
-	  if (tipData) {
-	    // console.log(tipData)
-	    obj.rendered.plot.seriesGroup
-	      .selectAll(("." + (obj.prefix) + "dot"))
-	      .classed(((obj.prefix) + "muted"), true)
-	      .classed(((obj.prefix) + "active"), false);
+	  if (!tipData) { return; }
 
-	    obj.rendered.plot.seriesGroup
-	      .selectAll(("[data-key=\"" + (tipData.data.key) + "\"]"))
-	      .classed(((obj.prefix) + "muted"), false)
-	      .classed(((obj.prefix) + "active"), true);
+	  var dataGroup = obj.data.groups.indexOf(tipData.data.group);
 
-	    if (obj.annotations.highlight && obj.annotations.highlight.length) {
-	      obj.rendered.annotations.annoNode
-	        .selectAll(("." + (obj.prefix) + "annotation_highlight-text"))
-	        .classed(((obj.prefix) + "muted"), true);
-	    }
+	  obj.rendered.plot.seriesGroup
+	    .selectAll(("." + (obj.prefix) + "dot"))
+	    .classed(((obj.prefix) + "muted"), true)
+	    .classed(((obj.prefix) + "active"), false);
 
-	    var xPos;
+	  obj.rendered.container
+	    .selectAll(("." + (obj.prefix) + "axis-group line"))
+	    .classed(((obj.prefix) + "muted"), true);
 
-	    if (obj.rendered.plot.xScaleObj.obj.type === 'time') {
-	      // need to check if this would still work with x-axis as dates
-	      xPos = tipData[0].data[obj.data.keys[0]];
-	    } else {
-	      xPos = tipData.data.series[0].val;
-	    }
+	  obj.rendered.plot.seriesGroup
+	    .selectAll(("[data-key=\"" + (tipData.data.key) + "\"]"))
+	    .classed(((obj.prefix) + "muted"), false)
+	    .classed(((obj.prefix) + "active"), true);
 
-	    tipNodes.xTipLine.select('line')
-	      .attrs({
-	        'x1': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-	        'x2': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-	        'y1': 0,
-	        'y2': obj.dimensions.yAxisHeight()
-	      });
+	  var xPos = tipData.data.series[0].val,
+	    yPos = tipData.data.series[1].val;
 
-	    tipNodes.yTipLine.select('line')
-	      .attrs({
-	        'x1': obj.dimensions.computedWidth() - obj.dimensions.tickWidth(),
-	        'x2': obj.dimensions.computedWidth(),
-	        'y1': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val),
-	        'y2': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val)
-	      });
-	    
-	    //Murat: Get 'group' data belongs to
-	    var dataGroup = obj.data.groups.indexOf(tipData.data.group);
-	    
-	    //Murat: Fill the first circle based on group identification, hide the rest.
-	    tipNodes.tipGroup.selectAll('circle')
-	      .data([dataGroup, null, null])
-	      .attr('class', function (d,i,o) {
-	      if(d === null){o[i].setAttribute('fill', 'none');}
-	      return (d === null) ? '' : ((obj.prefix) + "tip_circle " + (obj.prefix) + "tip_circle-" + d);
+	  tipNodes.xTipLine.select('line')
+	    .attrs({
+	      'x1': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+	      'x2': obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+	      'y1': 0,
+	      'y2': obj.dimensions.yAxisHeight()
 	    });
-	    
-	    //Murat: Make new series to match the dataReference from tip build.
-	    var newSeries = [{key: dataGroup, val:tipData.data.key}].concat(tipData.data.series);
-	    
-	    //Murat: Use newSeries instead of tipData.data.series
-	    tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
-	      .data(newSeries)
-	      .text(function (d,i) {
-	        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
-	        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
-	        //Murat: Skip the first value for formatting.
-	        if ((d.val || d.val === 0) && d.val !== '__undefined__' && i > 0) {
-	          //Murat: Label data?
-	          return (d.key) + ": " + obj.yAxis.prefix + setTickFormat(obj.yAxis.format, d.val) + obj.yAxis.suffix;
-	        } else if (i === 0){
-	        //Murat: Get the first value.
-	          return d.val;
-	        } else {
-	          return 'n/a';
-	        }
-	      })
-	      .classed(((obj.prefix) + "muted"), function (d) {
-	        return (!(d.val || d.val === 0) || d.val === '__undefined__');
-	      });
-	/*
-	    if (obj.rendered.plot.xScaleObj.obj.type !== 'ordinal') {
-	      const domain = obj.rendered.plot.xScaleObj.scale.domain(),
-	        ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
-	    
-	      tipNodes.tipTextDate
-	        .call(tipDateFormatter, ctx, obj.monthsAbr, tipData.data.key);
-	    }/* else {
-	      tipNodes.tipTextDate
-	        .text(tipData.data.key);
-	    }*/
 
-	    tipNodes.tipGroup
-	      .selectAll(("." + (obj.prefix) + "tip_text-group"))
-	      .data(tipData.data.series)
-	      .classed(((obj.prefix) + "active"), function (d) { return d.val ? true : false; });
+	  tipNodes.yTipLine.select('line')
+	    .attrs({
+	      'x1': obj.dimensions.computedWidth() - obj.dimensions.tickWidth(),
+	      'x2': obj.dimensions.computedWidth(),
+	      'y1': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val),
+	      'y2': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val)
+	    });
 
-	    tipNodes.tipGroup
-	      .attr('transform', function () {
-	        var x;
-	        if (cursor.x > obj.dimensions.tickWidth() / 2) {
-	          // tipbox pointing left
-	          x = obj.dimensions.tipPadding.left;
-	        } else {
-	          // tipbox pointing right
-	          x = obj.dimensions.tipPadding.right;
-	        }
-	        return ("translate(" + x + "," + (obj.dimensions.tipPadding.top) + ")");
-	      });
+	  tipNodes.tipCircle.select('circle')
+	    .attrs({
+	      'class': '',
+	      'cx': obj.rendered.plot.xScaleObj.scale(xPos),
+	      'cy': obj.rendered.plot.yScaleObj.scale(tipData.data.series[1].val)
+	    })
+	    .classed(((obj.prefix) + "tip_circle-xy-" + dataGroup), true);
 
-	    // tipNodes.tipPathCircles
-	    //   .selectAll(`.${obj.prefix}tip_path-circle`)
-	    //     .data(tipData.series)
-	    //     .classed(`${obj.prefix}active`, d => {
-	    //       return d.val && d.val !== '__undefined__';
-	    //     })
-	    //     .attrs({
-	    //       'cx': obj.rendered.plot.xScaleObj.scale(tipData.key) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-	    //       'cy': d => {
-	    //         if (d.val && d.val !== '__undefined__') {
-	    //           return obj.rendered.plot.yScaleObj.scale(d.val);
-	    //         }
-	    //       }
-	    //     });
+	  var isTimeScale = obj.xAxis.scale === 'time' || obj.xAxis.scale === 'ordinal-time';
 
-	    tipNodes.tipRect
-	      .attrs({
-	        'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
-	        'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
-	      });
+	  var domain, ctx;
 
-	    tipNodes.tipBox
-	      .attr('transform', function() {
-	        var x;
-	        if (cursor.x > obj.dimensions.tickWidth() / 2) {
-	          // tipbox pointing left
-	          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
-	        } else {
-	          // tipbox pointing right
-	          x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
-	        }
-	        return ("translate(" + x + "," + (obj.dimensions.tipOffset.vertical) + ")");
-	      });
-
+	  if (isTimeScale) {
+	    domain = obj.rendered.plot.xScaleObj.scale.domain();
+	    ctx = timeDiff(domain[0], domain[domain.length - 1], 8, obj.data);
 	  }
 
+	  tipNodes.tipGroup.selectAll(("." + (obj.prefix) + "tip_text-group text"))
+	    .data(tipData.data.series)
+	    .attr('x', 0)
+	    .text(function (d, i) {
+	      var rhs;
+	      if (i === 0 && isTimeScale) {
+	        rhs = tipDateFormatter(ctx, obj.monthsAbr, tipData.data.series[0].val);
+	      } else {
+	        if (!obj.yAxis.prefix) { obj.yAxis.prefix = ''; }
+	        if (!obj.yAxis.suffix) { obj.yAxis.suffix = ''; }
+	        rhs = "" + (obj.yAxis.prefix) + (setTickFormat(obj.yAxis.format, d.val)) + (obj.yAxis.suffix);
+	      }
+	      if ((d.val || d.val === 0) && d.val !== '__undefined__') {
+	        return ((d.key) + ": " + rhs);
+	      } else {
+	        return 'n/a';
+	      }
+	    })
+	    .classed(((obj.prefix) + "muted"), function (d) {
+	      return (!(d.val || d.val === 0) || d.val === '__undefined__');
+	    });
+
+	  tipNodes.tipTextX
+	    .text(tipData.data.key);
+
+	  tipNodes.tipGroup
+	    .selectAll(("." + (obj.prefix) + "tip_text-group"))
+	    .data(tipData.data.series)
+	    .classed(((obj.prefix) + "active"), function (d) { return d.val ? true : false; });
+
+	  tipNodes.tipGroup
+	    .attr('transform', function () {
+	      // tipbox pointing left or right, and top or bottom
+	      var xDirection = cursor.x > obj.dimensions.tickWidth() / 2 ? 'left' : 'right',
+	        yDirection = cursor.y > obj.dimensions.yAxisHeight() / 2 ? 'top' : 'bottom';
+	      return ("translate(" + (obj.dimensions.tipPadding[xDirection]) + "," + (obj.dimensions.tipPadding[yDirection]) + ")");
+	    });
+
+	  tipNodes.tipRect
+	    .attrs({
+	      'width': tipNodes.tipGroup.node().getBoundingClientRect().width + obj.dimensions.tipPadding.left + obj.dimensions.tipPadding.right,
+	      'height': tipNodes.tipGroup.node().getBoundingClientRect().height + obj.dimensions.tipPadding.top + obj.dimensions.tipPadding.bottom
+	    });
+
+	  tipNodes.tipBox
+	    .attr('transform', function() {
+	      var x, y;
+
+	      if (cursor.y > obj.dimensions.yAxisHeight() / 2) {
+	        // tipbox pointing up
+	        y = obj.rendered.plot.yScaleObj.scale(yPos) - this.getBoundingClientRect().height - obj.dimensions.tipOffset.vertical;
+	      } else {
+	        // tipbox pointing down
+	        y = obj.rendered.plot.yScaleObj.scale(yPos) + obj.dimensions.tipOffset.vertical;
+	      }
+
+	      if (cursor.x > obj.dimensions.tickWidth() / 2) {
+	        // tipbox pointing left
+	        x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight - this.getBoundingClientRect().width - obj.dimensions.tipOffset.horizontal;
+	      } else {
+	        // tipbox pointing right
+	        x = obj.rendered.plot.xScaleObj.scale(xPos) + obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight + obj.dimensions.tipOffset.horizontal;
+	      }
+	      return ("translate(" + x + "," + y + ")");
+	    });
+
 	}
 
-	function tipDateFormatter(selection$$1, ctx, months, data) {
+	function tipDateFormatter(ctx, months, data) {
+
 	  var dMonth,
 	    dDate,
 	    dYear,
 	    dHour,
-	    dMinute;
+	    dMinute,
+	    dStr;
 
-	  selection$$1.text(function () {
-	    var d = data;
-	    var dStr;
-	    switch (ctx) {
-	      case 'years':
-	        dStr = d.getFullYear();
-	        break;
-	      case 'monthly':
-	        dMonth = months[d.getMonth()];
-	        dYear = d.getFullYear();
-	        dStr = dMonth + " " + dYear;
-	        break;
-	      case 'months':
-	        dMonth = months[d.getMonth()];
-	        dDate = d.getDate();
-	        dYear = d.getFullYear();
-	        dStr = dMonth + " " + dDate + ", " + dYear;
-	        break;
-	      case 'weeks':
-	      case 'days':
-	        dMonth = months[d.getMonth()];
-	        dDate = d.getDate();
-	        dYear = d.getFullYear();
-	        dStr = dMonth + " " + dDate;
-	        break;
-	      case 'hours': {
+	  var d = data;
 
-	        dDate = d.getDate();
-	        dHour = d.getHours();
-	        dMinute = d.getMinutes();
+	  switch (ctx) {
+	    case 'years':
+	      dStr = d.getFullYear();
+	      break;
+	    case 'monthly':
+	      dMonth = months[d.getMonth()];
+	      dYear = d.getFullYear();
+	      dStr = dMonth + " " + dYear;
+	      break;
+	    case 'months':
+	      dMonth = months[d.getMonth()];
+	      dDate = d.getDate();
+	      dYear = d.getFullYear();
+	      dStr = dMonth + " " + dDate + ", " + dYear;
+	      break;
+	    case 'weeks':
+	    case 'days':
+	      dMonth = months[d.getMonth()];
+	      dDate = d.getDate();
+	      dYear = d.getFullYear();
+	      dStr = dMonth + " " + dDate;
+	      break;
+	    case 'hours': {
 
-	        var dHourStr,
-	          dMinuteStr;
+	      dDate = d.getDate();
+	      dHour = d.getHours();
+	      dMinute = d.getMinutes();
 
-	        // Convert from 24h time
-	        var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
+	      var dHourStr,
+	        dMinuteStr;
 
-	        if (dHour === 0) {
-	          dHourStr = 12;
-	        } else if (dHour > 12) {
-	          dHourStr = dHour - 12;
-	        } else {
-	          dHourStr = dHour;
-	        }
+	      // Convert from 24h time
+	      var suffix = (dHour >= 12) ? 'p.m.' : 'a.m.';
 
-	        // Make minutes follow Globe style
-	        if (dMinute === 0) {
-	          dMinuteStr = '';
-	        } else if (dMinute < 10) {
-	          dMinuteStr = ":0" + dMinute;
-	        } else {
-	          dMinuteStr = ":" + dMinute;
-	        }
-
-	        dStr = "" + dHourStr + dMinuteStr + " " + suffix;
-
-	        break;
+	      if (dHour === 0) {
+	        dHourStr = 12;
+	      } else if (dHour > 12) {
+	        dHourStr = dHour - 12;
+	      } else {
+	        dHourStr = dHour;
 	      }
-	      default:
-	        dStr = d;
-	        break;
+
+	      // Make minutes follow Globe style
+	      if (dMinute === 0) {
+	        dMinuteStr = '';
+	      } else if (dMinute < 10) {
+	        dMinuteStr = ":0" + dMinute;
+	      } else {
+	        dMinuteStr = ":" + dMinute;
+	      }
+
+	      dStr = "" + dHourStr + dMinuteStr + " " + suffix;
+
+	      break;
 	    }
-	    return dStr;
-	  });
+	    default:
+	      dStr = d;
+	      break;
+	  }
+
+	  return dStr;
 
 	}
 
@@ -13465,7 +13460,7 @@
 	      });
 	  }
 
-	  if (annoData.range && annoData.range.length) { range$1(annoNode, obj); }
+	  if (annoData.range && annoData.range.length) { range(annoNode, obj); }
 	  if (annoData.highlight && annoData.highlight.length) { highlight(annoNode, obj); }
 	  if (annoData.pointer && annoData.pointer.length) { pointer(annoNode, obj); }
 	  if (annoData.text && annoData.text.length) { text(annoNode, obj); }
@@ -13528,7 +13523,7 @@
 
 	}
 
-	function range$1(annoNode, obj) {
+	function range(annoNode, obj) {
 	  var r = obj.annotations.range;
 
 	  r.map(function (rangeObj, i) {
@@ -13586,7 +13581,7 @@
 	    attrs.y = rangeObj.axis === 'x' ? 0 : rangeVals[0];
 	    attrs.width = rangeObj.axis === 'x' ? Math.abs(rangeVals[1] - rangeVals[0]) : obj.dimensions.tickWidth();
 	    attrs.height = rangeObj.axis === 'x' ? obj.dimensions.yAxisHeight() : Math.abs(rangeVals[1] - rangeVals[0]);
-	    rangeNode = select(obj.rendered.plot.seriesGroup.node().parentNode).insert(type, ':first-child');
+	    rangeNode = obj.rendered.container.insert(type, ':first-child');
 	  } else {
 	    type = 'line';
 

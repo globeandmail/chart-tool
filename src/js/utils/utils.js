@@ -281,12 +281,18 @@ export function getUniqueValues(data) {
   return Array.from(new Set(data));
 }
 
-export function getUniqueDateValues(data, type) {
+export function resolveObjectPath(path, obj) {
+  return path.split('.').reduce((prev, curr) => {
+    return prev ? prev[curr] : undefined;
+  }, obj || self);
+}
+
+export function getUniqueDateValues(data, type, key) {
   const allDates = data.map(d => {
     switch (type) {
-      case 'day': return d.key.getDate();
-      case 'month': return d.key.getMonth();
-      case 'year': return d.key.getFullYear();
+      case 'day': return resolveObjectPath(key, d).getDate();
+      case 'month': return resolveObjectPath(key, d).getMonth();
+      case 'year': return resolveObjectPath(key, d).getFullYear();
     }
   });
   return getUniqueValues(allDates);

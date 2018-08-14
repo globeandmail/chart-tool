@@ -25,6 +25,9 @@
   stroke: $axis-stroke-color;
   stroke-width: $axis-stroke-width;
   stroke-linecap: butt;
+  &.#{$prefix}muted {
+    opacity: 0.075;
+  }
 }
 
 .#{$prefix}yAxis g.tick text {

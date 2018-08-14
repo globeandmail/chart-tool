@@ -27,7 +27,9 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
 
   let groupingKey, dotSizingKey;
 
-  if (type && type === 'scatterplot') {
+  const isScatterplot = type && type === 'scatterplot';
+
+  if (isScatterplot) {
     if (keys.length > 3) groupingKey = keys[3];
     if (keys.length >= 4) dotSizingKey = keys[4];
   }
@@ -41,7 +43,13 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
 
     if (inputDateFormat) {
       const dateFormat = timeParse(inputDateFormat);
-      obj.key = dateFormat(d[keys[0]]);
+      if (isScatterplot) {
+        obj.key = d[keys[0]];
+        // key will be along x-axis
+        d[keys[1]] = dateFormat(d[keys[1]]);
+      } else {
+        obj.key = dateFormat(d[keys[0]]);
+      }
     } else {
       obj.key = d[keys[0]];
     }
@@ -106,9 +114,10 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
     }));
   }
 
-  const uniqueDayValues = inputDateFormat ? getUniqueDateValues(data, 'day') : undefined;
-  const uniqueMonthValues = inputDateFormat ? getUniqueDateValues(data, 'month') : undefined;
-  const uniqueYearValues = inputDateFormat ? getUniqueDateValues(data, 'year') : undefined;
+  const dateKey = isScatterplot ? 'series.0.val' : 'key',
+    uniqueDayValues = inputDateFormat ? getUniqueDateValues(data, 'day', dateKey) : undefined,
+    uniqueMonthValues = inputDateFormat ? getUniqueDateValues(data, 'month', dateKey) : undefined,
+    uniqueYearValues = inputDateFormat ? getUniqueDateValues(data, 'year', dateKey) : undefined;
 
   return {
     csv,

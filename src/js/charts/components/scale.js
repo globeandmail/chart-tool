@@ -1,6 +1,6 @@
 import { scaleTime, scaleBand, scalePoint, scaleLinear } from 'd3-scale';
 import { min, max, extent } from 'd3-array';
-import { timeDiff, timeInterval } from '../../utils/utils';
+import { timeDiff, timeInterval, resolveObjectPath } from '../../utils/utils';
 import { map } from 'd3-collection';
 
 export function scaleManager(obj, axisType) {
@@ -82,7 +82,7 @@ export function setDomain(obj, axis, axisType) {
 
   switch(axis.scale) {
     case 'time':
-      domain = setDateDomain(data, axis.min, axis.max);
+      domain = setDateDomain(data, axis.min, axis.max, obj.options.type);
       break;
     case 'linear':
       domain = setNumericalDomain(data, axis.min, axis.max, {
@@ -102,13 +102,17 @@ export function setDomain(obj, axis, axisType) {
 
 }
 
-export function setDateDomain(data, min, max) {
+export function setDateDomain(data, min, max, type) {
   let startDate, endDate;
   if (min && max) {
     startDate = min;
     endDate = max;
   } else {
-    const dateRange = extent(data.data, d => d.key);
+
+    const isScatterplot = type && type === 'scatterplot',
+      dateKey = isScatterplot ? 'series.0.val' : 'key',
+      dateRange = extent(data.data, d => resolveObjectPath(dateKey, d));
+
     startDate = min || new Date(dateRange[0]);
     endDate = max || new Date(dateRange[1]);
   }
