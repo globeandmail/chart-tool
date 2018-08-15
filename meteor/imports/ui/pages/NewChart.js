@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import slugify from 'slug';
-import { dataParse, mode } from '../../modules/utils';
+import { dataParse, mode, chartFromColTypes, guessDateFormat } from '../../modules/utils';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -21,6 +21,7 @@ export default class NewChart extends Component {
 
   formatSlug(event) {
     const slug = slugify(event.target.value);
+    event.target.value = slug;
     this.setState({ slug });
   }
 
@@ -32,15 +33,23 @@ export default class NewChart extends Component {
   createChart(event) {
     event.preventDefault();
 
-    const data = this.state.data ? dataParse(this.state.data) : '',
-      startMode = mode(data.start),
-      endMode = mode(data.end);
+    if (!this.state.data) return;
 
-    data.start = startMode ? startMode[0] : '';
-    data.end = endMode ? endMode[0] : '';
+    const { data, start, end, colTypes, parsedData } = dataParse(this.state.data),
+      startMode = mode(start),
+      endMode = mode(end),
+      type = chartFromColTypes(colTypes);
 
-    if (this.state.slug && data.data) {
-      Meteor.call('charts.add', this.state.slug, data, (err, result) => {
+    const dataObj = {
+      data,
+      type,
+      start: startMode ? startMode[0] : '',
+      end: endMode ? endMode[0] : '',
+      dateFormat: guessDateFormat(parsedData, type)
+    };
+
+    if (this.state.slug && data) {
+      Meteor.call('charts.add', this.state.slug, dataObj, (err, result) => {
         if (err) {
           console.log(err);
         } else {
@@ -70,8 +79,8 @@ export default class NewChart extends Component {
                 name='slug'
                 placeholder='Slug'
                 className='input-slug'
-                value={this.state.slug}
-                onChange={this.formatSlug}
+                defaultValue={this.state.slug}
+                onBlur={this.formatSlug}
               />
               <textarea
                 type='text'

@@ -595,7 +595,7 @@
 	  return [min, max];
 	}
 
-	function range(start, stop, step) {
+	function sequence(start, stop, step) {
 	  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
 	  var i = -1,
@@ -914,7 +914,7 @@
 	    start += (stop - start - step * (n - paddingInner)) * align;
 	    bandwidth = step * (1 - paddingInner);
 	    if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-	    var values = range(n).map(function(i) { return start + step * i; });
+	    var values = sequence(n).map(function(i) { return start + step * i; });
 	    return ordinalRange(reverse ? values.reverse() : values);
 	  }
 
@@ -1824,15 +1824,15 @@
 	  };
 	}
 
-	function bimap(domain, range$$1, deinterpolate, reinterpolate) {
-	  var d0 = domain[0], d1 = domain[1], r0 = range$$1[0], r1 = range$$1[1];
+	function bimap(domain, range, deinterpolate, reinterpolate) {
+	  var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
 	  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
 	  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
 	  return function(x) { return r0(d0(x)); };
 	}
 
-	function polymap(domain, range$$1, deinterpolate, reinterpolate) {
-	  var j = Math.min(domain.length, range$$1.length) - 1,
+	function polymap(domain, range, deinterpolate, reinterpolate) {
+	  var j = Math.min(domain.length, range.length) - 1,
 	      d = new Array(j),
 	      r = new Array(j),
 	      i = -1;
@@ -1840,12 +1840,12 @@
 	  // Reverse descending domains.
 	  if (domain[j] < domain[0]) {
 	    domain = domain.slice().reverse();
-	    range$$1 = range$$1.slice().reverse();
+	    range = range.slice().reverse();
 	  }
 
 	  while (++i < j) {
 	    d[i] = deinterpolate(domain[i], domain[i + 1]);
-	    r[i] = reinterpolate(range$$1[i], range$$1[i + 1]);
+	    r[i] = reinterpolate(range[i], range[i + 1]);
 	  }
 
 	  return function(x) {
@@ -1866,7 +1866,7 @@
 	// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
-	      range$$1 = unit,
+	      range = unit,
 	      interpolate$$1 = interpolate,
 	      clamp = false,
 	      piecewise$$1,
@@ -1874,17 +1874,17 @@
 	      input;
 
 	  function rescale() {
-	    piecewise$$1 = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
+	    piecewise$$1 = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
 	    output = input = null;
 	    return scale;
 	  }
 
 	  function scale(x) {
-	    return (output || (output = piecewise$$1(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+	    return (output || (output = piecewise$$1(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
 	  }
 
 	  scale.invert = function(y) {
-	    return (input || (input = piecewise$$1(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+	    return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	  };
 
 	  scale.domain = function(_) {
@@ -1892,11 +1892,11 @@
 	  };
 
 	  scale.range = function(_) {
-	    return arguments.length ? (range$$1 = slice$1.call(_), rescale()) : range$$1.slice();
+	    return arguments.length ? (range = slice$1.call(_), rescale()) : range.slice();
 	  };
 
 	  scale.rangeRound = function(_) {
-	    return range$$1 = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
+	    return range = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
 	  };
 
 	  scale.clamp = function(_) {
@@ -2418,7 +2418,6 @@
 	    return (end - start) / k;
 	  });
 	};
-	var milliseconds = millisecond.range;
 
 	var durationSecond = 1e3;
 	var durationMinute = 6e4;
@@ -2435,7 +2434,6 @@
 	}, function(date) {
 	  return date.getUTCSeconds();
 	});
-	var seconds = second.range;
 
 	var minute = newInterval(function(date) {
 	  date.setTime(Math.floor(date / durationMinute) * durationMinute);
@@ -2492,6 +2490,8 @@
 	var saturday = weekday(6);
 
 	var sundays = sunday.range;
+	var mondays = monday.range;
+	var thursdays = thursday.range;
 
 	var month = newInterval(function(date) {
 	  date.setDate(1);
@@ -2537,7 +2537,6 @@
 	}, function(date) {
 	  return date.getUTCMinutes();
 	});
-	var utcMinutes = utcMinute.range;
 
 	var utcHour = newInterval(function(date) {
 	  date.setUTCMinutes(0, 0, 0);
@@ -2548,7 +2547,6 @@
 	}, function(date) {
 	  return date.getUTCHours();
 	});
-	var utcHours = utcHour.range;
 
 	var utcDay = newInterval(function(date) {
 	  date.setUTCHours(0, 0, 0, 0);
@@ -2559,7 +2557,6 @@
 	}, function(date) {
 	  return date.getUTCDate() - 1;
 	});
-	var utcDays = utcDay.range;
 
 	function utcWeekday(i) {
 	  return newInterval(function(date) {
@@ -2581,6 +2578,8 @@
 	var utcSaturday = utcWeekday(6);
 
 	var utcSundays = utcSunday.range;
+	var utcMondays = utcMonday.range;
+	var utcThursdays = utcThursday.range;
 
 	var utcMonth = newInterval(function(date) {
 	  date.setUTCDate(1);
@@ -2592,7 +2591,6 @@
 	}, function(date) {
 	  return date.getUTCMonth();
 	});
-	var utcMonths = utcMonth.range;
 
 	var utcYear = newInterval(function(date) {
 	  date.setUTCMonth(0, 1);
@@ -2615,7 +2613,6 @@
 	    date.setUTCFullYear(date.getUTCFullYear() + step * k);
 	  });
 	};
-	var utcYears = utcYear.range;
 
 	function localDate(d) {
 	  if (0 <= d.y && d.y < 100) {
@@ -5470,6 +5467,8 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
+	var _library$1 = false;
+
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5478,7 +5477,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: 'global',
+	  mode: _library$1 ? 'pure' : 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -7028,7 +7027,7 @@
 
 	  if (stacked && keys.length > 2) {
 	    var stackFn = stack().keys(keys.slice(1));
-	    stackedData = stackFn(range(data.length).map(function (i) {
+	    stackedData = stackFn(sequence(data.length).map(function (i) {
 	      var o = {};
 	      o[keys[0]] = data[i].key;
 	      for (var j = 0; j < data[i].series.length; j++) {
@@ -8526,15 +8525,15 @@
 
 	function setRange(obj, axisType) {
 
-	  var range$$1;
+	  var range;
 
 	  if (axisType === 'xAxis') {
-	    range$$1 = [0, obj.dimensions.tickWidth()]; // operating on width
+	    range = [0, obj.dimensions.tickWidth()]; // operating on width
 	  } else if (axisType === 'yAxis') {
-	    range$$1 = [obj.dimensions.yAxisHeight(), 0]; // operating on height
+	    range = [obj.dimensions.yAxisHeight(), 0]; // operating on height
 	  }
 
-	  return range$$1;
+	  return range;
 
 	}
 
@@ -8784,12 +8783,12 @@
 
 	function linearAxis(obj, axis, axisNode, axisSettings) {
 
-	  var range$$1;
+	  var range;
 
-	  if (axisSettings.axisType === 'xAxis') { range$$1 = [0, obj.dimensions.tickWidth()]; }
-	  if (axisSettings.axisType === 'yAxis') { range$$1 = [obj.dimensions.yAxisHeight(), 0]; }
+	  if (axisSettings.axisType === 'xAxis') { range = [0, obj.dimensions.tickWidth()]; }
+	  if (axisSettings.axisType === 'yAxis') { range = [obj.dimensions.yAxisHeight(), 0]; }
 
-	  axis.scale().range(range$$1);
+	  axis.scale().range(range);
 
 	  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
@@ -10635,7 +10634,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function nodrag(view) {
+	function dragDisable(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10732,7 +10731,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    nodrag(event.view);
+	    dragDisable(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11192,7 +11191,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      nodrag(event.view);
+	      dragDisable(event.view);
 	    }
 
 	    nopropagation$1();
@@ -13454,7 +13453,7 @@
 	      });
 	  }
 
-	  if (annoData.range && annoData.range.length) { range$1(annoNode, obj); }
+	  if (annoData.range && annoData.range.length) { range(annoNode, obj); }
 	  if (annoData.highlight && annoData.highlight.length) { highlight(annoNode, obj); }
 	  if (annoData.pointer && annoData.pointer.length) { pointer(annoNode, obj); }
 	  if (annoData.text && annoData.text.length) { text(annoNode, obj); }
@@ -13504,7 +13503,7 @@
 
 	}
 
-	function range$1(annoNode, obj) {
+	function range(annoNode, obj) {
 	  var r = obj.annotations.range;
 
 	  r.map(function (rangeObj, i) {

@@ -1,44 +1,12 @@
 import React, { Component } from 'react';
 import MD5 from 'crypto-js/md5';
-import { dataParse, updateAndSave } from '../../modules/utils';
+import { dataParse, updateAndSave, dateFormats } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { parse } from '../../modules/chart-tool';
 import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 
-const formats = [
-  {
-    format: '%Y-%m-%d',
-    pretty: 'YYYY-MM-DD'
-  }, {
-    format: '%Y-%d-%m',
-    pretty: 'YYYY-DD-MM'
-  }, {
-    format: '%y-%m-%d',
-    pretty: 'YY-MM-DD'
-  }, {
-    format: '%y-%d-%m',
-    pretty: 'YY-DD-MM'
-  }, {
-    format: '%m-%d-%Y',
-    pretty: 'MM-DD-YYYY'
-  }, {
-    format: '%m-%e-%Y',
-    pretty: 'MM-D-YYYY'
-  }, {
-    format: '%m-%d-%y',
-    pretty: 'MM-DD-YY'
-  }, {
-    format: '%d-%m-%Y',
-    pretty: 'DD-MM-YYYY'
-  }, {
-    format: '%d-%m-%y',
-    pretty: 'DD-MM-YY'
-  }, {
-    format: '%Y',
-    pretty: 'YYYY'
-  }
-];
+const formats = dateFormats();
 
 export default class ChartData extends Component {
 

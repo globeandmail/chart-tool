@@ -195,12 +195,14 @@ export function dataParse(data) {
     });
   }
 
-  let start, end;
+  let start, end, colTypes;
 
   if (parseParams) {
+
     parsedData = cleanData(Papa.parse(newData, parseParams).data);
     start = parsedData.start;
     end = parsedData.end;
+    colTypes = parsedData.colTypes;
     const csvOptions = {
       delimiter: ',',
       newline: '\n'
@@ -214,28 +216,41 @@ export function dataParse(data) {
   return {
     data: output,
     start,
-    end
+    end,
+    colTypes,
+    parsedData: parsedData.output
   };
 
 }
 
-export function dataTypeIndices(data) {
-  // determine if a column of data is likely to be "numeric" or not
+export function chartFromColTypes(colTypes) {
 
-  const dataColumns = data[0]
-    .filter((d, i) => i !== 0)
-    .map(() => []);
+  // use col types to determine whether it's bar, line or scatterplot
+  // if first index is non-numeric, it's bar
+  // if first index is numeric and any later indices are non-numeric, it's scatterplot
+  // if first index is numeric and any later indices are also numeric, it's line
+
+  const firstColType = colTypes.shift();
+
+  if (firstColType !== 'numeric') return 'bar';
+
+  return colTypes.indexOf('non-numeric') !== -1 ? 'scatterplot' : 'line';
+
+}
+
+export function determineColTypes(data) {
+
+  // determine if a column of data is likely to be "numeric" or not
+  const dataColumns = data[0].map(() => []);
 
   // construct a list of all values in each column
   data.map(arr => {
-    arr
-      .filter((d, i) => i !== 0)
-      .map((val, i) => dataColumns[i].push(val));
+    arr.map((val, i) => dataColumns[i].push(val));
   });
 
   // count up number of digit and non-digit characters and determine
   // whether column is numeric or non-numeric
-  const numericIndices = dataColumns.map(arr => {
+  const colTypes = dataColumns.map(arr => {
     const str = arr.join(''),
       numeric = str.replace(/[^\d-]/g, '').length,
       nonNumeric = str.replace(/[\d-]/g, '').length;
@@ -243,7 +258,7 @@ export function dataTypeIndices(data) {
     return numeric > nonNumeric ? 'numeric' : 'non-numeric';
   });
 
-  return numericIndices;
+  return colTypes;
 
 }
 
@@ -255,7 +270,9 @@ export function cleanData(data) {
   const headerRow = data.shift();
 
   // build an index of whether data is likely to be "numeric", which requires cleaning
-  const numericIndices = dataTypeIndices(data);
+  const colTypes = determineColTypes(data);
+
+  const firstColType = colTypes.shift();
 
   // step through each line in the csv
   const output = data.map(arr => {
@@ -266,7 +283,7 @@ export function cleanData(data) {
     // step through each value
     const line = arr.map((val, i) => {
       let value;
-      if (numericIndices[i] === 'numeric') {
+      if (colTypes[i] === 'numeric') {
         const lineOutput = cleanNumber(val);
         if (lineOutput.start.length) start.push(lineOutput.start);
         if (lineOutput.end.length) end.push(lineOutput.end);
@@ -291,12 +308,16 @@ export function cleanData(data) {
     return line;
   });
 
+  colTypes.unshift(firstColType);
+
   // add the header row back to the data
   output.unshift(headerRow);
+
   return {
     output,
     start,
-    end
+    end,
+    colTypes
   };
 }
 
@@ -306,7 +327,7 @@ export function formatDate(data, format) {
   return output;
 }
 
-export function cleanNumber(inputString, isNumeric) {
+export function cleanNumber(inputString) {
   // remove everything that isnt a number, decimal, or negative
   // and do some checking for characters we can use for prefix/suffix
 
@@ -600,7 +621,7 @@ export function chartTypeFieldReset(type) {
         'options.type': type,
         'options.interpolation': defaults.interpolation,
         'options.stacked': defaults.stacked,
-        'x_axis.scale': 'time',
+        'x_axis.scal e': 'time',
         'x_axis.nice': false,
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
@@ -727,4 +748,123 @@ export function generateMeasurements(print) {
     height: (height * dpi) / 25.4,
     name
   };
+}
+
+export function setPropertyByPath(obj, pathStr, value) {
+
+  const path = pathStr.split('.');
+
+  let i, j, name, parent, ref;
+
+  parent = obj;
+
+  if (path.length > 1) {
+    for (i = j = 0, ref = path.length - 2; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+      parent = (parent[name = path[i]] || (parent[name] = {}));
+    }
+  }
+  return parent[path[path.length - 1]] = value;
+
+}
+
+export function dateFormats() {
+  return [
+    {
+      format: '%Y-%m-%d',
+      pretty: 'YYYY-MM-DD'
+    }, {
+      format: '%Y-%d-%m',
+      pretty: 'YYYY-DD-MM'
+    }, {
+      format: '%y-%m-%d',
+      pretty: 'YY-MM-DD'
+    }, {
+      format: '%y-%d-%m',
+      pretty: 'YY-DD-MM'
+    }, {
+      format: '%m-%d-%Y',
+      pretty: 'MM-DD-YYYY'
+    }, {
+      format: '%m-%e-%Y',
+      pretty: 'MM-D-YYYY'
+    }, {
+      format: '%m-%d-%y',
+      pretty: 'MM-DD-YY'
+    }, {
+      format: '%d-%m-%Y',
+      pretty: 'DD-MM-YYYY'
+    }, {
+      format: '%d-%m-%y',
+      pretty: 'DD-MM-YY'
+    }, {
+      format: '%Y',
+      pretty: 'YYYY'
+    }
+  ];
+}
+
+export function guessDateFormat(data, type) {
+
+  if (type !== 'line') return;
+
+  // grab all values for first data column
+  const firstCol = data
+    .filter((d, i) => i !== 0)
+    .map(d => d[0]);
+
+  const formats = dateFormats().map(f => {
+    f.parse = timeParse(f.format);
+    return f;
+  });
+
+  const hasDashes = firstCol.join('').indexOf('-') !== -1;
+
+  // assume YYYY if no dashes
+  if (!hasDashes) return formats.filter(d => d.pretty === 'YYYY')[0].format;
+
+  let dateFormat;
+
+  // parse all the first column data and then check if it was parsed successfully
+  const tests = formats
+    .map(f => {
+      return {
+        format: f.format,
+        pretty: f.pretty,
+        test: firstCol.map(d => f.parse(d))
+      };
+    })
+    .filter(item => {
+      // filter out tests that failed
+      const newArr = item.test.filter(t => t !== null);
+      return newArr.length;
+    })
+    .filter(item => {
+      // then filter out tests that had any fails in them
+      return item.test.indexOf(null) !== 1;
+    })
+    .filter(item => {
+      // finally, filter out tests where the values' order wasn't maintained
+      const originalLength = item.test.length,
+        first = item.test[0],
+        last = item.test[item.test.length - 1],
+        order = first > last ? 'desc' : 'asc';
+
+      const newArr = item.test.filter((t, i) => {
+        if (i === 0) return true;
+        const currItem = item.test[i],
+          prevItem = item.test[i - 1];
+        return order === 'desc' ? currItem < prevItem : currItem > prevItem;
+      });
+      return originalLength === newArr.length;
+    });
+
+  if (tests.length === 1) dateFormat = tests[0].format;
+  if (tests.length > 1) {
+    // if tests still has elements, probably best to assume MM-DD-YY instead of DD-MM-YY?
+    const re = /^%m.*/;
+    dateFormat = tests.filter(item => re.test(item.format))[0].format;
+  }
+
+  return dateFormat;
+
 }

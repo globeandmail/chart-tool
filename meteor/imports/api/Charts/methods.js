@@ -1,10 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import MD5 from 'crypto-js/md5';
 import Charts from './Charts';
-import { extend, queryConstructor, isObject } from '../../modules/utils';
+import { extend, queryConstructor, isObject, chartTypeFieldReset, convertToMM, setPropertyByPath } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { generatePDF, generatePNG, generateThumb } from '../../modules/generate';
-import { convertToMM } from '../../modules/utils';
 
 Meteor.methods({
   // addChart only takes the text and data from the /new route
@@ -22,6 +21,14 @@ Meteor.methods({
     newChart.x_axis.suffix = d.end;
     newChart.y_axis.suffix = d.end;
     newChart.md5 = MD5(d.data).toString();
+
+    if (d.dateFormat) newChart.date_format = d.dateFormat;
+
+    const chartTypeSettings = chartTypeFieldReset(d.type);
+
+    Object.keys(chartTypeSettings).map(key => {
+      setPropertyByPath(newChart, key, chartTypeSettings[key]);
+    });
 
     return Charts.insert(newChart);
   },
