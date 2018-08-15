@@ -19,6 +19,7 @@
   opacity: 0.2;
   fill: $color-gray-medium;
   shape-rendering: crispEdges;
+  pointer-events: none;
 }
 
 .#{$prefix}annotation_range-line {

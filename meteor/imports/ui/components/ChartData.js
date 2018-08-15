@@ -60,7 +60,9 @@ export default class ChartData extends Component {
       chart = this.props.chart;
     if (data !== chart.data) {
 
-      const hasHighlights = chart.annotations && chart.annotations.highlight && chart.annotations.highlight.length;
+      const hasHighlights = chart.annotations &&
+        chart.annotations.highlight &&
+        chart.annotations.highlight.length;
 
       const fields = {
         data: data,

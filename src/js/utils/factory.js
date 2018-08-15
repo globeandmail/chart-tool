@@ -4,13 +4,12 @@ import chartSettings from '../config/chart-settings';
 
 export default function recipe(obj) {
 
-  const t = extend(chartSettings);
+  const t = extend(chartSettings),
+    embed = obj.data,
+    chart = embed.chart;
 
-  const embed = obj.data, chart = embed.chart;
-
-  // I'm not a big fan of indenting stuff like this
-  // (looking at you, Pereira), but I'm making an exception
-  // in this case because my eyes were bleeding
+  // I'm not a big fan of indenting stuff like this but making
+  // an exception in this case because eyes were bleeding
 
   t.dispatch    = obj.dispatch;
   t.version     = embed.version                 || t.version;
@@ -18,12 +17,12 @@ export default function recipe(obj) {
   t.heading     = embed.heading                 || t.heading;
   t.qualifier   = embed.qualifier               || t.qualifier;
   t.source      = embed.source                  || t.source;
-  t.deck        = embed.deck                    || t.deck;
   t.customClass = chart.class                   || t.customClass;
   t.xAxis       = extend(t.xAxis, chart.x_axis) || t.xAxis;
   t.yAxis       = extend(t.yAxis, chart.y_axis) || t.yAxis;
 
-  const o = t.options, co = chart.options;
+  const o = t.options,
+    co = chart.options;
 
   // 'options' area of embed code
   o.type          = chart.options.type          || o.type;
@@ -34,7 +33,6 @@ export default function recipe(obj) {
   o.stacked     = !isUndef(co.stacked) === true ? co.stacked         : o.stacked;
   o.expanded    = !isUndef(co.expanded) === true ? co.expanded       : o.expanded;
   o.head        = !isUndef(co.head) === true ? co.head               : o.head;
-  o.deck        = !isUndef(co.deck) === true ? co.deck               : o.deck;
   o.legend      = !isUndef(co.legend) === true ? co.legend           : o.legend;
   o.qualifier   = !isUndef(co.qualifier) === true ? co.qualifier     : o.qualifier;
   o.footer      = !isUndef(co.footer) === true ? co.footer           : o.footer;
@@ -42,8 +40,6 @@ export default function recipe(obj) {
   o.y_axis      = !isUndef(co.y_axis) === true ? co.y_axis           : o.y_axis;
   o.tips        = !isUndef(co.tips) === true ? co.tips               : o.tips;
   o.annotations = !isUndef(co.annotations) === true ? co.annotations : o.annotations;
-  o.range       = !isUndef(co.range) === true ? co.range             : o.range;
-  o.series      = !isUndef(co.series) === true ? co.series           : o.series;
   o.index       = !isUndef(co.indexed) === true ? co.indexed         : o.index;
 
   //  these are specific to the t object and don't exist in the embed

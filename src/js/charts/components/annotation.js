@@ -34,9 +34,15 @@ export default function annotation(node, obj) {
   if (annoData.pointer && annoData.pointer.length) pointer(annoNode, obj);
   if (annoData.text && annoData.text.length) text(annoNode, obj);
 
+  const isTextAndScatterplot = obj.options.type === 'scatterplot' &&
+    obj.annotationHandlers &&
+    obj.annotationHandlers.type === 'text';
+
   if (obj.editable && obj.annotationHandlers && obj.annotationHandlers.type) {
+    // insert either behind `graph` element for text scatterplots,
+    // or behind annotations element for everything else
     annoEditable = select(node.node().parentNode)
-      .insert('g', `.${obj.prefix}annotations`)
+      .insert('g', isTextAndScatterplot ? `.${obj.prefix}graph` : `.${obj.prefix}annotations`)
       .attrs({
         transform: `translate(${obj.dimensions.margin.left},${obj.dimensions.margin.top})`,
         class: `${obj.prefix}annotation-editable-group`
@@ -69,25 +75,6 @@ export function highlight(annoNode, obj) {
           .style('fill', highlightObj.color);
       });
     }
-  }
-
-  if (obj.options.type === 'scatterplot') {
-    h.map((highlightObj, i) => {
-
-      const currRef = obj.rendered.plot.dotItems
-        .filter(d => d.key.toString() === highlightObj.key)
-        .style('opacity', 1);
-
-      const config = generateTextAnnotationConfig(highlightObj, annoNode, obj, {
-        x: Number(currRef.attr('cy')),
-        y: Number(currRef.attr('cx'))
-      });
-
-      // need to revisit x and y stuff here since it's fractional right now for text annos
-
-      drawTextAnnotation(i, config, obj);
-    });
-
   }
 
 }
@@ -380,45 +367,34 @@ export function generateTextAnnotationConfig(d, annoNode, obj, pos) {
 
   const config = {
     annoNode: annoNode,
-    key: d.key || null,
     text: d.text || d.key,
-    offset: {
-      x: d.offset && isNumeric(d.offset.x) ? d.offset.x : null,
-      y: d.offset && isNumeric(d.offset.y) ? d.offset.y : null,
-    },
     position: position || null,
     'text-align': d['text-align'] || 'middle',
     valign: d.valign || 'top',
     color: d.color
   };
 
-  const radius = obj.options.type === 'scatterplot' && d.key ? obj.dimensions.scatterplotRadius : 0;
-
   switch(config['text-align']) {
     case 'left':
       config['text-align'] = 'start';
-      config.offset.x = d.offset && isNumeric(d.offset.x) ? d.offset.x : radius * 2;
       break;
     case 'middle':
       config['text-align'] = 'middle';
       break;
     case 'right':
       config['text-align'] = 'end';
-      config.offset.x = d.offset && isNumeric(d.offset.x) ? d.offset.x : radius * -2;
       break;
   }
 
   switch(config.valign) {
     case 'top':
       config.valign = 'hanging';
-      config.offset.y = d.offset && isNumeric(d.offset.y) ? d.offset.y : radius * 2;
       break;
     case 'middle':
       config.valign = 'central';
       break;
     case 'bottom':
       config.valign = 'baseline';
-      config.offset.y = d.offset && isNumeric(d.offset.y) ? d.offset.y : radius * -2;
       break;
   }
 
@@ -432,21 +408,14 @@ export function drawTextAnnotation(i, config, obj) {
     .append('text')
     .text(config.text)
     .attrs({
-      'class': () => {
-        if (config.key) {
-          return `${obj.prefix}annotation_highlight-text ${obj.prefix}annotation_highlight-text-${i} `;
-        } else {
-          return `${obj.prefix}annotation_text ${obj.prefix}annotation_text-${i}`;
-        }
-      },
+      'class': `${obj.prefix}annotation_text ${obj.prefix}annotation_text-${i}`,
       'transform': `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`,
-      'x': config.position.x + (config.offset.x || 0),
-      'y': config.position.y + (config.offset.y || 0),
+      'x': config.position.x,
+      'y': config.position.y,
       'text-anchor': config['text-align'],
       'dominant-baseline': config.valign
     });
 
-  if (config.key) textNode.attr('data-key', config.key);
   if (config.color) textNode.style('fill', config.color);
 
   let lines = 1;
@@ -511,6 +480,18 @@ export function drawTextAnnotation(i, config, obj) {
 }
 
 export function editableText(annoEditable, obj) {
+
+  if (obj.options.type === 'scatterplot') {
+    const xScale = obj.rendered.plot.xScaleObj.scale,
+      yScale = obj.rendered.plot.yScaleObj.scale;
+    obj.rendered.plot.dotItems
+      .on('click', d => {
+        obj.annotationHandlers.textText = d.key;
+        obj.annotationHandlers.textX = xScale(d.series[0].val) / obj.dimensions.tickWidth();
+        obj.annotationHandlers.textY = yScale(d.series[1].val) / obj.dimensions.yAxisHeight();
+        appendTextInput(obj, this);
+      });
+  }
 
   const textSel = annoEditable
     .append('g')

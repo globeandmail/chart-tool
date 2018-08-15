@@ -180,11 +180,9 @@ export default class ChartOverlayPrint extends Component {
                   onClick={this.togglePrintMode}>
                   Millimetres</button>
               </div>
-              {
-                this.props.chart.print.mode === 'millimetres' ?
+              { this.props.chart.print.mode === 'millimetres' ?
                 this.renderMM() :
-                this.renderColumns()
-              }
+                this.renderColumns() }
             </div>
           </div>
         </div>

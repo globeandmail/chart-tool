@@ -546,37 +546,32 @@ span.note-anno-color {
 }
 
 .chart-preview-annotation-highlight {
-  rect {
-    &:hover {
-      cursor: url('/images/cursor.cur') 0 15, auto;
-    }
+  rect:hover {
+    cursor: url('/images/cursor.cur') 0 15, auto;
   }
 }
 
 .chart-preview-annotation-text {
-  .#{$prefix}annotation-editable-group {
-    &:hover {
-      cursor: pointer;
-    }
+  .#{$prefix}dot:hover,
+  .#{$prefix}annotation_text:hover {
+    cursor: pointer;
+  }
+  .#{$prefix}annotation-editable-group:hover {
+    cursor: text;
   }
 }
 
 .chart-preview-annotation-pointer {
-  .#{$prefix}annotations .#{$prefix}pointer-path {
-    &:hover {
-      cursor: pointer;
-    }
+  .#{$prefix}annotations .#{$prefix}pointer-path:hover {
+    cursor: pointer;
   }
 }
 
 .chart-preview-annotation-range {
-  .#{$prefix}annotations .#{$prefix}annotation_range {
-    &:hover {
-      cursor: pointer;
-    }
+  .#{$prefix}annotations .#{$prefix}annotation_range:hover {
+    cursor: pointer;
   }
 }
-
 
 .twitter-picker {
   box-shadow: none !important;

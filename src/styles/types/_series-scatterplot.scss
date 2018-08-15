@@ -1,5 +1,5 @@
 .#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot {
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 @for $pcounter from 1 through $palette-count {

@@ -595,7 +595,7 @@
 	  return [min, max];
 	}
 
-	function sequence(start, stop, step) {
+	function range(start, stop, step) {
 	  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
 	  var i = -1,
@@ -914,7 +914,7 @@
 	    start += (stop - start - step * (n - paddingInner)) * align;
 	    bandwidth = step * (1 - paddingInner);
 	    if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-	    var values = sequence(n).map(function(i) { return start + step * i; });
+	    var values = range(n).map(function(i) { return start + step * i; });
 	    return ordinalRange(reverse ? values.reverse() : values);
 	  }
 
@@ -1824,15 +1824,15 @@
 	  };
 	}
 
-	function bimap(domain, range, deinterpolate, reinterpolate) {
-	  var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
+	function bimap(domain, range$$1, deinterpolate, reinterpolate) {
+	  var d0 = domain[0], d1 = domain[1], r0 = range$$1[0], r1 = range$$1[1];
 	  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
 	  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
 	  return function(x) { return r0(d0(x)); };
 	}
 
-	function polymap(domain, range, deinterpolate, reinterpolate) {
-	  var j = Math.min(domain.length, range.length) - 1,
+	function polymap(domain, range$$1, deinterpolate, reinterpolate) {
+	  var j = Math.min(domain.length, range$$1.length) - 1,
 	      d = new Array(j),
 	      r = new Array(j),
 	      i = -1;
@@ -1840,12 +1840,12 @@
 	  // Reverse descending domains.
 	  if (domain[j] < domain[0]) {
 	    domain = domain.slice().reverse();
-	    range = range.slice().reverse();
+	    range$$1 = range$$1.slice().reverse();
 	  }
 
 	  while (++i < j) {
 	    d[i] = deinterpolate(domain[i], domain[i + 1]);
-	    r[i] = reinterpolate(range[i], range[i + 1]);
+	    r[i] = reinterpolate(range$$1[i], range$$1[i + 1]);
 	  }
 
 	  return function(x) {
@@ -1866,7 +1866,7 @@
 	// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
-	      range = unit,
+	      range$$1 = unit,
 	      interpolate$$1 = value,
 	      clamp = false,
 	      piecewise$$1,
@@ -1874,17 +1874,17 @@
 	      input;
 
 	  function rescale() {
-	    piecewise$$1 = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
+	    piecewise$$1 = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
 	    output = input = null;
 	    return scale;
 	  }
 
 	  function scale(x) {
-	    return (output || (output = piecewise$$1(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+	    return (output || (output = piecewise$$1(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
 	  }
 
 	  scale.invert = function(y) {
-	    return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+	    return (input || (input = piecewise$$1(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	  };
 
 	  scale.domain = function(_) {
@@ -1892,11 +1892,11 @@
 	  };
 
 	  scale.range = function(_) {
-	    return arguments.length ? (range = slice$1.call(_), rescale()) : range.slice();
+	    return arguments.length ? (range$$1 = slice$1.call(_), rescale()) : range$$1.slice();
 	  };
 
 	  scale.rangeRound = function(_) {
-	    return range = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
+	    return range$$1 = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
 	  };
 
 	  scale.clamp = function(_) {
@@ -2418,6 +2418,7 @@
 	    return (end - start) / k;
 	  });
 	};
+	var milliseconds = millisecond.range;
 
 	var durationSecond = 1e3;
 	var durationMinute = 6e4;
@@ -2434,6 +2435,7 @@
 	}, function(date) {
 	  return date.getUTCSeconds();
 	});
+	var seconds = second.range;
 
 	var minute = newInterval(function(date) {
 	  date.setTime(Math.floor(date / durationMinute) * durationMinute);
@@ -2537,6 +2539,7 @@
 	}, function(date) {
 	  return date.getUTCMinutes();
 	});
+	var utcMinutes = utcMinute.range;
 
 	var utcHour = newInterval(function(date) {
 	  date.setUTCMinutes(0, 0, 0);
@@ -2547,6 +2550,7 @@
 	}, function(date) {
 	  return date.getUTCHours();
 	});
+	var utcHours = utcHour.range;
 
 	var utcDay = newInterval(function(date) {
 	  date.setUTCHours(0, 0, 0, 0);
@@ -2557,6 +2561,7 @@
 	}, function(date) {
 	  return date.getUTCDate() - 1;
 	});
+	var utcDays = utcDay.range;
 
 	function utcWeekday(i) {
 	  return newInterval(function(date) {
@@ -2591,6 +2596,7 @@
 	}, function(date) {
 	  return date.getUTCMonth();
 	});
+	var utcMonths = utcMonth.range;
 
 	var utcYear = newInterval(function(date) {
 	  date.setUTCMonth(0, 1);
@@ -2613,6 +2619,7 @@
 	    date.setUTCFullYear(date.getUTCFullYear() + step * k);
 	  });
 	};
+	var utcYears = utcYear.range;
 
 	function localDate(d) {
 	  if (0 <= d.y && d.y < 100) {
@@ -3554,7 +3561,6 @@
 	  heading: '',
 	  qualifier: '',
 	  source: '',
-	  deck: '',
 	  index: '',
 	  hasHours: false,
 	  social: social,
@@ -3562,29 +3568,32 @@
 	  customClass: '',
 
 	  options: {
-	    type: 'line',
-	    interpolation: 'linear',
-	    stacked: false,
+	    annotations: true,
 	    expanded: false,
-	    head: true,
-	    deck: false,
-	    qualifier: true,
-	    legend: true,
 	    footer: true,
-	    x_axis: true,
-	    y_axis: true,
-	    tips: false,
-	    annotations: false,
-	    range: false,
-	    series: false,
+	    head: true,
+	    indexed: false,
+	    interpolation: 'linear',
+	    legend: true,
+	    qualifier: true,
 	    share_data: true,
-	    social: true
+	    social: true,
+	    stacked: false,
+	    tips: true,
+	    type: 'line',
+	    x_axis: true,
+	    y_axis: true
 	  },
 
-	  range: {},
-	  series: {},
 	  xAxis: xAxis,
 	  yAxis: yAxis,
+
+	  annotations: {
+	    highlight: [],
+	    range: [],
+	    text: [],
+	    pointer: []
+	  },
 
 	  exportable: false, // this can be overwritten by the backend as needed
 	  editable: false,
@@ -7025,7 +7034,7 @@
 
 	  if (stacked && keys.length > 2) {
 	    var stackFn = stack().keys(keys.slice(1));
-	    stackedData = stackFn(sequence(data.length).map(function (i) {
+	    stackedData = stackFn(range(data.length).map(function (i) {
 	      var o = {};
 	      o[keys[0]] = data[i].key;
 	      for (var j = 0; j < data[i].series.length; j++) {
@@ -7099,13 +7108,12 @@
 
 	function recipe(obj) {
 
-	  var t = extend$1(chartSettings);
+	  var t = extend$1(chartSettings),
+	    embed = obj.data,
+	    chart = embed.chart;
 
-	  var embed = obj.data, chart = embed.chart;
-
-	  // I'm not a big fan of indenting stuff like this
-	  // (looking at you, Pereira), but I'm making an exception
-	  // in this case because my eyes were bleeding
+	  // I'm not a big fan of indenting stuff like this but making
+	  // an exception in this case because eyes were bleeding
 
 	  t.dispatch    = obj.dispatch;
 	  t.version     = embed.version                 || t.version;
@@ -7113,12 +7121,12 @@
 	  t.heading     = embed.heading                 || t.heading;
 	  t.qualifier   = embed.qualifier               || t.qualifier;
 	  t.source      = embed.source                  || t.source;
-	  t.deck        = embed.deck                    || t.deck;
 	  t.customClass = chart.class                   || t.customClass;
 	  t.xAxis       = extend$1(t.xAxis, chart.x_axis) || t.xAxis;
 	  t.yAxis       = extend$1(t.yAxis, chart.y_axis) || t.yAxis;
 
-	  var o = t.options, co = chart.options;
+	  var o = t.options,
+	    co = chart.options;
 
 	  // 'options' area of embed code
 	  o.type          = chart.options.type          || o.type;
@@ -7129,7 +7137,6 @@
 	  o.stacked     = !isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
 	  o.expanded    = !isUndefined(co.expanded) === true ? co.expanded       : o.expanded;
 	  o.head        = !isUndefined(co.head) === true ? co.head               : o.head;
-	  o.deck        = !isUndefined(co.deck) === true ? co.deck               : o.deck;
 	  o.legend      = !isUndefined(co.legend) === true ? co.legend           : o.legend;
 	  o.qualifier   = !isUndefined(co.qualifier) === true ? co.qualifier     : o.qualifier;
 	  o.footer      = !isUndefined(co.footer) === true ? co.footer           : o.footer;
@@ -7137,8 +7144,6 @@
 	  o.y_axis      = !isUndefined(co.y_axis) === true ? co.y_axis           : o.y_axis;
 	  o.tips        = !isUndefined(co.tips) === true ? co.tips               : o.tips;
 	  o.annotations = !isUndefined(co.annotations) === true ? co.annotations : o.annotations;
-	  o.range       = !isUndefined(co.range) === true ? co.range             : o.range;
-	  o.series      = !isUndefined(co.series) === true ? co.series           : o.series;
 	  o.index       = !isUndefined(co.indexed) === true ? co.indexed         : o.index;
 
 	  //  these are specific to the t object and don't exist in the embed
@@ -8527,15 +8532,15 @@
 
 	function setRange(obj, axisType) {
 
-	  var range;
+	  var range$$1;
 
 	  if (axisType === 'xAxis') {
-	    range = [0, obj.dimensions.tickWidth()]; // operating on width
+	    range$$1 = [0, obj.dimensions.tickWidth()]; // operating on width
 	  } else if (axisType === 'yAxis') {
-	    range = [obj.dimensions.yAxisHeight(), 0]; // operating on height
+	    range$$1 = [obj.dimensions.yAxisHeight(), 0]; // operating on height
 	  }
 
-	  return range;
+	  return range$$1;
 
 	}
 
@@ -8785,12 +8790,12 @@
 
 	function linearAxis(obj, axis, axisNode, axisSettings) {
 
-	  var range;
+	  var range$$1;
 
-	  if (axisSettings.axisType === 'xAxis') { range = [0, obj.dimensions.tickWidth()]; }
-	  if (axisSettings.axisType === 'yAxis') { range = [obj.dimensions.yAxisHeight(), 0]; }
+	  if (axisSettings.axisType === 'xAxis') { range$$1 = [0, obj.dimensions.tickWidth()]; }
+	  if (axisSettings.axisType === 'yAxis') { range$$1 = [obj.dimensions.yAxisHeight(), 0]; }
 
-	  axis.scale().range(range);
+	  axis.scale().range(range$$1);
 
 	  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
@@ -10636,7 +10641,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function nodrag(view) {
+	function dragDisable(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10733,7 +10738,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    nodrag(event.view);
+	    dragDisable(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11193,7 +11198,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      nodrag(event.view);
+	      dragDisable(event.view);
 	    }
 
 	    nopropagation$1();
@@ -13455,14 +13460,20 @@
 	      });
 	  }
 
-	  if (annoData.range && annoData.range.length) { range(annoNode, obj); }
+	  if (annoData.range && annoData.range.length) { range$1(annoNode, obj); }
 	  if (annoData.highlight && annoData.highlight.length) { highlight(annoNode, obj); }
 	  if (annoData.pointer && annoData.pointer.length) { pointer(annoNode, obj); }
 	  if (annoData.text && annoData.text.length) { text(annoNode, obj); }
 
+	  var isTextAndScatterplot = obj.options.type === 'scatterplot' &&
+	    obj.annotationHandlers &&
+	    obj.annotationHandlers.type === 'text';
+
 	  if (obj.editable && obj.annotationHandlers && obj.annotationHandlers.type) {
+	    // insert either behind `graph` element for text scatterplots,
+	    // or behind annotations element for everything else
 	    annoEditable = select(node.node().parentNode)
-	      .insert('g', ("." + (obj.prefix) + "annotations"))
+	      .insert('g', isTextAndScatterplot ? ("." + (obj.prefix) + "graph") : ("." + (obj.prefix) + "annotations"))
 	      .attrs({
 	        transform: ("translate(" + (obj.dimensions.margin.left) + "," + (obj.dimensions.margin.top) + ")"),
 	        class: ((obj.prefix) + "annotation-editable-group")
@@ -13497,28 +13508,9 @@
 	    }
 	  }
 
-	  if (obj.options.type === 'scatterplot') {
-	    h.map(function (highlightObj, i) {
-
-	      var currRef = obj.rendered.plot.dotItems
-	        .filter(function (d) { return d.key.toString() === highlightObj.key; })
-	        .style('opacity', 1);
-
-	      var config = generateTextAnnotationConfig(highlightObj, annoNode, obj, {
-	        x: Number(currRef.attr('cy')),
-	        y: Number(currRef.attr('cx'))
-	      });
-
-	      // need to revisit x and y stuff here since it's fractional right now for text annos
-
-	      drawTextAnnotation(i, config, obj);
-	    });
-
-	  }
-
 	}
 
-	function range(annoNode, obj) {
+	function range$1(annoNode, obj) {
 	  var r = obj.annotations.range;
 
 	  r.map(function (rangeObj, i) {
@@ -13806,45 +13798,34 @@
 
 	  var config = {
 	    annoNode: annoNode,
-	    key: d.key || null,
 	    text: d.text || d.key,
-	    offset: {
-	      x: d.offset && isNumeric(d.offset.x) ? d.offset.x : null,
-	      y: d.offset && isNumeric(d.offset.y) ? d.offset.y : null,
-	    },
 	    position: position || null,
 	    'text-align': d['text-align'] || 'middle',
 	    valign: d.valign || 'top',
 	    color: d.color
 	  };
 
-	  var radius = obj.options.type === 'scatterplot' && d.key ? obj.dimensions.scatterplotRadius : 0;
-
 	  switch(config['text-align']) {
 	    case 'left':
 	      config['text-align'] = 'start';
-	      config.offset.x = d.offset && isNumeric(d.offset.x) ? d.offset.x : radius * 2;
 	      break;
 	    case 'middle':
 	      config['text-align'] = 'middle';
 	      break;
 	    case 'right':
 	      config['text-align'] = 'end';
-	      config.offset.x = d.offset && isNumeric(d.offset.x) ? d.offset.x : radius * -2;
 	      break;
 	  }
 
 	  switch(config.valign) {
 	    case 'top':
 	      config.valign = 'hanging';
-	      config.offset.y = d.offset && isNumeric(d.offset.y) ? d.offset.y : radius * 2;
 	      break;
 	    case 'middle':
 	      config.valign = 'central';
 	      break;
 	    case 'bottom':
 	      config.valign = 'baseline';
-	      config.offset.y = d.offset && isNumeric(d.offset.y) ? d.offset.y : radius * -2;
 	      break;
 	  }
 
@@ -13858,21 +13839,14 @@
 	    .append('text')
 	    .text(config.text)
 	    .attrs({
-	      'class': function () {
-	        if (config.key) {
-	          return ((obj.prefix) + "annotation_highlight-text " + (obj.prefix) + "annotation_highlight-text-" + i + " ");
-	        } else {
-	          return ((obj.prefix) + "annotation_text " + (obj.prefix) + "annotation_text-" + i);
-	        }
-	      },
+	      'class': ((obj.prefix) + "annotation_text " + (obj.prefix) + "annotation_text-" + i),
 	      'transform': ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"),
-	      'x': config.position.x + (config.offset.x || 0),
-	      'y': config.position.y + (config.offset.y || 0),
+	      'x': config.position.x,
+	      'y': config.position.y,
 	      'text-anchor': config['text-align'],
 	      'dominant-baseline': config.valign
 	    });
 
-	  if (config.key) { textNode.attr('data-key', config.key); }
 	  if (config.color) { textNode.style('fill', config.color); }
 
 	  var lines = 1;
@@ -13937,6 +13911,20 @@
 	}
 
 	function editableText(annoEditable, obj) {
+	  var this$1 = this;
+
+
+	  if (obj.options.type === 'scatterplot') {
+	    var xScale = obj.rendered.plot.xScaleObj.scale,
+	      yScale = obj.rendered.plot.yScaleObj.scale;
+	    obj.rendered.plot.dotItems
+	      .on('click', function (d) {
+	        obj.annotationHandlers.textText = d.key;
+	        obj.annotationHandlers.textX = xScale(d.series[0].val) / obj.dimensions.tickWidth();
+	        obj.annotationHandlers.textY = yScale(d.series[1].val) / obj.dimensions.yAxisHeight();
+	        appendTextInput(obj, this$1);
+	      });
+	  }
 
 	  var textSel = annoEditable
 	    .append('g')

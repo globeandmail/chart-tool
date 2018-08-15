@@ -16,7 +16,6 @@ const chartSettings = {
   heading: '',
   qualifier: '',
   source: '',
-  deck: '',
   index: '',
   hasHours: false,
   social: settings.social,
@@ -24,29 +23,32 @@ const chartSettings = {
   customClass: '',
 
   options: {
-    type: 'line',
-    interpolation: 'linear',
-    stacked: false,
+    annotations: true,
     expanded: false,
-    head: true,
-    deck: false,
-    qualifier: true,
-    legend: true,
     footer: true,
-    x_axis: true,
-    y_axis: true,
-    tips: false,
-    annotations: false,
-    range: false,
-    series: false,
+    head: true,
+    indexed: false,
+    interpolation: 'linear',
+    legend: true,
+    qualifier: true,
     share_data: true,
-    social: true
+    social: true,
+    stacked: false,
+    tips: true,
+    type: 'line',
+    x_axis: true,
+    y_axis: true
   },
 
-  range: {},
-  series: {},
   xAxis: settings.xAxis,
   yAxis: settings.yAxis,
+
+  annotations: {
+    highlight: [],
+    range: [],
+    text: [],
+    pointer: []
+  },
 
   exportable: false, // this can be overwritten by the backend as needed
   editable: false,

@@ -83,6 +83,7 @@ export default class ChartAnnotations extends Component {
   }
 
   displayHighlight() {
+
     const { data } = dataParse(this.props.chart.data);
 
     let needsDates;
@@ -509,9 +510,9 @@ export default class ChartAnnotations extends Component {
             </div>
           </div>
 
-          <div className='unit-edit unit-anno anno-highlight-edit'>
-            <h4 id='highlightExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
-            {this.displayHighlight() ?
+          { this.displayHighlight() ?
+            <div className='unit-edit unit-anno anno-highlight-edit'>
+              <h4 id='highlightExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
               <div className={`unit-annotation-expand ${this.expandStatus('highlightExpanded')}`}>
                 <ColorPicker
                   triangle={'hide'}
@@ -543,8 +544,9 @@ export default class ChartAnnotations extends Component {
                     </ul>
                   </div>
                   : null }
-              </div> : null }
-          </div>
+              </div>
+            </div>
+            : null }
 
           <div className='unit-edit unit-anno anno-text-edit'>
             <h4 id='rangeExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
