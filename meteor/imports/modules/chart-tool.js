@@ -1553,7 +1553,7 @@
 	      c = new Array(nb),
 	      i;
 
-	  for (i = 0; i < na; ++i) x[i] = value(a[i], b[i]);
+	  for (i = 0; i < na; ++i) x[i] = interpolate(a[i], b[i]);
 	  for (; i < nb; ++i) c[i] = b[i];
 
 	  return function(t) {
@@ -1585,7 +1585,7 @@
 
 	  for (k in b) {
 	    if (k in a) {
-	      i[k] = value(a[k], b[k]);
+	      i[k] = interpolate(a[k], b[k]);
 	    } else {
 	      c[k] = b[k];
 	    }
@@ -1660,7 +1660,7 @@
 	        });
 	}
 
-	function value(a, b) {
+	function interpolate(a, b) {
 	  var t = typeof b, c;
 	  return b == null || t === "boolean" ? constant$1(b)
 	      : (t === "number" ? interpolateNumber
@@ -1867,7 +1867,7 @@
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
 	      range$$1 = unit,
-	      interpolate$$1 = value,
+	      interpolate$$1 = interpolate,
 	      clamp = false,
 	      piecewise$$1,
 	      output,
@@ -2492,8 +2492,6 @@
 	var saturday = weekday(6);
 
 	var sundays = sunday.range;
-	var mondays = monday.range;
-	var thursdays = thursday.range;
 
 	var month = newInterval(function(date) {
 	  date.setDate(1);
@@ -2583,8 +2581,6 @@
 	var utcSaturday = utcWeekday(6);
 
 	var utcSundays = utcSunday.range;
-	var utcMondays = utcMonday.range;
-	var utcThursdays = utcThursday.range;
 
 	var utcMonth = newInterval(function(date) {
 	  date.setUTCDate(1);
@@ -5474,8 +5470,6 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
-	var _library$1 = false;
-
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5484,7 +5478,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: _library$1 ? 'pure' : 'global',
+	  mode: 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -7563,7 +7557,7 @@
 	  };
 	}
 
-	function interpolate(a, b) {
+	function interpolate$1(a, b) {
 	  var c;
 	  return (typeof b === "number" ? interpolateNumber
 	      : b instanceof color ? interpolateRgb
@@ -7605,12 +7599,12 @@
 	  };
 	}
 
-	function attrFunction$1(name, interpolate$$1, value$$1) {
+	function attrFunction$1(name, interpolate$$1, value) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value$$1(this);
+	    var value0, value1 = value(this);
 	    if (value1 == null) return void this.removeAttribute(name);
 	    value0 = this.getAttribute(name);
 	    return value0 === value1 ? null
@@ -7619,12 +7613,12 @@
 	  };
 	}
 
-	function attrFunctionNS$1(fullname, interpolate$$1, value$$1) {
+	function attrFunctionNS$1(fullname, interpolate$$1, value) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value$$1(this);
+	    var value0, value1 = value(this);
 	    if (value1 == null) return void this.removeAttributeNS(fullname.space, fullname.local);
 	    value0 = this.getAttributeNS(fullname.space, fullname.local);
 	    return value0 === value1 ? null
@@ -7633,12 +7627,12 @@
 	  };
 	}
 
-	function transition_attr(name, value$$1) {
-	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate;
-	  return this.attrTween(name, typeof value$$1 === "function"
-	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value$$1))
-	      : value$$1 == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
-	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value$$1));
+	function transition_attr(name, value) {
+	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate$1;
+	  return this.attrTween(name, typeof value === "function"
+	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value))
+	      : value == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
+	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value));
 	}
 
 	function attrTweenNS(fullname, value) {
@@ -7885,14 +7879,14 @@
 	  };
 	}
 
-	function styleFunction$1(name, interpolate$$1, value$$1) {
+	function styleFunction$1(name, interpolate$$1, value) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
 	    var style = window$1(this).getComputedStyle(this, null),
 	        value0 = style.getPropertyValue(name),
-	        value1 = value$$1(this);
+	        value1 = value(this);
 	    if (value1 == null) value1 = (this.style.removeProperty(name), style.getPropertyValue(name));
 	    return value0 === value1 ? null
 	        : value0 === value00 && value1 === value10 ? interpolate0
@@ -7900,14 +7894,14 @@
 	  };
 	}
 
-	function transition_style(name, value$$1, priority) {
-	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate;
-	  return value$$1 == null ? this
+	function transition_style(name, value, priority) {
+	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate$1;
+	  return value == null ? this
 	          .styleTween(name, styleRemove$1(name, i))
 	          .on("end.style." + name, styleRemoveEnd(name))
-	      : this.styleTween(name, typeof value$$1 === "function"
-	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value$$1))
-	          : styleConstant$1(name, i, value$$1), priority);
+	      : this.styleTween(name, typeof value === "function"
+	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value))
+	          : styleConstant$1(name, i, value), priority);
 	}
 
 	function styleTween(name, value, priority) {
@@ -10641,7 +10635,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function dragDisable(view) {
+	function nodrag(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10738,7 +10732,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    dragDisable(event.view);
+	    nodrag(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11047,7 +11041,7 @@
 	                emit = emitter(that, arguments),
 	                selection0 = state.selection,
 	                selection1 = dim.input(typeof selection$$1 === "function" ? selection$$1.apply(this, arguments) : selection$$1, state.extent),
-	                i = value(selection0, selection1);
+	                i = interpolate(selection0, selection1);
 
 	            function tween(t) {
 	              state.selection = t === 1 && empty$1(selection1) ? null : i(t);
@@ -11198,7 +11192,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      dragDisable(event.view);
+	      nodrag(event.view);
 	    }
 
 	    nopropagation$1();
@@ -11381,8 +11375,8 @@
 	  };
 
 	  brush.on = function() {
-	    var value$$1 = listeners.on.apply(listeners, arguments);
-	    return value$$1 === listeners ? brush : value$$1;
+	    var value = listeners.on.apply(listeners, arguments);
+	    return value === listeners ? brush : value;
 	  };
 
 	  return brush;
