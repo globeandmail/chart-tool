@@ -262,7 +262,7 @@ select {
 }
 
 .chart-preview {
-  margin-bottom: 4em;
+  margin-bottom: 2em;
   h5 {
     font-size: 0.9em;
     letter-spacing: 0.02em;
@@ -867,7 +867,6 @@ span.note-anno-color {
     @include transition (all 0.1s ease-out);
     &:hover {
       color: $color-black;
-      // opacity: 1;
       @include transition (all 0.1s ease-in);
     }
   }

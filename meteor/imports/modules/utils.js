@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 import { app_settings } from './settings';
 import { timeFormat, timeParse } from 'd3-time-format';
 import ChartTool from './chart-tool';
+import { extent } from 'd3-array';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -70,7 +71,8 @@ export function cleanEmbed(data) {
     'range',
     'public',
     'users',
-    'tags'
+    'tags',
+    'memo'
   );
   const chartObj = deleteProp(data, arr);
   const newData = csvFormat(data);
@@ -861,10 +863,65 @@ export function guessDateFormat(data, type) {
   if (tests.length === 1) dateFormat = tests[0].format;
   if (tests.length > 1) {
     // if tests still has elements, probably best to assume MM-DD-YY instead of DD-MM-YY?
-    const re = /^%m.*/;
-    dateFormat = tests.filter(item => re.test(item.format))[0].format;
+
+    // either YYYY-XX
+    // or XX-YYYY
+    const splitDates = firstCol
+      .map(f => f.split('-'));
+
+    const dateLengths = firstCol[0].split('-').map(f => f.length),
+      yearIndex = dateLengths.indexOf(4);
+
+    let re;
+
+    if (yearIndex !== -1) {
+      // has YYYY in it, so other two are either DD or MM
+      // count up numbers for other two columns
+      const remainingDates = splitDates
+        .map(row => row.filter((f, i) => i !== yearIndex));
+
+      const analysis = transposeArray(remainingDates)
+        .map(arr => {
+          const [min, max] = extent(arr);
+          return {
+            min: parseInt(min),
+            max: parseInt(max),
+            mode: parseInt(mode(arr))
+          };
+        });
+
+      if (analysis[0].min === analysis[0].max && analysis[1].min === analysis[1].max) {
+        // then it doesn't matter, use D-M-Y
+        re = /^%d.*/;
+      } else if (analysis[0].min === analysis[0].max) {
+        // 0 is day
+        re = /^%d.*/;
+      } else if (analysis[1].min === analysis[1].max) {
+        // 1 is day
+        re = /^%m.*/;
+      } else if (analysis[0].max === 12) {
+        // 0 is month
+        re = /^%m.*/;
+      } else if (analysis[1].max === 12) {
+        // 1 is month
+        re = /^%d.*/;
+      }
+
+    } else {
+      // it's short form MM-DD-YY or DD-MM-YY or rarely, YY-XX-XX
+      re = /^%m.*/;
+    }
+
+    const filtered = tests.filter(item => re.test(item.format));
+
+    dateFormat = filtered.length ? filtered[0].format : undefined;
+
   }
 
   return dateFormat;
 
+}
+
+function transposeArray(m) {
+  return m[0].map((x,i) => m.map(x => x[i]));
 }
