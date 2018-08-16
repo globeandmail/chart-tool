@@ -32,7 +32,8 @@ export default class Header extends Component {
   updateSlug(event) {
     const slugData = event.target.value,
       slug = slugify(slugData);
-    if (slug) { this.setSlugValue(slug); }
+    event.target.value = slug;
+    if (slug) this.setSlugValue(slug);
   }
 
   renderEditSlug() {

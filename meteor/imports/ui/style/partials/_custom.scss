@@ -135,7 +135,9 @@ $nine-pt: ptToPx(9);
     stroke: $color-black;
   }
 
-  .#{$prefix}axis-group text, .#{$prefix}bar-label {
+  .#{$prefix}axis-group text,
+  .#{$prefix}bar-label,
+  .#{$prefix}annotation_text {
     font-size: $eight-pt;
     color: $color-black;
     fill: $color-black;
@@ -157,6 +159,10 @@ $nine-pt: ptToPx(9);
 
   .#{$prefix}type_column .#{$prefix}series_group .#{$prefix}column rect,
   .#{$prefix}type_bar .#{$prefix}series_group .#{$prefix}bar rect {
+    stroke-width: ptToPx(0.5);
+  }
+
+  .#{$prefix}pointer-path {
     stroke-width: ptToPx(0.5);
   }
 

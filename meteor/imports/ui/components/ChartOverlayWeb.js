@@ -88,7 +88,7 @@ export default class ChartOverlayWeb extends Component {
       scale = Number(event.target[2].value);
     }
 
-    Meteor.call('chart.png.download', this.props.chart._id, {
+    Meteor.call('charts.png.download', this.props.chart._id, {
       width,
       height,
       scale,

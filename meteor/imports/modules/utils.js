@@ -226,15 +226,15 @@ export function dataParse(data) {
 export function chartFromColTypes(colTypes) {
 
   // use col types to determine whether it's bar, line or scatterplot
-  // if first index is non-numeric, it's bar
-  // if first index is numeric and any later indices are non-numeric, it's scatterplot
-  // if first index is numeric and any later indices are also numeric, it's line
+  // if first index is numeric, it's line
+  // if first index is non-numeric and any later indices are non-numeric, it's scatterplot
+  // if first index is non-numeric and later indices are numeric, it's bar
 
   const firstColType = colTypes.shift();
 
-  if (firstColType !== 'numeric') return 'bar';
+  if (firstColType === 'numeric') return 'line';
 
-  return colTypes.indexOf('non-numeric') !== -1 ? 'scatterplot' : 'line';
+  return colTypes.indexOf('non-numeric') !== -1 ? 'scatterplot' : 'bar';
 
 }
 
@@ -535,7 +535,7 @@ const debouncedThumb = debounce(id => {
 }, app_settings.thumbnail_debounce);
 
 function generateThumb(id) {
-  Meteor.call('chart.update.thumbnail', id, {
+  Meteor.call('charts.update.thumbnail', id, {
     width: app_settings.s3.thumbnailWidth,
     scale: 2,
     dynamicHeight: false

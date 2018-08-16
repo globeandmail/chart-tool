@@ -101,6 +101,7 @@ export const app_settings = {
 
     users: [],
     tags: [],
+    memo: '',
 
     img: '',
     print: {

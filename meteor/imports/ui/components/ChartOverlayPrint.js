@@ -34,7 +34,7 @@ export default class ChartOverlayPrint extends Component {
     const print = generateMeasurements(this.props.chart.print),
       filename = `${this.props.chart.slug}-print-${print.name}.pdf`;
 
-    Meteor.call('chart.pdf.download', this.props.chart._id, (error, response) => {
+    Meteor.call('charts.pdf.download', this.props.chart._id, (error, response) => {
       if (error) {
         console.log(error);
       } else {

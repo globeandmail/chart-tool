@@ -11,6 +11,7 @@ import ChartType from '../components/ChartType';
 import ChartPreview from '../components/ChartPreview';
 import ChartOutput from '../components/ChartOutput';
 import ChartOverlays from '../components/ChartOverlays';
+import ChartMemo from '../components/ChartMemo';
 import ChartStatus from '../components/ChartStatus';
 import ChartData from '../components/ChartData';
 import ChartXAxis from '../components/ChartXAxis';
@@ -160,6 +161,9 @@ class EditChart extends Component {
             />
           </article>
           <aside className='options-area'>
+            <ChartMemo
+              {...this.props}
+            />
             <ChartStatus
               name={this.state.animalName}
               {...this.props}

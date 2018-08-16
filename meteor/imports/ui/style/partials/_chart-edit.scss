@@ -843,3 +843,45 @@ span.note-anno-color {
 .rc-slider-rail {
   background-color: darken($color-gray-light, 20%) !important;
 }
+
+.memo {
+  h4 {
+    @include interface-font-regular;
+    margin-top: 0;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-left: 0.5em;
+  }
+  .add-memo {
+    @include appearance(none);
+    background-color: $color-gray-light;
+    border: none;
+    color: rgba($color-black, 0.4);
+    font-size: 0.8em;
+    padding: 0.4em 0.5em 0.35em 0.5em;
+    width: 100%;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    @include transition (all 0.1s ease-out);
+    &:hover {
+      color: $color-black;
+      // opacity: 1;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+  .memo-field {
+    @include appearance(none);
+    background-color: $color-gray-light;
+    width: 100%;
+    resize: vertical;
+    border-radius: 3px;
+    min-height: (3 * 1.4667) * 1em;
+    font-size: 0.75em;
+    font-family: "Monaco", "Lucida Console", monospace;
+    overflow: auto;
+    padding: 0.3em 0.5em;
+    border: none;
+  }
+}
