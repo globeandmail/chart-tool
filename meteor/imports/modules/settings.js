@@ -276,6 +276,7 @@ var app_settings = {
     column_width: 47,
     first_line_depth: 2.14,
     line_depth: 3.35,
+    overall_margin: 1,
     x_axis: {
       tickTarget: 8,
       ticksSmall: 5,

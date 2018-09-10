@@ -370,6 +370,10 @@ export default class Chart extends Component {
         chart.exportable.y_axis = app_settings.print.y_axis;
         chart.exportable.margin = app_settings.print.margin;
         chart.exportable.barLabelOffset = app_settings.print.barLabelOffset;
+        if (this.props.margin) {
+          chart.exportable.width = chart.exportable.width - (this.props.margin * 2);
+          chart.exportable.height = chart.exportable.height - (this.props.margin * 2);
+        }
       }
 
       if (this.props.type === 'png') {

@@ -18,6 +18,7 @@ class PDF extends Component {
           <Chart
             type={'print'}
             chart={this.props.chart}
+            margin={this.props.query.margin}
             editable={false}
             tips={false}
             exportable={true}

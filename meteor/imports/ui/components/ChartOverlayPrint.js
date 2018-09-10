@@ -156,6 +156,7 @@ export default class ChartOverlayPrint extends Component {
                 <Chart
                   type={'print'}
                   chart={this.props.chart}
+                  margin={app_settings.print.overall_margin || 0}
                   editable={false}
                   tips={false}
                   exportable={true}

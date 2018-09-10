@@ -10,7 +10,8 @@ const puppeteerSettings = {
 export async function generatePDF(chart, width, height) {
   const browser = await puppeteer.launch(puppeteerSettings);
   const page = await browser.newPage();
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf`, { waitUntil: ['load', 'networkidle0'] });
+  const margin = `margin=${app_settings.print.overall_margin || 0}`;
+  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf?${margin}`, { waitUntil: ['load', 'networkidle0'] });
   await page.emulateMedia('screen');
   const pdf = await page.pdf({
     width: `${width}mm`,

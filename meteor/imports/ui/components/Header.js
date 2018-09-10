@@ -57,7 +57,7 @@ export default class Header extends Component {
   renderNav() {
     return (
       <div className={this.props.edit ? 'header-edit-nav' : 'header-nav'}>
-        <h2 className='header-help'><Link to={ app_settings.help || 'http://www.github.com/globeandmail/chart-tool' }>Help</Link></h2>
+        <h2 className='header-help'><Link to={ app_settings.help ? app_settings.help : 'http://www.github.com/globeandmail/chart-tool' }>Help</Link></h2>
         <h2 className='header-list'><Link to='/archive'>Archive</Link></h2>
         <h2 className='header-new'><Link to='/new'>New chart</Link></h2>
       </div>
