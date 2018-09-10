@@ -62,7 +62,7 @@ $nine-pt: ptToPx(9);
     padding-top: 0;
     display: block;
     color: $color-black;
-    padding-bottom: 1.5px;
+    padding-bottom: 1px;
     margin-bottom: 0;
     line-height: $six-five-pt;
     @media(min-width: 420px) {
@@ -164,6 +164,10 @@ $nine-pt: ptToPx(9);
 
   .#{$prefix}pointer-path {
     stroke-width: ptToPx(0.5);
+  }
+
+  .#{$prefix}annotation_range-line {
+    stroke-width: ptToPx(1.0);
   }
 
 }

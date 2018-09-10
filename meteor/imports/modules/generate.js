@@ -4,7 +4,11 @@ import AWS from 'aws-sdk';
 import { app_settings } from './settings';
 
 const puppeteerSettings = {
-  args: ['--enable-font-antialiasing', '--font-render-hinting=medium']
+  args: [
+    '--enable-font-antialiasing',
+    '--font-render-hinting=medium',
+    '--hide-scrollbars'
+  ]
 };
 
 export async function generatePDF(chart, width, height) {
