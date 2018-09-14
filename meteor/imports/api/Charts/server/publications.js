@@ -20,8 +20,6 @@ Meteor.publish('chart.archive', function(params) {
   parameters.options.fields.lastEdited = true;
   parameters.options.fields.createdAt = true;
 
-  // console.log(JSON.stringify(parameters));
-
   const data = Charts.find(parameters.find, parameters.options);
   if (data) { return data; }
   return this.ready();

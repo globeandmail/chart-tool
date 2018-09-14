@@ -5,6 +5,7 @@ import { app_settings } from '../../modules/settings';
 import { parse } from '../../modules/chart-tool';
 import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
+import { DebounceInput } from 'react-debounce-input';
 
 const formats = dateFormats();
 
@@ -144,14 +145,17 @@ export default class ChartData extends Component {
 
           <div className='unit-edit'>
             <h4>Data</h4>
-            <textarea
-              type='text'
+            <DebounceInput
+              minLength={2}
+              debounceTimeout={300}
+              element='textarea'
               name='pasteData'
               placeholder='Paste your spreadsheet data here'
               className='input-data-edit'
-              onBlur={this.handleData}
-              defaultValue={this.props.chart.data}
-            ></textarea>
+              onChange={this.handleData}
+              forceNotifyByEnter={false}
+              value={this.props.chart.data}
+            />
           </div>
 
           { this.props.chart.x_axis.scale === 'time' || this.props.chart.x_axis.scale === 'ordinal-time' ?

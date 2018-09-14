@@ -4,6 +4,7 @@ import slugify from 'slug';
 import { Link } from 'react-router-dom';
 import { app_settings } from '../../modules/settings';
 import { setDocumentTitle } from '../../modules/utils';
+import { DebounceInput } from 'react-debounce-input';
 
 export default class Header extends Component {
 
@@ -40,13 +41,17 @@ export default class Header extends Component {
     return (
       <div className='header-grid'>
         <div className='chart-slug'>
-          <input
-            type='text'
-            name='slug'
+          <DebounceInput
+            minLength={2}
+            debounceTimeout={500}
+            element='input'
             className='input-slug-edit'
             placeholder={this.props.chart.slug}
-            defaultValue={this.props.chart.slug}
-            onBlur={this.updateSlug}
+            type='text'
+            name='slug'
+            onChange={this.updateSlug}
+            forceNotifyByEnter={false}
+            value={this.props.chart.slug}
           />
         </div>
         { this.renderNav() }

@@ -3,6 +3,7 @@ import { dataParse, updateAndSave, isNumber } from '../../modules/utils';
 import { min } from 'd3-array';
 import Swal from 'sweetalert2';
 import { parse } from '../../modules/chart-tool';
+import { DebounceInput } from 'react-debounce-input';
 
 const formats = [
   { format: 'comma', pretty: '1,234' },
@@ -187,13 +188,16 @@ export default class ChartYAxis extends Component {
               <div className='unit-edit'>
                 <h4>Formatting</h4>
                 <div className='y-prefix-edit'>
-                  <input
+                  <DebounceInput
+                    minLength={0}
+                    debounceTimeout={300}
+                    element='input'
                     type='text'
                     name='prefix'
                     placeholder='$'
-                    className='input-prefix-x input-field'
-                    defaultValue={this.props.chart.y_axis.prefix}
-                    onBlur={this.handlePrefix}
+                    className='input-prefix-y input-field'
+                    value={this.props.chart.y_axis.prefix}
+                    onChange={this.handlePrefix}
                   />
                 </div>
                 <div className='y-formatval-edit'>
@@ -210,13 +214,16 @@ export default class ChartYAxis extends Component {
                   </div>
                 </div>
                 <div className='y-suffix-edit'>
-                  <input
+                  <DebounceInput
+                    minLength={0}
+                    debounceTimeout={300}
+                    element='input'
                     type='text'
                     name='suffix'
                     placeholder='%'
                     className='input-suffix-y input-field'
-                    defaultValue={this.props.chart.y_axis.suffix}
-                    onBlur={this.handleSuffix}
+                    value={this.props.chart.y_axis.suffix}
+                    onChange={this.handleSuffix}
                   />
                 </div>
               </div>
@@ -224,22 +231,28 @@ export default class ChartYAxis extends Component {
                 <h4>Custom range</h4>
                 <span>
                   { this.displayMin() === true ?
-                    <input
+                    <DebounceInput
+                      minLength={0}
+                      debounceTimeout={300}
+                      element='input'
                       type='number'
                       name='min'
                       placeholder='Min'
                       className='input-min-y input-field'
-                      defaultValue={this.props.chart.y_axis.min}
-                      onBlur={this.handleMin}
+                      value={this.props.chart.y_axis.min}
+                      onChange={this.handleMin}
                     /> : null }
                   { this.displayMin() === true ? <span className='axisval-to'> to </span> : null }
-                  <input
+                  <DebounceInput
+                    minLength={0}
+                    debounceTimeout={300}
+                    element='input'
                     type='number'
                     name='max'
                     placeholder='Max'
                     className='input-max-y input-field'
-                    defaultValue={this.props.chart.y_axis.max}
-                    onBlur={this.handleMax}
+                    value={this.props.chart.y_axis.max}
+                    onChange={this.handleMax}
                   />
                 </span>
               </div>

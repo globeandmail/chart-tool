@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { updateAndSave, isNumber } from '../../modules/utils';
 import Swal from 'sweetalert2';
+import { DebounceInput } from 'react-debounce-input';
 
 const formats = [
   { format: 'comma', pretty: '1,234' },
@@ -221,13 +222,16 @@ export default class ChartXAxis extends Component {
             <div className='unit-edit'>
               <h4>Formatting</h4>
               <div className='x-prefix-edit'>
-                <input
+                <DebounceInput
+                  minLength={0}
+                  debounceTimeout={300}
+                  element='input'
                   type='text'
                   name='prefix'
                   placeholder='$'
                   className='input-prefix-x input-field'
-                  defaultValue={this.props.chart.x_axis.prefix}
-                  onBlur={this.handlePrefix}
+                  value={this.props.chart.x_axis.prefix}
+                  onChange={this.handlePrefix}
                 />
               </div>
               <div className='x-formatval-edit'>
@@ -244,13 +248,16 @@ export default class ChartXAxis extends Component {
                 </div>
               </div>
               <div className='x-suffix-edit'>
-                <input
+                <DebounceInput
+                  minLength={0}
+                  debounceTimeout={300}
+                  element='input'
                   type='text'
                   name='suffix'
                   placeholder='%'
                   className='input-suffix-x input-field'
-                  defaultValue={this.props.chart.x_axis.suffix}
-                  onBlur={this.handleSuffix}
+                  value={this.props.chart.x_axis.suffix}
+                  onChange={this.handleSuffix}
                 />
               </div>
             </div>
@@ -260,22 +267,28 @@ export default class ChartXAxis extends Component {
               <div className='unit-edit x-axisval-edit'>
                 <h4>Custom range</h4>
                 <span>
-                  <input
+                  <DebounceInput
+                    minLength={0}
+                    debounceTimeout={300}
+                    element='input'
                     type='number'
                     name='min'
                     placeholder='Min'
                     className='input-min-x input-field'
-                    defaultValue={this.props.chart.x_axis.min}
-                    onBlur={this.handleMin}
+                    value={this.props.chart.x_axis.min}
+                    onChange={this.handleMin}
                   />
                   <span className='axisval-to'> to </span>
-                  <input
+                  <DebounceInput
+                    minLength={0}
+                    debounceTimeout={300}
+                    element='input'
                     type='number'
                     name='max'
                     placeholder='Max'
                     className='input-max-x input-field'
-                    defaultValue={this.props.chart.x_axis.max}
-                    onBlur={this.handleMax}
+                    value={this.props.chart.x_axis.max}
+                    onChange={this.handleMax}
                   />
                 </span>
               </div>

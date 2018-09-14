@@ -5,6 +5,7 @@
   "description": "A responsive charting application",
   "main": "gulpfile.js",
   "dependencies": {
+    "@babel/runtime": "^7.0.0",
     "brace-expansion": "^1.1.11",
     "core-js": "^2.5.7",
     "d3-array": "^1.2.1",

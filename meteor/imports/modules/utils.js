@@ -836,7 +836,7 @@ export function guessDateFormat(data, type) {
       };
     })
     .filter(item => {
-      // filter out tests that failed
+      // filter out tests that completely failed
       const newArr = item.test.filter(t => t !== null);
       return newArr.length;
     })
@@ -885,8 +885,7 @@ export function guessDateFormat(data, type) {
           const [min, max] = extent(arr);
           return {
             min: parseInt(min),
-            max: parseInt(max),
-            mode: parseInt(mode(arr))
+            max: parseInt(max)
           };
         });
 
@@ -907,7 +906,9 @@ export function guessDateFormat(data, type) {
         re = /^%d.*/;
       }
 
-    } else {
+    }
+
+    if (yearIndex === -1 || !re) {
       // it's short form MM-DD-YY or DD-MM-YY or rarely, YY-XX-XX
       re = /^%m.*/;
     }

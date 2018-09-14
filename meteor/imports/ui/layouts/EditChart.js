@@ -50,17 +50,19 @@ class EditChart extends Component {
     this.handleCurrentAnnotation = this.handleCurrentAnnotation.bind(this);
     this.expandStatus = this.expandStatus.bind(this);
     this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
+    const animalName = generateRandomAnimalName();
     this.state = {
-      animalName: generateRandomAnimalName(),
+      animalName: animalName,
       overlay: false,
       annotationMode: false,
       expanded: 'ChartData',
-      currentAnnotation: this.resetCurrentAnnotation()
+      currentAnnotation: this.resetCurrentAnnotation(),
+      presence: {
+        currentChartId: this.props.match.params._id,
+        user: animalName
+      }
     };
-    Presence.state = () => ({
-      currentChartId: this.props.match.params._id,
-      user: this.state.animalName
-    });
+    Presence.state = () => this.state.presence;
   }
 
   resetCurrentAnnotation() {
@@ -166,6 +168,7 @@ class EditChart extends Component {
             />
             <ChartStatus
               name={this.state.animalName}
+              presence={this.state.presence}
               {...this.props}
             />
             <ChartData

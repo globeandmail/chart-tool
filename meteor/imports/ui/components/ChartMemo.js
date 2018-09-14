@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { DebounceInput } from 'react-debounce-input';
 
-export default class ChartStatus extends Component {
+export default class ChartMemo extends Component {
 
   constructor(props) {
     super(props);
     this.addMemo = this.addMemo.bind(this);
-    this.memoBlur = this.memoBlur.bind(this);
+    this.memoChange = this.memoChange.bind(this);
     this.state = {
       memoToggled: false
     };
@@ -16,8 +17,8 @@ export default class ChartStatus extends Component {
     this.setState({ memoToggled: !this.state.memoToggled });
   }
 
-  memoBlur(event) {
-    const val = event.target.value.trim();
+  memoChange(event) {
+    const val = event.target.value;
     this.setState({ memoToggled: val ? true : false });
     Meteor.call('charts.update.memo', this.props.match.params._id, val, err => {
       if (err) console.log(err);
@@ -31,12 +32,16 @@ export default class ChartStatus extends Component {
           { this.props.chart.memo || this.state.memoToggled ?
             <div>
               <h4>Memos and notes</h4>
-              <textarea
-                onBlur={this.memoBlur}
-                placeholder=''
+              <DebounceInput
+                minLength={2}
+                debounceTimeout={500}
+                element='textarea'
                 className='memo-field'
-                defaultValue={this.props.chart.memo || ''}
-              ></textarea>
+                placeholder=''
+                onChange={this.memoChange}
+                forceNotifyByEnter={false}
+                value={this.props.chart.memo || ''}
+              />
             </div>
             : <button className='add-memo' onClick={this.addMemo}>Add memo</button> }
         </div>
