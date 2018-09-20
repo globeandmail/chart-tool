@@ -1,4 +1,4 @@
-/* Chart Tool v1.3.0-0 | https://github.com/globeandmail/chart-tool | MIT */
+/* Chart Tool v1.4.0-0 | https://github.com/globeandmail/chart-tool | MIT */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -3537,7 +3537,7 @@
 		thumbnailWidth: 460
 	};
 
-	var version = "1.3.0";
+	var version = "1.4.0";
 	var buildVer = "0";
 
 	var chartSettings = {
@@ -10632,7 +10632,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function dragDisable(view) {
+	function nodrag(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10729,7 +10729,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    dragDisable(event.view);
+	    nodrag(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11189,7 +11189,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      dragDisable(event.view);
+	      nodrag(event.view);
 	    }
 
 	    nopropagation$1();
