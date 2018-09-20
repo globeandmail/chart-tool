@@ -623,7 +623,7 @@ export function chartTypeFieldReset(type) {
         'options.type': type,
         'options.interpolation': defaults.interpolation,
         'options.stacked': defaults.stacked,
-        'x_axis.scal e': 'time',
+        'x_axis.scale': 'time',
         'x_axis.nice': false,
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
