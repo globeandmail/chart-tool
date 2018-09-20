@@ -1,6 +1,6 @@
 import { scaleTime, scaleBand, scalePoint, scaleLinear } from 'd3-scale';
 import { min, max, extent } from 'd3-array';
-import { timeDiff, timeInterval } from '../../utils/utils';
+import { timeDiff, timeInterval, resolveObjectPath } from '../../utils/utils';
 import { map } from 'd3-collection';
 
 export function scaleManager(obj, axisType) {
@@ -33,7 +33,7 @@ export function scaleManager(obj, axisType) {
 export class ScaleObj {
   constructor(obj, axis, axisType) {
     this.type = axis.scale;
-    this.domain = setDomain(obj, axis);
+    this.domain = setDomain(obj, axis, axisType);
     this.rangeType = 'range';
     this.range = setRange(obj, axisType);
     this.bands = obj.dimensions.bands;
@@ -75,21 +75,22 @@ export function setRangeArgs(scale, scaleObj) {
   }
 }
 
-export function setDomain(obj, axis) {
-
+export function setDomain(obj, axis, axisType) {
   const data = obj.data;
+
   let domain;
 
   switch(axis.scale) {
     case 'time':
-      domain = setDateDomain(data, axis.min, axis.max);
+      domain = setDateDomain(data, axis.min, axis.max, obj.options.type);
       break;
     case 'linear':
-      if (obj.options.type === 'area' || obj.options.type === 'column' || obj.options.type === 'bar') {
-        domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked, true);
-      } else {
-        domain = setNumericalDomain(data, axis.min, axis.max, obj.options.stacked);
-      }
+      domain = setNumericalDomain(data, axis.min, axis.max, {
+        stacked: obj.options.stacked,
+        scatterplot: obj.options.type === 'scatterplot',
+        axisType: axisType,
+        forceMaxVal: obj.options.type === 'area' || obj.options.type === 'column' || obj.options.type === 'bar'
+      });
       break;
     case 'ordinal':
     case 'ordinal-time':
@@ -101,32 +102,40 @@ export function setDomain(obj, axis) {
 
 }
 
-export function setDateDomain(data, min, max) {
+export function setDateDomain(data, min, max, type) {
   let startDate, endDate;
   if (min && max) {
     startDate = min;
     endDate = max;
   } else {
-    const dateRange = extent(data.data, d => { return d.key; });
+
+    const isScatterplot = type && type === 'scatterplot',
+      dateKey = isScatterplot ? 'series.0.val' : 'key',
+      dateRange = extent(data.data, d => resolveObjectPath(dateKey, d));
+
     startDate = min || new Date(dateRange[0]);
     endDate = max || new Date(dateRange[1]);
   }
   return [startDate, endDate];
 }
 
-export function setNumericalDomain(data, vmin, vmax, stacked, forceMaxVal) {
+export function setNumericalDomain(data, vmin, vmax, options) {
 
   let minVal, maxVal;
 
   const mArr = [];
 
   map(data.data, d => {
-    for (let j = 0; j < d.series.length; j++) {
-      mArr.push(Number(d.series[j].val));
+    if (options.scatterplot) {
+      mArr.push(Number(d.series[options.axisType === 'xAxis' ? 0 : 1].val));
+    } else {
+      for (let j = 0; j < d.series.length; j++) {
+        mArr.push(Number(d.series[j].val));
+      }
     }
   });
 
-  if (stacked) {
+  if (options.stacked) {
     maxVal = max(data.stackedData, layer => {
       return max(layer, d => { return d[1]; });
     });
@@ -144,7 +153,7 @@ export function setNumericalDomain(data, vmin, vmax, stacked, forceMaxVal) {
 
   if (vmax) {
     maxVal = vmax;
-  } else if (maxVal < 0 && forceMaxVal) {
+  } else if (maxVal < 0 && options.forceMaxVal) {
     maxVal = 0;
   }
 

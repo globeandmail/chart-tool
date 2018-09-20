@@ -49,24 +49,21 @@ export const app_settings = {
     hasHours: false,
     data: '',
     options: {
-      type: 'line',
-      interpolation: 'linear',
-      stacked: false,
-      expanded: false,
-      head: true,
-      deck: false,
-      legend: true,
-      footer: true,
-      x_axis: true,
-      y_axis: true,
-      tips: true,
       annotations: true,
-      range: false,
-      series: false,
+      expanded: false,
+      footer: true,
+      head: true,
       indexed: false,
+      interpolation: 'linear',
+      legend: true,
       qualifier: true,
       share_data: true,
-      social: true
+      social: true,
+      stacked: false,
+      tips: true,
+      type: 'line',
+      x_axis: true,
+      y_axis: true
     },
     x_axis: {
       display: config.xAxis.display,
@@ -96,13 +93,15 @@ export const app_settings = {
     annotations: {
       highlight: [],
       range: [],
-      text: []
+      text: [],
+      pointer: []
     },
 
     public: false,
 
     users: [],
     tags: [],
+    memo: '',
 
     img: '',
     print: {
@@ -120,6 +119,7 @@ export const app_settings = {
     column_width: 47,
     first_line_depth: 2.14,
     line_depth: 3.35,
+    overall_margin: 1,
     x_axis: {
       tickTarget: 8,
       ticksSmall: 5,

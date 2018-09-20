@@ -83,9 +83,22 @@ export function appendXAxis(axisGroup, obj, scale, axis, axisType) {
     case 'ordinal-time':
       ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings);
       break;
+    case 'linear':
+      linearAxis(obj, axis, axisNode, axisSettings);
+      break;
   }
 
   obj.dimensions.xAxisHeight = axisNode.node().getBBox().height;
+
+  if (obj.options.type === 'scatterplot') {
+
+    axisNode.selectAll('.tick line')
+      .attrs({
+        'y1': 0,
+        'y2': obj.dimensions.xAxisHeight - obj.dimensions.computedHeight()
+      });
+
+  }
 
 }
 
@@ -111,7 +124,7 @@ export function appendYAxis(axisGroup, obj, scale, axis, axisType) {
 
   switch(axisObj.scale) {
     case 'linear':
-      drawYAxis(obj, axis, axisNode, axisSettings);
+      linearAxis(obj, axis, axisNode, axisSettings);
       break;
     case 'ordinal':
       discreteAxis(axisNode, scale, axis, axisSettings, obj.dimensions);
@@ -120,28 +133,46 @@ export function appendYAxis(axisGroup, obj, scale, axis, axisType) {
 
 }
 
-export function drawYAxis(obj, axis, axisNode, axisSettings) {
+export function linearAxis(obj, axis, axisNode, axisSettings) {
 
-  axis.scale().range([obj.dimensions.yAxisHeight(), 0]);
+  let range;
 
-  axis.tickValues(tickFinderY(axis.scale(), axisSettings));
+  if (axisSettings.axisType === 'xAxis') range = [0, obj.dimensions.tickWidth()];
+  if (axisSettings.axisType === 'yAxis') range = [obj.dimensions.yAxisHeight(), 0];
+
+  axis.scale().range(range);
+
+  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
   axisNode.call(axis);
 
   axisNode.selectAll('g')
-    .filter(d => { return d; })
+    .filter(d => d)
     .classed(`${obj.prefix}minor`, true);
 
-  axisNode.selectAll('.tick text')
-    .attr('transform', 'translate(0,0)')
-    .call(updateTextY, axisNode, obj, axis, axisSettings)
-    .call(repositionTextY, obj.dimensions, axisSettings.textX);
+  if (axisSettings.axisType === 'yAxis') {
 
-  axisNode.selectAll('.tick line')
-    .attrs({
-      'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
-      'x2': obj.dimensions.computedWidth()
-    });
+    axisNode.selectAll('.tick text')
+      .attr('transform', 'translate(0,0)')
+      .call(updateTextY, axisNode, obj, axis, axisSettings)
+      .call(repositionTextY, obj.dimensions, axisSettings.textX);
+
+    axisNode.selectAll('.tick line')
+      .attrs({
+        'x1': obj.dimensions.labelWidth + obj.dimensions.yAxisPaddingRight,
+        'x2': obj.dimensions.computedWidth()
+      });
+
+  } else {
+
+    axisNode.selectAll('text')
+      .call(updateTextX, axisNode, obj, axis, axisSettings);
+
+    // if necessary, drop ticks
+    axisNode.selectAll('.tick')
+      .call(dropTicks);
+
+  }
 
 }
 
@@ -162,9 +193,9 @@ export function timeAxis(axisNode, obj, scale, axis, axisSettings) {
   }
 
   if (obj.dimensions.tickWidth() > axisSettings.widthThreshold) {
-    ticks = tickFinderX(domain, ctx, tickGoal);
+    ticks = tickFinderDates(domain, ctx, tickGoal);
   } else {
-    ticks = tickFinderX(domain, ctx, axisSettings.ticksSmall);
+    ticks = tickFinderDates(domain, ctx, axisSettings.ticksSmall);
   }
 
   if (obj.options.type !== 'column') {
@@ -182,7 +213,7 @@ export function timeAxis(axisNode, obj, scale, axis, axisSettings) {
       'dy': `${axisSettings.dy}em`
     })
     .style('text-anchor', 'start')
-    .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+    .call(setTickFormatDate, ctx, axisSettings.ems, obj.monthsAbr);
 
   if (obj.options.type === 'column') { dropRedundantTicks(axisNode, ctx); }
 
@@ -285,7 +316,7 @@ export function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
       'dy': `${axisSettings.dy}em`
     })
     .style('text-anchor', 'start')
-    .call(setTickFormatX, ctx, axisSettings.ems, obj.monthsAbr);
+    .call(setTickFormatDate, ctx, axisSettings.ems, obj.monthsAbr);
 
   let ordinalTickPadding;
 
@@ -303,7 +334,7 @@ export function ordinalTimeAxis(axisNode, obj, scale, axis, axisSettings) {
 
 }
 
-export function setTickFormatX(selection, ctx, ems, monthsAbr) {
+export function setTickFormatDate(selection, ctx, ems, monthsAbr) {
 
   let prevYear,
     prevMonth,
@@ -395,8 +426,9 @@ export function setTickFormatX(selection, ctx, ems, monthsAbr) {
 
 }
 
-export function setTickFormatY(fmt, d) {
-  // checking for a format and formatting y-axis values accordingly
+export function setTickFormat(fmt, d) {
+  // checking for a format and formatting axis values accordingly
+
   switch (fmt) {
     case 'general':
       return format('')(d);
@@ -414,13 +446,14 @@ export function setTickFormatY(fmt, d) {
     default:
       return format(',')(d);
   }
+
 }
 
 export function updateTextX(textNodes, axisNode, obj, axis, axisObj) {
 
   textNodes
     .text((d, i) => {
-      let val = setTickFormatY(axisObj.format, d);
+      let val = setTickFormat(axisObj.format, d);
       if (i === axis.tickValues().length - 1) {
         val = (axisObj.prefix || '') + val + (axisObj.suffix || '');
       }
@@ -436,7 +469,7 @@ export function updateTextY(textNodes, axisNode, obj, axis, axisObj) {
   textNodes
     .attr('transform', 'translate(0,0)')
     .text((d, i) => {
-      let val = setTickFormatY(axisObj.format, d);
+      let val = setTickFormat(axisObj.format, d);
       if (i === axis.tickValues().length - 1) {
         val = (axisObj.prefix || '') + val + (axisObj.suffix || '');
       }
@@ -620,7 +653,7 @@ export function dropOversetTicks(axisNode, tickWidth) {
 
 }
 
-export function tickFinderX(domain, period, tickGoal) {
+export function tickFinderDates(domain, period, tickGoal) {
 
   // set ranges
   const startDate = domain[0],
@@ -679,7 +712,7 @@ export function tickFinderX(domain, period, tickGoal) {
 
 }
 
-export function tickFinderY(scale, tickSettings) {
+export function tickFinderLinear(scale, tickSettings) {
 
   // In a nutshell:
   // Checks if an explicit number of ticks has been declared
@@ -869,7 +902,6 @@ export function axisCleanup(node, obj, xAxisObj, yAxisObj) {
 }
 
 export function addZeroLine(obj, node, Axis, axisType) {
-
   const ticks = Axis.axis.tickValues(),
     tickMin = ticks[0],
     tickMax = ticks[ticks.length - 1];
@@ -891,7 +923,6 @@ export function addZeroLine(obj, node, Axis, axisType) {
     transform[1] += getTranslate(refGroup.node())[1];
 
     if (axisType === 'xAxis') {
-
       zeroLine.attrs({
         'y1': refLine.attr('y1'),
         'y2': refLine.attr('y2'),

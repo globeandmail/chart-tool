@@ -55,10 +55,71 @@
                 "x_axis": true,
                 "y_axis": true,
                 "tips": true,
-                "annotations": false,
+                "annotations": true,
                 "range": false,
                 "series": false,
                 "indexed": false
+              },
+              // "editable": true,
+              // "annotationHandlers": {
+              //   "type": "range",
+              //   "rangeType": "area",
+              //   "rangeAxis": "x",
+              //   "rangeStart": "",
+              //   "rangeEnd": "",
+              //   // "type": "text",
+              //   // "currId": 0,
+              //   // "type": "pointer",
+              //   "pointerCurve": "0.4",
+              //   "pointerHandler": (data) => {
+              //     console.log(JSON.stringify(data))
+              //   },
+              //   "pointerX1": "0.2021",
+              //   "pointerY1": "0.1534",
+              //   "pointerX2": "0.2912",
+              //   "pointerY2": "0.3835",
+              //   "text-align": "right",
+              //   "valign": "top",
+              //   "textText": "There may be a\nrelationship between\nrent and house price",
+              //   "textX": 0.5,
+              //   "textY": 0.65
+              // },
+              "annotations": {
+                "pointer": [
+                  {
+                    "curve": "0.3",
+                    "position": [{"x":0.7677,"y":0.119},{"x":0.7052,"y":0.5184}]
+                  }
+                ],
+                "text": [
+                  {
+                    "text": "There may be a\nrelationship between\nrent and house price",
+                    "valign": "top",
+                    "text-align": "right",
+                    "position": {
+                      "x": 0.5,
+                      "y": 0.65
+                    }
+                  }
+                ],
+                "range": [
+                  {
+                    "axis": "x",
+                    "start": "Thu Oct 07 2010 00:00:00 GMT-0400 (Eastern Daylight Time)",
+                    "end": "Mon Dec 13 2010 00:00:00 GMT-0500 (Eastern Standard Time)",
+                    "color": "blue"
+                  },
+                  {
+                    "axis": "y",
+                    "start": 1800,
+                    "color": "red"
+                  },
+                  {
+                    "axis": "x",
+                    "start": "Mon Dec 13 2010 00:00:00 GMT-0500 (Eastern Standard Time)",
+                    // "color": "red"
+                  }
+                ]
               }
             }
           };

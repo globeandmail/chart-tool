@@ -3,12 +3,19 @@ import { Meteor } from 'meteor/meteor';
 import AWS from 'aws-sdk';
 import { app_settings } from './settings';
 
+const puppeteerSettings = {
+  args: [
+    '--enable-font-antialiasing',
+    '--font-render-hinting=medium',
+    '--hide-scrollbars'
+  ]
+};
+
 export async function generatePDF(chart, width, height) {
-  const browser = await puppeteer.launch({
-    args: ['--enable-font-antialiasing', '--font-render-hinting=medium']
-  });
+  const browser = await puppeteer.launch(puppeteerSettings);
   const page = await browser.newPage();
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf`, { waitUntil: ['load', 'networkidle0'] });
+  const margin = `margin=${app_settings.print.overall_margin || 0}`;
+  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf?${margin}`, { waitUntil: ['load', 'networkidle0'] });
   await page.emulateMedia('screen');
   const pdf = await page.pdf({
     width: `${width}mm`,
@@ -17,12 +24,13 @@ export async function generatePDF(chart, width, height) {
     pageRanges: '1',
     printBackground: true
   });
+  await page.close();
   await browser.close();
   return pdf;
 }
 
 export async function generatePNG(chart, params) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(puppeteerSettings);
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -45,12 +53,13 @@ export async function generatePNG(chart, params) {
     },
     type: params.type ? params.type : 'png'
   });
+  await page.close();
   await browser.close();
   return png;
 }
 
 export async function generateThumb(chart, params) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(puppeteerSettings);
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -79,6 +88,8 @@ export async function generateThumb(chart, params) {
     },
     type: params.type ? params.type : 'png'
   });
+
+  await page.close();
 
   await browser.close();
 

@@ -34,7 +34,7 @@ export default class ChartOverlayPrint extends Component {
     const print = generateMeasurements(this.props.chart.print),
       filename = `${this.props.chart.slug}-print-${print.name}.pdf`;
 
-    Meteor.call('chart.pdf.download', this.props.chart._id, (error, response) => {
+    Meteor.call('charts.pdf.download', this.props.chart._id, (error, response) => {
       if (error) {
         console.log(error);
       } else {
@@ -156,6 +156,7 @@ export default class ChartOverlayPrint extends Component {
                 <Chart
                   type={'print'}
                   chart={this.props.chart}
+                  margin={app_settings.print.overall_margin || 0}
                   editable={false}
                   tips={false}
                   exportable={true}
@@ -180,11 +181,9 @@ export default class ChartOverlayPrint extends Component {
                   onClick={this.togglePrintMode}>
                   Millimetres</button>
               </div>
-              {
-                this.props.chart.print.mode === 'millimetres' ?
+              { this.props.chart.print.mode === 'millimetres' ?
                 this.renderMM() :
-                this.renderColumns()
-              }
+                this.renderColumns() }
             </div>
           </div>
         </div>

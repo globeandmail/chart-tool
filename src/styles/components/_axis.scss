@@ -16,9 +16,18 @@
   shape-rendering: crispEdges;
 }
 
+.#{$prefix}type_scatterplot .#{$prefix}yAxis .#{$prefix}minor line {
+  stroke: $color-black;
+  shape-rendering: crispEdges;
+}
+
 .#{$prefix}axis-group g.tick line {
   stroke: $axis-stroke-color;
   stroke-width: $axis-stroke-width;
+  stroke-linecap: butt;
+  &.#{$prefix}muted {
+    opacity: 0.075;
+  }
 }
 
 .#{$prefix}yAxis g.tick text {
@@ -64,4 +73,9 @@
   stroke-width: $axis-stroke-width;
   stroke: $color-black;
   stroke-linecap: square;
+}
+
+.#{$prefix}type_scatterplot .#{$prefix}yAxis line,
+.#{$prefix}type_scatterplot .#{$prefix}xAxis line {
+  opacity: 0.25;
 }

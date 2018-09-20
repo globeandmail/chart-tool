@@ -122,14 +122,14 @@ export default function columnChart(node, obj) {
   addZeroLine(obj, node, yAxisObj, 'yAxis');
 
   return {
-    xScaleObj: xScaleObj,
-    yScaleObj: yScaleObj,
-    xAxisObj: xAxisObj,
-    yAxisObj: yAxisObj,
-    seriesGroup: seriesGroup,
-    series: series,
-    singleColumn: singleColumn,
-    columnItems: columnItems
+    xScaleObj,
+    yScaleObj,
+    xAxisObj,
+    yAxisObj,
+    seriesGroup,
+    series,
+    singleColumn,
+    columnItems
   };
 
 }

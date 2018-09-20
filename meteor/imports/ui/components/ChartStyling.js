@@ -15,22 +15,9 @@ export default class ChartStyling extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.handlePalette = this.handlePalette.bind(this);
     this.handleStacked = this.handleStacked.bind(this);
     this.handleInterpolation = this.handleInterpolation.bind(this);
-    this.state = {
-      expanded: false
-    };
-  }
-
-  expandStatus() {
-    return this.state.expanded ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
   }
 
   handlePalette(event) {
@@ -95,8 +82,8 @@ export default class ChartStyling extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>Styling</h3>
-        <div className={`unit-edit ${this.expandStatus()}`}>
+        <h3 id='ChartStyling' onClick={this.props.toggleCollapseExpand}>Styling</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartStyling')}`}>
           <div className='unit-edit color-edit'>
             <h4>Pick a colour palette</h4>
             <div className='radio-buttons'>
@@ -133,7 +120,7 @@ export default class ChartStyling extends Component {
                 checked={this.isStacked()}
               />
             </div>
-          : null }
+            : null }
           { this.isLineChartType() ?
             <div className='unit-edit interpolation-edit'>
               <h4>Interpolation <a onClick={this.helpInterpolation} className='help-toggle help-interpolation'>?</a></h4>
@@ -142,14 +129,14 @@ export default class ChartStyling extends Component {
                   className='select-interpolation'
                   value={this.props.chart.options.interpolation}
                   onChange={this.handleInterpolation}
-                  >
+                >
                   {interpolations.map(d => {
                     return <option key={d.format} value={d.format}>{d.pretty}</option>;
                   })}
                 </select>
               </div>
             </div>
-          : null }
+            : null }
         </div>
       </div>
     );

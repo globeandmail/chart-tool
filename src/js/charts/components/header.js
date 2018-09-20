@@ -49,10 +49,14 @@ export default function header(container, obj) {
     legend = headerGroup.append('div')
       .classed(`${obj.prefix}chart_legend`, true);
 
-    let keys = obj.data.keys.slice();
+    let keys;
 
-    // get rid of the first item as it doesnt represent a series
-    keys.shift();
+    if (obj.options.type === 'scatterplot') {
+      keys = obj.data.groups ? obj.data.groups.slice() : [];
+    } else {
+      keys = obj.data.keys.slice();
+      keys.shift(); // get rid of the first item as it doesnt represent a series
+    }
 
     if (obj.options.type === 'multiline') {
       keys = [keys[0], keys[1]];
@@ -79,9 +83,9 @@ export default function header(container, obj) {
   obj.dimensions.headerHeight = headerGroup.node().getBoundingClientRect().height;
 
   return {
-    headerGroup: headerGroup,
-    legend: legend,
-    qualifier: qualifier
+    headerGroup,
+    legend,
+    qualifier
   };
 
 }

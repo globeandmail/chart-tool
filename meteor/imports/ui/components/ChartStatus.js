@@ -42,10 +42,19 @@ class ChartStatus extends Component {
 }
 
 export default withTracker(props => {
+  // issue here seems to be with the 5s interval set on presence ticks or something similar?
   const subscription = Meteor.subscribe('chart.users', props.match.params._id);
   return {
     loading: !subscription.ready(),
-    connected: Presences.find({ 'state.currentChartId': props.match.params._id }, { fields: { 'state': true, 'userId': true }}).fetch(),
+    connected: Presences
+      .find({
+        'state.currentChartId': props.match.params._id
+      }, {
+        fields: {
+          'state': true,
+          'userId': true
+        }
+      }).fetch(),
     props
   };
 })(ChartStatus);

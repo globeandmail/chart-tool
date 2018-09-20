@@ -1,66 +1,27 @@
 import React, { Component } from 'react';
 import MD5 from 'crypto-js/md5';
-import { dataParse, updateAndSave } from '../../modules/utils';
+import { dataParse, updateAndSave, dateFormats } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { parse } from '../../modules/chart-tool';
 import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
+import { DebounceInput } from 'react-debounce-input';
 
-const formats = [
-  {
-    format: '%Y-%m-%d',
-    pretty: 'YYYY-MM-DD'
-  }, {
-    format: '%Y-%d-%m',
-    pretty: 'YYYY-DD-MM'
-  }, {
-    format: '%y-%m-%d',
-    pretty: 'YY-MM-DD'
-  }, {
-    format: '%y-%d-%m',
-    pretty: 'YY-DD-MM'
-  }, {
-    format: '%m-%d-%Y',
-    pretty: 'MM-DD-YYYY'
-  }, {
-    format: '%m-%e-%Y',
-    pretty: 'MM-D-YYYY'
-  }, {
-    format: '%m-%d-%y',
-    pretty: 'MM-DD-YY'
-  }, {
-    format: '%d-%m-%Y',
-    pretty: 'DD-MM-YYYY'
-  }, {
-    format: '%d-%m-%y',
-    pretty: 'DD-MM-YY'
-  }, {
-    format: '%Y',
-    pretty: 'YYYY'
-  }
-];
+const formats = dateFormats();
 
 export default class ChartData extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
+    this.shouldDisplayIndex = this.shouldDisplayIndex.bind(this);
     this.handleData = this.handleData.bind(this);
     this.handleDateConstruction = this.handleDateConstruction.bind(this);
     this.handleHasHours = this.handleHasHours.bind(this);
     this.handleIndex = this.handleIndex.bind(this);
-    this.state = {
-      expanded: true
-    };
   }
 
-  expandStatus() {
-    return this.state.expanded ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
+  shouldDisplayIndex() {
+    return this.props.chart.options.type !== 'scatterplot';
   }
 
   handleData(event) {
@@ -68,7 +29,9 @@ export default class ChartData extends Component {
       chart = this.props.chart;
     if (data !== chart.data) {
 
-      const hasHighlights = chart.annotations && chart.annotations.highlight && chart.annotations.highlight.length;
+      const hasHighlights = chart.annotations &&
+        chart.annotations.highlight &&
+        chart.annotations.highlight.length;
 
       const fields = {
         data: data,
@@ -86,9 +49,9 @@ export default class ChartData extends Component {
         }
       }
 
-      updateAndSave('charts.update.multiple.fields', chart._id, fields, err => {
-        if (err) console.log(err);
-      });
+      event.target.value = fields.data;
+
+      updateAndSave('charts.update.multiple.fields', chart._id, fields);
     }
   }
 
@@ -97,9 +60,9 @@ export default class ChartData extends Component {
 
     const dateFormat = this.props.chart.date_format,
       str = ` ${app_settings.chart.time_format}`,
-      re = /\s\%H\:\%M/g;
+      re = /\s%H:%M/g;
 
-    if (re.test(dateFormat)) { dateConstruction += str; }
+    if (re.test(dateFormat)) dateConstruction += str;
 
     updateAndSave('charts.update.dateformat', this.props.chart._id, dateConstruction);
   }
@@ -109,10 +72,10 @@ export default class ChartData extends Component {
 
     const hasHours = event.target.checked,
       str = ` ${app_settings.chart.time_format}`,
-      re = /\s\%H\:\%M/g;
+      re = /\s%H:%M/g;
 
     const fields = {
-      hasHours: hasHours,
+      hasHours
     };
 
     if (!re.test(dateFormat)) {
@@ -121,9 +84,7 @@ export default class ChartData extends Component {
       fields.date_format = dateFormat.replace(str, '');
     }
 
-    updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields, err => {
-      if (err) console.log(err);
-    });
+    updateAndSave('charts.update.multiple.fields', this.props.chart._id, fields);
 
   }
 
@@ -179,20 +140,22 @@ export default class ChartData extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>Data</h3>
-
-        <div className={`unit-edit ${this.expandStatus()}`}>
+        <h3 id='ChartData' onClick={this.props.toggleCollapseExpand}>Data</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartData')}`}>
 
           <div className='unit-edit'>
             <h4>Data</h4>
-            <textarea
-              type='text'
+            <DebounceInput
+              minLength={2}
+              debounceTimeout={300}
+              element='textarea'
               name='pasteData'
               placeholder='Paste your spreadsheet data here'
               className='input-data-edit'
-              onBlur={this.handleData}
-              defaultValue={this.props.chart.data}
-              ></textarea>
+              onChange={this.handleData}
+              forceNotifyByEnter={false}
+              value={this.props.chart.data}
+            />
           </div>
 
           { this.props.chart.x_axis.scale === 'time' || this.props.chart.x_axis.scale === 'ordinal-time' ?
@@ -204,7 +167,7 @@ export default class ChartData extends Component {
                     className='select-date-construction'
                     value={this.props.chart.date_format.replace('%H:%M', '').trim()}
                     onChange={this.handleDateConstruction}
-                    >
+                  >
                     {formats.map(f => {
                       return <option key={f.pretty} value={f.format}>{f.pretty}</option>;
                     })}
@@ -227,16 +190,19 @@ export default class ChartData extends Component {
                 <div className='date-calculation'>{ this.dateCalc() }</div>
               </div>
 
-              <div className='unit-edit index-edit'>
-                <h4>Index <a onClick={this.helpIndex} className='help-toggle help-index-edit'>?</a></h4>
-                <input
-                  type='number'
-                  name='index'
-                  placeholder='100'
-                  className='input-index input-field'
-                  value={this.props.chart.options.indexed}
-                  onChange={this.handleIndex} />
-              </div>
+              { this.shouldDisplayIndex() ?
+                <div className='unit-edit index-edit'>
+                  <h4>Index <a onClick={this.helpIndex} className='help-toggle help-index-edit'>?</a></h4>
+                  <input
+                    type='number'
+                    name='index'
+                    placeholder='100'
+                    className='input-index input-field'
+                    value={this.props.chart.options.indexed}
+                    onChange={this.handleIndex} />
+                </div>
+                : null }
+
             </div>
             : null }
 
