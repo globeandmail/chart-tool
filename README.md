@@ -51,6 +51,7 @@ Chart Tool is made up of two parts:
   * Bar charts
   * Stacked bar charts
   * Multiline charts
+  * Scatterplots
   * No pies [(sorry)](http://www.storytellingwithdata.com/blog/2011/07/death-to-pie-charts)
 * **Annotations:** All charts can be annotated with text annotations, pointer arrows, highlighting a range along the x- or y-axis, or highlighting a bar or column.
 * **Highly configurable:** Don't want tips to appear for a specific chart, or want to manually set the number of ticks to be displayed? No problem!
