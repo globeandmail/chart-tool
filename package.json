@@ -27,7 +27,8 @@
     "ismobilejs": "^0.4.1"
   },
   "engines": {
-    "node": "8.11.1"
+    "node": "8.11.1",
+    "npm": "6.4.1"
   },
   "devDependencies": {
     "autoprefixer": "^8.6.5",
