@@ -51,7 +51,9 @@ Chart Tool is made up of two parts:
   * Bar charts
   * Stacked bar charts
   * Multiline charts
+  * Scatterplots
   * No pies [(sorry)](http://www.storytellingwithdata.com/blog/2011/07/death-to-pie-charts)
+* **Annotations:** All charts can be annotated with text annotations, pointer arrows, highlighting a range along the x- or y-axis, or highlighting a bar or column.
 * **Highly configurable:** Don't want tips to appear for a specific chart, or want to manually set the number of ticks to be displayed? No problem!
 * **"Ordinal-time" scales:** Treat time series data as if it were ordinal — this is very useful for visualizing stock price charts, or when you want to skip weekends and holidays
 * **Pre- and post-render hooks:** All charts come with several basic custom events via D3's [dispatch library](https://github.com/d3/d3-dispatch), including pre- and post-render hooks for every chart
@@ -117,7 +119,7 @@ Otherwise, these are some other tutorials you might want to check out:
 
 ## Version
 
-1.3.0
+1.4.0
 
 
 ## License

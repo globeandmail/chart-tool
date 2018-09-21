@@ -28,12 +28,12 @@ export default function header(container, obj) {
 
   let qualifier;
 
-  if ((obj.qualifier !== '' || obj.editable) &&  obj.options.qualifier) {
+  if ((obj.qualifier !== '' || obj.editable) && obj.options.qualifier) {
     qualifier = headerGroup
       .append('div')
       .attrs({
         'class': () => {
-          let str = `${obj.prefix}chart_qualifier ${obj.prefix}chart_qualifier-bar`;
+          let str = `${obj.prefix}chart_qualifier`;
           if (obj.editable) { str += ' editable-chart_qualifier'; }
           return str;
         },
@@ -49,10 +49,14 @@ export default function header(container, obj) {
     legend = headerGroup.append('div')
       .classed(`${obj.prefix}chart_legend`, true);
 
-    let keys = obj.data.keys.slice();
+    let keys;
 
-    // get rid of the first item as it doesnt represent a series
-    keys.shift();
+    if (obj.options.type === 'scatterplot') {
+      keys = obj.data.groups ? obj.data.groups.slice() : [];
+    } else {
+      keys = obj.data.keys.slice();
+      keys.shift(); // get rid of the first item as it doesnt represent a series
+    }
 
     if (obj.options.type === 'multiline') {
       keys = [keys[0], keys[1]];
@@ -68,19 +72,20 @@ export default function header(container, obj) {
       });
 
     legendItem.append('span')
-      .attr('class', `${obj.prefix}legend_item_icon`);
+      .attr('class', `${obj.prefix}legend_item_icon`)
+      .text('\u00A0');
 
     legendItem.append('span')
       .attr('class', `${obj.prefix}legend_item_text`)
-      .text(d => { return d; });
+      .text(d => d);
   }
 
   obj.dimensions.headerHeight = headerGroup.node().getBoundingClientRect().height;
 
   return {
-    headerGroup: headerGroup,
-    legend: legend,
-    qualifier: qualifier
+    headerGroup,
+    legend,
+    qualifier
   };
 
 }

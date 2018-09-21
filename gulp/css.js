@@ -38,8 +38,9 @@ gulp.task('scss-compile:build', () => {
       autoPrefixer(autoprefixerOptions)]
     ))
     .pipe(csso({ debug: true }))
-    .pipe(rename('chart-tool.min.css'))
+    .pipe(rename('chart-tool.css'))
     .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style`))
+    .pipe(rename('chart-tool.min.css'))
     .pipe(gulp.dest(buildCss))
     .on('error', gutil.log);
 });

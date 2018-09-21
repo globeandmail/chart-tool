@@ -13,11 +13,13 @@ class ShowChart extends Component {
 
   constructor(props) {
     super(props);
+    this.forkChart = this.forkChart.bind(this);
+    this.goToChart = this.goToChart.bind(this);
     this.state = {};
   }
 
   forkChart() {
-    Meteor.call('forkChart', this.props.id, (err, result) => {
+    Meteor.call('charts.fork', this.props.id, (err, result) => {
       if (err) {
         console.log(err);
       } else {
@@ -58,7 +60,7 @@ class ShowChart extends Component {
         <div className='chart-show_tags'>
           <h4>Tags</h4>
           <ul>
-            {this.props.chart.tags.map(d => <li key={d}>{d}</li>)}
+            { this.props.chart.tags.map(d => <li key={d}>{d}</li>) }
           </ul>
         </div>
         <div className='chart-show_dates'>
@@ -79,7 +81,7 @@ class ShowChart extends Component {
         <Header {...this.props} />
         <section>
           <div className='chart-show'>
-            {this.props.loading ? renderLoading() : this.renderChart()}
+            { this.props.loading ? renderLoading() : this.renderChart() }
           </div>
         </section>
         <Footer />

@@ -65,8 +65,41 @@ export class TimeObj {
   }
 }
 
-export function wrapText(text, width) {
-  text.each(function() {
+export function wrapAnnoText(textNode) {
+  textNode.each(function() {
+
+    const text = select(this),
+      lineHeight = 1.0, // ems
+      x = text.attr('x'),
+      dy = parseFloat(text.attr('dy')) || 0;
+
+    let words = text.text().split('\n').reverse(),
+      line = [],
+      lineNumber = 0,
+      word,
+      tspan = text.text(null).append('tspan')
+        .attr('x', x)
+        .attr('dy', `${dy}em`);
+
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(' '));
+      if (line.length > 1) {
+        line.pop();
+        tspan.text(line.join(' '));
+        line = [word];
+        tspan = text.append('tspan')
+          .attr('x', x)
+          .attr('dy', `${++lineNumber > 0 ? lineHeight : 0}em`)
+          .text(word);
+      }
+    }
+  });
+}
+
+export function wrapText(textNode, width) {
+
+  textNode.each(function() {
 
     const text = select(this),
       y = text.attr('y'),
@@ -244,15 +277,25 @@ export function csvToTable(target, data) {
     .text(d => d);
 }
 
-export function getUniqueDateValues(data, type) {
+export function getUniqueValues(data) {
+  return Array.from(new Set(data));
+}
+
+export function resolveObjectPath(path, obj) {
+  return path.split('.').reduce((prev, curr) => {
+    return prev ? prev[curr] : undefined;
+  }, obj || self);
+}
+
+export function getUniqueDateValues(data, type, key) {
   const allDates = data.map(d => {
     switch (type) {
-      case 'day': return d.key.getDate();
-      case 'month': return d.key.getMonth();
-      case 'year': return d.key.getFullYear();
+      case 'day': return resolveObjectPath(key, d).getDate();
+      case 'month': return resolveObjectPath(key, d).getMonth();
+      case 'year': return resolveObjectPath(key, d).getFullYear();
     }
   });
-  return Array.from(new Set(allDates));
+  return getUniqueValues(allDates);
 }
 
 export function isElement(el) {

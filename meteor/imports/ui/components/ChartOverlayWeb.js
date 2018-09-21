@@ -88,7 +88,7 @@ export default class ChartOverlayWeb extends Component {
       scale = Number(event.target[2].value);
     }
 
-    Meteor.call('chart.png.download', this.props.chart._id, {
+    Meteor.call('charts.png.download', this.props.chart._id, {
       width,
       height,
       scale,
@@ -195,25 +195,25 @@ export default class ChartOverlayWeb extends Component {
           <div className='web-export-row'>
             <div className='web-export-custom-field web-export-custom-field-width'>
               <h5>Width</h5>
-                <span><input
-                  type='number'
-                  name='width'
-                  placeholder='400'
-                  className='input-field'
-                  value={this.state.width}
-                  onChange={this.handleCustomSize}
-                />px</span>
+              <span><input
+                type='number'
+                name='width'
+                placeholder='400'
+                className='input-field'
+                value={this.state.width}
+                onChange={this.handleCustomSize}
+              />px</span>
             </div>
             <div className='web-export-custom-field web-export-custom-field-height'>
               <h5>Height</h5>
-                <span><input
-                  type='number'
-                  name='height'
-                  placeholder='600'
-                  className='input-field'
-                  value={this.state.height}
-                  onChange={this.handleCustomSize}
-                />px</span>
+              <span><input
+                type='number'
+                name='height'
+                placeholder='600'
+                className='input-field'
+                value={this.state.height}
+                onChange={this.handleCustomSize}
+              />px</span>
             </div>
             <div className='web-export-custom-field web-export-custom-field-scale'>
               <h5>Scale</h5>
@@ -317,22 +317,22 @@ export default class ChartOverlayWeb extends Component {
                 <h4>Options</h4>
                 <p>Select whether you'd like to hide the heading, qualifier, or source line below.</p>
                 <ul>
-                {['head', 'qualifier', 'footer'].map(d => {
-                  const labels = { head: 'heading', qualifier: 'qualifier', footer: 'source' };
-                  return (
-                    <li key={d}>
-                      <input
-                        className='input-checkbox'
-                        type='checkbox'
-                        id={`hide-${d}`}
-                        name={d}
-                        onChange={this.handleHide}
-                        checked={this.state.hide[d]}
-                      />
-                      <label htmlFor={`hide-${d}`}>Hide {labels[d]}</label>
-                    </li>
-                  );
-                })}
+                  {['head', 'qualifier', 'footer'].map(d => {
+                    const labels = { head: 'heading', qualifier: 'qualifier', footer: 'source' };
+                    return (
+                      <li key={d}>
+                        <input
+                          className='input-checkbox'
+                          type='checkbox'
+                          id={`hide-${d}`}
+                          name={d}
+                          onChange={this.handleHide}
+                          checked={this.state.hide[d]}
+                        />
+                        <label htmlFor={`hide-${d}`}>Hide {labels[d]}</label>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
               <div className='web-export-option-group'>

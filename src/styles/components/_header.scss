@@ -33,32 +33,8 @@
 // qualifier
 .#{$prefix}chart_qualifier {
   margin: 0;
-  background: $color-white;
-  height: auto;
-  @include utility-font;
-}
-
-.#{$prefix}chart_qualifier-bar {
   margin-top: 2px;
-}
-
-.#{$prefix}chart_qualifier-text {
-  fill: $color-black;
-}
-
-.#{$prefix}chart_qualifier-text-bg {
-  stroke: $color-white;
-  stroke-width: 10px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: $color-white;
-}
-
-.#{$prefix}fo.#{$prefix}qualifier, .#{$prefix}fo.#{$prefix}qualifier > div {
-  display: inline-block;
-  margin-right: 10px;
-  padding-bottom: 0px;
-  vertical-align: middle;
+  height: auto;
   @include utility-font;
 }
 

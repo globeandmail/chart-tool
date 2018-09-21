@@ -1,10 +1,11 @@
+import 'core-js/library/fn/object/assign';
+import isMobile from 'ismobilejs';
+import chartSettings from './config/chart-settings';
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
-import chartSettings from './config/chart-settings';
-import { clearObj, clearChart, getBounding, generateThumb, isElement, debounce as debounceFn } from './utils/utils';
 import { parse } from './utils/dataparse';
 import { ChartManager } from './charts/manager';
-import 'core-js/library/fn/object/assign';
+import { clearObj, clearChart, getBounding, generateThumb, isElement, debounce as debounceFn } from './utils/utils';
 
 const root = typeof window !== 'undefined' ? window : this;
 
@@ -122,15 +123,21 @@ const ChartTool = (function ChartTool() {
       }
     }
     const debouncer = debounceFn(createLoop, true, chartSettings.debounce, root);
+    const eventListener = (isMobile.phone || isMobile.tablet) ? 'orientationchange' : 'resize';
     select(root)
-      .on(`resize.${chartSettings.prefix}debounce`, debouncer)
-      .on(`resize.${chartSettings.prefix}redraw`, dispatcher.call('redraw', this, charts));
+      .on(`${eventListener}.${chartSettings.prefix}debounce`, () => {
+        dispatcher.call('redraw', this, charts);
+        debouncer();
+      });
     if (root.ChartTool) { createLoop(); }
   }
 
   return {
-    init: function() {
+    init: function(preloadedCharts) {
       if (!this.initialized) {
+        if (preloadedCharts && preloadedCharts.length) {
+          preloadedCharts.map(p => charts.push(p));
+        }
         initializer();
         this.initialized = true;
       }
@@ -170,7 +177,7 @@ const ChartTool = (function ChartTool() {
 })();
 
 if (root) {
-  ChartTool.init();
+  ChartTool.init(root.ChartTool);
   root.ChartTool = ChartTool;
 }
 

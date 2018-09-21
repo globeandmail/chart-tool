@@ -5,9 +5,21 @@ const nodeResolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const replace = require('rollup-plugin-replace');
 
+const onwarn = warning => {
+  // Silence circular dependency warning for moment
+  if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.importer.indexOf('node_modules/d3') !== -1) {
+    return;
+  }
+  if (warning.code === 'THIS_IS_UNDEFINED' && !warning.importer) {
+    return;
+  }
+  console.warn(`${warning.message}`);
+};
+
 class RollupConfig {
   constructor() {
-    this.entry = `${gulpConfig.libScripts}/index.js`;
+    this.input = `${gulpConfig.libScripts}/index.js`;
+    this.onwarn = onwarn;
     this.plugins = [
       json(),
       buble({

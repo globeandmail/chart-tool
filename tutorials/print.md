@@ -31,7 +31,7 @@ Once you've fixed up your `meteor-config.js` file, be sure to kill any active Ch
 
 Assuming you haven't loaded any charts into Chart Tool yet, do that now — you'll want to have a proper chart to test PDF export against.
 
-Once that's done, you'll want to point your browser to [`/chart/pdf/_id`](https://github.com/globeandmail/chart-tool/blob/master/tutorials/interface.md) to preview what your chart will look like to wkhtmltopdf. At this point, you'll want to go back to [`meteor-custom.scss`](https://github.com/globeandmail/chart-tool/blob/master/tutorials/customizing.md) to tweak your print-specific CSS. There should be a section that looks something like this:
+Once that's done, you'll want to point your browser to [`/chart/:_id/pdf`](https://github.com/globeandmail/chart-tool/blob/master/tutorials/interface.md) to preview what your chart will look like to wkhtmltopdf. At this point, you'll want to go back to [`meteor-custom.scss`](https://github.com/globeandmail/chart-tool/blob/master/tutorials/customizing.md) to tweak your print-specific CSS. There should be a section that looks something like this:
 
 ```css
 .chart-pdf,

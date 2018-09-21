@@ -235,7 +235,7 @@ class Archive extends Component {
                 <h3 onClick={() => this.toggleCollapseExpand('chartType')}>Chart type</h3>
                 <div className={`unit-edit charts-archive_type ${this.expandStatus('chartType')}`}>
                   <ul>
-                    {['Line', 'Multiline', 'Area', 'Column', 'Bar'].map(t => {
+                    {['Line', 'Multiline', 'Area', 'Column', 'Bar', 'Scatterplot'].map(t => {
                       return (
                         <li key={t}>
                           <input

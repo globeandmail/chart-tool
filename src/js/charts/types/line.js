@@ -52,9 +52,9 @@ export default function lineChart(node, obj) {
     if (i !== obj.seriesHighlight()) {
 
       const l = line().curve(getCurve(obj.options.interpolation))
-        .defined(d => { return !isNaN(d.series[i].val); })
-        .x(d => { return xScale(d.key); })
-        .y(d => { return yScale(d.series[i].val); });
+        .defined(d => !isNaN(d.series[i].val))
+        .x(d => xScale(d.key))
+        .y(d => yScale(d.series[i].val));
 
       const pathRef = seriesGroup.append('path')
         .datum(obj.data.data)
@@ -77,9 +77,9 @@ export default function lineChart(node, obj) {
   secondaryArr.reverse();
 
   const hLine = line().curve(getCurve(obj.options.interpolation))
-    .defined(d => { return !isNaN(d.series[obj.seriesHighlight()].val); })
-    .x(d => { return xScale(d.key); })
-    .y(d => { return yScale(d.series[obj.seriesHighlight()].val); });
+    .defined(d => !isNaN(d.series[obj.seriesHighlight()].val))
+    .x(d => xScale(d.key))
+    .y(d => yScale(d.series[obj.seriesHighlight()].val));
 
   seriesGroup.append('path')
     .datum(obj.data.data)

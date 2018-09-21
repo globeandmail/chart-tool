@@ -2,7 +2,7 @@ import { csvParseRows, csvParse } from 'd3-dsv';
 import { timeParse } from 'd3-time-format';
 import { stack } from 'd3-shape';
 import { range } from 'd3-array';
-import { getUniqueDateValues } from './utils';
+import { getUniqueValues, getUniqueDateValues } from './utils';
 
 /**
  * Data parsing module. Takes a CSV and turns it into an Object, and optionally determines the formatting to use when parsing dates.
@@ -17,13 +17,25 @@ export function inputDate(scaleType, defaultFormat, declaredFormat) {
   }
 }
 
-export function parse(csv, inputDateFormat, index, stacked) {
+export function parse(csv, inputDateFormat, index, stacked, type) {
 
   let val;
 
   const firstVals = {};
 
-  const headers = csvParseRows(csv.match(/^.*$/m)[0])[0];
+  const keys = csvParseRows(csv.match(/^.*$/m)[0])[0];
+
+  let groupingKey, dotSizingKey;
+
+  const isScatterplot = type && type === 'scatterplot';
+
+  if (isScatterplot) {
+    if (keys.length > 3) groupingKey = keys[3];
+    if (keys.length >= 4) dotSizingKey = keys[4];
+  }
+
+  if (groupingKey) keys.splice(keys.indexOf(groupingKey), 1);
+  if (dotSizingKey) keys.splice(keys.indexOf(dotSizingKey), 1);
 
   const data = csvParse(csv, (d, i) => {
 
@@ -31,20 +43,27 @@ export function parse(csv, inputDateFormat, index, stacked) {
 
     if (inputDateFormat) {
       const dateFormat = timeParse(inputDateFormat);
-      obj.key = dateFormat(d[headers[0]]);
+      if (isScatterplot) {
+        obj.key = d[keys[0]];
+        // key will be along x-axis
+        d[keys[1]] = dateFormat(d[keys[1]]);
+      } else {
+        obj.key = dateFormat(d[keys[0]]);
+      }
     } else {
-      obj.key = d[headers[0]];
+      obj.key = d[keys[0]];
     }
+
+    if (groupingKey) obj.group = d[groupingKey];
+    if (dotSizingKey) obj.size = d[dotSizingKey];
 
     obj.series = [];
 
-    for (let j = 1; j < headers.length; j++) {
+    for (let j = 1; j < keys.length; j++) {
 
-      const key = headers[j];
+      const key = keys[j];
 
-      if (d[key] === 0 || d[key] === '') {
-        d[key] = '__undefined__';
-      }
+      if (d[key] === 0 || d[key] === '') d[key] = '__undefined__';
 
       if (index) {
 
@@ -73,15 +92,17 @@ export function parse(csv, inputDateFormat, index, stacked) {
 
   });
 
+  const groups = groupingKey ? getUniqueValues(data.map(d => d.group)) : undefined;
+
   const seriesAmount = data[0].series.length;
 
   let stackedData;
 
-  if (stacked && headers.length > 2) {
-    const stackFn = stack().keys(headers.slice(1));
+  if (stacked && keys.length > 2) {
+    const stackFn = stack().keys(keys.slice(1));
     stackedData = stackFn(range(data.length).map(i => {
       const o = {};
-      o[headers[0]] = data[i].key;
+      o[keys[0]] = data[i].key;
       for (let j = 0; j < data[i].series.length; j++) {
         if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
           o[data[i].series[j].key] = '0';
@@ -93,19 +114,24 @@ export function parse(csv, inputDateFormat, index, stacked) {
     }));
   }
 
-  const uniqueDayValues = inputDateFormat ? getUniqueDateValues(data, 'day') : undefined;
-  const uniqueMonthValues = inputDateFormat ? getUniqueDateValues(data, 'month') : undefined;
-  const uniqueYearValues = inputDateFormat ? getUniqueDateValues(data, 'year') : undefined;
+  const dateKey = isScatterplot ? 'series.0.val' : 'key',
+    uniqueDayValues = inputDateFormat ? getUniqueDateValues(data, 'day', dateKey) : undefined,
+    uniqueMonthValues = inputDateFormat ? getUniqueDateValues(data, 'month', dateKey) : undefined,
+    uniqueYearValues = inputDateFormat ? getUniqueDateValues(data, 'year', dateKey) : undefined;
 
   return {
-    csv: csv,
-    data: data,
-    seriesAmount: seriesAmount,
-    keys: headers,
-    stackedData: stackedData,
-    uniqueDayValues: uniqueDayValues,
-    uniqueMonthValues: uniqueMonthValues,
-    uniqueYearValues: uniqueYearValues
+    csv,
+    inputDateFormat,
+    data,
+    seriesAmount,
+    keys,
+    stackedData,
+    uniqueDayValues,
+    uniqueMonthValues,
+    uniqueYearValues,
+    groupingKey,
+    dotSizingKey,
+    groups
   };
 
 }

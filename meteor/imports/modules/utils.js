@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 import { app_settings } from './settings';
 import { timeFormat, timeParse } from 'd3-time-format';
 import ChartTool from './chart-tool';
+import { extent } from 'd3-array';
 
 export function randomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -14,6 +15,10 @@ export function mode(arr) {
   return arr
     .sort((a, b) => arr.filter(v => v === a).length - arr.filter(v => v === b).length)
     .pop();
+}
+
+export function isUndefined(val) {
+  return val === undefined ? true : false;
 }
 
 export function extend(from, to) {
@@ -44,12 +49,6 @@ export function isObject(item) {
   return (typeof item === 'object' && !Array.isArray(item) && item !== null);
 }
 
-export function escapeStr(str) {
-  if (typeof str === 'string') {
-    return str ? str.replace(/\'/g, '\\\'') : str;
-  }
-}
-
 export function cleanEmbed(data) {
   const arr = [];
   arr.push(
@@ -72,7 +71,8 @@ export function cleanEmbed(data) {
     'range',
     'public',
     'users',
-    'tags'
+    'tags',
+    'memo'
   );
   const chartObj = deleteProp(data, arr);
   const newData = csvFormat(data);
@@ -84,10 +84,10 @@ export function embed(obj) {
   return {
     'version': obj.version,
     'id': obj._id,
-    'heading': escapeStr(obj.heading),
-    'qualifier': escapeStr(obj.qualifier),
-    'source': escapeStr(obj.source),
-    'tags': escapeStr(obj.tags),
+    'heading': obj.heading,
+    'qualifier': obj.qualifier,
+    'source': obj.source,
+    'tags': obj.tags,
     'chart': cleanEmbed(obj)
   };
 }
@@ -133,7 +133,7 @@ export function jsonToCSV(objArray, config) {
     for (let j = 0; j < array[i].length; j++) {
       if (line != '') { line += opt.delimiter; }
       if (array[i][j].match(/,/)) {
-        line += `'${array[i][j]}'`;
+        line += `"${array[i][j]}"`;
       } else {
         line += array[i][j];
       }
@@ -156,7 +156,8 @@ export function csvFormat(obj) {
       let stdFormat = app_settings.chart.date_format;
       if (obj.hasHours) { stdFormat += ` ${app_settings.chart.time_format}`; }
       const currFormat = obj.date_format;
-      return standardizeDates(data, currFormat, stdFormat);
+      const isScatterplot = obj.options.type === 'scatterplot';
+      return standardizeDates(data, currFormat, stdFormat, isScatterplot);
     } else {
       return data;
     }
@@ -196,12 +197,14 @@ export function dataParse(data) {
     });
   }
 
-  let start, end;
+  let start, end, colTypes;
 
   if (parseParams) {
+
     parsedData = cleanData(Papa.parse(newData, parseParams).data);
     start = parsedData.start;
     end = parsedData.end;
+    colTypes = parsedData.colTypes;
     const csvOptions = {
       delimiter: ',',
       newline: '\n'
@@ -215,42 +218,91 @@ export function dataParse(data) {
   return {
     data: output,
     start,
-    end
+    end,
+    colTypes,
+    parsedData: parsedData.output
   };
 
 }
 
-export function cleanData(data) {
+export function chartFromColTypes(colTypes) {
 
+  // use col types to determine whether it's bar, line or scatterplot
+  // if first index is numeric, it's line
+  // if first index is non-numeric and any later indices are non-numeric, it's scatterplot
+  // if first index is non-numeric and later indices are numeric, it's bar
+
+  const firstColType = colTypes.shift();
+
+  if (firstColType === 'numeric') return 'line';
+
+  return colTypes.indexOf('non-numeric') !== -1 ? 'scatterplot' : 'bar';
+
+}
+
+export function determineColTypes(data) {
+
+  // determine if a column of data is likely to be "numeric" or not
+  const dataColumns = data[0].map(() => []);
+
+  // construct a list of all values in each column
+  data.map(arr => {
+    arr.map((val, i) => dataColumns[i].push(val));
+  });
+
+  // count up number of digit and non-digit characters and determine
+  // whether column is numeric or non-numeric
+  const colTypes = dataColumns.map(arr => {
+    const str = arr.join(''),
+      numeric = str.replace(/[^\d-]/g, '').length,
+      nonNumeric = str.replace(/[\d-]/g, '').length;
+
+    return numeric > nonNumeric ? 'numeric' : 'non-numeric';
+  });
+
+  return colTypes;
+
+}
+
+export function cleanData(data) {
   const start = [],
     end = [];
 
-  // strip empty lines
-
-  //ignore the first item which would be the header row
+  // ignore the first item which would be the header row
   const headerRow = data.shift();
 
-  //step through each line in the csv
-  const output = data.map(obj => {
+  // build an index of whether data is likely to be "numeric", which requires cleaning
+  const colTypes = determineColTypes(data);
 
-    //ignore the first row which would identify the series - everything following is a value
-    const headerCol = obj.shift();
+  const firstColType = colTypes.shift();
 
-    //step through each value
-    const line = obj.map(arr => {
-      const line_output = cleanNumber(arr);
-      if (line_output.start.length) start.push(line_output.start);
-      if (line_output.end.length) end.push(line_output.end);
-      return line_output.data;
+  // step through each line in the csv
+  const output = data.map(arr => {
+
+    // ignore the first row which would identify the series - everything following is a value
+    const headerCol = arr.shift();
+
+    // step through each value
+    const line = arr.map((val, i) => {
+      let value;
+      if (colTypes[i] === 'numeric') {
+        const lineOutput = cleanNumber(val);
+        if (lineOutput.start.length) start.push(lineOutput.start);
+        if (lineOutput.end.length) end.push(lineOutput.end);
+        value = lineOutput.data;
+      } else {
+        value = val;
+      }
+      return value;
     });
 
     const re = /^\d*\/\d*\/\d*$/;
 
-    // if it's all digits (i.e. a date)
+    // if first column's all digits with slashes (i.e. dates)
 
     if (re.test(headerCol)) {
-      const replace_slashes = /\//g;
-      line.unshift(headerCol.replace(replace_slashes,'-'));
+      const replaceSlashes = /\//g;
+      line.unshift(headerCol.replace(replaceSlashes, '-'));
     } else {
       line.unshift(headerCol);
     }
@@ -258,12 +310,16 @@ export function cleanData(data) {
     return line;
   });
 
+  colTypes.unshift(firstColType);
+
   // add the header row back to the data
   output.unshift(headerRow);
+
   return {
     output,
     start,
-    end
+    end,
+    colTypes
   };
 }
 
@@ -273,13 +329,17 @@ export function formatDate(data, format) {
   return output;
 }
 
-export function cleanNumber(data) {
+export function cleanNumber(inputString) {
   // remove everything that isnt a number, decimal, or negative
   // and do some checking for characters we can use for prefix/suffix
+
+  // fix weird dash characters into minus signs if necessary
+  const str = inputString.toString().replace(String.fromCharCode(8208), String.fromCharCode(45));
+
   return {
-    data: data.toString().replace(/[^0-9\.-]/g, ''),
-    start: data.match(/^[^0-9\.-]+/g) || [],
-    end: data.match(/[^0-9\.-]+$/g) || []
+    data: str.replace(/[^0-9.-]/g, ''),
+    start: str.match(/^[^0-9.-]+/g) || [],
+    end: str.match(/[^0-9.-]+$/g) || []
   };
 }
 
@@ -292,7 +352,7 @@ export function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-export function standardizeDates(data, oldFormat, newFormat) {
+export function standardizeDates(data, oldFormat, newFormat, isScatterplot) {
 
   const stdFormat = timeFormat(newFormat),
     currFormat = timeParse(oldFormat);
@@ -300,9 +360,9 @@ export function standardizeDates(data, oldFormat, newFormat) {
   const jsonData = Papa.parse(data, { delimiter: ',' });
 
   for (let i = 1; i < jsonData.data.length; i++) {
-    const date = currFormat(jsonData.data[i][0]);
+    const date = currFormat(jsonData.data[i][isScatterplot ? 1 : 0]);
     if (date !== null) {
-      jsonData.data[i][0] = stdFormat(date);
+      jsonData.data[i][isScatterplot ? 1 : 0] = stdFormat(date);
     } else {
       throw new Meteor.Error('Incompatible date formatting', "Make sure your data's date style matches the formatting dropdown.");
     }
@@ -477,7 +537,7 @@ const debouncedThumb = debounce(id => {
 }, app_settings.thumbnail_debounce);
 
 function generateThumb(id) {
-  Meteor.call('chart.update.thumbnail', id, {
+  Meteor.call('charts.update.thumbnail', id, {
     width: app_settings.s3.thumbnailWidth,
     scale: 2,
     dynamicHeight: false
@@ -486,7 +546,7 @@ function generateThumb(id) {
   });
 }
 
-export function updateAndSave(method, id, data) {
+export function updateAndSave(method, id, data, cb) {
   const thumbnailMethods = [
     'charts.update.multiple.fields',
     'charts.update.data',
@@ -521,19 +581,22 @@ export function updateAndSave(method, id, data) {
     'charts.update.y_axis.nice',
     'charts.reset.x_axis',
     'charts.reset.y_axis',
-    'charts.update.annotations.reset',
-    'charts.update.annotations.highlight',
-    'charts.update.annotations.highlight.reset'
+    'charts.reset.annotation',
+    'charts.update.annotation.highlight',
+    'charts.update.annotation.pointer',
+    'charts.update.annotation.text',
+    'charts.update.annotation.range'
   ];
 
   const createThumbnail = thumbnailMethods.indexOf(method) !== -1 ? true : false;
 
-  Meteor.call(method, id, data, (err) => {
+  Meteor.call(method, id, data, (err, res) => {
     if (err) {
       console.log(err);
     } else if (createThumbnail) {
       debouncedThumb(id);
     }
+    if (cb) cb(err, res);
   });
 }
 
@@ -565,7 +628,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'options.indexed': false,
-        'charts.update.annotations.highlight.reset': []
+        'annotations.highlight': [],
+        'annotations.range': []
       };
     case 'multiline':
       return {
@@ -577,7 +641,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'options.indexed': false,
-        'charts.update.annotations.highlight.reset': []
+        'annotations.highlight': [],
+        'annotations.range': []
       };
     case 'area':
       return {
@@ -589,7 +654,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.nice': true,
         'y_axis.min': '',
         'options.indexed': false,
-        'charts.update.annotations.highlight.reset': []
+        'annotations.highlight': [],
+        'annotations.range': []
       };
     case 'column':
       return {
@@ -600,7 +666,8 @@ export function chartTypeFieldReset(type) {
         'y_axis.scale': 'linear',
         'y_axis.nice': true,
         'y_axis.min': '',
-        'options.indexed': false
+        'options.indexed': false,
+        'annotations.range': []
       };
     case 'bar':
       return {
@@ -612,6 +679,19 @@ export function chartTypeFieldReset(type) {
         'y_axis.nice': false,
         'y_axis.min': '',
         'options.indexed': false,
+        'annotations.range': []
+      };
+    case 'scatterplot':
+      return {
+        'options.type': type,
+        'options.interpolation': false,
+        'x_axis.scale': 'linear',
+        'x_axis.nice': false,
+        'y_axis.scale': 'linear',
+        'y_axis.nice': false,
+        'options.indexed': false,
+        'annotations.highlight': [],
+        'annotations.range': []
       };
   }
 
@@ -670,4 +750,179 @@ export function generateMeasurements(print) {
     height: (height * dpi) / 25.4,
     name
   };
+}
+
+export function setPropertyByPath(obj, pathStr, value) {
+
+  const path = pathStr.split('.');
+
+  let i, j, name, parent, ref;
+
+  parent = obj;
+
+  if (path.length > 1) {
+    for (i = j = 0, ref = path.length - 2; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+      parent = (parent[name = path[i]] || (parent[name] = {}));
+    }
+  }
+  return parent[path[path.length - 1]] = value;
+
+}
+
+export function dateFormats() {
+  return [
+    {
+      format: '%Y-%m-%d',
+      pretty: 'YYYY-MM-DD'
+    }, {
+      format: '%Y-%d-%m',
+      pretty: 'YYYY-DD-MM'
+    }, {
+      format: '%y-%m-%d',
+      pretty: 'YY-MM-DD'
+    }, {
+      format: '%y-%d-%m',
+      pretty: 'YY-DD-MM'
+    }, {
+      format: '%m-%d-%Y',
+      pretty: 'MM-DD-YYYY'
+    }, {
+      format: '%m-%e-%Y',
+      pretty: 'MM-D-YYYY'
+    }, {
+      format: '%m-%d-%y',
+      pretty: 'MM-DD-YY'
+    }, {
+      format: '%d-%m-%Y',
+      pretty: 'DD-MM-YYYY'
+    }, {
+      format: '%d-%m-%y',
+      pretty: 'DD-MM-YY'
+    }, {
+      format: '%Y',
+      pretty: 'YYYY'
+    }
+  ];
+}
+
+export function guessDateFormat(data, type) {
+
+  if (type !== 'line') return;
+
+  // grab all values for first data column
+  const firstCol = data
+    .filter((d, i) => i !== 0)
+    .map(d => d[0]);
+
+  const formats = dateFormats().map(f => {
+    f.parse = timeParse(f.format);
+    return f;
+  });
+
+  const hasDashes = firstCol.join('').indexOf('-') !== -1;
+
+  // assume YYYY if no dashes
+  if (!hasDashes) return formats.filter(d => d.pretty === 'YYYY')[0].format;
+
+  let dateFormat;
+
+  // parse all the first column data and then check if it was parsed successfully
+  const tests = formats
+    .map(f => {
+      return {
+        format: f.format,
+        pretty: f.pretty,
+        test: firstCol.map(d => f.parse(d))
+      };
+    })
+    .filter(item => {
+      // filter out tests that completely failed
+      const newArr = item.test.filter(t => t !== null);
+      return newArr.length;
+    })
+    .filter(item => {
+      // then filter out tests that had any fails in them
+      return item.test.indexOf(null) !== 1;
+    })
+    .filter(item => {
+      // finally, filter out tests where the values' order wasn't maintained
+      const originalLength = item.test.length,
+        first = item.test[0],
+        last = item.test[item.test.length - 1],
+        order = first > last ? 'desc' : 'asc';
+
+      const newArr = item.test.filter((t, i) => {
+        if (i === 0) return true;
+        const currItem = item.test[i],
+          prevItem = item.test[i - 1];
+        return order === 'desc' ? currItem < prevItem : currItem > prevItem;
+      });
+      return originalLength === newArr.length;
+    });
+
+  if (tests.length === 1) dateFormat = tests[0].format;
+  if (tests.length > 1) {
+    // if tests still has elements, probably best to assume MM-DD-YY instead of DD-MM-YY?
+
+    // either YYYY-XX
+    // or XX-YYYY
+    const splitDates = firstCol
+      .map(f => f.split('-'));
+
+    const dateLengths = firstCol[0].split('-').map(f => f.length),
+      yearIndex = dateLengths.indexOf(4);
+
+    let re;
+
+    if (yearIndex !== -1) {
+      // has YYYY in it, so other two are either DD or MM
+      // count up numbers for other two columns
+      const remainingDates = splitDates
+        .map(row => row.filter((f, i) => i !== yearIndex));
+
+      const analysis = transposeArray(remainingDates)
+        .map(arr => {
+          const [min, max] = extent(arr);
+          return {
+            min: parseInt(min),
+            max: parseInt(max)
+          };
+        });
+
+      if (analysis[0].min === analysis[0].max && analysis[1].min === analysis[1].max) {
+        // then it doesn't matter, use D-M-Y
+        re = /^%d.*/;
+      } else if (analysis[0].min === analysis[0].max) {
+        // 0 is day
+        re = /^%d.*/;
+      } else if (analysis[1].min === analysis[1].max) {
+        // 1 is day
+        re = /^%m.*/;
+      } else if (analysis[0].max === 12) {
+        // 0 is month
+        re = /^%m.*/;
+      } else if (analysis[1].max === 12) {
+        // 1 is month
+        re = /^%d.*/;
+      }
+
+    }
+
+    if (yearIndex === -1 || !re) {
+      // it's short form MM-DD-YY or DD-MM-YY or rarely, YY-XX-XX
+      re = /^%m.*/;
+    }
+
+    const filtered = tests.filter(item => re.test(item.format));
+
+    dateFormat = filtered.length ? filtered[0].format : undefined;
+
+  }
+
+  return dateFormat;
+
+}
+
+function transposeArray(m) {
+  return m[0].map((x, i) => m.map(x => x[i]));
 }

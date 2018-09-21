@@ -12,12 +12,13 @@
 }
 
 .edit-box {
-  margin-bottom: 1.6em;
+  margin-bottom: 1em;
   h3 {
     border-bottom: 1px solid $color-black;
     padding-bottom: 0.1em;
     margin: 0 0 0.3em 0;
     cursor: pointer;
+    font-size: 1.5em;
     @include user-select(none);
     @include interface-font-light;
     @include transition (all 0.1s ease-out);
@@ -29,7 +30,7 @@
   }
   h4 {
     @include interface-font-bold;
-    font-size: 1em;
+    font-size: 0.9em;
     margin: 0.7em 0 0.5em 0;
   }
   span {
@@ -43,7 +44,7 @@ select {
   outline: none;
   background: transparent;
   width: auto;
-  padding: 0.3em 1em 0.3em 0.5em;
+  padding: 0.3em 1.2em 0.3em 0.5em;
   @include appearance(none);
   @include transition (all 0.1s ease-out);
   @include placeholder {
@@ -261,7 +262,7 @@ select {
 }
 
 .chart-preview {
-  margin-bottom: 4em;
+  margin-bottom: 2em;
   h5 {
     font-size: 0.9em;
     letter-spacing: 0.02em;
@@ -273,7 +274,7 @@ select {
     margin-bottom: 0.75em;
     padding-bottom: 0.2em;
   }
-  .preview-container {
+  .chart-wrapper, .preview-container {
     height: auto;
     position: relative;
   }
@@ -358,62 +359,62 @@ select {
   display: block;
 }
 
-.selectize-input {
-  font-size: 0.8em;
-  font-family: "Monaco", "Lucida Console", monospace;
-  background-color: $color-gray-light;
-  border: 2px solid $color-gray-light;
-  box-sizing: border-box;
-  box-shadow: none;
-  border-radius: 0;
-  white-space: nowrap;
-  @include transition (all 0.1s ease-out);
-  &.focus {
-    box-shadow: none;
-    outline: none;
-    border: 2px solid $color-black;
-    border-radius: 0;
-    @include transition (all 0.1s ease-in);
-  }
-}
-
-.selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input [data-value].active {
-  font-family: "Monaco", "Lucida Console", monospace;
-  background: none;
-  text-shadow: none;
-  border: 1px solid $color-black;
-  border-radius: 4px;
-  box-shadow: none;
-  color: $color-black;
-  float: left;
-}
-
-.selectize-control.multi .selectize-input > div {
-  margin: 0 5px 5px 0;
-}
-
-.selectize-control.multi .selectize-input [data-value].active {
-  background-color: $color-black;
-  color: $color-gray-light;
-}
-
-.selectize-dropdown {
-  margin-top: -2px;
-}
-
-.selectize-dropdown .active {
-  background-color: lighten($primary-color, 60%);
-  color: $color-black;
-}
-
-.selectize-dropdown [data-selectable] .highlight {
-  background: lighten($primary-color, 50%);
-  color: $color-black;
-}
-
-.selectize-dropdown .active.create {
-  color: $color-black;
-}
+// .selectize-input {
+//   font-size: 0.8em;
+//   font-family: "Monaco", "Lucida Console", monospace;
+//   background-color: $color-gray-light;
+//   border: 2px solid $color-gray-light;
+//   box-sizing: border-box;
+//   box-shadow: none;
+//   border-radius: 0;
+//   white-space: nowrap;
+//   @include transition (all 0.1s ease-out);
+//   &.focus {
+//     box-shadow: none;
+//     outline: none;
+//     border: 2px solid $color-black;
+//     border-radius: 0;
+//     @include transition (all 0.1s ease-in);
+//   }
+// }
+//
+// .selectize-control.multi .selectize-input [data-value], .selectize-control.multi .selectize-input [data-value].active {
+//   font-family: "Monaco", "Lucida Console", monospace;
+//   background: none;
+//   text-shadow: none;
+//   border: 1px solid $color-black;
+//   border-radius: 4px;
+//   box-shadow: none;
+//   color: $color-black;
+//   float: left;
+// }
+//
+// .selectize-control.multi .selectize-input > div {
+//   margin: 0 5px 5px 0;
+// }
+//
+// .selectize-control.multi .selectize-input [data-value].active {
+//   background-color: $color-black;
+//   color: $color-gray-light;
+// }
+//
+// .selectize-dropdown {
+//   margin-top: -2px;
+// }
+//
+// .selectize-dropdown .active {
+//   background-color: lighten($primary-color, 60%);
+//   color: $color-black;
+// }
+//
+// .selectize-dropdown [data-selectable] .highlight {
+//   background: lighten($primary-color, 50%);
+//   color: $color-black;
+// }
+//
+// .selectize-dropdown .active.create {
+//   color: $color-black;
+// }
 
 // Title, qualifier and source contentEditable fields
 
@@ -455,7 +456,7 @@ select {
   }
 }
 
-.#{$prefix}chart_source {
+.chart-preview .#{$prefix}chart_source {
   @media only screen and (min-width: 420px) {
     width: 100% !important;
   }
@@ -529,11 +530,46 @@ select {
   color: $color-gray-medium;
 }
 
+span.note-anno-color {
+  color: $color-annotation-mode;
+}
+
 .chart-preview-annotation {
-  rect {
-    &:hover {
-      cursor: url('/images/cursor.cur') 0 15, auto;
-    }
+  h5 span {
+    float: right;
+    color: $color-annotation-mode;
+    vertical-align: bottom;
+    font-size: 0.7rem;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+  }
+}
+
+.chart-preview-annotation-highlight {
+  rect:hover {
+    cursor: url('/images/cursor.cur') 0 15, auto;
+  }
+}
+
+.chart-preview-annotation-text {
+  .#{$prefix}dot:hover,
+  .#{$prefix}annotation_text:hover {
+    cursor: pointer;
+  }
+  .#{$prefix}annotation-editable-group:hover {
+    cursor: text;
+  }
+}
+
+.chart-preview-annotation-pointer {
+  .#{$prefix}annotations .#{$prefix}pointer-path:hover {
+    cursor: pointer;
+  }
+}
+
+.chart-preview-annotation-range {
+  .#{$prefix}annotations .#{$prefix}annotation_range:hover {
+    cursor: pointer;
   }
 }
 
@@ -541,6 +577,21 @@ select {
   box-shadow: none !important;
   > div {
     padding: 0 !important;
+  }
+}
+
+.unit-anno h4 {
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid $color-black;
+  cursor: pointer;
+  span {
+    color: $color-black;
+  }
+  &:hover {
+    border-color: $primary-color;
+    span {
+      color: $primary-color;
+    }
   }
 }
 
@@ -559,5 +610,277 @@ select {
     border-color: $primary-color;
     color: $primary-color;
     @include transition (all 0.1s ease-in);
+  }
+}
+
+.current-highlight, .current-ranges, .current-text, .current-pointer {
+  p {
+    text-transform: uppercase;
+    font-size: 0.8em;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5em;
+  }
+
+  ul {
+    margin: 0;
+  }
+
+  li {
+    list-style-type: none;
+    padding-bottom: 0.4em;
+    @include row();
+    > div {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+
+  .highlight-color {
+    height: 1.25em;
+    border-radius: 3px;
+    position: relative;
+    @include span-columns(1 of 10);
+  }
+
+  .highlight-remove {
+    @include appearance(none);
+    opacity: 0;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    position: absolute;
+    top: calc(50% - 1px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+      color: $color-white;
+    }
+  }
+
+  .highlight-key {
+    @include span-columns(9 of 10);
+  }
+
+  .range-item, .text-item, .pointer-item {
+    background-color: darken($color-gray-light, 2%);
+    padding: 0.4rem 0.5rem;
+    position: relative;
+    margin-bottom: 0.4rem;
+    p {
+      margin: 0;
+      line-height: 1.3;
+    }
+    &:hover {
+      .range-tools, .text-tools, .pointer-tools {
+        opacity: 1;
+        pointer-events: all;
+        padding-left: 0.5em;
+        background-color: darken($color-gray-light, 2%);
+        @include transition (all 0.1s ease-in);
+      }
+    }
+  }
+
+  .text-item-selected, .pointer-item-selected, .range-item-selected {
+    background-color: lighten($color-annotation-mode, 40%);
+    .text-edit, .pointer-edit, .range-edit {
+      display: none;
+    }
+    &:hover {
+      .range-tools, .text-tools, .pointer-tools {
+        opacity: 1;
+        pointer-events: all;
+        padding-left: 0.5em;
+        background-color: lighten($color-annotation-mode, 40%);
+        @include transition (all 0.1s ease-in);
+      }
+    }
+  }
+
+  .text-item p, .range-item p {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.9rem;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .range-tools, .text-tools, .pointer-tools {
+    position: absolute;
+    right: 0.3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    pointer-events: none;
+    @include transition (all 0.1s ease-out);
+  }
+
+  .range-remove, .range-edit, .text-remove, .text-edit, .pointer-remove, .pointer-edit {
+    height: 1.3rem;
+    vertical-align: bottom;
+    &:hover {
+      border-color: $primary-color;
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+
+  .range-remove, .text-remove, .pointer-remove {
+    @include appearance(none);
+    background: none;
+    border: 1px solid $color-black;
+    border-radius: 3px;
+    font-size: 1.2em;
+    line-height: 0.7;
+    padding: 0 0.2em 0.1em 0.2em;
+    margin-left: 0.25em;
+  }
+
+  .range-edit, .text-edit, .pointer-edit {
+    @include appearance(none);
+    background: none;
+    border: 1px solid $color-black;
+    border-radius: 3px;
+    line-height: 1.2rem;
+    padding: 0 0.25em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+
+}
+
+.add-text, .add-range, .add-pointer {
+  .note {
+    color: $color-black;
+    margin: 0;
+  }
+  .note, .range-row, .text-row {
+    margin-bottom: 0.5em;
+  }
+  label {
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+  .select-wrapper, select {
+    width: 100%;
+  }
+  select {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    padding-right: 1.8em;
+    letter-spacing: 1.2px;
+    border-radius: 3px;
+    vertical-align: middle;
+    width: 100%;
+  }
+  .range-row, .text-row {
+    @include clearfix;
+  }
+  .range-row-item, .text-row-item {
+    display: inline-block;
+    width: 48%;
+    float: left;
+    ~ .range-row-item, ~ .text-row-item {
+      float: right;
+    }
+    &.muted {
+      opacity: 0.2;
+      pointer-events: none;
+    }
+  }
+  .range-value {
+    pointer-events: none;
+    @include user-select(none);
+  }
+  .editable {
+    pointer-events: all;
+  }
+  input {
+    @extend %input;
+    width: 100%;
+    font-size: 0.9rem;
+    background: none;
+  }
+  button {
+    @include appearance(none);
+    background: none;
+    border: 1px solid $color-black;
+    color: $color-black;
+    font-size: 1em;
+    margin-top: 0.3em;
+    padding: 0.3em 0.5em 0.35em 0.5em;
+    border-radius: 4px;
+    @include transition (all 0.1s ease-out);
+    text-decoration: none;
+    opacity: 0.3;
+    pointer-events: none;
+    &:hover {
+      border-color: $primary-color;
+      color: $primary-color;
+      @include transition (all 0.1s ease-in);
+    }
+    &.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+}
+
+.rc-slider-track {
+  background: none !important;
+}
+
+.rc-slider-handle {
+  border-color: $color-black !important;
+}
+
+.rc-slider-rail {
+  background-color: darken($color-gray-light, 20%) !important;
+}
+
+.memo {
+  h4 {
+    @include interface-font-regular;
+    margin-top: 0;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-left: 0.5em;
+  }
+  .add-memo {
+    @include appearance(none);
+    background-color: $color-gray-light;
+    border: none;
+    color: rgba($color-black, 0.4);
+    font-size: 0.8em;
+    padding: 0.4em 0.5em 0.35em 0.5em;
+    width: 100%;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    @include transition (all 0.1s ease-out);
+    &:hover {
+      color: $color-black;
+      @include transition (all 0.1s ease-in);
+    }
+  }
+  .memo-field {
+    @include appearance(none);
+    background-color: $color-gray-light;
+    width: 100%;
+    resize: vertical;
+    border-radius: 3px;
+    min-height: (3 * 1.4667) * 1em;
+    font-size: 0.75em;
+    font-family: "Monaco", "Lucida Console", monospace;
+    overflow: auto;
+    padding: 0.3em 0.5em;
+    border: none;
   }
 }

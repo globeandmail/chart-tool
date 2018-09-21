@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Chart Tool — chart tests</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <style type="text/css">
+    .wrapper {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+  </style>
+
+  <!-- <link rel="stylesheet" type="text/css" href="../dist/dev/chart-tool.css"> -->
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <h1>This is a test file for the front-end lib.</h1>
+
+    <!-- CHART TOOL v1.1.0-0 -->
+    <!-- edited: Wed Feb 03 2016 16:49:25 GMT-0500 (EST) -->
+    <!-- slug: teranet-composite-6 -->
+    <div class="ct-chart" data-chartid="ct-scatterplot">
+      <script>
+        (function(root) {
+          var data = {
+            "version": "1.1.0",
+            "id": "scatterplot",
+            "heading": "Scatterplot test chart",
+            "qualifier": "",
+            "source": "Source: Chart Tool",
+            "chart": {
+              "class": "primary",
+              "hasHours": false,
+              "data": "csd,Date,rent,group\nAbbotsford,1993-07-30,656,Potato\nAjax,1993-08-31,947,Potato\nAmherstburg,1993-09-30,744,Potato\nAurora,1993-10-29,1038,Potato\nBarrie,1993-11-30,901,Potato\nBelleville,1993-12-31,752,Potato\nBlainville,1994-01-31,628,Potato\nBoucherville,1994-02-28,670,Potato\nBrampton,1994-03-31,977,Potato\nBrant,1994-04-29,912,Potato\nBrantford,1994-05-31,728,Potato\nBrossard,1994-06-30,867,Potato\nBurlington,1994-07-29,938,Potato\nBurnaby,1994-08-31,820,Potato\nCalgary,1994-09-30,919,Potato\nCambridge,1994-10-31,774,Potato\nCape Breton,1994-11-30,570,Potato\nCentral Okanagan J,1994-12-30,754,Potato\nCentral Saanich,1995-01-31,834,Potato\nChambly,1995-02-28,569,Potato\nCharlottetown,1995-03-31,624,Potato\nChÃ¢teauguay,1995-04-28,568,Potato\nChatham-Kent,1995-05-31,609,Potato\nClarington,1995-06-30,882,Potato\nComox,1995-07-31,662,Potato\nConception Bay South,1995-08-31,455,Potato\nCoquitlam,1995-09-29,742,Potato\nCornwall,1995-10-31,634,Potato\nCourtenay,1995-11-30,603,Potato\nDrummondville,1995-12-29,479,Apple\nEdmonton,1996-01-31,810,Apple\nFort Erie,1996-02-29,601,Apple\nGatineau,1996-03-29,633,Apple\nGranby,1996-04-30,486,Apple\nGrande Prairie,1996-05-31,1076,Apple\nGuelph,1996-06-28,839,Apple\nGuelph/Eramosa,1996-07-31,786,Apple\nHalifax,1996-08-30,747,Apple\nHalton Hills,1996-09-30,1004,Apple\nKamloops,1996-10-31,664,Apple\nKawartha Lakes,1996-11-29,780,Apple\nKelowna,1996-12-31,758,Apple\nKingston,1997-01-31,787,Apple\nKitchener,1997-02-28,778,Apple\nLa Prairie,1997-03-31,646,Apple\nLakeshore,1997-04-30,640,Apple\nLangford,1997-05-30,742,Apple\nLangley,1997-06-30,742,Apple\nLaSalle,1997-07-31,682,Apple\nLaval,1997-08-29,611,Apple\nLeduc,1997-09-30,972,Apple\nLethbridge,1997-10-31,663,Apple\nLÃ©vis,1997-11-28,573,Apple\nLincoln,1997-12-31,630,Apple\nLondon,1998-01-30,745,Apple\nLongueuil,1998-02-27,568,Apple\nMagog,1998-03-31,498,Apple\nMascouche,1998-04-30,709,Apple\nMedicine Hat,1998-05-29,588,Apple\nMirabel,1998-06-30,540,Pear\nMission,1998-07-31,680,Pear\nMississauga,1998-08-31,1013,Pear\nMontrÃ©al,1998-09-30,604,Pear\nMount Pearl,1998-10-30,543,Pear\nNanaimo,1998-11-30,624,Pear\nNew Westminster,1998-12-31,708,Pear\nNewmarket,1999-01-29,1007,Pear\nNiagara Falls,1999-02-26,714,Pear\nNorfolk County,1999-03-31,606,Pear\nNorth Vancouver,1999-04-30,1253,Pear\nOak Bay,1999-05-31,786,Pear\nOakville,1999-06-30,1068,Pear\nOrangeville,1999-07-30,812,Pear\nOshawa,1999-08-31,851,Pear\nPelham,1999-09-30,673,Pear\nPeterborough,1999-10-29,776,Pear\nPort Colborne,1999-11-30,723,Pear\nPrince George,1999-12-31,619,Pear\nQuÃ©bec,2000-01-31,634,Pear\nQuinte West,2000-02-29,658,Pear\nRed Deer,2000-03-31,772,Pear\nRegina,2000-04-28,588,Pear\nRichmond Hill,2000-05-31,1205,Pear\nRichmond,2000-06-30,1039,Pear\nRimouski,2000-07-31,504,Pear\nSaanich,2000-08-31,853,Pear\nSaguenay,2000-09-29,467,Pear\nSaint-Eustache,2000-10-31,592,Pear\nSaint-Hyacinthe,2000-11-30,498,Pear\nSaint-Jean-sur-Richelieu,2000-12-29,528,Zucchini\nSaint-JÃ©rÃ´me,2001-01-31,554,Zucchini\nSarnia,2001-02-28,643,Zucchini\nSaskatoon,2001-03-30,581,Zucchini\nShawinigan,2001-04-30,374,Zucchini\nSherbrooke,2001-05-31,516,Zucchini\nSpruce Grove,2001-06-29,818,Zucchini\nSt. Albert,2001-07-31,903,Zucchini\nSt. Catharines,2001-08-31,754,Zucchini\nSt. Thomas,2001-09-28,688,Zucchini\nStratford,2001-10-31,721,Zucchini\nSurrey,2001-11-30,760,Zucchini\nTecumseh,2001-12-31,803,Zucchini\nTerrebonne,2002-01-31,609,Zucchini\nThorold,2002-02-28,647,Zucchini\nThunder Bay,2002-03-29,643,Zucchini\nTrois-RiviÃ¨res,2002-04-30,466,Zucchini\nUxbridge,2002-05-31,1166,Zucchini\nVancouver,2002-06-28,931,Zucchini\nVarennes,2002-07-31,604,Zucchini\nVernon,2002-08-30,621,Zucchini\nVictoria,2002-09-30,757,Zucchini\nWaterloo,2002-10-31,863,Zucchini\nWelland,2002-11-29,676,Zucchini\nWest Vancouver,2002-12-31,1287,Zucchini\nWhitby,2003-01-31,860,Zucchini\nWhite Rock,2003-02-28,825,Zucchini\nWindsor,2003-03-31,688,Zucchini\nWinnipeg,2003-04-30,630,Zucchini\nWoolwich,2003-05-30,758,Zucchini",
+              "x_axis": {
+                "display": true,
+                "scale": "time",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "auto",
+                "rescale": false,
+                "nice": true
+                // "prefix": "$",
+                // "ticks": 6
+              },
+              "y_axis": {
+                "display": true,
+                "scale": "linear",
+                "ticks": "auto",
+                "orient": "right",
+                "format": "comma",
+                "rescale": false,
+                "nice": true,
+                "min": 300,
+                "ticks": 5,
+                "prefix": "$"
+              },
+              "annotations": {
+                "highlight": [
+                //   {
+                //     "key": "White Rock",
+                //     "text-align": "left",
+                //     "valign": "middle",
+                //     "offset": {
+                //       "x": 0
+                //     }
+                //   },
+                //   {
+                //     "key": "West Vancouver",
+                //     "text": "West\nVancouver",
+                //     "valign": "top",
+                //     "tet-align": "middle"
+                //   },
+                //   {
+                //     "key": "Shawinigan",
+                //     "text-align": "left"
+                //   }
+                // ],
+                // "range": [
+                //   {
+                //     "axis": "x",
+                //     "end": 1000000,
+                //     "start": 2000000,
+                //     // "color": "#dedede"
+                //   },
+                //   {
+                //     "axis": "y",
+                //     "start": 820,
+                //     "color": "blue"
+                //   }
+                ],
+                "text": [
+                  // {
+                  //   "text": "There may be a\nrelationship between\nrent and house price",
+                  //   "valign": "top",
+                  //   "text-align": "left",
+                  //   "position": {
+                  //     "x": 0.3,
+                  //     "y": 0.65
+                  //   },
+                  //   "color": "#ff0000",
+                  // }
+                ]
+              },
+              "options": {
+                "type": "scatterplot",
+                "interpolation": "linear",
+                "stacked": false,
+                "expanded": false,
+                "head": true,
+                "deck": false,
+                "legend": true,
+                "footer": true,
+                "x_axis": true,
+                "y_axis": true,
+                "tips": true,
+                "annotations": true,
+                // "range": false,
+                "series": false,
+                "indexed": false,
+                "qualifier": true
+              }
+            }
+          };
+          root.ChartTool = root.ChartTool || [];
+          root.ChartTool.push({ id: 'ct-scatterplot', data: data });
+          var b = document.getElementsByTagName('body')[0];
+          if (!b.classList.contains('ct-charttool-init')) {
+            b.classList.add('ct-charttool-init');
+            var j = document.createElement('script');
+            var c = document.createElement('link');
+            j.src = '../dist/dev/chart-tool.js';
+            j.async = true;
+            j.defer = true;
+            c.href = '../dist/dev/chart-tool.css';
+            c.rel = 'stylesheet';
+            document.getElementsByTagName('head')[0].appendChild(j);
+            document.getElementsByTagName('head')[0].appendChild(c);
+          }
+        })(this);
+      </script>
+    </div>
+
+  </div>
+
+</body>
+
+</html>

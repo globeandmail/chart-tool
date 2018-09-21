@@ -10,21 +10,8 @@ class ChartTags extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleNewTag = this.handleNewTag.bind(this);
-    this.state = {
-      expanded: false
-    };
-  }
-
-  expandStatus() {
-    return this.state.expanded ? 'expanded' : 'collapsed';
-  }
-
-  toggleCollapseExpand() {
-    const expanded = !this.state.expanded;
-    this.setState({ expanded });
   }
 
   handleSelectChange(selectedOptions) {
@@ -51,8 +38,8 @@ class ChartTags extends Component {
   render() {
     return (
       <div className='edit-box'>
-        <h3 onClick={this.toggleCollapseExpand}>Tags</h3>
-        <div className={`unit-edit ${this.expandStatus()}`}>
+        <h3 id='ChartTags' onClick={this.props.toggleCollapseExpand}>Tags</h3>
+        <div className={`unit-edit ${this.props.expandStatus('ChartTags')}`}>
           <h4>Add a few tags below</h4>
           { !this.props.loading ?
             <Select
@@ -62,8 +49,7 @@ class ChartTags extends Component {
               onChange={this.handleSelectChange}
               options={this.props.availableTags}
               onNewOptionClick={this.handleNewTag}
-            /> : null
-          }
+            /> : null }
         </div>
       </div>
     );

@@ -20,7 +20,7 @@
   @include utility-font;
 }
 
-.#{$prefix}tip_text-date {
+.#{$prefix}tip_text-x {
   @include utility-font;
   font-weight: bold;
   fill: $color-black;
@@ -37,6 +37,29 @@
     stroke: $axis-stroke-color;
     stroke-width: $axis-stroke-width;
     shape-rendering: crispEdges;
+  }
+}
+
+.#{$prefix}tip_line-y {
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  &.#{$prefix}active {
+    opacity: 1;
+  }
+  line {
+    stroke: $axis-stroke-color;
+    stroke-width: $axis-stroke-width;
+    shape-rendering: crispEdges;
+  }
+}
+
+.#{$prefix}tip_circle-xy {
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  &.#{$prefix}active {
+    opacity: 1;
   }
 }
 
@@ -70,7 +93,8 @@
 
   @for $counter from 1 through $series-count-max {
     .#{$prefix + $palette-name} .#{$prefix}tip .#{$prefix}tip_path-circle-#{$counter - 1},
-    .#{$prefix + $palette-name} .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1} {
+    .#{$prefix + $palette-name} .#{$prefix}tip .#{$prefix}tip_circle.#{$prefix}tip_circle-#{$counter - 1},
+    .#{$prefix + $palette-name} .#{$prefix}tip .#{$prefix}tip_circle-xy .#{$prefix}tip_circle-xy-#{$counter - 1} {
       fill: nth( $palette, $counter );
     }
   }
@@ -80,7 +104,23 @@
   }
 }
 
-.#{$prefix}muted {
+.#{$prefix}muted,
+.#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot.#{$prefix}muted {
   transition: opacity 0.3s;
-  opacity: 0.3;
+  opacity: 0.1;
+}
+
+.#{$prefix}type_scatterplot .#{$prefix}series_group .#{$prefix}dot.#{$prefix}active {
+  transition: opacity 0.3s;
+  opacity: 1;
+}
+
+.#{$prefix}annotations,
+.#{$prefix}annotation_range {
+  transition: opacity 0.3s;
+}
+
+.#{$prefix}muted.#{$prefix}annotation_range {
+  opacity: 0.075;
+  transition: opacity 0.3s;
 }
