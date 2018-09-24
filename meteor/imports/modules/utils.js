@@ -247,7 +247,9 @@ export function determineColTypes(data) {
 
   // construct a list of all values in each column
   data.map(arr => {
-    arr.map((val, i) => dataColumns[i].push(val));
+    arr.map((val, i) => {
+      if (dataColumns[i]) dataColumns[i].push(val);
+    });
   });
 
   // count up number of digit and non-digit characters and determine
