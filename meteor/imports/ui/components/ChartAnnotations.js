@@ -28,16 +28,14 @@ export default class ChartAnnotations extends Component {
     this.editPointer = this.editPointer.bind(this);
     this.removePointer = this.removePointer.bind(this);
     this.pointerDataExists = this.pointerDataExists.bind(this);
+
     this.state = {
-      textExpanded: true,
-      pointerExpanded: false,
-      highlightExpanded: false,
-      rangeExpanded: false
+      expanded: this.props.currentAnnotation.type
     };
   }
 
   expandStatus(category) {
-    return this.state[category] ? 'expanded' : 'collapsed';
+    return this.state.expanded === category ? 'expanded' : 'collapsed';
   }
 
   resetDefaultAnnoSettings(key, val) {
@@ -64,22 +62,10 @@ export default class ChartAnnotations extends Component {
 
   toggleSubsectionExpand(event) {
     const type = event.currentTarget.id,
-      isExpanded = !this.state[type],
-      newState = {},
-      possibleStates = [
-        'highlightExpanded',
-        'textExpanded',
-        'pointerExpanded',
-        'rangeExpanded'
-      ].filter(s => s !== type);
+      [keyArr, valArr] = this.resetDefaultAnnoSettings('type', type);
 
-    if (isExpanded) possibleStates.map(p => newState[p] = false);
-
-    newState[type] = isExpanded;
-
-    const [keyArr, valArr] = this.resetDefaultAnnoSettings('type', type.replace('Expanded', ''));
     this.props.handleCurrentAnnotation(keyArr, valArr);
-    this.setState(newState);
+    this.setState({ expanded: type });
   }
 
   displayHighlight() {
@@ -397,8 +383,8 @@ export default class ChartAnnotations extends Component {
           }
 
           <div className='unit-edit unit-anno anno-text-edit'>
-            <h4 id='textExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Text annotations</span> <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
-            <div className={`unit-annotation-expand ${this.expandStatus('textExpanded')}`}>
+            <h4 id='text' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Text annotations</span> <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('text')}`}>
               <div className='add-text'>
                 <div className='text-row'>
                   <div className='text-row-item'>
@@ -465,8 +451,8 @@ export default class ChartAnnotations extends Component {
           </div>
 
           <div className='unit-edit unit-anno anno-pointer-edit'>
-            <h4 id='pointerExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
-            <div className={`unit-annotation-expand ${this.expandStatus('pointerExpanded')}`}>
+            <h4 id='pointer' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('pointer')}`}>
               <div className='add-pointer'>
                 <div className='pointer-row'>
                   <div className='pointer-row-item'>
@@ -512,8 +498,8 @@ export default class ChartAnnotations extends Component {
 
           { this.displayHighlight() ?
             <div className='unit-edit unit-anno anno-highlight-edit'>
-              <h4 id='highlightExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
-              <div className={`unit-annotation-expand ${this.expandStatus('highlightExpanded')}`}>
+              <h4 id='highlight' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
+              <div className={`unit-annotation-expand ${this.expandStatus('highlight')}`}>
                 <ColorPicker
                   triangle={'hide'}
                   colors={app_settings.highlightOptions}
@@ -549,8 +535,8 @@ export default class ChartAnnotations extends Component {
             : null }
 
           <div className='unit-edit unit-anno anno-text-edit'>
-            <h4 id='rangeExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
-            <div className={`unit-annotation-expand ${this.expandStatus('rangeExpanded')}`}>
+            <h4 id='range' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('range')}`}>
               <div className='add-range'>
                 <p className='note'>Select a start value (and optionally an end value) by clicking and dragging on the chart or editing the fields below.</p>
                 <div className='range-row'>
