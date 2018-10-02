@@ -50,6 +50,7 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
       } else {
         obj.key = dateFormat(d[keys[0]]);
       }
+      obj.originalKey = d[keys[0]];
     } else {
       obj.key = d[keys[0]];
     }
