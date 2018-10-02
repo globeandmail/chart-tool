@@ -67,7 +67,7 @@ class EditChart extends Component {
 
   resetCurrentAnnotation() {
     const currentAnnotation = {
-      type: 'text'
+      type: this.state ? this.state.currentAnnotation.type : 'text'
     };
 
     Object.keys(defaultAnnoSettings).map(key => {
