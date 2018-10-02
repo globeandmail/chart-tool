@@ -5474,6 +5474,8 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
+	var _library$1 = false;
+
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5482,7 +5484,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: 'global',
+	  mode: _library$1 ? 'pure' : 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -10640,7 +10642,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function dragDisable(view) {
+	function nodrag(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10737,7 +10739,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    dragDisable(event.view);
+	    nodrag(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11197,7 +11199,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      dragDisable(event.view);
+	      nodrag(event.view);
 	    }
 
 	    nopropagation$1();

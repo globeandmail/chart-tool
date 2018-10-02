@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { DebounceInput } from 'react-debounce-input';
 
 export default class ChartMemo extends Component {
 
@@ -30,18 +29,15 @@ export default class ChartMemo extends Component {
       <div className='edit-box'>
         <div className='unit-edit memo'>
           { this.props.chart.memo || this.state.memoToggled ?
-            <div>
+            <div key={this.props.chart.memo || ''}>
               <h4>Memos and notes</h4>
-              <DebounceInput
-                minLength={2}
-                debounceTimeout={500}
+              <textarea
                 element='textarea'
                 className='memo-field'
                 placeholder=''
-                onChange={this.memoChange}
-                forceNotifyByEnter={false}
-                value={this.props.chart.memo || ''}
-              />
+                onBlur={this.memoChange}
+                defaultValue={this.props.chart.memo || ''}
+              ></textarea>
             </div>
             : <button className='add-memo' onClick={this.addMemo}>Add memo</button> }
         </div>
