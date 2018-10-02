@@ -3,7 +3,6 @@ import { TwitterPicker as ColorPicker } from 'react-color';
 import { updateAndSave, dataParse, isNumber } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { parse } from '../../modules/chart-tool';
-import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 import Slider from 'rc-slider';
 
@@ -131,8 +130,7 @@ export default class ChartAnnotations extends Component {
     const axis = this.props.chart[`${this.props.currentAnnotation.rangeAxis}_axis`];
 
     if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
-      const formatTime = timeFormat(this.props.chart.date_format);
-      return formatTime(new Date(data));
+      return data;
     } else {
 
       // if it's direct input, let it be whatever the user wants
@@ -181,10 +179,12 @@ export default class ChartAnnotations extends Component {
       <div className={`range-row-item ${rangeType === 'line' && type === 'rangeEnd' ? 'muted' : ''}`}>
         <label
           className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
-          htmlFor={type}>{labelText}</label>
+        >{labelText}</label>
         <input
           id={type}
           type={scaleType === 'linear' ? 'number' : 'text'}
+          tabIndex={scaleType === 'linear' ? '' : '-1'}
+          readOnly={scaleType === 'linear' ? false : true}
           className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
           value={this.formatRangeValue(type)}
           onChange={this.setRangeValue}
@@ -588,9 +588,8 @@ export default class ChartAnnotations extends Component {
                       const axis = this.props.chart[`${d.axis}_axis`];
                       const data = {};
                       if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
-                        const formatTime = timeFormat(this.props.chart.date_format);
-                        data.start = formatTime(new Date(d.start));
-                        data.end = formatTime(new Date(d.end));
+                        data.start = d.start;
+                        data.end = d.end;
                       } else {
                         const rangeFormatting = {
                           auto: 100,

@@ -1,4 +1,4 @@
-/* Chart Tool v1.4.0-0 | https://github.com/globeandmail/chart-tool | MIT */
+/* Chart Tool v1.4.1-0 | https://github.com/globeandmail/chart-tool | MIT */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -2492,8 +2492,6 @@
 	var saturday = weekday(6);
 
 	var sundays = sunday.range;
-	var mondays = monday.range;
-	var thursdays = thursday.range;
 
 	var month = newInterval(function(date) {
 	  date.setDate(1);
@@ -2583,8 +2581,6 @@
 	var utcSaturday = utcWeekday(6);
 
 	var utcSundays = utcSunday.range;
-	var utcMondays = utcMonday.range;
-	var utcThursdays = utcThursday.range;
 
 	var utcMonth = newInterval(function(date) {
 	  date.setUTCDate(1);
@@ -3544,7 +3540,7 @@
 		thumbnailWidth: 460
 	};
 
-	var version = "1.4.0";
+	var version = "1.4.1";
 	var buildVer = "0";
 
 	var chartSettings = {
@@ -13536,8 +13532,11 @@
 	    start = Number(rangeObj.start);
 	    if ('end' in rangeObj) { end = Number(rangeObj.end); }
 	  } else {
-	    start = new Date(rangeObj.start);
-	    if ('end' in rangeObj) { end = new Date(rangeObj.end); }
+	    var dateFormat = timeParse(obj.data.inputDateFormat);
+	    start = dateFormat(rangeObj.start);
+	    if ('end' in rangeObj) { end = dateFormat(rangeObj.end); }
+	    // start = new Date(rangeObj.start);
+	    // if ('end' in rangeObj) end = new Date(rangeObj.end);
 	  }
 
 	  var attrs = {
@@ -13573,7 +13572,7 @@
 	  } else {
 	    type = 'line';
 
-	    // cancels out offsetting for leftmost column)
+	    // cancels out offsetting for leftmost column
 	    var sameStarts = new Date(start).toString() === scale.domain()[0].toString();
 	    if (isColumnAndX && sameStarts) { offset = 0; }
 	    attrs.x1 = rangeObj.axis === 'x' ? scale(start) + offset : 0;
@@ -13629,7 +13628,8 @@
 
 	  var scale = obj.rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale,
 	    scaleType = obj.rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].obj.type,
-	    isTime = scaleType === 'time' || scaleType === 'ordinal-time';
+	    isTime = scaleType === 'time' || scaleType === 'ordinal-time',
+	    dateFormat = isTime ? timeParse(obj.data.inputDateFormat) : function (x) { return x; };
 
 	  if (hasRangePassedFromInterface) {
 	    var move;
@@ -13641,13 +13641,13 @@
 	    var offset = isColumnAndX ? obj.rendered.plot.singleColumn : 0;
 
 	    if (obj.annotationHandlers.rangeType === 'line') {
-	      var sameStarts = new Date(start).toString() === scale.domain()[0].toString();
+	      var sameStarts = dateFormat(start).toString() === scale.domain()[0].toString();
 	      if (isColumnAndX && sameStarts) { offset = 0; }
-	      move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)) + offset);
+	      move = getBrushFromCenter(obj, scale(isTime ? dateFormat(start) : Number(start)) + offset);
 	    } else {
 	      move = [
-	        scale(isTime ? new Date(start) : Number(start)),
-	        scale(isTime ? new Date(end) : Number(end)) + offset
+	        scale(isTime ? dateFormat(start) : Number(start)),
+	        scale(isTime ? dateFormat(end) : Number(end)) + offset
 	      ];
 
 	    }
@@ -13767,7 +13767,10 @@
 	  }
 
 	  if (scaleObj.obj.type === 'time' || scaleObj.obj.type === 'ordinal-time') {
-	    fn = function (d) { return getTipData(obj, { x: d }).key; };
+	    fn = function (d) {
+	      var data = getTipData(obj, { x: d });
+	      return data.originalKey || data.key;
+	    };
 	  }
 
 	  return fn;
