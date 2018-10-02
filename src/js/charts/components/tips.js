@@ -770,10 +770,10 @@ export function columnChartTips(tipNodes, obj) {
     .classed(`${obj.prefix}muted`, true);
 
   if (obj.options.stacked) {
-    obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"]`)
+    obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.originalKey || tipData.key}"]`)
       .classed(`${obj.prefix}muted`, false);
   } else {
-    obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.key}"] rect`)
+    obj.rendered.plot.seriesGroup.selectAll(`[data-key="${tipData.originalKey || tipData.key}"] rect`)
       .classed(`${obj.prefix}muted`, false);
   }
 
