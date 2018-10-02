@@ -5474,8 +5474,6 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
-	var _library$1 = false;
-
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5484,7 +5482,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: _library$1 ? 'pure' : 'global',
+	  mode: 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -6984,6 +6982,7 @@
 	      } else {
 	        obj.key = dateFormat(d[keys[0]]);
 	      }
+	      obj.originalKey = d[keys[0]];
 	    } else {
 	      obj.key = d[keys[0]];
 	    }
@@ -10053,7 +10052,7 @@
 	      .attrs({
 	        'class': ((obj.prefix) + "column " + (obj.prefix) + "column-" + i),
 	        'data-series': i,
-	        'data-key': function (d) { return d.key; },
+	        'data-key': function (d) { return obj.data.inputDateFormat ? d.originalKey : d.key; },
 	        'data-legend': function () { return obj.data.keys[i + 1]; },
 	        'transform': function (d) {
 	          if (obj.xAxis.scale !== 'ordinal-time') {
@@ -10194,7 +10193,7 @@
 	      .attrs({
 	        'class': ((obj.prefix) + "bar " + (obj.prefix) + "bar-" + i),
 	        'data-series': i,
-	        'data-key': function (d) { return d.key; },
+	        'data-key': function (d) { return obj.data.inputDateFormat ? d.originalKey : d.key; },
 	        'data-legend': function () { return obj.data.keys[i + 1]; },
 	        'transform': function (d) { return ("translate(0," + (yScale(d.key)) + ")"); }
 	      });
@@ -10641,7 +10640,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function nodrag(view) {
+	function dragDisable(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10738,7 +10737,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    nodrag(event.view);
+	    dragDisable(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11198,7 +11197,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      nodrag(event.view);
+	      dragDisable(event.view);
 	    }
 
 	    nopropagation$1();
@@ -13501,7 +13500,7 @@
 	    if (ref && obj.data.seriesAmount === 1) {
 	      h.map(function (highlightObj) {
 	        ref
-	          .filter(function (d) { return d.key.toString() === highlightObj.key; })
+	          .filter(function (d) { return (d.originalKey || d.key.toString()) === highlightObj.key; })
 	          .select('rect')
 	          .style('fill', highlightObj.color);
 	      });

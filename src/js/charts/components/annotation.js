@@ -70,7 +70,7 @@ export function highlight(annoNode, obj) {
     if (ref && obj.data.seriesAmount === 1) {
       h.map(highlightObj => {
         ref
-          .filter(d => d.key.toString() === highlightObj.key)
+          .filter(d => (d.originalKey || d.key.toString()) === highlightObj.key)
           .select('rect')
           .style('fill', highlightObj.color);
       });

@@ -59,7 +59,7 @@ export default function barChart(node, obj) {
       .attrs({
         'class': `${obj.prefix}bar ${obj.prefix}bar-${i}`,
         'data-series': i,
-        'data-key': d => d.key,
+        'data-key': d => obj.data.inputDateFormat ? d.originalKey : d.key,
         'data-legend': () => obj.data.keys[i + 1],
         'transform': d => `translate(0,${yScale(d.key)})`
       });
