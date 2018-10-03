@@ -104,6 +104,7 @@ export function parse(csv, inputDateFormat, index, stacked, type) {
     stackedData = stackFn(range(data.length).map(i => {
       const o = {};
       o[keys[0]] = data[i].key;
+      o.originalKey = data[i].originalKey;
       for (let j = 0; j < data[i].series.length; j++) {
         if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
           o[data[i].series[j].key] = '0';

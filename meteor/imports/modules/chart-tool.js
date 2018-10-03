@@ -2492,6 +2492,8 @@
 	var saturday = weekday(6);
 
 	var sundays = sunday.range;
+	var mondays = monday.range;
+	var thursdays = thursday.range;
 
 	var month = newInterval(function(date) {
 	  date.setDate(1);
@@ -2581,6 +2583,8 @@
 	var utcSaturday = utcWeekday(6);
 
 	var utcSundays = utcSunday.range;
+	var utcMondays = utcMonday.range;
+	var utcThursdays = utcThursday.range;
 
 	var utcMonth = newInterval(function(date) {
 	  date.setUTCDate(1);
@@ -7034,6 +7038,7 @@
 	    stackedData = stackFn(range(data.length).map(function (i) {
 	      var o = {};
 	      o[keys[0]] = data[i].key;
+	      o.originalKey = data[i].originalKey;
 	      for (var j = 0; j < data[i].series.length; j++) {
 	        if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
 	          o[data[i].series[j].key] = '0';
@@ -10518,9 +10523,7 @@
 	      if (obj.data.seriesAmount > 1) { output += " " + (obj.prefix) + "multiple"; }
 	      return output;
 	    })
-	    .attr('transform', function () {
-	      return ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
-	    });
+	    .attr('transform', ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"));
 
 	  var series = seriesGroup.selectAll(("g." + (obj.prefix) + "series"))
 	    .data(obj.data.stackedData)
@@ -10538,7 +10541,7 @@
 	    .data(function (d) { return d; })
 	    .enter().append('rect')
 	    .attrs({
-	      'data-key': function (d) { return d.data[obj.data.keys[0]]; },
+	      'data-key': function (d) { return obj.data.inputDateFormat ? d.data.originalKey : d.data[obj.data.keys[0]]; },
 	      'x': function (d) { return xScale(d.data[obj.data.keys[0]]); },
 	      'y': function (d) { return yScale(Math.max(0, d[1])); },
 	      'height': function (d) { return Math.abs(yScale(d[1]) - yScale(d[0])); },
@@ -10638,7 +10641,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function nodrag(view) {
+	function dragDisable(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10735,7 +10738,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    nodrag(event.view);
+	    dragDisable(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11195,7 +11198,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      nodrag(event.view);
+	      dragDisable(event.view);
 	    }
 
 	    nopropagation$1();

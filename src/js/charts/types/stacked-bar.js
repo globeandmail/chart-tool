@@ -43,23 +43,23 @@ export default function stackedBarChart(node, obj) {
   const series = seriesGroup.selectAll(`g.${obj.prefix}series`)
     .data(obj.data.stackedData)
     .enter().append('g')
-    .attr('class', (d, i) => { return `${obj.prefix}series ${obj.prefix}series-${i}`; });
+    .attr('class', (d, i) => `${obj.prefix}series ${obj.prefix}series-${i}`);
 
   let barItem = series
     .append('g')
     .attrs({
-      'class': (d, i) => { return `${obj.prefix}bar ${obj.prefix}bar-${i}`; },
-      'data-legend': d => { return d.key; },
+      'class': (d, i) => `${obj.prefix}bar ${obj.prefix}bar-${i}`,
+      'data-legend': d => d.key,
     });
 
   const rect = barItem.selectAll('rect')
     .data(d => d)
     .enter().append('rect')
     .attrs({
-      'data-key': d => { return d.data[obj.data.keys[0]]; },
-      'y': d => { return yScale(d.data[obj.data.keys[0]]); },
-      'x': d => { return xScale(d[0]); },
-      'width': d => { return Math.abs(xScale(d[1]) - xScale(d[0])); },
+      'data-key': d => d.data[obj.data.keys[0]],
+      'y': d => yScale(d.data[obj.data.keys[0]]),
+      'x': d => xScale(d[0]),
+      'width': d => Math.abs(xScale(d[1]) - xScale(d[0])),
       'height': singleBar
     });
 
