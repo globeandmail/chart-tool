@@ -10641,7 +10641,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function dragDisable(view) {
+	function nodrag(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10738,7 +10738,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    dragDisable(event.view);
+	    nodrag(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11198,7 +11198,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      dragDisable(event.view);
+	      nodrag(event.view);
 	    }
 
 	    nopropagation$1();
@@ -14738,7 +14738,8 @@
 
 	    var exportable = chart.data.chart.exportable;
 
-	    obj.data.width = exportable ? exportable.width : getBounding(container, 'width');
+	    obj.data.width = exportable && exportable.width ? exportable.width : getBounding(container, 'width');
+
 	    obj.dispatch = dispatcher;
 
 	    var chartObj, error;

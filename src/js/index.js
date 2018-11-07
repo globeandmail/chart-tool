@@ -27,7 +27,8 @@ const ChartTool = (function ChartTool() {
 
     const exportable = chart.data.chart.exportable;
 
-    obj.data.width = exportable ? exportable.width : getBounding(container, 'width');
+    obj.data.width = exportable && exportable.width ? exportable.width : getBounding(container, 'width');
+
     obj.dispatch = dispatcher;
 
     let chartObj, error;
