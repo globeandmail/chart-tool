@@ -37,30 +37,28 @@ export default function stackedColumnChart(node, obj) {
       if (obj.data.seriesAmount > 1) { output += ` ${obj.prefix}multiple`; }
       return output;
     })
-    .attr('transform', () => {
-      return `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`;
-    });
+    .attr('transform', `translate(${obj.dimensions.computedWidth() - obj.dimensions.tickWidth()},0)`);
 
   const series = seriesGroup.selectAll(`g.${obj.prefix}series`)
     .data(obj.data.stackedData)
     .enter().append('g')
-    .attr('class', (d, i) => { return `${obj.prefix}series ${obj.prefix}series-${i}`; });
+    .attr('class', (d, i) => `${obj.prefix}series ${obj.prefix}series-${i}`);
 
   const columnItem = series
     .append('g')
     .attrs({
-      'class': (d, i) => { return `${obj.prefix}column ${obj.prefix}column-${i}`; },
-      'data-legend': d => { return d.key; },
+      'class': (d, i) => `${obj.prefix}column ${obj.prefix}column-${i}`,
+      'data-legend': d => d.key,
     });
 
   const rect = columnItem.selectAll('rect')
     .data(d => d)
     .enter().append('rect')
     .attrs({
-      'data-key': d => { return d.data[obj.data.keys[0]]; },
-      'x': d => { return xScale(d.data[obj.data.keys[0]]); },
-      'y': d => { return yScale(Math.max(0, d[1])); },
-      'height': d => { return Math.abs(yScale(d[1]) - yScale(d[0])); },
+      'data-key': d => obj.data.inputDateFormat ? d.data.originalKey : d.data[obj.data.keys[0]],
+      'x': d => xScale(d.data[obj.data.keys[0]]),
+      'y': d => yScale(Math.max(0, d[1])),
+      'height': d => Math.abs(yScale(d[1]) - yScale(d[0])),
       'width': singleColumn
     });
 

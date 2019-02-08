@@ -1,4 +1,4 @@
-/* Chart Tool v1.4.0-0 | https://github.com/globeandmail/chart-tool | MIT */
+/* Chart Tool v1.4.1-0 | https://github.com/globeandmail/chart-tool | MIT */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -595,7 +595,7 @@
 	  return [min, max];
 	}
 
-	function sequence(start, stop, step) {
+	function range(start, stop, step) {
 	  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
 	  var i = -1,
@@ -914,7 +914,7 @@
 	    start += (stop - start - step * (n - paddingInner)) * align;
 	    bandwidth = step * (1 - paddingInner);
 	    if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-	    var values = sequence(n).map(function(i) { return start + step * i; });
+	    var values = range(n).map(function(i) { return start + step * i; });
 	    return ordinalRange(reverse ? values.reverse() : values);
 	  }
 
@@ -1824,15 +1824,15 @@
 	  };
 	}
 
-	function bimap(domain, range, deinterpolate, reinterpolate) {
-	  var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
+	function bimap(domain, range$$1, deinterpolate, reinterpolate) {
+	  var d0 = domain[0], d1 = domain[1], r0 = range$$1[0], r1 = range$$1[1];
 	  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
 	  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
 	  return function(x) { return r0(d0(x)); };
 	}
 
-	function polymap(domain, range, deinterpolate, reinterpolate) {
-	  var j = Math.min(domain.length, range.length) - 1,
+	function polymap(domain, range$$1, deinterpolate, reinterpolate) {
+	  var j = Math.min(domain.length, range$$1.length) - 1,
 	      d = new Array(j),
 	      r = new Array(j),
 	      i = -1;
@@ -1840,12 +1840,12 @@
 	  // Reverse descending domains.
 	  if (domain[j] < domain[0]) {
 	    domain = domain.slice().reverse();
-	    range = range.slice().reverse();
+	    range$$1 = range$$1.slice().reverse();
 	  }
 
 	  while (++i < j) {
 	    d[i] = deinterpolate(domain[i], domain[i + 1]);
-	    r[i] = reinterpolate(range[i], range[i + 1]);
+	    r[i] = reinterpolate(range$$1[i], range$$1[i + 1]);
 	  }
 
 	  return function(x) {
@@ -1866,7 +1866,7 @@
 	// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
-	      range = unit,
+	      range$$1 = unit,
 	      interpolate$$1 = value,
 	      clamp = false,
 	      piecewise$$1,
@@ -1874,17 +1874,17 @@
 	      input;
 
 	  function rescale() {
-	    piecewise$$1 = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
+	    piecewise$$1 = Math.min(domain.length, range$$1.length) > 2 ? polymap : bimap;
 	    output = input = null;
 	    return scale;
 	  }
 
 	  function scale(x) {
-	    return (output || (output = piecewise$$1(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
+	    return (output || (output = piecewise$$1(domain, range$$1, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
 	  }
 
 	  scale.invert = function(y) {
-	    return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
+	    return (input || (input = piecewise$$1(range$$1, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	  };
 
 	  scale.domain = function(_) {
@@ -1892,11 +1892,11 @@
 	  };
 
 	  scale.range = function(_) {
-	    return arguments.length ? (range = slice$1.call(_), rescale()) : range.slice();
+	    return arguments.length ? (range$$1 = slice$1.call(_), rescale()) : range$$1.slice();
 	  };
 
 	  scale.rangeRound = function(_) {
-	    return range = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
+	    return range$$1 = slice$1.call(_), interpolate$$1 = interpolateRound, rescale();
 	  };
 
 	  scale.clamp = function(_) {
@@ -2418,6 +2418,7 @@
 	    return (end - start) / k;
 	  });
 	};
+	var milliseconds = millisecond.range;
 
 	var durationSecond = 1e3;
 	var durationMinute = 6e4;
@@ -2434,6 +2435,7 @@
 	}, function(date) {
 	  return date.getUTCSeconds();
 	});
+	var seconds = second.range;
 
 	var minute = newInterval(function(date) {
 	  date.setTime(Math.floor(date / durationMinute) * durationMinute);
@@ -2537,6 +2539,7 @@
 	}, function(date) {
 	  return date.getUTCMinutes();
 	});
+	var utcMinutes = utcMinute.range;
 
 	var utcHour = newInterval(function(date) {
 	  date.setUTCMinutes(0, 0, 0);
@@ -2547,6 +2550,7 @@
 	}, function(date) {
 	  return date.getUTCHours();
 	});
+	var utcHours = utcHour.range;
 
 	var utcDay = newInterval(function(date) {
 	  date.setUTCHours(0, 0, 0, 0);
@@ -2557,6 +2561,7 @@
 	}, function(date) {
 	  return date.getUTCDate() - 1;
 	});
+	var utcDays = utcDay.range;
 
 	function utcWeekday(i) {
 	  return newInterval(function(date) {
@@ -2591,6 +2596,7 @@
 	}, function(date) {
 	  return date.getUTCMonth();
 	});
+	var utcMonths = utcMonth.range;
 
 	var utcYear = newInterval(function(date) {
 	  date.setUTCMonth(0, 1);
@@ -2613,6 +2619,7 @@
 	    date.setUTCFullYear(date.getUTCFullYear() + step * k);
 	  });
 	};
+	var utcYears = utcYear.range;
 
 	function localDate(d) {
 	  if (0 <= d.y && d.y < 100) {
@@ -3537,7 +3544,7 @@
 		thumbnailWidth: 460
 	};
 
-	var version = "1.4.0";
+	var version = "1.4.1";
 	var buildVer = "0";
 
 	var chartSettings = {
@@ -5467,6 +5474,8 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
+	var _library$1 = false;
+
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5475,7 +5484,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: 'global',
+	  mode: _library$1 ? 'pure' : 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -6975,6 +6984,7 @@
 	      } else {
 	        obj.key = dateFormat(d[keys[0]]);
 	      }
+	      obj.originalKey = d[keys[0]];
 	    } else {
 	      obj.key = d[keys[0]];
 	    }
@@ -7025,9 +7035,10 @@
 
 	  if (stacked && keys.length > 2) {
 	    var stackFn = stack().keys(keys.slice(1));
-	    stackedData = stackFn(sequence(data.length).map(function (i) {
+	    stackedData = stackFn(range(data.length).map(function (i) {
 	      var o = {};
 	      o[keys[0]] = data[i].key;
+	      o.originalKey = data[i].originalKey;
 	      for (var j = 0; j < data[i].series.length; j++) {
 	        if (!data[i].series[j].val || data[i].series[j].val === '__undefined__') {
 	          o[data[i].series[j].key] = '0';
@@ -8523,15 +8534,15 @@
 
 	function setRange(obj, axisType) {
 
-	  var range;
+	  var range$$1;
 
 	  if (axisType === 'xAxis') {
-	    range = [0, obj.dimensions.tickWidth()]; // operating on width
+	    range$$1 = [0, obj.dimensions.tickWidth()]; // operating on width
 	  } else if (axisType === 'yAxis') {
-	    range = [obj.dimensions.yAxisHeight(), 0]; // operating on height
+	    range$$1 = [obj.dimensions.yAxisHeight(), 0]; // operating on height
 	  }
 
-	  return range;
+	  return range$$1;
 
 	}
 
@@ -8781,12 +8792,12 @@
 
 	function linearAxis(obj, axis, axisNode, axisSettings) {
 
-	  var range;
+	  var range$$1;
 
-	  if (axisSettings.axisType === 'xAxis') { range = [0, obj.dimensions.tickWidth()]; }
-	  if (axisSettings.axisType === 'yAxis') { range = [obj.dimensions.yAxisHeight(), 0]; }
+	  if (axisSettings.axisType === 'xAxis') { range$$1 = [0, obj.dimensions.tickWidth()]; }
+	  if (axisSettings.axisType === 'yAxis') { range$$1 = [obj.dimensions.yAxisHeight(), 0]; }
 
-	  axis.scale().range(range);
+	  axis.scale().range(range$$1);
 
 	  axis.tickValues(tickFinderLinear(axis.scale(), axisSettings)); // can generalize to tickFinder instead of X or Y?
 
@@ -10044,7 +10055,7 @@
 	      .attrs({
 	        'class': ((obj.prefix) + "column " + (obj.prefix) + "column-" + i),
 	        'data-series': i,
-	        'data-key': function (d) { return d.key; },
+	        'data-key': function (d) { return obj.data.inputDateFormat ? d.originalKey : d.key; },
 	        'data-legend': function () { return obj.data.keys[i + 1]; },
 	        'transform': function (d) {
 	          if (obj.xAxis.scale !== 'ordinal-time') {
@@ -10185,7 +10196,7 @@
 	      .attrs({
 	        'class': ((obj.prefix) + "bar " + (obj.prefix) + "bar-" + i),
 	        'data-series': i,
-	        'data-key': function (d) { return d.key; },
+	        'data-key': function (d) { return obj.data.inputDateFormat ? d.originalKey : d.key; },
 	        'data-legend': function () { return obj.data.keys[i + 1]; },
 	        'transform': function (d) { return ("translate(0," + (yScale(d.key)) + ")"); }
 	      });
@@ -10512,9 +10523,7 @@
 	      if (obj.data.seriesAmount > 1) { output += " " + (obj.prefix) + "multiple"; }
 	      return output;
 	    })
-	    .attr('transform', function () {
-	      return ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)");
-	    });
+	    .attr('transform', ("translate(" + (obj.dimensions.computedWidth() - obj.dimensions.tickWidth()) + ",0)"));
 
 	  var series = seriesGroup.selectAll(("g." + (obj.prefix) + "series"))
 	    .data(obj.data.stackedData)
@@ -10532,7 +10541,7 @@
 	    .data(function (d) { return d; })
 	    .enter().append('rect')
 	    .attrs({
-	      'data-key': function (d) { return d.data[obj.data.keys[0]]; },
+	      'data-key': function (d) { return obj.data.inputDateFormat ? d.data.originalKey : d.data[obj.data.keys[0]]; },
 	      'x': function (d) { return xScale(d.data[obj.data.keys[0]]); },
 	      'y': function (d) { return yScale(Math.max(0, d[1])); },
 	      'height': function (d) { return Math.abs(yScale(d[1]) - yScale(d[0])); },
@@ -13131,10 +13140,10 @@
 	    .classed(((obj.prefix) + "muted"), true);
 
 	  if (obj.options.stacked) {
-	    obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"]"))
+	    obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.originalKey || tipData.key) + "\"]"))
 	      .classed(((obj.prefix) + "muted"), false);
 	  } else {
-	    obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.key) + "\"] rect"))
+	    obj.rendered.plot.seriesGroup.selectAll(("[data-key=\"" + (tipData.originalKey || tipData.key) + "\"] rect"))
 	      .classed(((obj.prefix) + "muted"), false);
 	  }
 
@@ -13451,7 +13460,7 @@
 	      });
 	  }
 
-	  if (annoData.range && annoData.range.length) { range(annoNode, obj); }
+	  if (annoData.range && annoData.range.length) { range$1(annoNode, obj); }
 	  if (annoData.highlight && annoData.highlight.length) { highlight(annoNode, obj); }
 	  if (annoData.pointer && annoData.pointer.length) { pointer(annoNode, obj); }
 	  if (annoData.text && annoData.text.length) { text(annoNode, obj); }
@@ -13492,7 +13501,7 @@
 	    if (ref && obj.data.seriesAmount === 1) {
 	      h.map(function (highlightObj) {
 	        ref
-	          .filter(function (d) { return d.key.toString() === highlightObj.key; })
+	          .filter(function (d) { return (d.originalKey || d.key.toString()) === highlightObj.key; })
 	          .select('rect')
 	          .style('fill', highlightObj.color);
 	      });
@@ -13501,7 +13510,7 @@
 
 	}
 
-	function range(annoNode, obj) {
+	function range$1(annoNode, obj) {
 	  var r = obj.annotations.range;
 
 	  r.map(function (rangeObj, i) {
@@ -13526,8 +13535,11 @@
 	    start = Number(rangeObj.start);
 	    if ('end' in rangeObj) { end = Number(rangeObj.end); }
 	  } else {
-	    start = new Date(rangeObj.start);
-	    if ('end' in rangeObj) { end = new Date(rangeObj.end); }
+	    var dateFormat = timeParse(obj.data.inputDateFormat);
+	    start = dateFormat(rangeObj.start);
+	    if ('end' in rangeObj) { end = dateFormat(rangeObj.end); }
+	    // start = new Date(rangeObj.start);
+	    // if ('end' in rangeObj) end = new Date(rangeObj.end);
 	  }
 
 	  var attrs = {
@@ -13563,7 +13575,7 @@
 	  } else {
 	    type = 'line';
 
-	    // cancels out offsetting for leftmost column)
+	    // cancels out offsetting for leftmost column
 	    var sameStarts = new Date(start).toString() === scale.domain()[0].toString();
 	    if (isColumnAndX && sameStarts) { offset = 0; }
 	    attrs.x1 = rangeObj.axis === 'x' ? scale(start) + offset : 0;
@@ -13619,7 +13631,8 @@
 
 	  var scale = obj.rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].scale,
 	    scaleType = obj.rendered.plot[((obj.annotationHandlers.rangeAxis) + "ScaleObj")].obj.type,
-	    isTime = scaleType === 'time' || scaleType === 'ordinal-time';
+	    isTime = scaleType === 'time' || scaleType === 'ordinal-time',
+	    dateFormat = isTime ? timeParse(obj.data.inputDateFormat) : function (x) { return x; };
 
 	  if (hasRangePassedFromInterface) {
 	    var move;
@@ -13631,13 +13644,13 @@
 	    var offset = isColumnAndX ? obj.rendered.plot.singleColumn : 0;
 
 	    if (obj.annotationHandlers.rangeType === 'line') {
-	      var sameStarts = new Date(start).toString() === scale.domain()[0].toString();
+	      var sameStarts = dateFormat(start).toString() === scale.domain()[0].toString();
 	      if (isColumnAndX && sameStarts) { offset = 0; }
-	      move = getBrushFromCenter(obj, scale(isTime ? new Date(start) : Number(start)) + offset);
+	      move = getBrushFromCenter(obj, scale(isTime ? dateFormat(start) : Number(start)) + offset);
 	    } else {
 	      move = [
-	        scale(isTime ? new Date(start) : Number(start)),
-	        scale(isTime ? new Date(end) : Number(end)) + offset
+	        scale(isTime ? dateFormat(start) : Number(start)),
+	        scale(isTime ? dateFormat(end) : Number(end)) + offset
 	      ];
 
 	    }
@@ -13757,7 +13770,10 @@
 	  }
 
 	  if (scaleObj.obj.type === 'time' || scaleObj.obj.type === 'ordinal-time') {
-	    fn = function (d) { return getTipData(obj, { x: d }).key; };
+	    fn = function (d) {
+	      var data = getTipData(obj, { x: d });
+	      return data.originalKey || data.key;
+	    };
 	  }
 
 	  return fn;
@@ -14722,7 +14738,8 @@
 
 	    var exportable = chart.data.chart.exportable;
 
-	    obj.data.width = exportable ? exportable.width : getBounding(container, 'width');
+	    obj.data.width = exportable && exportable.width ? exportable.width : getBounding(container, 'width');
+
 	    obj.dispatch = dispatcher;
 
 	    var chartObj, error;

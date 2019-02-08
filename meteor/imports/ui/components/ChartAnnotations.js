@@ -3,7 +3,6 @@ import { TwitterPicker as ColorPicker } from 'react-color';
 import { updateAndSave, dataParse, isNumber } from '../../modules/utils';
 import { app_settings } from '../../modules/settings';
 import { parse } from '../../modules/chart-tool';
-import { timeFormat } from 'd3-time-format';
 import Swal from 'sweetalert2';
 import Slider from 'rc-slider';
 
@@ -28,16 +27,14 @@ export default class ChartAnnotations extends Component {
     this.editPointer = this.editPointer.bind(this);
     this.removePointer = this.removePointer.bind(this);
     this.pointerDataExists = this.pointerDataExists.bind(this);
+
     this.state = {
-      textExpanded: true,
-      pointerExpanded: false,
-      highlightExpanded: false,
-      rangeExpanded: false
+      expanded: this.props.currentAnnotation.type
     };
   }
 
   expandStatus(category) {
-    return this.state[category] ? 'expanded' : 'collapsed';
+    return this.state.expanded === category ? 'expanded' : 'collapsed';
   }
 
   resetDefaultAnnoSettings(key, val) {
@@ -64,22 +61,10 @@ export default class ChartAnnotations extends Component {
 
   toggleSubsectionExpand(event) {
     const type = event.currentTarget.id,
-      isExpanded = !this.state[type],
-      newState = {},
-      possibleStates = [
-        'highlightExpanded',
-        'textExpanded',
-        'pointerExpanded',
-        'rangeExpanded'
-      ].filter(s => s !== type);
+      [keyArr, valArr] = this.resetDefaultAnnoSettings('type', type);
 
-    if (isExpanded) possibleStates.map(p => newState[p] = false);
-
-    newState[type] = isExpanded;
-
-    const [keyArr, valArr] = this.resetDefaultAnnoSettings('type', type.replace('Expanded', ''));
     this.props.handleCurrentAnnotation(keyArr, valArr);
-    this.setState(newState);
+    this.setState({ expanded: type });
   }
 
   displayHighlight() {
@@ -145,8 +130,7 @@ export default class ChartAnnotations extends Component {
     const axis = this.props.chart[`${this.props.currentAnnotation.rangeAxis}_axis`];
 
     if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
-      const formatTime = timeFormat(this.props.chart.date_format);
-      return formatTime(new Date(data));
+      return data;
     } else {
 
       // if it's direct input, let it be whatever the user wants
@@ -195,10 +179,12 @@ export default class ChartAnnotations extends Component {
       <div className={`range-row-item ${rangeType === 'line' && type === 'rangeEnd' ? 'muted' : ''}`}>
         <label
           className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
-          htmlFor={type}>{labelText}</label>
+        >{labelText}</label>
         <input
           id={type}
           type={scaleType === 'linear' ? 'number' : 'text'}
+          tabIndex={scaleType === 'linear' ? '' : '-1'}
+          readOnly={scaleType === 'linear' ? false : true}
           className={`range-value ${scaleType === 'linear' ? 'editable' : ''}`}
           value={this.formatRangeValue(type)}
           onChange={this.setRangeValue}
@@ -397,8 +383,8 @@ export default class ChartAnnotations extends Component {
           }
 
           <div className='unit-edit unit-anno anno-text-edit'>
-            <h4 id='textExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Text annotations</span> <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
-            <div className={`unit-annotation-expand ${this.expandStatus('textExpanded')}`}>
+            <h4 id='text' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Text annotations</span> <a onClick={this.helpText} className='help-toggle help-anno-text'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('text')}`}>
               <div className='add-text'>
                 <div className='text-row'>
                   <div className='text-row-item'>
@@ -465,8 +451,8 @@ export default class ChartAnnotations extends Component {
           </div>
 
           <div className='unit-edit unit-anno anno-pointer-edit'>
-            <h4 id='pointerExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
-            <div className={`unit-annotation-expand ${this.expandStatus('pointerExpanded')}`}>
+            <h4 id='pointer' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Pointers</span> <a onClick={this.helpPointer} className='help-toggle help-anno-pointer'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('pointer')}`}>
               <div className='add-pointer'>
                 <div className='pointer-row'>
                   <div className='pointer-row-item'>
@@ -512,8 +498,8 @@ export default class ChartAnnotations extends Component {
 
           { this.displayHighlight() ?
             <div className='unit-edit unit-anno anno-highlight-edit'>
-              <h4 id='highlightExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
-              <div className={`unit-annotation-expand ${this.expandStatus('highlightExpanded')}`}>
+              <h4 id='highlight' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Highlighting</span> <a onClick={this.helpHighlighting} className='help-toggle help-anno-higlight'>?</a></h4>
+              <div className={`unit-annotation-expand ${this.expandStatus('highlight')}`}>
                 <ColorPicker
                   triangle={'hide'}
                   colors={app_settings.highlightOptions}
@@ -527,17 +513,12 @@ export default class ChartAnnotations extends Component {
                     <p>Currently highlighted</p>
                     <ul>
                       {this.props.chart.annotations.highlight.map(d => {
-                        const formatTime = timeFormat(this.props.chart.date_format);
-                        let keyText = d.key;
-                        if (this.props.chart.x_axis.scale === 'time' || this.props.chart.x_axis.scale === 'ordinal-time') {
-                          keyText = formatTime(new Date(d.key));
-                        }
                         return (
                           <li className='highlight-item' key={d.key}>
                             <div className='highlight-color' style={{ backgroundColor: d.color }}>
                               <button className='highlight-remove' value={d.key} onClick={this.removeHighlight}>&times;</button>
                             </div>
-                            <div className='highlight-key'>{keyText}</div>
+                            <div className='highlight-key'>{d.key}</div>
                           </li>
                         );
                       })}
@@ -549,8 +530,8 @@ export default class ChartAnnotations extends Component {
             : null }
 
           <div className='unit-edit unit-anno anno-text-edit'>
-            <h4 id='rangeExpanded' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
-            <div className={`unit-annotation-expand ${this.expandStatus('rangeExpanded')}`}>
+            <h4 id='range' onClick={this.toggleSubsectionExpand}><span className='anno-subhed'>Ranges and lines</span> <a onClick={this.helpRanges} className='help-toggle help-anno-ranges'>?</a></h4>
+            <div className={`unit-annotation-expand ${this.expandStatus('range')}`}>
               <div className='add-range'>
                 <p className='note'>Select a start value (and optionally an end value) by clicking and dragging on the chart or editing the fields below.</p>
                 <div className='range-row'>
@@ -607,9 +588,8 @@ export default class ChartAnnotations extends Component {
                       const axis = this.props.chart[`${d.axis}_axis`];
                       const data = {};
                       if (axis.scale === 'time' || axis.scale === 'ordinal-time') {
-                        const formatTime = timeFormat(this.props.chart.date_format);
-                        data.start = formatTime(new Date(d.start));
-                        data.end = formatTime(new Date(d.end));
+                        data.start = d.start;
+                        data.end = d.end;
                       } else {
                         const rangeFormatting = {
                           auto: 100,
