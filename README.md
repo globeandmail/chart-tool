@@ -119,7 +119,7 @@ Otherwise, these are some other tutorials you might want to check out:
 
 ## Version
 
-1.4.1
+1.4.2
 
 
 ## License
