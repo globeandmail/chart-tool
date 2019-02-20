@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Chart Tool — chart tests</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <style type="text/css">
+    .wrapper {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+
+    <!-- CHART TOOL v1.4.1-16 -->
+    <!-- edited: Fri Feb 15 2019 17:31:31 GMT-0500 (Eastern Standard Time) -->
+    <!-- slug: 0215-nw-po-snc-lobbyists_snc-rank -->
+    <div class="ct-chart" data-chartid="ct-fbNcrLJ3ucEtDgwST">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+      "version": "1.4.1",
+      "id": "fbNcrLJ3ucEtDgwST",
+      "heading": "Groups with most registered lobbying communications with the Prime Minister’s Office",
+      "qualifier": "Top 20 since Jan. 1, 2017",
+      "source": "THE GLOBE AND MAIL, SOURCE: office of the commissioner of lobbying",
+      "tags": [],
+      "chart": {
+      "exportable": {
+          "dynamicHeight": true,
+          "height": 1000
+        },
+        "class": "primary",
+        "hasHours": false,
+        "data": "client,n\nBombardier,38\nDairy Farmers of Canada,36\nInnovative Medicines Canada,29\nMining Association of Canada,29\nIrving Shipbuilding,26\nMaxar Technologies,26\nUniversity of Calgary,25\nRio Tinto,24\nShell,24\nConseil québécois des entreprises adaptées,22\nAmazon,21\nCanadian Chamber of Commerce,20\nInternational Union of Operating Engineers,20\nSNC-Lavalin,19\nCanadian Marine Pilots' Association,18\nGoogle,18\nShaw,18\nFédération des communautés francophones et acadienne du Canada,17\nCentre for Israel and Jewish Affairs,17\nAgropur Dairy Cooperative,16",
+        "options": {
+          "annotations": true,
+          "expanded": false,
+          "footer": true,
+          "head": true,
+          "indexed": false,
+          "interpolation": false,
+          "legend": true,
+          "qualifier": true,
+          "share_data": true,
+          "social": true,
+          "stacked": false,
+          "tips": true,
+          "type": "bar",
+          "x_axis": true,
+          "y_axis": true
+        },
+        "x_axis": {
+          "display": true,
+          "scale": "linear",
+          "ticks": "auto",
+          "orient": "bottom",
+          "format": "comma",
+          "nice": false
+        },
+        "y_axis": {
+          "display": true,
+          "scale": "ordinal",
+          "ticks": "auto",
+          "orient": "right",
+          "format": "comma",
+          "nice": false
+        },
+        "annotations": {
+          "highlight": [
+            {
+              "key": "SNC-Lavalin",
+              "color": "#89cad3"
+            }
+          ],
+          "range": [],
+          "text": [],
+          "pointer": []
+        }
+      }
+    };
+          root.ChartTool = root.ChartTool || [];
+          root.ChartTool.push({id: "ct-" + data.id, data: data});
+          var b = document.getElementsByTagName("body")[0];
+          if (!b.classList.contains("ct-charttool-init")) {
+            b.classList.add("ct-charttool-init");
+            var c = document.createElement("link");
+            var j = document.createElement("script");
+            c.href = '../dist/dev/chart-tool.css'; c.rel = 'stylesheet';
+            j.src = '../dist/dev/chart-tool.js'; j.async = true; j.defer = true;
+            document.getElementsByTagName("head")[0].appendChild(c);
+            document.getElementsByTagName("head")[0].appendChild(j);
+          }
+        })(this);
+      </script>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
