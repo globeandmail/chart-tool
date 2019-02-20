@@ -147,7 +147,7 @@ export default function barChart(node, obj) {
             return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
           }
         },
-        'y': () => { return i * singleBar + Math.ceil(singleBar / 2); }
+        'y': () => (i * singleBar) + Math.ceil(singleBar / 2)
       });
   }
 
@@ -164,7 +164,7 @@ export default function barChart(node, obj) {
 
   if (!obj.exportable || !obj.exportable.height) {
 
-    obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
+    obj.dimensions.computedHeight = () => node.node().getBoundingClientRect().height;
 
     // fixed height, so transform accordingly and modify the dimension function and parent rects
     select(node.node().parentNode)

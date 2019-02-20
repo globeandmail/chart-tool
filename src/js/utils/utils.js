@@ -99,38 +99,39 @@ export function wrapAnnoText(textNode) {
 
 export function wrapText(textNode, width) {
 
-  textNode.each(function() {
+  textNode
+    .each(function() {
 
-    const text = select(this),
-      y = text.attr('y'),
-      lineHeight = 1.0, // ems
-      x = 0,
-      dy = parseFloat(text.attr('dy'));
+      const text = select(this),
+        y = text.attr('y'),
+        lineHeight = 1.0, // ems
+        x = 0,
+        dy = parseFloat(text.attr('dy'));
 
-    let words = text.text().split(/\s+/).reverse(),
-      line = [],
-      lineNumber = 0,
-      word,
-      tspan = text.text(null).append('tspan')
-        .attr('x', x)
-        .attr('y', y)
-        .attr('dy', `${dy}em`);
-
-    while (word = words.pop()) {
-      line.push(word);
-      tspan.text(line.join(' '));
-      if (tspan.node().getComputedTextLength() > width && line.length > 1) {
-        line.pop();
-        tspan.text(line.join(' '));
-        line = [word];
-        tspan = text.append('tspan')
+      let words = text.text().split(/\s+/).reverse(),
+        line = [],
+        lineNumber = 0,
+        word,
+        tspan = text.text(null).append('tspan')
           .attr('x', x)
           .attr('y', y)
-          .attr('dy', `${++lineNumber * lineHeight + dy}em`)
-          .text(word);
+          .attr('dy', `${dy}em`);
+
+      while (word = words.pop()) {
+        line.push(word);
+        tspan.text(line.join(' '));
+        if (tspan.node().getComputedTextLength() > width && line.length > 1) {
+          line.pop();
+          tspan.text(line.join(' '));
+          line = [word];
+          tspan = text.append('tspan')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('dy', `${++lineNumber * lineHeight + dy}em`)
+            .text(word);
+        }
       }
-    }
-  });
+    });
 }
 
 export function timeDiff(d1, d2, tolerance, data) {

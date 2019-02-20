@@ -5474,8 +5474,6 @@
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	});
 
-	var _library$1 = false;
-
 	var _shared$1 = createCommonjsModule(function (module) {
 	var SHARED = '__core-js_shared__';
 	var store = _global$1[SHARED] || (_global$1[SHARED] = {});
@@ -5484,7 +5482,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core$1.version,
-	  mode: _library$1 ? 'pure' : 'global',
+	  mode: 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -6738,38 +6736,39 @@
 
 	function wrapText(textNode, width) {
 
-	  textNode.each(function() {
+	  textNode
+	    .each(function() {
 
-	    var text = select(this),
-	      y = text.attr('y'),
-	      lineHeight = 1.0, // ems
-	      x = 0,
-	      dy = parseFloat(text.attr('dy'));
+	      var text = select(this),
+	        y = text.attr('y'),
+	        lineHeight = 1.0, // ems
+	        x = 0,
+	        dy = parseFloat(text.attr('dy'));
 
-	    var words = text.text().split(/\s+/).reverse(),
-	      line$$1 = [],
-	      lineNumber = 0,
-	      word,
-	      tspan = text.text(null).append('tspan')
-	        .attr('x', x)
-	        .attr('y', y)
-	        .attr('dy', (dy + "em"));
-
-	    while (word = words.pop()) {
-	      line$$1.push(word);
-	      tspan.text(line$$1.join(' '));
-	      if (tspan.node().getComputedTextLength() > width && line$$1.length > 1) {
-	        line$$1.pop();
-	        tspan.text(line$$1.join(' '));
-	        line$$1 = [word];
-	        tspan = text.append('tspan')
+	      var words = text.text().split(/\s+/).reverse(),
+	        line$$1 = [],
+	        lineNumber = 0,
+	        word,
+	        tspan = text.text(null).append('tspan')
 	          .attr('x', x)
 	          .attr('y', y)
-	          .attr('dy', ((++lineNumber * lineHeight + dy) + "em"))
-	          .text(word);
+	          .attr('dy', (dy + "em"));
+
+	      while (word = words.pop()) {
+	        line$$1.push(word);
+	        tspan.text(line$$1.join(' '));
+	        if (tspan.node().getComputedTextLength() > width && line$$1.length > 1) {
+	          line$$1.pop();
+	          tspan.text(line$$1.join(' '));
+	          line$$1 = [word];
+	          tspan = text.append('tspan')
+	            .attr('x', x)
+	            .attr('y', y)
+	            .attr('dy', ((++lineNumber * lineHeight + dy) + "em"))
+	            .text(word);
+	        }
 	      }
-	    }
-	  });
+	    });
 	}
 
 	function timeDiff(d1, d2, tolerance, data) {
@@ -8940,10 +8939,18 @@
 	        .call(wrapText, maxLabelWidth)
 	        .each(function() {
 	          var tspans = select(this).selectAll('tspan'),
+	            tspanCount = tspans._groups[0].length;
+	          if (tspanCount > 1) { tspans.attr('y', 0); }
+	        })
+	        .attr('transform', function() {
+	          var tspans = select(this).selectAll('tspan'),
 	            tspanCount = tspans._groups[0].length,
-	            textHeight = select(this).node().getBBox().height;
+	            textHeight = this.getBBox().height,
+	            tspanHeight = textHeight / tspanCount;
 	          if (tspanCount > 1) {
-	            tspans.attr('y', ((textHeight / tspanCount) / 2) - (textHeight / 2));
+	            return ("translate(0," + ((this.getBoundingClientRect().height / 2 * -1) + (tspanHeight / 2)) + ")");
+	          } else {
+	            return 'translate(0,0)';
 	          }
 	        });
 	    }
@@ -10286,7 +10293,7 @@
 	            return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
 	          }
 	        },
-	        'y': function () { return i * singleBar + Math.ceil(singleBar / 2); }
+	        'y': function () { return (i * singleBar) + Math.ceil(singleBar / 2); }
 	      });
 	  };
 
@@ -10305,7 +10312,7 @@
 
 	  if (!obj.exportable || !obj.exportable.height) {
 
-	    obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
+	    obj.dimensions.computedHeight = function () { return node.node().getBoundingClientRect().height; };
 
 	    // fixed height, so transform accordingly and modify the dimension function and parent rects
 	    select(node.node().parentNode)

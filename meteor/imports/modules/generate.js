@@ -3,17 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import AWS from 'aws-sdk';
 import { app_settings } from './settings';
 
-<<<<<<< HEAD
-const args = {
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
-};
-
-export async function generatePDF(chart, width, height) {
-  const browser = await puppeteer.launch(args);
-  const page = await browser.newPage();
-  console.log(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf`);
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf`, { waitUntil: ['load', 'networkidle0'] });
-=======
 const puppeteerSettings = {
   args: [
     '--enable-font-antialiasing',
@@ -27,7 +16,6 @@ export async function generatePDF(chart, width, height) {
   const page = await browser.newPage();
   const margin = `margin=${app_settings.print.overall_margin || 0}`;
   await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf?${margin}`, { waitUntil: ['load', 'networkidle0'] });
->>>>>>> 8abfb851a7b3691733482807208f264fb23c7596
   await page.emulateMedia('screen');
   const pdf = await page.pdf({
     width: `${width}mm`,
@@ -42,11 +30,7 @@ export async function generatePDF(chart, width, height) {
 }
 
 export async function generatePNG(chart, params) {
-<<<<<<< HEAD
-  const browser = await puppeteer.launch(args);
-=======
   const browser = await puppeteer.launch(puppeteerSettings);
->>>>>>> 8abfb851a7b3691733482807208f264fb23c7596
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -75,11 +59,7 @@ export async function generatePNG(chart, params) {
 }
 
 export async function generateThumb(chart, params) {
-<<<<<<< HEAD
-  const browser = await puppeteer.launch(args);
-=======
   const browser = await puppeteer.launch(puppeteerSettings);
->>>>>>> 8abfb851a7b3691733482807208f264fb23c7596
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
