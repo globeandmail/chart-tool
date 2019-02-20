@@ -283,10 +283,18 @@ export function discreteAxis(axisNode, scale, axis, axisSettings, dimensions) {
         .call(wrapText, maxLabelWidth)
         .each(function() {
           const tspans = select(this).selectAll('tspan'),
+            tspanCount = tspans._groups[0].length;
+          if (tspanCount > 1) tspans.attr('y', 0);
+        })
+        .attr('transform', function() {
+          const tspans = select(this).selectAll('tspan'),
             tspanCount = tspans._groups[0].length,
-            textHeight = select(this).node().getBBox().height;
+            textHeight = this.getBBox().height,
+            tspanHeight = textHeight / tspanCount;
           if (tspanCount > 1) {
-            tspans.attr('y', ((textHeight / tspanCount) / 2) - (textHeight / 2));
+            return `translate(0, ${(this.getBoundingClientRect().height / 2 * -1) + (tspanHeight / 2)})`;
+          } else {
+            return 'translate(0, 0)';
           }
         });
     }

@@ -8940,10 +8940,18 @@
 	        .call(wrapText, maxLabelWidth)
 	        .each(function() {
 	          var tspans = select(this).selectAll('tspan'),
+	            tspanCount = tspans._groups[0].length;
+	          if (tspanCount > 1) { tspans.attr('y', 0); }
+	        })
+	        .attr('transform', function() {
+	          var tspans = select(this).selectAll('tspan'),
 	            tspanCount = tspans._groups[0].length,
-	            textHeight = select(this).node().getBBox().height;
+	            textHeight = this.getBBox().height,
+	            tspanHeight = textHeight / tspanCount;
 	          if (tspanCount > 1) {
-	            tspans.attr('y', ((textHeight / tspanCount) / 2) - (textHeight / 2));
+	            return ("translate(0, " + ((this.getBoundingClientRect().height / 2 * -1) + (tspanHeight / 2)) + ")");
+	          } else {
+	            return 'translate(0, 0)';
 	          }
 	        });
 	    }
@@ -10286,7 +10294,7 @@
 	            return xScale(Math.max(0, d.series[i].val)) + barLabelOffset;
 	          }
 	        },
-	        'y': function () { return i * singleBar + Math.ceil(singleBar / 2); }
+	        'y': function () { return (i * singleBar) + Math.ceil(singleBar / 2); }
 	      });
 	  };
 
@@ -10305,7 +10313,7 @@
 
 	  if (!obj.exportable || !obj.exportable.height) {
 
-	    obj.dimensions.computedHeight = function() { return node.node().getBoundingClientRect().height; };
+	    obj.dimensions.computedHeight = function () { return node.node().getBoundingClientRect().height; };
 
 	    // fixed height, so transform accordingly and modify the dimension function and parent rects
 	    select(node.node().parentNode)
