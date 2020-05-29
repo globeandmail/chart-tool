@@ -69,7 +69,7 @@ function shareDataClicked(node, obj) {
     .attr('class', `${obj.prefix}chart_data_close`)
     .html('Close');
 
-  csvToTable(chartDataTable, obj.data.csv, obj);
+  csvToTable(chartDataTable, obj.data.csv);
 
   chartDataCloseBtn.on('click', () => {
     chartData.classed(`${obj.prefix}active`, false);

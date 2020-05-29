@@ -232,7 +232,7 @@ export function svgTest(root) {
   return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 }
 
-export function csvToTable(target, data, obj) {
+export function csvToTable(target, data) {
   const parsedCSV = csvParseRows(data),
     headerRow = parsedCSV[0],
     dataRows = parsedCSV.slice(1, parsedCSV.length);
@@ -252,16 +252,7 @@ export function csvToTable(target, data, obj) {
     .append('tr').selectAll('td')
     .data(d => d).enter()
     .append('td')
-    .text((d, i) => {
-      const chartType = obj.options.type;
-      let axisType;
-      if (chartType == 'bar') {
-        axisType = i === 0 ? 'yAxis' : 'xAxis';
-      } else {
-        axisType = i === 0 ? 'xAxis' : 'yAxis';
-      }
-      return `${obj[axisType].prefix}${d}${obj[axisType].suffix}`;
-    });
+    .text(d => d);
 }
 
 export function getUniqueValues(data) {
