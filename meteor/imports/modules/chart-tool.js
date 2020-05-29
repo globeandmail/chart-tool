@@ -6842,7 +6842,7 @@
 	  return [matrix.e, matrix.f];
 	}
 
-	function csvToTable(target, data, obj) {
+	function csvToTable(target, data) {
 	  var parsedCSV = csvParseRows(data),
 	    headerRow = parsedCSV[0],
 	    dataRows = parsedCSV.slice(1, parsedCSV.length);
@@ -6862,16 +6862,7 @@
 	    .append('tr').selectAll('td')
 	    .data(function (d) { return d; }).enter()
 	    .append('td')
-	    .text(function (d, i) {
-	      // const chartType = obj.options.type;
-	      // let axisType;
-	      // if (chartType == 'bar') {
-	      //   axisType = i === 0 ? 'yAxis' : 'xAxis';
-	      // } else {
-	      //   axisType = i === 0 ? 'xAxis' : 'yAxis';
-	      // }
-	      // return `${obj[axisType].prefix}${d}${obj[axisType].suffix}`;
-	    });
+	    .text(function (d) { return d; });
 	}
 
 	function getUniqueValues(data) {
@@ -10610,7 +10601,7 @@
 	  event.stopImmediatePropagation();
 	}
 
-	function nodrag(view) {
+	function dragDisable(view) {
 	  var root = view.document.documentElement,
 	      selection$$1 = select(view).on("dragstart.drag", noevent, true);
 	  if ("onselectstart" in root) {
@@ -10707,7 +10698,7 @@
 	    var gesture = beforestart("mouse", container.apply(this, arguments), mouse, this, arguments);
 	    if (!gesture) return;
 	    select(event.view).on("mousemove.drag", mousemoved, true).on("mouseup.drag", mouseupped, true);
-	    nodrag(event.view);
+	    dragDisable(event.view);
 	    nopropagation();
 	    mousemoving = false;
 	    mousedownx = event.clientX;
@@ -11167,7 +11158,7 @@
 	          .on("mousemove.brush", moved, true)
 	          .on("mouseup.brush", ended, true);
 
-	      nodrag(event.view);
+	      dragDisable(event.view);
 	    }
 
 	    nopropagation$1();
@@ -14458,7 +14449,7 @@
 	    .attr('class', ((obj.prefix) + "chart_data_close"))
 	    .html('Close');
 
-	  csvToTable(chartDataTable, obj.data.csv, obj);
+	  csvToTable(chartDataTable, obj.data.csv);
 
 	  chartDataCloseBtn.on('click', function () {
 	    chartData.classed(((obj.prefix) + "active"), false);
@@ -14583,9 +14574,9 @@
 	      console.log(error);
 	    }
 
-	    if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
+	    if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(chartObj); }
 
-	    if (callback) { callback(); }
+	    if (callback) { callback(chartObj); }
 
 	  }
 
