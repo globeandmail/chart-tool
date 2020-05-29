@@ -49,9 +49,9 @@ const ChartTool = (function ChartTool() {
       console.log(error);
     }
 
-    if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }
+    if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(chartObj); }
 
-    if (callback) { callback(); }
+    if (callback) { callback(chartObj); }
 
   }
 
