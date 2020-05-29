@@ -18,7 +18,6 @@ const chartSettings = {
   source: '',
   index: '',
   hasHours: false,
-  social: settings.social,
   baseClass: `${settings.prefix}chart`,
   customClass: '',
 
@@ -32,7 +31,6 @@ const chartSettings = {
     legend: true,
     qualifier: true,
     share_data: true,
-    social: true,
     stacked: false,
     tips: true,
     type: 'line',

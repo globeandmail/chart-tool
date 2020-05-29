@@ -32,7 +32,6 @@
                 "indexed": false,
                 "qualifier": true,
                 "share_data": true,
-                "social": true
               },
               "x_axis": {
                 "display": true,

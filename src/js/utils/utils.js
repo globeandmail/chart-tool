@@ -232,45 +232,23 @@ export function svgTest(root) {
   return !!root.document && !!root.document.createElementNS && !!root.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 }
 
-export function getThumbnailPath(obj) {
-  const imgSettings = obj.image;
-  imgSettings.bucket = bucket;
-  const id = obj.id.replace(obj.prefix, '');
-
-  return `https://s3.amazonaws.com/${imgSettings.bucket}/${imgSettings.base_path}${id}/${imgSettings.filename}.${imgSettings.extension}`;
-}
-
-export function generateThumb(container, obj) {
-
-  const settings = new Settings();
-
-  const imgSettings = settings.image;
-
-  const cont = document.querySelector(container),
-    fallback = cont.querySelector(`.${settings.prefix}base64img`);
-
-  if (imgSettings && imgSettings.enable && obj.data.id) {
-
-    const img = document.createElement('img');
-
-    img.setAttribute('src', getThumbnailPath(obj));
-    img.setAttribute('alt', obj.data.heading);
-    img.setAttribute('class', `${settings.prefix}thumbnail`);
-
-    cont.appendChild(img);
-
-  } else if (fallback) {
-
-    fallback.style.display = 'block';
-
-  }
-
-}
-
 export function csvToTable(target, data) {
-  const parsedCSV = csvParseRows(data);
-  target.append('table').selectAll('tr')
-    .data(parsedCSV).enter()
+  const parsedCSV = csvParseRows(data),
+    headerRow = parsedCSV[0],
+    dataRows = parsedCSV.slice(1, parsedCSV.length);
+
+  const table = target.append('table'),
+    thead = table.append('thead'),
+    tbody = table.append('tbody');
+
+  thead.append('tr')
+    .selectAll('th')
+    .data(headerRow).enter()
+    .append('th')
+    .text(d => d);
+
+  tbody.selectAll('tr')
+    .data(dataRows).enter()
     .append('tr').selectAll('td')
     .data(d => d).enter()
     .append('td')

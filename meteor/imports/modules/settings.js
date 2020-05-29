@@ -19,7 +19,6 @@ var debounce = 500;
 var tipTimeout = 5000;
 var ratioMobile = 1.15;
 var ratioDesktop = 0.65;
-var thumbnailDebounce = 1500;
 var dateFormat = "%Y-%m-%d";
 var timeFormat = "%H:%M";
 var margin = {
@@ -94,28 +93,6 @@ var source = {
 	prefix: "CHART TOOL",
 	suffix: " » SOURCE:"
 };
-var social = {
-	facebook: {
-		label: "Facebook",
-		icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg",
-		redirect: "",
-		appID: ""
-	},
-	twitter: {
-		label: "Twitter",
-		icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
-		via: "",
-		hashtag: ""
-	},
-	email: {
-		label: "Email",
-		icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
-	},
-	sms: {
-		label: "SMS",
-		icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
-	}
-};
 var image = {
 	enable: false,
 	base_path: "",
@@ -134,7 +111,6 @@ var config = {
 	tipTimeout: tipTimeout,
 	ratioMobile: ratioMobile,
 	ratioDesktop: ratioDesktop,
-	thumbnailDebounce: thumbnailDebounce,
 	dateFormat: dateFormat,
 	timeFormat: timeFormat,
 	margin: margin,
@@ -148,7 +124,6 @@ var config = {
 	scatterplotRadius: scatterplotRadius,
 	bands: bands,
 	source: source,
-	social: social,
 	image: image,
 	embedJS: embedJS,
 	embedCSS: embedCSS
@@ -166,7 +141,6 @@ var prefix$1 = config.prefix;
 var app_settings = {
 
   s3: config.image,
-  thumbnail_debounce: config.thumbnailDebounce,
 
   embedJS: config.embedJS.replace('{{version}}', version),
   embedCSS: config.embedCSS.replace('{{version}}', version),
@@ -215,7 +189,6 @@ var app_settings = {
       legend: true,
       qualifier: true,
       share_data: true,
-      social: true,
       stacked: false,
       tips: true,
       type: 'line',

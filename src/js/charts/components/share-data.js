@@ -6,6 +6,8 @@ export default function shareData(node, obj) {
 
   const chartContainer = select(node);
 
+  let dataBtnClicked;
+
   let chartMeta = chartContainer.select(`.${obj.prefix}chart_meta`);
 
   if (chartMeta.node() === null) {
@@ -17,39 +19,57 @@ export default function shareData(node, obj) {
   const chartDataBtn = chartMeta
     .append('div')
     .attr('class', `${obj.prefix}chart_meta_btn`)
-    .html('data');
+    .text('Data');
 
   const chartData = chartContainer
     .append('div')
     .attr('class', `${obj.prefix}chart_data`);
 
-  const chartDataCloseBtn = chartData
-    .append('div')
-    .attr('class', `${obj.prefix}chart_data_close`)
-    .html('&#xd7;');
+  chartDataBtn.on('click', () => {
+    if (!dataBtnClicked) shareDataClicked(node, obj);
+    chartData.classed(`${obj.prefix}active`, true);
+  });
 
-  const chartDataTable = chartData
+  return {
+    meta_nav: chartMeta,
+    data_panel: chartData
+  };
+
+}
+
+function shareDataClicked(node, obj) {
+
+  const chartData = select(node)
+    .select(`.${obj.prefix}chart_data`);
+
+  const chartDataWrapper = chartData
+    .append('div')
+    .attr('class', `${obj.prefix}chart_data_wrapper`);
+
+  chartDataWrapper
+    .append('p')
+    .attr('class', `${obj.prefix}chart_title`)
+    .text(obj.heading);
+
+  const chartDataTable = chartDataWrapper
     .append('div')
     .attr('class', `${obj.prefix}chart_data_inner`);
 
-  chartData
-    .append('h2')
-    .html(obj.heading);
-
-  const chartDataNav = chartData
+  const chartDataNav = chartDataWrapper
     .append('div')
     .attr('class', `${obj.prefix}chart_data_nav`);
 
   const csvDLBtn = chartDataNav
     .append('a')
     .attr('class', `${obj.prefix}chart_data_btn csv`)
-    .html('download csv');
+    .text('Download CSV');
+
+  const chartDataCloseBtn = chartDataNav
+    .append('a')
+    .attr('class', `${obj.prefix}chart_data_close`)
+    .html('Close');
 
   csvToTable(chartDataTable, obj.data.csv);
-
-  chartDataBtn.on('click', () => {
-    chartData.classed(`${obj.prefix}active`, true);
-  });
 
   chartDataCloseBtn.on('click', () => {
     chartData.classed(`${obj.prefix}active`, false);
@@ -62,10 +82,5 @@ export default function shareData(node, obj) {
         'download': `data_${obj.id}.csv`
       });
   });
-
-  return {
-    meta_nav: chartMeta,
-    data_panel: chartData
-  };
 
 }

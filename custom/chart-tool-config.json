@@ -9,7 +9,6 @@
   "tipTimeout": 5000,
   "ratioMobile": 1.15,
   "ratioDesktop": 0.65,
-  "thumbnailDebounce": 1500,
 
   "dateFormat": "%Y-%m-%d",
   "timeFormat": "%H:%M",
@@ -95,29 +94,6 @@
   "source": {
     "prefix": "CHART TOOL",
     "suffix": " » SOURCE:"
-  },
-
-  "social": {
-    "facebook": {
-      "label": "Facebook",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg",
-      "redirect": "",
-      "appID": ""
-    },
-    "twitter": {
-      "label": "Twitter",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
-      "via": "",
-      "hashtag": ""
-    },
-    "email": {
-      "label": "Email",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
-    },
-    "sms": {
-      "label": "SMS",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
-    }
   },
 
   "image": {

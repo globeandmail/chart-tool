@@ -352,7 +352,6 @@ export default class Chart extends Component {
 
     if ('editable' in this.props) chart.editable = this.props.editable;
     if ('share_data' in this.props) chart.options.share_data = this.props.share_data;
-    if ('social' in this.props) chart.options.social = this.props.social;
     if ('tips' in this.props) chart.options.tips = this.props.tips;
 
     if (this.props.exportable) {

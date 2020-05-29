@@ -161,7 +161,6 @@ export default class ChartOverlayPrint extends Component {
                   tips={false}
                   exportable={true}
                   share_data={false}
-                  social={false}
                 />
               </div>
             </div>

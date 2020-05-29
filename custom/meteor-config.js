@@ -9,7 +9,6 @@ export const prefix = config.prefix;
 export const app_settings = {
 
   s3: config.image,
-  thumbnail_debounce: config.thumbnailDebounce,
 
   embedJS: config.embedJS.replace('{{version}}', version),
   embedCSS: config.embedCSS.replace('{{version}}', version),
@@ -58,7 +57,6 @@ export const app_settings = {
       legend: true,
       qualifier: true,
       share_data: true,
-      social: true,
       stacked: false,
       tips: true,
       type: 'line',

@@ -52,7 +52,6 @@ class ShowChart extends Component {
         <Chart
           editable={false}
           share_data={false}
-          social={false}
           exportable={false}
           chart={this.props.chart}
           tips={true}
