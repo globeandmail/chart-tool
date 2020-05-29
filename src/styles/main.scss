@@ -36,8 +36,4 @@
   @include utility-font;
 }
 
-.#{$prefix}base64img {
-  display: none;
-}
-
 @import '../../custom/custom.scss';
