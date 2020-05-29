@@ -142,42 +142,6 @@
     "suffix": " » SOURCE:"
   },
 
-  // parameters for social sharing
-  "social": {
-
-    // facebook sharing requires a redirect URL and and app ID
-    "facebook": {
-      "label": "Facebook",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg",
-
-      // the redirect should be a static HTML file with contents described
-      // in solution 2 here: http://stackoverflow.com/a/24417323
-      "redirect": "",
-      "appID": ""
-    },
-
-    "twitter": {
-      "label": "Twitter",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
-
-      // "via" value is optional, and should be a twitter handle
-      // without the "@", such as "globeandmail"
-      "via": "",
-
-      // similarly, "hashtag" is optional, and should be a hashtag
-      // without the "#"
-      "hashtag": ""
-    },
-    "email": {
-      "label": "Email",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
-    },
-    "sms": {
-      "label": "SMS",
-      "icon": "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
-    }
-  },
-
   // settings for S3 upload. if `enable` is set to `false`, Chart Tool
   // will generate inline base64 image fallbacks instead
   "image": {

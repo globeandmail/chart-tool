@@ -5,7 +5,7 @@ import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
 import { parse } from './utils/dataparse';
 import { ChartManager } from './charts/manager';
-import { clearObj, clearChart, getBounding, generateThumb, isElement, debounce as debounceFn } from './utils/utils';
+import { clearObj, clearChart, getBounding, isElement, debounce as debounceFn } from './utils/utils';
 
 const root = typeof window !== 'undefined' ? window : this;
 
@@ -47,7 +47,6 @@ const ChartTool = (function ChartTool() {
     } catch(e) {
       error = e;
       console.log(error);
-      generateThumb(container, obj);
     }
 
     if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }

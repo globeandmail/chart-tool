@@ -1553,7 +1553,7 @@
 	      c = new Array(nb),
 	      i;
 
-	  for (i = 0; i < na; ++i) x[i] = interpolate(a[i], b[i]);
+	  for (i = 0; i < na; ++i) x[i] = value(a[i], b[i]);
 	  for (; i < nb; ++i) c[i] = b[i];
 
 	  return function(t) {
@@ -1585,7 +1585,7 @@
 
 	  for (k in b) {
 	    if (k in a) {
-	      i[k] = interpolate(a[k], b[k]);
+	      i[k] = value(a[k], b[k]);
 	    } else {
 	      c[k] = b[k];
 	    }
@@ -1660,7 +1660,7 @@
 	        });
 	}
 
-	function interpolate(a, b) {
+	function value(a, b) {
 	  var t = typeof b, c;
 	  return b == null || t === "boolean" ? constant$1(b)
 	      : (t === "number" ? interpolateNumber
@@ -1867,7 +1867,7 @@
 	function continuous(deinterpolate, reinterpolate) {
 	  var domain = unit,
 	      range$$1 = unit,
-	      interpolate$$1 = interpolate,
+	      interpolate$$1 = value,
 	      clamp = false,
 	      piecewise$$1,
 	      output,
@@ -3513,28 +3513,6 @@
 		offset: 0.06,
 		outerPadding: 0.06
 	};
-	var social = {
-		facebook: {
-			label: "Facebook",
-			icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-facebook.svg",
-			redirect: "",
-			appID: ""
-		},
-		twitter: {
-			label: "Twitter",
-			icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-social-twitter.svg",
-			via: "",
-			hashtag: ""
-		},
-		email: {
-			label: "Email",
-			icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-mail.svg"
-		},
-		sms: {
-			label: "SMS",
-			icon: "https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/svgs/fi-telephone.svg"
-		}
-	};
 	var image = {
 		enable: false,
 		base_path: "",
@@ -3563,7 +3541,6 @@
 	  source: '',
 	  index: '',
 	  hasHours: false,
-	  social: social,
 	  baseClass: ((prefix$1) + "chart"),
 	  customClass: '',
 
@@ -3577,7 +3554,6 @@
 	    legend: true,
 	    qualifier: true,
 	    share_data: true,
-	    social: true,
 	    stacked: false,
 	    tips: true,
 	    type: 'line',
@@ -5451,7 +5427,6 @@
 	}
 
 	// defined in rollup.config.js
-	var bucket = "chartprod";
 
 	var toString$1 = {}.toString;
 
@@ -6867,49 +6842,36 @@
 	  return [matrix.e, matrix.f];
 	}
 
-	function getThumbnailPath(obj) {
-	  var imgSettings = obj.image;
-	  imgSettings.bucket = bucket;
-	  var id = obj.id.replace(obj.prefix, '');
+	function csvToTable(target, data, obj) {
+	  var parsedCSV = csvParseRows(data),
+	    headerRow = parsedCSV[0],
+	    dataRows = parsedCSV.slice(1, parsedCSV.length);
 
-	  return ("https://s3.amazonaws.com/" + (imgSettings.bucket) + "/" + (imgSettings.base_path) + id + "/" + (imgSettings.filename) + "." + (imgSettings.extension));
-	}
+	  var table = target.append('table'),
+	    thead = table.append('thead'),
+	    tbody = table.append('tbody');
 
-	function generateThumb(container, obj) {
+	  thead.append('tr')
+	    .selectAll('th')
+	    .data(headerRow).enter()
+	    .append('th')
+	    .text(function (d) { return d; });
 
-	  var settings = new chartSettings();
-
-	  var imgSettings = settings.image;
-
-	  var cont = document.querySelector(container),
-	    fallback = cont.querySelector(("." + (settings.prefix) + "base64img"));
-
-	  if (imgSettings && imgSettings.enable && obj.data.id) {
-
-	    var img = document.createElement('img');
-
-	    img.setAttribute('src', getThumbnailPath(obj));
-	    img.setAttribute('alt', obj.data.heading);
-	    img.setAttribute('class', ((settings.prefix) + "thumbnail"));
-
-	    cont.appendChild(img);
-
-	  } else if (fallback) {
-
-	    fallback.style.display = 'block';
-
-	  }
-
-	}
-
-	function csvToTable(target, data) {
-	  var parsedCSV = csvParseRows(data);
-	  target.append('table').selectAll('tr')
-	    .data(parsedCSV).enter()
+	  tbody.selectAll('tr')
+	    .data(dataRows).enter()
 	    .append('tr').selectAll('td')
 	    .data(function (d) { return d; }).enter()
 	    .append('td')
-	    .text(function (d) { return d; });
+	    .text(function (d, i) {
+	      // const chartType = obj.options.type;
+	      // let axisType;
+	      // if (chartType == 'bar') {
+	      //   axisType = i === 0 ? 'yAxis' : 'xAxis';
+	      // } else {
+	      //   axisType = i === 0 ? 'xAxis' : 'yAxis';
+	      // }
+	      // return `${obj[axisType].prefix}${d}${obj[axisType].suffix}`;
+	    });
 	}
 
 	function getUniqueValues(data) {
@@ -7134,7 +7096,6 @@
 	  o.type          = chart.options.type          || o.type;
 	  o.interpolation = chart.options.interpolation || o.interpolation;
 
-	  o.social      = !isUndefined(co.social) === true ? co.social           : o.social;
 	  o.share_data  = !isUndefined(co.share_data) === true ? co.share_data   : o.share_data;
 	  o.stacked     = !isUndefined(co.stacked) === true ? co.stacked         : o.stacked;
 	  o.expanded    = !isUndefined(co.expanded) === true ? co.expanded       : o.expanded;
@@ -7565,7 +7526,7 @@
 	  };
 	}
 
-	function interpolate$1(a, b) {
+	function interpolate(a, b) {
 	  var c;
 	  return (typeof b === "number" ? interpolateNumber
 	      : b instanceof color ? interpolateRgb
@@ -7607,12 +7568,12 @@
 	  };
 	}
 
-	function attrFunction$1(name, interpolate$$1, value) {
+	function attrFunction$1(name, interpolate$$1, value$$1) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value(this);
+	    var value0, value1 = value$$1(this);
 	    if (value1 == null) return void this.removeAttribute(name);
 	    value0 = this.getAttribute(name);
 	    return value0 === value1 ? null
@@ -7621,12 +7582,12 @@
 	  };
 	}
 
-	function attrFunctionNS$1(fullname, interpolate$$1, value) {
+	function attrFunctionNS$1(fullname, interpolate$$1, value$$1) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
-	    var value0, value1 = value(this);
+	    var value0, value1 = value$$1(this);
 	    if (value1 == null) return void this.removeAttributeNS(fullname.space, fullname.local);
 	    value0 = this.getAttributeNS(fullname.space, fullname.local);
 	    return value0 === value1 ? null
@@ -7635,12 +7596,12 @@
 	  };
 	}
 
-	function transition_attr(name, value) {
-	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate$1;
-	  return this.attrTween(name, typeof value === "function"
-	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value))
-	      : value == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
-	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value));
+	function transition_attr(name, value$$1) {
+	  var fullname = namespace(name), i = fullname === "transform" ? interpolateTransformSvg : interpolate;
+	  return this.attrTween(name, typeof value$$1 === "function"
+	      ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value$$1))
+	      : value$$1 == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
+	      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value$$1));
 	}
 
 	function attrTweenNS(fullname, value) {
@@ -7887,14 +7848,14 @@
 	  };
 	}
 
-	function styleFunction$1(name, interpolate$$1, value) {
+	function styleFunction$1(name, interpolate$$1, value$$1) {
 	  var value00,
 	      value10,
 	      interpolate0;
 	  return function() {
 	    var style = window$1(this).getComputedStyle(this, null),
 	        value0 = style.getPropertyValue(name),
-	        value1 = value(this);
+	        value1 = value$$1(this);
 	    if (value1 == null) value1 = (this.style.removeProperty(name), style.getPropertyValue(name));
 	    return value0 === value1 ? null
 	        : value0 === value00 && value1 === value10 ? interpolate0
@@ -7902,14 +7863,14 @@
 	  };
 	}
 
-	function transition_style(name, value, priority) {
-	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate$1;
-	  return value == null ? this
+	function transition_style(name, value$$1, priority) {
+	  var i = (name += "") === "transform" ? interpolateTransformCss : interpolate;
+	  return value$$1 == null ? this
 	          .styleTween(name, styleRemove$1(name, i))
 	          .on("end.style." + name, styleRemoveEnd(name))
-	      : this.styleTween(name, typeof value === "function"
-	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value))
-	          : styleConstant$1(name, i, value), priority);
+	      : this.styleTween(name, typeof value$$1 === "function"
+	          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value$$1))
+	          : styleConstant$1(name, i, value$$1), priority);
 	}
 
 	function styleTween(name, value, priority) {
@@ -11055,7 +11016,7 @@
 	                emit = emitter(that, arguments),
 	                selection0 = state.selection,
 	                selection1 = dim.input(typeof selection$$1 === "function" ? selection$$1.apply(this, arguments) : selection$$1, state.extent),
-	                i = interpolate(selection0, selection1);
+	                i = value(selection0, selection1);
 
 	            function tween(t) {
 	              state.selection = t === 1 && empty$1(selection1) ? null : i(t);
@@ -11389,8 +11350,8 @@
 	  };
 
 	  brush.on = function() {
-	    var value = listeners.on.apply(listeners, arguments);
-	    return value === listeners ? brush : value;
+	    var value$$1 = listeners.on.apply(listeners, arguments);
+	    return value$$1 === listeners ? brush : value$$1;
 	  };
 
 	  return brush;
@@ -14447,39 +14408,57 @@
 	  var chartDataBtn = chartMeta
 	    .append('div')
 	    .attr('class', ((obj.prefix) + "chart_meta_btn"))
-	    .html('data');
+	    .text('Data');
 
 	  var chartData = chartContainer
 	    .append('div')
 	    .attr('class', ((obj.prefix) + "chart_data"));
 
-	  var chartDataCloseBtn = chartData
-	    .append('div')
-	    .attr('class', ((obj.prefix) + "chart_data_close"))
-	    .html('&#xd7;');
+	  chartDataBtn.on('click', function () {
+	    { shareDataClicked(node, obj); }
+	    chartData.classed(((obj.prefix) + "active"), true);
+	  });
 
-	  var chartDataTable = chartData
+	  return {
+	    meta_nav: chartMeta,
+	    data_panel: chartData
+	  };
+
+	}
+
+	function shareDataClicked(node, obj) {
+
+	  var chartData = select(node)
+	    .select(("." + (obj.prefix) + "chart_data"));
+
+	  var chartDataWrapper = chartData
+	    .append('div')
+	    .attr('class', ((obj.prefix) + "chart_data_wrapper"));
+
+	  chartDataWrapper
+	    .append('p')
+	    .attr('class', ((obj.prefix) + "chart_title"))
+	    .text(obj.heading);
+
+	  var chartDataTable = chartDataWrapper
 	    .append('div')
 	    .attr('class', ((obj.prefix) + "chart_data_inner"));
 
-	  chartData
-	    .append('h2')
-	    .html(obj.heading);
-
-	  var chartDataNav = chartData
+	  var chartDataNav = chartDataWrapper
 	    .append('div')
 	    .attr('class', ((obj.prefix) + "chart_data_nav"));
 
 	  var csvDLBtn = chartDataNav
 	    .append('a')
 	    .attr('class', ((obj.prefix) + "chart_data_btn csv"))
-	    .html('download csv');
+	    .text('Download CSV');
 
-	  csvToTable(chartDataTable, obj.data.csv);
+	  var chartDataCloseBtn = chartDataNav
+	    .append('a')
+	    .attr('class', ((obj.prefix) + "chart_data_close"))
+	    .html('Close');
 
-	  chartDataBtn.on('click', function () {
-	    chartData.classed(((obj.prefix) + "active"), true);
-	  });
+	  csvToTable(chartDataTable, obj.data.csv, obj);
 
 	  chartDataCloseBtn.on('click', function () {
 	    chartData.classed(((obj.prefix) + "active"), false);
@@ -14493,167 +14472,6 @@
 	      });
 	  });
 
-	  return {
-	    meta_nav: chartMeta,
-	    data_panel: chartData
-	  };
-
-	}
-
-	function social$1(node, obj) {
-
-	  var socialOptions = [];
-
-	  for (var prop in obj.social) {
-	    if (obj.social[prop]) {
-	      switch (obj.social[prop].label) {
-	        case 'Twitter':
-	          obj.social[prop].url = constructTwitterURL(obj);
-	          obj.social[prop].popup = true;
-	          break;
-	        case 'Facebook':
-	          obj.social[prop].url = constructFacebookURL(obj);
-	          obj.social[prop].popup = true;
-	          break;
-	        case 'Email':
-	          obj.social[prop].url = constructMailURL(obj);
-	          obj.social[prop].popup = false;
-	          break;
-	        case 'SMS':
-	          obj.social[prop].url = constructSMSURL(obj);
-	          obj.social[prop].popup = false;
-	          break;
-	        default:
-	          console.log('Incorrect social item definition.');
-	      }
-	      socialOptions.push(obj.social[prop]);
-	    }
-	  }
-
-	  var chartContainer = select(node);
-
-	  var chartMeta = chartContainer.select(("." + (obj.prefix) + "chart_meta"));
-
-	  if (chartMeta.node() === null) {
-	    chartMeta = chartContainer
-	      .append('div')
-	      .attr('class', ((obj.prefix) + "chart_meta"));
-	  }
-
-	  var chartSocialBtn = chartMeta
-	    .append('div')
-	    .attr('class', ((obj.prefix) + "chart_meta_btn"))
-	    .html('share');
-
-	  var chartSocial = chartContainer
-	    .append('div')
-	    .attr('class', ((obj.prefix) + "chart_social"));
-
-	  var chartSocialCloseBtn = chartSocial
-	    .append('div')
-	    .attr('class', ((obj.prefix) + "chart_social_close"))
-	    .html('&#xd7;');
-
-	  var chartSocialOptions = chartSocial
-	    .append('div')
-	    .attr('class', ((obj.prefix) + "chart_social_options"));
-
-	  chartSocialOptions
-	    .append('h3')
-	    .html('Share this chart:');
-
-	  chartSocialBtn.on('click', function () {
-	    chartSocial.classed(((obj.prefix) + "active"), true);
-	  });
-
-	  chartSocialCloseBtn.on('click', function () {
-	    chartSocial.classed(((obj.prefix) + "active"), false);
-	  });
-
-	  var itemAmount = socialOptions.length;
-
-	  for (var i = 0; i < itemAmount; i++) {
-	    chartSocialOptions
-	      .selectAll(("." + (obj.prefix) + "social-item"))
-	      .data(socialOptions)
-	      .enter()
-	      .append('div')
-	      .attr('class', ((obj.prefix) + "social-item"))
-	      .html(function (d) {
-	        if (!d.popup) {
-	          return ("<a href='" + (d.url) + "'><img class='" + (obj.prefix) + "social-icon' src='" + (d.icon) + "' title='" + (d.label) + "'></a>");
-	        } else {
-	          return ("<a class='" + (obj.prefix) + "js-share' href='" + (d.url) + "'><img class='" + (obj.prefix) + "social-icon' src='" + (d.icon) + "' title='" + (d.label) + "'></a>");
-	        }
-	      });
-	  }
-
-	  if (obj.image && obj.image.enable) {
-	    chartSocialOptions
-	      .append('div')
-	      .attr('class', ((obj.prefix) + "image-url"))
-	      .attr('contentEditable', 'true')
-	      .html(getThumbnailPath(obj));
-	  }
-
-	  var sharePopup = document.querySelectorAll(("." + (obj.prefix) + "js-share"));
-
-	  if (sharePopup) {
-	    [].forEach.call(sharePopup, function (anchor) {
-	      anchor.addEventListener('click', function(e) {
-	        e.preventDefault();
-	        windowPopup(this.href, 600, 620);
-	      });
-	    });
-	  }
-
-	  return {
-	    meta_nav: chartMeta
-	  };
-
-	}
-
-	function windowPopup(url, width, height) {
-
-	  // calculate the position of the popup so it’s centered on the screen
-	  var left = (screen.width / 2) - (width / 2),
-	    top = (screen.height / 2) - (height / 2);
-
-	  window.open(
-	    url,
-	    '',
-	    ("menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left)
-	  );
-	}
-
-	function constructFacebookURL(obj){
-	  var base = 'https://www.facebook.com/dialog/share?',
-	    redirect = obj.social.facebook.redirect;
-	  var url = "app_id=" + (obj.social.facebook.appID) + "&amp;display=popup&amp;title=" + (obj.heading) + "&amp;description=From%20article" + (document.title) + "&amp;href=" + (window.location.href) + "&amp;redirect_uri=" + redirect;
-	  if (obj.image && obj.image.enable) { url += "&amp;picture=" + (getThumbnailPath(obj)); }
-	  return ("" + base + url);
-	}
-
-	function constructMailURL(obj){
-	  var base = 'mailto:?';
-	  var thumbnail = (obj.image && obj.image.enable) ? ("%0A" + (getThumbnailPath(obj))) : '';
-	  return (base + "subject=" + (obj.heading) + "&amp;body=" + (obj.heading) + thumbnail + "%0Afrom article: " + (document.title) + "%0A" + (window.location.href));
-	}
-
-	function constructSMSURL(obj){
-	  var base = 'sms:';
-	  var url = "&body=Check%20out%20this%20chart: " + (obj.heading);
-	  if (obj.image && obj.image.enable) {  url += "%20" + (getThumbnailPath(obj)); }
-	  return ("" + base + url);
-	}
-
-	function constructTwitterURL(obj){
-	  var base = 'https://twitter.com/intent/tweet?',
-	    hashtag = (obj.social.twitter.hashtag) ? ("&amp;hashtags=" + (obj.social.twitter.hashtag)) : '',
-	    via = (obj.social.twitter.via) ? ("&amp;via=" + (obj.social.twitter.via)) : '';
-	  var url = "url=" + (window.location.href) + via + "&amp;text=" + (encodeURI(obj.heading)) + hashtag;
-	  if (obj.image && obj.image.enable) {  url += "%20" + (getThumbnailPath(obj)); }
-	  return ("" + base + url);
 	}
 
 	/**
@@ -14713,9 +14531,6 @@
 	    if (this.recipe.options.share_data) {
 	      rendered.shareData = shareData(container, this.recipe);
 	    }
-	    if (this.recipe.options.social) {
-	      rendered.social = social$1(container, this.recipe);
-	    }
 	  }
 
 	  if (this.recipe.CUSTOM) {
@@ -14766,7 +14581,6 @@
 	    } catch(e) {
 	      error = e;
 	      console.log(error);
-	      generateThumb(container, obj);
 	    }
 
 	    if (chart.data.chart.drawFinished) { chart.data.chart.drawFinished(); }

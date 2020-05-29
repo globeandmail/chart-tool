@@ -28,7 +28,6 @@ export default function recipe(obj) {
   o.type          = chart.options.type          || o.type;
   o.interpolation = chart.options.interpolation || o.interpolation;
 
-  o.social      = !isUndef(co.social) === true ? co.social           : o.social;
   o.share_data  = !isUndef(co.share_data) === true ? co.share_data   : o.share_data;
   o.stacked     = !isUndef(co.stacked) === true ? co.stacked         : o.stacked;
   o.expanded    = !isUndef(co.expanded) === true ? co.expanded       : o.expanded;

@@ -306,7 +306,6 @@ export default class ChartOverlayWeb extends Component {
                   tips={false}
                   exportable={true}
                   share_data={false}
-                  social={false}
                 />
               </div>
             </div>

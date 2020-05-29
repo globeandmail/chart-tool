@@ -15,9 +15,9 @@ You'll be greeted with two fields:
 
 **Data must only be the columns and rows you want drawn in the chart.**
 
-Note: Unexpected _non-data_ entered into the data field will cause the chart to render incorrectly or not at all. Non-data includes units (e.g., $, %) and any comma-formatting. 
+Note: Unexpected _non-data_ entered into the data field will cause the chart to render incorrectly or not at all. Non-data includes units (e.g., $, %) and any comma-formatting.
 
-Additional information including title, qualifier, source, units, etc. can be added to the chart afterwards. 
+Additional information including title, qualifier, source, units, etc. can be added to the chart afterwards.
 
 #### Sample data
 
@@ -44,15 +44,15 @@ Chart Tool initially tries to create a line chart with your data and may not rec
 * If the data is a time series, change the Date format pulldown to match your data (e.g., YYYY).
 * Try changing the chart type from Line to one of the other options. Columns are reliable.
 * You can stack columns or area charts with multi-series data.
-* If you still get errors, always **check your data**.	
+* If you still get errors, always **check your data**.
 
 You have a chart. Now it needs some context.
-	
+
 ![All data no context](images/CT-NewChart-ColumnStacked.png)
 
 
 ### Step 4. Add some chart context to help your readers
-	
+
 * Double-click on the chart title line and enter a meaningful title. Describe the data in the chart – don't try to write a headline
 * Double-click on the `CHART TOOL` text below the chart to add source information.
 * Use the chart qualifier line to add a units label to the y-axis (e.g., "Monthly, in U.S. dollars").
@@ -74,28 +74,24 @@ Click on a heading to expand the options within.
 	* **Ticks**: Change the number of ticks that appear on the y-axis. Chart Tool may override or round up your setting for better display.
 	* **Niceify**: Adjusts the Y-axis to start and end on nice round numbers.
 
-* Tags let Chart Tool filter charts within the admin interface. Use them if your team lives for taxonomy. 
-* Set chart styling to primary (default) or alternate. This depends on what's defined in your [Chart Tool configuration](https://github.com/globeandmail/chart-tool/blob/master/tutorials/customizing.md). 
-		
-Multi-series area or column charts can also be stacked for compact display and comparison across series. 
-	
+* Tags let Chart Tool filter charts within the admin interface. Use them if your team lives for taxonomy.
+* Set chart styling to primary (default) or alternate. This depends on what's defined in your [Chart Tool configuration](https://github.com/globeandmail/chart-tool/blob/master/tutorials/customizing.md).
+
+Multi-series area or column charts can also be stacked for compact display and comparison across series.
+
 * There are a few additional options available for your chart, including:
 	* **Share data**: allows users to download a CSV of your dataset
-	* **Social sharing**: users can post an image of your chart to Facebook, Twitter or share by email and SMS. **Social sharing requires AWS for image storage. See [Setting up chart thumbnails](thumbnails.md)**
 	* **Show tips**: let users see the exact values for a point on your chart. Handy for dense datasets.
 
 
 ### Step 6. Publish your chart
 
-Copy the embed code ([here's what a basic embed code looks like](https://github.com/globeandmail/chart-tool/blob/master/tutorials/sample-embed.md)) and add it to your CMS or HTML page. To deploy a Chart Tool chart your need the front-end JavaScript and CSS library on a public-facing server and linked to the HTML page that the chart appears on. 
+Copy the embed code ([here's what a basic embed code looks like](https://github.com/globeandmail/chart-tool/blob/master/tutorials/sample-embed.md)) and add it to your CMS or HTML page. To deploy a Chart Tool chart your need the front-end JavaScript and CSS library on a public-facing server and linked to the HTML page that the chart appears on.
 
 
 ### Step 7. Alternate formats
 
-Aside from responsive SVGs, Chart Tool also generates static images of your charts in formats optimized for web and print. These can be useful if you don't have the front-end library in production, need to use the chart as a graphic within videos or another element, or need to hand off a chart to the print designers. 
+Aside from responsive SVGs, Chart Tool also generates static images of your charts in formats optimized for web and print. These can be useful if you don't have the front-end library in production, need to use the chart as a graphic within videos or another element, or need to hand off a chart to the print designers.
 
 * **Web export**: Available in common grid sizes, custom width and heights, and social images sized for Facebook and Twitter.
 * **Print export**: An editable PDF ready for printing. Adjust the number of columns and lines to suit. [Requires some additional setup](https://github.com/globeandmail/chart-tool/blob/master/tutorials/print.md).
-
-
-

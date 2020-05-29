@@ -25,7 +25,6 @@ export default class ChartPreview extends Component {
               editable={true}
               exportable={false}
               share_data={false}
-              social={false}
               {...this.props}
             /> : renderLoading()
           }
@@ -42,7 +41,6 @@ export default class ChartPreview extends Component {
               editable={true}
               exportable={false}
               share_data={false}
-              social={false}
               {...this.props}
             /> : renderLoading()
           }

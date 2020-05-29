@@ -1,3 +1,51 @@
+.#{$prefix}chart_meta {
+  position: relative;
+  text-align: left;
+  width: 100%;
+  display: inline-block;
+  float: none;
+  margin-top: 0;
+  @media(min-width: 420px) {
+    float: right;
+    position: relative;
+    width: auto;
+    margin-top: 8px;
+  }
+  &:after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+.#{$prefix}chart_meta_btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 10px;
+  margin-top: 5px;
+  text-transform: uppercase;
+  @include utility-font;
+  font-size: 11px;
+  color: $color-gray-medium;
+  border-right: 1px solid $color-gray-medium;
+  &:hover {
+    color: $primary-color;
+  }
+  @media(min-width: 420px) {
+    margin-left: 10px;
+    padding: 0;
+    border: none;
+    margin-top: 0;
+  }
+  &:last-child {
+    border-right: none;
+  }
+
+  &:first-child {
+    margin-left: -10px;
+  }
+}
+
 .#{$prefix}chart_data {
   display: block;
   opacity: 0;
@@ -6,39 +54,28 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background: white;
   background: $color-gray-light;
-  transition: transform .25s, opacity .5s;
-  transform: translateY(100%);
+  transition: opacity .5s;
   height: 0;
   pointer-events: none;
   &.#{$prefix}active {
     pointer-events: auto;
     height: auto;
     opacity: 1;
-    transform: translateY(0%);
+    transition: opacity .5s;
     display: block;
   }
 }
 
-.#{$prefix}chart_data_close {
-  position: absolute;
-  right: 1.2em;
-  top: 1.8em;
-  border: 1px solid $color-gray-medium;
-  padding: 0;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  line-height: 20px;
-  color: $color-black;
-  cursor: pointer;
-  background: white;
-  &:hover {
-    opacity: 0.5;
-    color: $primary-color;
-    border: 1px solid $primary-color;
+.#{$prefix}chart_data_wrapper {
+  padding: 10px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column;
+  .#{$prefix}chart_title {
+    margin: 0;
+    margin-bottom: 1em;
   }
 }
 
@@ -47,72 +84,59 @@
   color: $color-black;
   font-size: 1.2em;
   line-height: 1.6em;
-  overflow: scroll;
-  position: absolute;
-  left: 1em;
-  right: 1em;
-  top: 4em;
-  bottom: 4em;
-  padding: 1em .25em;
   border: 1px solid $color-gray-medium;
+  flex: 1;
+  overflow: auto;
 }
 
 .#{$prefix}chart_data_inner table {
   border-spacing: 0;
-}
-
-.#{$prefix}chart_data_inner table tr td {
-  padding: .5em 2em;
-  text-align: right;
-  line-height: 1.2em;
-}
-
-.#{$prefix}chart_data_inner table tr td:nth-child(1) {
-  text-align: left;
-}
-
-.#{$prefix}chart_data_inner table tr:nth-child(odd) td {
-  background: $color-gray-light;
-}
-
-.#{$prefix}chart_data_inner table tr:nth-child(1) td {
-  background: white;
-  color: black;
-  font-size: 0.8em;
-  border-bottom: 1px solid $color-gray-medium;
+  width: 100%;
+  th, td {
+    font-family: monospace;
+    font-size: 0.8em;
+  }
+  th {
+    color: black;
+    border-bottom: 1px solid $color-gray-medium;
+    text-align: left;
+    padding: 0.5em 1em;
+    line-height: 1;
+  }
+  td {
+    padding: 0.2em 1em;
+    text-align: left;
+  }
+  tr:nth-child(odd) td {
+    background: $color-gray-light;
+  }
+  tr:nth-child(even) td {
+    background: white;
+  }
 }
 
 .#{$prefix}chart_data_nav {
-  position: absolute;
-  bottom: 1.5em;
-  right: 2em;
-}
-
-.#{$prefix}chart_data_nav .#{$prefix}chart_data_btn {
-  text-decoration: none;
-  color: $color-black;
-  display: inline-block;
-  padding: .5em 1em;
-  cursor: pointer;
-  border-radius: 1em;
-  border: 1px solid $color-gray-medium;
-  margin-left: 1em;
+  margin-top: 1em;
+  text-align: right;
   text-transform: uppercase;
   font-size: 0.8em;
-}
-
-.#{$prefix}chart_data_nav .#{$prefix}chart_data_btn:hover {
-  color: $primary-color;
-  border: 1px solid $primary-color;
-  opacity: 0.6;
-}
-
-.#{$prefix}chart_data h2 {
-  font-size: 1em;
-  position: absolute;
-  top: 2em;
-  left: 2em;
-  text-transform: uppercase;
-  margin: 0;
-  padding: 0;
+  .#{$prefix}chart_data_btn,
+  .#{$prefix}chart_data_close {
+    text-decoration: none;
+    color: $color-black;
+    display: inline-block;
+    color: $color-black;
+    cursor: pointer;
+    padding: .5em 1em;
+    border-radius: 5px;
+    border: 1px solid $color-gray-medium;
+    &:hover {
+      color: $primary-color;
+      border: 1px solid $primary-color;
+      opacity: 0.6;
+    }
+  }
+  .#{$prefix}chart_data_btn {
+    margin-right: 0.5em;
+  }
 }

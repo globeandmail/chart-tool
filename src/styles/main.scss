@@ -8,7 +8,6 @@
 @import './components/annotations';
 @import './components/tips';
 @import './components/share_data';
-@import './components/social';
 
 @import './types/series-line';
 @import './types/series-multiline';
@@ -35,10 +34,6 @@
   position: relative;
   overflow: hidden;
   @include utility-font;
-}
-
-.#{$prefix}thumbnail {
-  width: 100%;
 }
 
 .#{$prefix}base64img {

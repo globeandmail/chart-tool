@@ -6,7 +6,6 @@ import plot from './components/plot';
 import annotation from './components/annotation';
 import { tipsManager as tips } from './components/tips';
 import shareData from './components/share-data';
-import social from './components/social';
 import { custom } from '../../../custom/custom';
 
 export class ChartManager {
@@ -46,9 +45,6 @@ export class ChartManager {
     if (!this.recipe.editable && !this.recipe.exportable) {
       if (this.recipe.options.share_data) {
         rendered.shareData = shareData(container, this.recipe);
-      }
-      if (this.recipe.options.social) {
-        rendered.social = social(container, this.recipe);
       }
     }
 

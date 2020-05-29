@@ -29,7 +29,6 @@ class PNG extends Component {
             tips={false}
             exportable={true}
             share_data={false}
-            social={false}
           /> : null
         }
       </div>

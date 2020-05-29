@@ -8,7 +8,6 @@ export default class ChartOptions extends Component {
   constructor(props) {
     super(props);
     this.handleShareData = this.handleShareData.bind(this);
-    this.handleSocial = this.handleSocial.bind(this);
     this.handleTips = this.handleTips.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
@@ -16,11 +15,6 @@ export default class ChartOptions extends Component {
   handleShareData(event) {
     const shareData = event.target.checked;
     updateAndSave('charts.update.options.share_data', this.props.chart._id, shareData);
-  }
-
-  handleSocial(event) {
-    const social = event.target.checked;
-    updateAndSave('charts.update.options.social', this.props.chart._id, social);
   }
 
   handleTips(event) {
@@ -62,14 +56,6 @@ export default class ChartOptions extends Component {
     });
   }
 
-  helpSocial() {
-    Swal({
-      title: 'Social sharing?',
-      text: "Adds a 'social' button to each chart which can be toggled to present the user with social sharing options.",
-      type: 'info',
-    });
-  }
-
   helpTips() {
     Swal({
       title: 'Show tips?',
@@ -91,16 +77,6 @@ export default class ChartOptions extends Component {
               name='Share'
               checked={this.props.chart.options.share_data}
               onChange={this.handleShareData}
-            />
-          </div>
-          <div className='unit-edit social-edit'>
-            <h4>Social sharing <a onClick={this.helpSocial} className='help-toggle help-social-sharing'>?</a></h4>
-            <input
-              className='input-checkbox-social'
-              type='checkbox'
-              name='Social'
-              checked={this.props.chart.options.social}
-              onChange={this.handleSocial}
             />
           </div>
           <div className='unit-edit tips-edit'>
