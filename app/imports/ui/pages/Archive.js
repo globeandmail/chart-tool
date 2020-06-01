@@ -223,7 +223,7 @@ class Archive extends Component {
                 <h3 onClick={() => this.toggleCollapseExpand('tags')}>Tags</h3>
                 <div className={`unit-edit charts-archive_tags ${this.expandStatus('tags')}`}>
                   <Select
-                    multi={true}
+                    isMulti={true}
                     className={'archive-tags-select'}
                     value={this.state.selectedOption}
                     onChange={this.handleSelectChange}

@@ -20,10 +20,6 @@ class ArchiveCharts extends Component {
     }
   }
 
-  goToChart(id) {
-    this.props.history.push({ pathname: `/chart/${id}` });
-  }
-
   render() {
     return (
       <section className='charts-archive_results'>
@@ -32,7 +28,7 @@ class ArchiveCharts extends Component {
             <h3>Displaying <span>{ this.props.charts.length }</span> of <span>{ this.state.matchedCharts }</span> charts</h3>
           </div>
           <div className='charts-archive_count-right'>
-          <h3>Total charts to load:</h3>
+            <h3>Total charts to load:</h3>
             <select
               className='charts-archive_count-limit'
               value={this.props.limit}
@@ -44,11 +40,11 @@ class ArchiveCharts extends Component {
         <div className='charts-archive_grid'>
           {this.props.charts.map(chart => {
             return (
-              <div
+              <a
                 className='charts-archive_single'
                 key={chart._id}
-                onClick={() => this.goToChart(chart._id)}
-                >
+                href={`/chart/${chart._id}`}
+              >
                 <div className='charts-archive_single-inner'>
                   <h4 className='slug'>{chart.slug}</h4>
                   {chart.img ?
@@ -57,7 +53,7 @@ class ArchiveCharts extends Component {
                   }
                   <div className='hover-screen'></div>
                 </div>
-              </div>
+              </a>
             );
           })}
           <div className='charts-archive_empty-container'>

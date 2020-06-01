@@ -14,7 +14,6 @@ class ShowChart extends Component {
   constructor(props) {
     super(props);
     this.forkChart = this.forkChart.bind(this);
-    this.goToChart = this.goToChart.bind(this);
     this.state = {};
   }
 
@@ -27,15 +26,6 @@ class ShowChart extends Component {
           pathname: `/chart/${result}/edit`,
           state: { id: result }
         });
-      }
-    });
-  }
-
-  goToChart() {
-    this.props.history.push({
-      pathname: `/chart/${ this.props.id }/edit`,
-      state: {
-        id: this.props.id
       }
     });
   }

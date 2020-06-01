@@ -18,10 +18,10 @@ const libPath = './src',
   buildJsFilename = 'bundle',
   buildCssFilename = 'bundle',
 
-  meteorPath = './meteor',
+  meteorPath = './app',
   meteorBundle = `${meteorPath}/imports/modules`,
   meteorSettings = `${meteorBundle}/settings.js`,
-  meteorBuildPath = `.${buildPath}/meteor`;
+  meteorBuildPath = `.${buildPath}/app`;
 
 module.exports = {
   version: version,

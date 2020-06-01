@@ -9,6 +9,7 @@ export const prefix = config.prefix;
 export const app_settings = {
 
   s3: config.image,
+  thumbnail_debounce: 10000,
 
   embedJS: config.embedJS.replace('{{version}}', version),
   embedCSS: config.embedCSS.replace('{{version}}', version),

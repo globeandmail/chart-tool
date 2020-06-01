@@ -11,7 +11,7 @@ import PNG from '../../ui/pages/PNG';
 import NotFound from '../../ui/pages/NotFound';
 import EditChart from '../../ui/layouts/EditChart';
 
-import 'react-select/dist/react-select.css';
+// import 'react-select/dist/react-select.css';
 import '../../ui/style/main.scss';
 import 'sweetalert2/dist/sweetalert2.css';
 import '../../ui/style/chart-tool.css';

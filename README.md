@@ -72,7 +72,7 @@ For a demo of the back end interface used to generate charts, images and PDFs, c
 
 *Curious to try out Chart Tool, but don't want to go through the process of setting it up? Try out our [hosted demo version](https://chart-tool-demo.herokuapp.com/).*
 
-First, you'll need [Node.js](https://nodejs.org) 8.11 installed. We recommend using [nvm](https://github.com/creationix/nvm) to keep your Node version in sync with what Chart Tool expects. This is important: anything lower and Meteor will fail in spectacular and unexpected ways.
+First, you'll need [Node.js](https://nodejs.org) 14.3.0 or greater installed. We recommend using [nvm](https://github.com/creationix/nvm) to keep your Node version in sync with what Chart Tool expects.
 
 Next, you'll need to [install Meteor](https://www.meteor.com/install).
 

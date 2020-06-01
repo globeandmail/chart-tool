@@ -141,6 +141,7 @@ var prefix$1 = config.prefix;
 var app_settings = {
 
   s3: config.image,
+  thumbnail_debounce: 10000,
 
   embedJS: config.embedJS.replace('{{version}}', version),
   embedCSS: config.embedCSS.replace('{{version}}', version),

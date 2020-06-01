@@ -127,6 +127,8 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
+  text-decoration: none;
+  color: $color-black;
   &:after {
     content: "";
     display: block;

@@ -105,7 +105,7 @@ sftp-config.json
 
 dist/
 
-meteor/.buildpacks
+app/.buildpacks
 
 # chart-tool.js
 # chart-tool.min.js

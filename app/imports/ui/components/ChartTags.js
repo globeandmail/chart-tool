@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import slug from 'slug';
 import Tags from '../../api/Tags/Tags';
-import { Creatable as Select } from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import { withTracker } from 'meteor/react-meteor-data';
 import { arrayDiff } from '../../modules/utils';
 
@@ -14,18 +14,18 @@ class ChartTags extends Component {
     this.handleNewTag = this.handleNewTag.bind(this);
   }
 
-  handleSelectChange(selectedOptions) {
-    const newChartTags = selectedOptions.map(s => s.value),
+  handleSelectChange(opts) {
+    const newChartTags = opts ? opts.map(s => s.value) : [],
       oldChartTags = this.props.chartTags.map(s => s.value),
       tagId = arrayDiff(newChartTags, oldChartTags)[0];
 
-    Meteor.call('tags.change', tagId, this.props.chart._id, selectedOptions.map(s => s.label), err => {
+    Meteor.call('tags.change', tagId, this.props.chart._id, opts ? opts.map(s => s.label) : [], err => {
       if (err) { console.log(err); }
     });
   }
 
-  handleNewTag(event) {
-    const newTag = slug(event.value),
+  handleNewTag(value) {
+    const newTag = slug(value),
       newChartTags = this.props.chartTags.map(s => s.label);
 
     newChartTags.push(newTag);
@@ -42,13 +42,13 @@ class ChartTags extends Component {
         <div className={`unit-edit ${this.props.expandStatus('ChartTags')}`}>
           <h4>Add a few tags below</h4>
           { !this.props.loading ?
-            <Select
-              multi={true}
+            <CreatableSelect
+              isMulti={true}
               className={'edit-tags-select'}
               value={this.props.chartTags}
               onChange={this.handleSelectChange}
               options={this.props.availableTags}
-              onNewOptionClick={this.handleNewTag}
+              onCreateOption={this.handleNewTag}
             /> : null }
         </div>
       </div>
