@@ -51,12 +51,14 @@ RUN npm install -g gulp-cli
 ENV METEOR_ALLOW_SUPERUSER=1
 
 # Copy app and meteor package.json and package-lock.json into container
-ADD package*.json $APP_HOME/
-ADD app/package*.json $APP_HOME/app/
+COPY package*.json $APP_HOME/
+COPY app/package*.json $APP_HOME/app/
 
 RUN npm ci --unsafe-perm
 
-ADD . $APP_HOME
+# RUN npm rebuild node-sass
+
+COPY . $APP_HOME
 
 COPY ./docker/entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
@@ -64,4 +66,4 @@ ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 8080 3000
 
-CMD ["gulp meteorServe"]
+CMD ["gulp", "meteorServe"]

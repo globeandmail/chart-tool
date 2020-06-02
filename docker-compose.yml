@@ -25,5 +25,3 @@ services:
 
 volumes:
   data:
-
-meteor mongo --url

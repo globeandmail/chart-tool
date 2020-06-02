@@ -1,5 +1,4 @@
 import { series, src, dest } from 'gulp';
-import gulp from 'gulp';
 import gulpConfig from './gulp.config.js';
 import gutil from 'gulp-util';
 import sass from 'gulp-sass';
