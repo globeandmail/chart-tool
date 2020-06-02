@@ -23,15 +23,15 @@ export function buildSize() {
 }
 
 export function cleanDistDev() {
-  return del([`${gulpConfig.buildPathDev}/**/*`]);
+  return del([`${gulpConfig.buildPathDev}/**/*`], { force: true });
 }
 
 export function cleanDistBuild() {
-  return del([`${gulpConfig.buildPath}/**/*`]);
+  return del([`${gulpConfig.buildPath}/**/*`], { force: true });
 }
 
 export function cleanMeteorBuild() {
-  return del([`${gulpConfig.meteorBuildPath}/**/*`]);
+  return del([`${gulpConfig.meteorBuildPath}/**/*`], { force: true });
 }
 
 export function cleanMeteorLibs() {
@@ -39,7 +39,7 @@ export function cleanMeteorLibs() {
     `${gulpConfig.meteorBundle}/chart-tool.js`,
     `${gulpConfig.meteorBundle}/settings.js`,
     `${gulpConfig.meteorPath}/imports/ui/style/chart-tool.css`
-  ]);
+  ], { force: true });
 }
 
 export function setVersion() {

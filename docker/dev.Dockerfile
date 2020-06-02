@@ -30,7 +30,7 @@ RUN export TEMP_PACKAGES="alpine-sdk libc6-compat python linux-headers" && \
     cp scripts/admin/launch-meteor /usr/bin/meteor && \
     cd dev_bundle && \
     cd bin && \
-    rm node  && \
+    rm node && \
     rm npm && \
     rm npx && \
     ln -s $(which node) && \
@@ -51,7 +51,8 @@ ENV METEOR_ALLOW_SUPERUSER=1
 COPY package*.json $APP_HOME/
 COPY app/package*.json $APP_HOME/app/
 
-# Install gulp so we can run our servers
+# Install gulp so we can run our servers, then npm install
+# everything and rebuild node-sass
 RUN npm install -g gulp-cli && \
   npm ci --unsafe-perm && \
   npm rebuild node-sass

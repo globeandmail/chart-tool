@@ -35,7 +35,7 @@ export function moveMeteorBuild() {
 }
 
 function cleanBuildPath() {
-  return del([`${gulpConfig.buildpath}/**/*.js`]);
+  return del([`${gulpConfig.buildpath}/**/*.js`], { force: true });
 }
 
 async function rollupDev(done) {
