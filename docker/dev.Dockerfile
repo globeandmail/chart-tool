@@ -8,8 +8,8 @@
 FROM node:12.16.1-alpine
 
 # Setup environment variables that will be available to the instance
-ENV APP_HOME /chart-tool
 ENV METEOR_VERSION 1.10.2
+ENV APP_HOME /${ROOT_DIR}
 ENV MONGO_URL ${MONGO_URL}
 
 # Create a directory for our application

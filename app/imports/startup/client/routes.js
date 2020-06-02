@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router';
 import pathToRegexp from 'path-to-regexp';
-import createBrowserHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import NewChart from '../../ui/pages/NewChart';
 import Status from '../../ui/pages/Status';
 import Archive from '../../ui/pages/Archive';

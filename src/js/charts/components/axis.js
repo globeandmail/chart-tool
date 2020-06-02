@@ -20,7 +20,7 @@ export function AxisFactory(axisObj, scale) {
 export function axisManager(node, obj, scale, axisType) {
 
   const axisObj = obj[axisType],
-    axis = new AisFactory(axisObj, scale);
+    axis = new AxisFactory(axisObj, scale);
 
   const prevAxis = node.select(`.${obj.prefix}axis-group.${obj.prefix}${axisType}`).node();
 
