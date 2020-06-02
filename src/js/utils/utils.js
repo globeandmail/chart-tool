@@ -8,10 +8,8 @@ import {
   curveStepAfter,
   curveStep
 } from 'd3-shape';
-import Settings from '../config/chart-settings';
-import bucket from '../config/env';
-import 'core-js/fn/set';
-import 'core-js/fn/array/from';
+import 'core-js/features/set';
+import 'core-js/features/array/from';
 
 export function debounce(fn, params, timeout, root) {
   let timeoutID = -1;
@@ -163,7 +161,7 @@ export function timeDiff(d1, d2, tolerance, data) {
       if (uniqueDayValues.length > 1 && uniqueMonthValues.length > 1) ctx = 'months';
     }
 
-    if (ctx == 'months') {
+    if (ctx === 'months') {
       // if only one unique day value, and only one unique month values, probably annual data
       if (uniqueDayValues.length === 1 && uniqueMonthValues.length === 1) ctx = 'years';
       // if only one unique day value and many unique months, probably monthly data

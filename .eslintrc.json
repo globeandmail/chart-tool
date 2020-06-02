@@ -4,8 +4,13 @@
     "commonjs": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "gulp"],
+  "extends": [
+    "eslint:recommended",
+    "gulp",
+    "plugin:node/recommended"
+  ],
   "parserOptions": {
+    "ecmaVersion": 6,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -34,7 +39,9 @@
     "no-var": ["error"],
     "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
     "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error"
+    "react/jsx-uses-vars": "error",
+    "max-statements": 45,
+    "max-depth": 4
   },
   "globals": {
     "DocumentTouch": false

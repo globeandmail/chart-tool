@@ -11,12 +11,12 @@ export function isFloat(n) {
 }
 
 export function isEmpty(val) {
-  if (val.constructor == Object) {
+  if (val.constructor === Object) {
     for (let prop in val) {
       if (val.hasOwnProperty(prop)) { return false; }
     }
     return true;
-  } else if (val.constructor == Array) {
+  } else if (val.constructor === Array) {
     return !val.length;
   } else {
     return !val;
@@ -62,16 +62,16 @@ export function extend(from, to) {
 
   let target;
 
-  if (from == null || typeof from != 'object') return from;
-  if (from.constructor != Object && from.constructor != Array) return from;
-  if (from.constructor == Date || from.constructor == RegExp || from.constructor == Function ||
-    from.constructor == String || from.constructor == Number || from.constructor == Boolean)
+  if (from === null || typeof from != 'object') return from;
+  if (from.constructor !== Object && from.constructor !== Array) return from;
+  if (from.constructor === Date || from.constructor === RegExp || from.constructor === Function ||
+    from.constructor === String || from.constructor === Number || from.constructor === Boolean)
     return new from.constructor(from);
 
   target = to || new from.constructor();
 
   for (let name in from) {
-    target[name] = typeof target[name] == 'undefined' ? extend(from[name], null) : target[name];
+    target[name] = typeof target[name] === 'undefined' ? extend(from[name], null) : target[name];
   }
 
   return target;

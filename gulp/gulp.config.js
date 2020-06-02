@@ -1,4 +1,4 @@
-const { version, buildVer } = require('../package.json');
+import { version, buildVer } from '../package.json';
 
 const libPath = './src',
   meteorPath = './app',

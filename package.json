@@ -27,10 +27,10 @@
     "d3-time": "^1.1.0",
     "d3-time-format": "^2.2.3",
     "d3-voronoi": "^1.1.4",
-    "ismobilejs": "^1.1.1"
+    "is-mobile": "^2.2.1"
   },
   "engines": {
-    "node": "14.3.0"
+    "node": "12.16.1"
   },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",

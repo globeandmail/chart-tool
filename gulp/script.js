@@ -5,7 +5,7 @@ import gulpConfig from './gulp.config.js';
 import chartToolConfig from '../custom/chart-tool-config.json';
 import { rollup } from 'rollup';
 import { uglify } from 'rollup-plugin-uglify';
-import eslint from 'rollup-plugin-eslint';
+import { eslint } from 'rollup-plugin-eslint';
 import strip from '@rollup/plugin-strip';
 import replace from '@rollup/plugin-replace';
 import rename from 'gulp-rename';

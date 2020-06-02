@@ -1,5 +1,5 @@
-import 'core-js/library/fn/object/assign';
-import isMobile from 'ismobilejs';
+import 'core-js/features/object/assign';
+import mobile from 'is-mobile';
 import chartSettings from './config/chart-settings';
 import { select } from 'd3-selection';
 import { dispatch } from 'd3-dispatch';
@@ -114,7 +114,7 @@ const ChartTool = (function ChartTool() {
   function initializer() {
     dispatchFunctions = root.__charttooldispatcher || [];
     for (let prop in dispatchFunctions) {
-      if (dispatchFunctions.hasOwnProperty(prop)) {
+      if (Object.prototype.hasOwnProperty.call(dispatchFunctions, prop)) {
         if (Object.keys(dispatcher._).indexOf(prop) > -1) {
           dispatcher.on(prop, dispatchFunctions[prop]);
         } else {
@@ -123,7 +123,7 @@ const ChartTool = (function ChartTool() {
       }
     }
     const debouncer = debounceFn(createLoop, true, chartSettings.debounce, root);
-    const eventListener = (isMobile.phone || isMobile.tablet) ? 'orientationchange' : 'resize';
+    const eventListener = (mobile({ tablet: true })) ? 'orientationchange' : 'resize';
     select(root)
       .on(`${eventListener}.${chartSettings.prefix}debounce`, () => {
         dispatcher.call('redraw', this, charts);

@@ -44,9 +44,6 @@ RUN export TEMP_PACKAGES="alpine-sdk libc6-compat python linux-headers" && \
     ln -s /root/.meteor && \
     apk del $TEMP_PACKAGES
 
-# Install gulp so we can run our servers
-RUN npm install -g gulp-cli
-
 # Fix permissions warning; https://github.com/meteor/meteor/issues/7959
 ENV METEOR_ALLOW_SUPERUSER=1
 
@@ -54,9 +51,10 @@ ENV METEOR_ALLOW_SUPERUSER=1
 COPY package*.json $APP_HOME/
 COPY app/package*.json $APP_HOME/app/
 
-RUN npm ci --unsafe-perm
-
-# RUN npm rebuild node-sass
+# Install gulp so we can run our servers
+RUN npm install -g gulp-cli && \
+  npm ci --unsafe-perm && \
+  npm rebuild node-sass
 
 COPY . $APP_HOME
 
@@ -64,6 +62,6 @@ COPY ./docker/entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
-EXPOSE 8080 3000
+EXPOSE 3000 3030
 
-CMD ["gulp", "meteorServe"]
+CMD ["/bin/sh" , "-c" , "cd ./app && meteor --no-release-check"]

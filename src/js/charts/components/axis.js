@@ -9,7 +9,7 @@ import { timeDiff, wrapText, getTranslate } from '../../utils/utils';
 import { isFloat } from '../../helpers/helpers';
 import 'd3-selection-multi';
 
-export function axisFactory(axisObj, scale) {
+export function AxisFactory(axisObj, scale) {
   switch (axisObj.orient) {
     case 'left': return axisLeft(scale);
     case 'right': return axisRight(scale);
@@ -20,7 +20,7 @@ export function axisFactory(axisObj, scale) {
 export function axisManager(node, obj, scale, axisType) {
 
   const axisObj = obj[axisType],
-    axis = new axisFactory(axisObj, scale);
+    axis = new AisFactory(axisObj, scale);
 
   const prevAxis = node.select(`.${obj.prefix}axis-group.${obj.prefix}${axisType}`).node();
 
