@@ -1,79 +1,73 @@
-const gulp = require('gulp');
-const gulpConfig = require('./gulp.config.js');
-const gutil = require('gulp-util');
-const sass = require('gulp-sass');
-const rename = require('gulp-rename');
-const sourcemaps = require('gulp-sourcemaps');
-const runSequence = require('run-sequence').use(gulp);
-const plumber = require('gulp-plumber');
-const csso = require('gulp-csso');
-const postCss = require('gulp-postcss');
-const autoPrefixer = require('autoprefixer');
+import { series, src, dest } from 'gulp';
+import gulp from 'gulp';
+import gulpConfig from './gulp.config.js';
+import gutil from 'gulp-util';
+import sass from 'gulp-sass';
+import rename from 'gulp-rename';
+import sourcemaps from 'gulp-sourcemaps';
+import plumber from 'gulp-plumber';
+import csso from 'gulp-csso';
+import postCss from 'gulp-postcss';
+import autoPrefixer from 'autoprefixer';
 
 const sourceCss = `${gulpConfig.libStylesheets}/main.scss`,
-  buildCss = gulpConfig.buildPath;
+  buildCss = gulpConfig.buildPath,
+  sassOptions = { onError: console.error.bind(console, 'SCSS error:') };
 
-const sassOptions = { onError: console.error.bind(console, 'SCSS error:') };
-const autoprefixerOptions = { browsers: ['last 1 version'] };
-
-gulp.task('scss-compile:dev', () => {
-  return gulp.src(sourceCss)
+function scssCompileDev() {
+  return src(sourceCss)
     .pipe(sourcemaps.init())
     .pipe(plumber())
     .pipe(sass(sassOptions))
-    .pipe(postCss([
-      autoPrefixer(autoprefixerOptions)
-    ]))
+    .pipe(postCss([autoPrefixer()]))
     .pipe(sourcemaps.write())
     .pipe(rename('chart-tool.css'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style`))
-    .pipe(gulp.dest(`${gulpConfig.buildPathDev}`))
+    .pipe(dest(`${gulpConfig.meteorPath}/imports/ui/style`))
+    .pipe(dest(`${gulpConfig.buildPathDev}`))
     .on('error', gutil.log);
-});
+}
 
-gulp.task('scss-compile:build', () => {
-  return gulp.src(sourceCss)
+function scssCompileBuild() {
+  return src(sourceCss)
     .pipe(sass(sassOptions))
     .pipe(postCss([
       autoPrefixer(autoprefixerOptions)]
     ))
     .pipe(csso({ debug: true }))
     .pipe(rename('chart-tool.css'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style`))
+    .pipe(dest(`${gulpConfig.meteorPath}/imports/ui/style`))
     .pipe(rename('chart-tool.min.css'))
-    .pipe(gulp.dest(buildCss))
+    .pipe(dest(buildCss))
     .on('error', gutil.log);
-});
+}
 
-gulp.task('scss-settings', () => {
-  return gulp.src(`${gulpConfig.libStylesheets}/settings/_settings.scss`)
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
-});
+function scssSettings() {
+  return src(`${gulpConfig.libStylesheets}/settings/_settings.scss`)
+    .pipe(dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
+}
 
-gulp.task('scss-custom-meteor-before', () => {
-  return gulp.src(`${gulpConfig.customPath}/base.scss`)
+function scssCustomMeteorBefore() {
+  return src(`${gulpConfig.customPath}/base.scss`)
     .pipe(rename('_custom-settings.scss'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
-});
+    .pipe(dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
+}
 
-gulp.task('scss-custom-meteor-after', () => {
-  return gulp.src(`${gulpConfig.customPath}/meteor-custom.scss`)
+function scssCustomMeteorAfter() {
+  return src(`${gulpConfig.customPath}/meteor-custom.scss`)
     .pipe(rename('_custom.scss'))
-    .pipe(gulp.dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
-});
+    .pipe(dest(`${gulpConfig.meteorPath}/imports/ui/style/partials`));
+};
 
-gulp.task('scss:build', done => {
-  runSequence('scss-compile:build',
-    'scss-settings',
-    'scss-custom-meteor-before',
-    'scss-custom-meteor-after',
-    done);
-});
+export const scssBuild = series(
+  scssCompileBuild,
+  scssSettings,
+  scssCustomMeteorBefore,
+  scssCustomMeteorAfter
+);
 
-gulp.task('scss:dev', done => {
-  runSequence('scss-compile:dev',
-    'scss-settings',
-    'scss-custom-meteor-before',
-    'scss-custom-meteor-after',
-    done);
-});
+export const scssDev = series(
+  scssCompileDev,
+  scssSettings,
+  scssCustomMeteorBefore,
+  scssCustomMeteorAfter
+);

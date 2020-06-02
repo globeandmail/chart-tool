@@ -1,9 +1,9 @@
-const json = require('rollup-plugin-json');
-const buble = require('rollup-plugin-buble');
-const gulpConfig = require('./gulp.config.js');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
-const replace = require('rollup-plugin-replace');
+import gulpConfig from './gulp.config.js';
+import json from '@rollup/plugin-json';
+import buble from '@rollup/plugin-buble';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import replace from '@rollup/plugin-replace';
 
 const onwarn = warning => {
   // Silence circular dependency warning for moment
@@ -16,7 +16,7 @@ const onwarn = warning => {
   console.warn(`${warning.message}`);
 };
 
-class RollupConfig {
+export default class RollupConfig {
   constructor() {
     this.input = `${gulpConfig.libScripts}/index.js`;
     this.onwarn = onwarn;
@@ -33,5 +33,3 @@ class RollupConfig {
     ];
   }
 }
-
-module.exports = RollupConfig;

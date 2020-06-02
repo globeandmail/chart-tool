@@ -284,4 +284,4 @@ var app_settings = {
 
 };
 
-export { app_version, app_build, app_name, prefix$1 as prefix, app_settings };
+export { app_build, app_name, app_settings, app_version, prefix$1 as prefix };

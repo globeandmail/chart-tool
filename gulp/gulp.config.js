@@ -1,49 +1,32 @@
-const p = require('../package.json');
-
-const version = p.version;
-const buildVer = p.buildVer;
+const { version, buildVer } = require('../package.json');
 
 const libPath = './src',
-  libScripts = `${libPath}/js`,
-  libStylesheets = `${libPath}/styles`,
-  libSettings = `${libPath}/js/config/chart-settings.js`,
-  customPath = './custom',
-
-  meteorPort = 3000,
-  browserSyncPort = 3030,
-  browserSyncUIPort = 3060,
-
-  buildPath = `./dist/${version}`,
-  buildPathDev = './dist/dev',
-  buildJsFilename = 'bundle',
-  buildCssFilename = 'bundle',
-
   meteorPath = './app',
   meteorBundle = `${meteorPath}/imports/modules`,
   meteorSettings = `${meteorBundle}/settings.js`,
-  meteorBuildPath = `.${buildPath}/app`;
+  buildPath = `./dist/${version}`;
 
-module.exports = {
-  version: version,
+export default {
+  version,
   build: buildVer,
 
-  libPath: libPath,
-  libScripts: libScripts,
-  libStylesheets: libStylesheets,
-  libSettings: libSettings,
-  customPath: customPath,
+  libPath,
+  libScripts: `${libPath}/js`,
+  libStylesheets: `${libPath}/styles`,
+  libSettings: `${libPath}/js/config/chart-settings.js`,
+  customPath: './custom',
 
-  meteorPort: meteorPort,
-  browserSyncPort: browserSyncPort,
-  browserSyncUIPort: browserSyncUIPort,
+  meteorPort: 3000,
+  browserSyncPort: 3030,
+  browserSyncUIPort: 3060,
 
-  meteorPath: meteorPath,
-  meteorBundle: meteorBundle,
-  meteorSettings: meteorSettings,
-  meteorBuildPath: meteorBuildPath,
+  meteorPath,
+  meteorBundle,
+  meteorSettings,
+  meteorBuildPath: `.${buildPath}/app`,
 
-  buildPath: buildPath,
-  buildPathDev: buildPathDev,
-  buildJsFilename: buildJsFilename,
-  buildCssFilename: buildCssFilename
+  buildPath,
+  buildPathDev: './dist/dev',
+  buildJsFilename: 'bundle',
+  buildCssFilename: 'bundle'
 };
