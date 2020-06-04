@@ -1,4 +1,7 @@
 setup:
+  build:
+    config:
+      HEROKU: ''
   config:
     NODE_ENV: production
     MAIL_URL: smtp://user:password@mailhost:port/

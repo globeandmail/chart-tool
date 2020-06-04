@@ -8,12 +8,32 @@ const puppeteerArgs = [
   '--headless', '--disable-gpu', '--no-sandbox', '--enable-font-antialiasing', '--font-render-hinting=medium', '--hide-scrollbars', '--disable-dev-shm-usage', '--disable-logging'
 ];
 
-const puppeteerSettings = {
-  browserWSEndpoint: `${process.env.CHROME_REMOTE_URL}?${puppeteerArgs.join('&')}`
-};
+const puppeteerSettings = {};
+
+if (process.env.CHROME_REMOTE_URL) {
+  puppeteerSettings.browserWSEndpoint = `${process.env.CHROME_REMOTE_URL}?${puppeteerArgs.join('&')}`;
+} else {
+  puppeteerSettings.args = puppeteerArgs;
+}
+
+async function createPuppeteer() {
+  const connectType = process.env.CHROME_REMOTE_URL ? 'connect' : 'launch';
+  const browser = await puppeteer[connectType](puppeteerSettings);
+  return browser;
+}
+
+async function destroyPuppeteer(browser) {
+  const connectType = process.env.CHROME_REMOTE_URL ? 'connect' : 'launch';
+  if (connectType == 'connect') {
+    await browser.disconnect();
+  } else {
+    await browser.close();
+  }
+  return;
+}
 
 export async function generatePDF(chart, width, height) {
-  const browser = await puppeteer.connect(puppeteerSettings);
+  const browser = await createPuppeteer();
   const page = await browser.newPage();
   const margin = `margin=${app_settings.print.overall_margin || 0}`;
   await page.goto(`${urlPath}/chart/${chart._id}/pdf?${margin}`, { waitUntil: ['load', 'networkidle0'] });
@@ -26,12 +46,12 @@ export async function generatePDF(chart, width, height) {
     printBackground: true
   });
   await page.close();
-  await browser.disconnect();
+  await destroyPuppeteer(browser);
   return pdf;
 }
 
 export async function generatePNG(chart, params) {
-  const browser = await puppeteer.connect(puppeteerSettings);
+  const browser = await createPuppeteer();
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -55,12 +75,12 @@ export async function generatePNG(chart, params) {
     type: params.type ? params.type : 'png'
   });
   await page.close();
-  await browser.disconnect();
+  await destroyPuppeteer(browser);
   return png;
 }
 
 export async function generateThumb(chart, params) {
-  const browser = await puppeteer.connect(puppeteerSettings);
+  const browser = await createPuppeteer();
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -91,7 +111,7 @@ export async function generateThumb(chart, params) {
   });
 
   await page.close();
-  await browser.disconnect();
+  await destroyPuppeteer(browser);
 
   if (app_settings.s3.enable) {
 
