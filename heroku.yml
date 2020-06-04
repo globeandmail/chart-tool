@@ -1,0 +1,22 @@
+setup:
+  addons:
+    - plan: mongolab:sandbox
+    AS: MONGODB
+build:
+  languages:
+    - nodejs
+  docker:
+    web: docker/prod.Dockerfile
+  config:
+    NODE_ENV: production
+    MAIL_URL: smtp://user:password@mailhost:port/
+    DOCKER: 'TRUE'
+    PORT: 3000
+    ROOT_URL: http://chart-tool-demo.herokuapp.com
+release:
+  command:
+    - ./deployment-tasks.sh
+  image: worker
+run:
+  web: /docker/entrypoint.sh node main.js
+    image: web
