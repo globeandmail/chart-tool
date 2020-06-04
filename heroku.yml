@@ -10,10 +10,6 @@ setup:
     as: MONGODB
 build:
   docker:
-    web: docker/prod.Dockerfile
-release:
-  image: web
-  command:
-    - ./deployment-tasks.sh
+    web: prod.Dockerfile
 run:
   web: /docker/entrypoint.sh node main.js
