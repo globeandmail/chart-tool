@@ -40,6 +40,7 @@ export function cleanMeteorLibs() {
     `${gulpConfig.meteorBundle}/chart-tool.min.js`,
     `${gulpConfig.meteorBundle}/settings.js`,
     `${gulpConfig.meteorPath}/imports/ui/style/chart-tool.css`
+    `${gulpConfig.meteorPath}/imports/ui/style/chart-tool.min.css`
   ], { force: true });
 }
 
