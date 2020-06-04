@@ -8,10 +8,6 @@ export default class ChartEmbed extends Component {
     super(props);
   }
 
-  useBase64Images() {
-    return !(app_settings.s3 && app_settings.s3.enable);
-  }
-
   selectEmbed(event) {
     event.target.select();
   }
@@ -47,7 +43,7 @@ export default class ChartEmbed extends Component {
         document.getElementsByTagName("head")[0].appendChild(j);
       }
     })(this);
-  </script>${this.useBase64Images() ? `\n<img src="${this.props.chart.img}" class="${prefix}base64img ${prefix}thumbnail" />` : ''}
+  </script>
 </div>`;
   }
 
