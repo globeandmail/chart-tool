@@ -12,6 +12,6 @@ build:
   config:
     HEROKU: ''
   docker:
-    web: prod.Dockerfile
+    web: Dockerfile.prod
 run:
   web: /docker/entrypoint.sh node main.js
