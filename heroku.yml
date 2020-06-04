@@ -1,10 +1,10 @@
 setup:
   addons:
-    - plan: mongolab:sandbox
-    AS: MONGODB
+  - plan: mongolab:sandbox
+    as: MONGODB
 build:
   languages:
-    - nodejs
+  - nodejs
   docker:
     web: docker/prod.Dockerfile
   config:
