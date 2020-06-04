@@ -12,9 +12,8 @@ build:
     PORT: 3000
     ROOT_URL: http://chart-tool-demo.herokuapp.com
 release:
+  image: web
   command:
     - ./deployment-tasks.sh
-  image: worker
 run:
   web: /docker/entrypoint.sh node main.js
-  image: web
