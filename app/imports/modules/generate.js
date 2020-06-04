@@ -23,12 +23,8 @@ async function createPuppeteer() {
 }
 
 async function destroyPuppeteer(browser) {
-  const connectType = process.env.CHROME_REMOTE_URL ? 'connect' : 'launch';
-  if (connectType == 'connect') {
-    await browser.disconnect();
-  } else {
-    await browser.close();
-  }
+  const disconnectType = process.env.CHROME_REMOTE_URL ? 'disconnect' : 'close';
+  await browser[disconnectType]();
   return;
 }
 
