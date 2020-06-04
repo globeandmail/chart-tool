@@ -107,6 +107,10 @@ dist/
 
 app/.buildpacks
 
-# chart-tool.js
-# chart-tool.min.js
 chart-tool.js.map
+
+app/imports/modules/chart-tool.js
+app/imports/modules/chart-tool.min.js
+app/imports/modules/settings.js
+app/imports/ui/style/chart-tool.css
+app/imports/ui/style/chart-tool.min.css

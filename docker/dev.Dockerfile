@@ -9,16 +9,6 @@ FROM node:12.16.1-alpine
 
 # Setup environment variables that will be available to the instance
 ENV METEOR_VERSION 1.10.2
-ENV APP_HOME /${ROOT_DIR}
-ENV MONGO_URL ${MONGO_URL}
-
-# Create a directory for our application
-# and set it as the working directory
-RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/app
-RUN mkdir $APP_HOME/app/.meteor
-
-WORKDIR $APP_HOME
 
 RUN apk add --update --no-cache bash
 
@@ -44,17 +34,28 @@ RUN export TEMP_PACKAGES="alpine-sdk libc6-compat python linux-headers" && \
     ln -s /root/.meteor && \
     apk del $TEMP_PACKAGES
 
-# Fix permissions warning; https://github.com/meteor/meteor/issues/7959
-ENV METEOR_ALLOW_SUPERUSER=1
+ENV APP_HOME /chart-tool
+
+# Create a directory for our application
+# and set it as the working directory
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/app
+RUN mkdir $APP_HOME/app/.meteor
+
+WORKDIR $APP_HOME
 
 # Copy app and meteor package.json and package-lock.json into container
 COPY package*.json $APP_HOME/
 COPY app/package*.json $APP_HOME/app/
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+
+# Fix permissions warning; https://github.com/meteor/meteor/issues/7959
+ENV METEOR_ALLOW_SUPERUSER=1
+
 # Install gulp so we can run our servers, then npm install
 # everything and rebuild node-sass
-RUN npm install -g gulp-cli && \
-  npm ci --unsafe-perm && \
+RUN npm ci --unsafe-perm && \
   npm rebuild node-sass
 
 COPY . $APP_HOME
@@ -63,6 +64,7 @@ COPY ./docker/entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
-EXPOSE 3000 3030
+EXPOSE 3000
+EXPOSE 3030
 
 CMD ["/bin/sh" , "-c" , "cd ./app && meteor --no-release-check"]

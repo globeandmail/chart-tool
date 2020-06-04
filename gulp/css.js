@@ -29,9 +29,7 @@ function scssCompileDev() {
 function scssCompileBuild() {
   return src(sourceCss)
     .pipe(sass(sassOptions))
-    .pipe(postCss([
-      autoPrefixer(autoprefixerOptions)]
-    ))
+    .pipe(postCss([autoPrefixer()]))
     .pipe(csso({ debug: true }))
     .pipe(rename('chart-tool.css'))
     .pipe(dest(`${gulpConfig.meteorPath}/imports/ui/style`))

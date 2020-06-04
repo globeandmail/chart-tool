@@ -62,13 +62,17 @@
     "gulp-util": "^3.0.8",
     "rollup": "^1.32.1",
     "rollup-plugin-eslint": "^7.0.0",
-    "rollup-plugin-uglify": "^6.0.4",
+    "rollup-plugin-terser": "^6.1.0",
     "run-sequence": "^2.2.1",
     "yargs": "^15.3.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cd app && meteor npm ci"
+    "postinstall": "cd app && meteor npm ci",
+    "libServe": "./node_modules/.bin/gulp libServe",
+    "meteorPrebuild": "./node_modules/.bin/gulp meteorPrebuild",
+    "libBuild": "./node_modules/.bin/gulp libBuild",
+    "gulp": "./node_modules/.bin/gulp default"
   },
   "keywords": [
     "charts",

@@ -4,7 +4,7 @@ import RollupConfig from './rollup.config.js';
 import gulpConfig from './gulp.config.js';
 import chartToolConfig from '../custom/chart-tool-config.json';
 import { rollup } from 'rollup';
-import { uglify } from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 import { eslint } from 'rollup-plugin-eslint';
 import strip from '@rollup/plugin-strip';
 import replace from '@rollup/plugin-replace';
@@ -83,14 +83,14 @@ async function rollupMeteorDev(done) {
 
 async function rollupBuild(done) {
   const rConfig = new RollupConfig();
-  rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json'] }));
+  rConfig.plugins.splice(1, 0, eslint({ exclude: ['node_modules/**', '**/*.json', 'package.json'] }));
   rConfig.plugins.push(
     strip({
       debugger: true,
       functions: ['assert.*', 'debug', 'alert'],
       sourceMap: false
     }),
-    uglify({
+    terser({
       output: {
         preamble: `/* Chart Tool v${gulpConfig.version}-${gulpConfig.build} | https://github.com/globeandmail/chart-tool | @license MIT */`
       }

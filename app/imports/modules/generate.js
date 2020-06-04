@@ -1,21 +1,22 @@
 import puppeteer from 'puppeteer';
-import { Meteor } from 'meteor/meteor';
 import AWS from 'aws-sdk';
 import { app_settings } from './settings';
 
+const urlPath = `${process.env.ROOT_URL}:${process.env.PORT}`;
+
+const puppeteerArgs = [
+  '--headless', '--disable-gpu', '--no-sandbox', '--enable-font-antialiasing', '--font-render-hinting=medium', '--hide-scrollbars', '--disable-dev-shm-usage', '--disable-logging'
+];
+
 const puppeteerSettings = {
-  args: [
-    '--enable-font-antialiasing',
-    '--font-render-hinting=medium',
-    '--hide-scrollbars'
-  ]
+  browserWSEndpoint: `${urlPath}?${puppeteerArgs.join('&')}`
 };
 
 export async function generatePDF(chart, width, height) {
-  const browser = await puppeteer.launch(puppeteerSettings);
+  const browser = await puppeteer.connect(puppeteerSettings);
   const page = await browser.newPage();
   const margin = `margin=${app_settings.print.overall_margin || 0}`;
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/pdf?${margin}`, { waitUntil: ['load', 'networkidle0'] });
+  await page.goto(`${urlPath}/chart/${chart._id}/pdf?${margin}`, { waitUntil: ['load', 'networkidle0'] });
   await page.emulateMedia('screen');
   const pdf = await page.pdf({
     width: `${width}mm`,
@@ -25,12 +26,12 @@ export async function generatePDF(chart, width, height) {
     printBackground: true
   });
   await page.close();
-  await browser.close();
+  await browser.disconnect();
   return pdf;
 }
 
 export async function generatePNG(chart, params) {
-  const browser = await puppeteer.launch(puppeteerSettings);
+  const browser = await puppeteer.connect(puppeteerSettings);
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -42,7 +43,7 @@ export async function generatePNG(chart, params) {
   if (params.hide.head) hideStr = `${hideStr}&hideHead=true`;
   if (params.hide.qualifier) hideStr = `${hideStr}&hideQualifier=true`;
   if (params.hide.footer) hideStr = `${hideStr}&hideFooter=true`;
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&height=${params.height}${optionalMargin}${hideStr}`, { waitUntil: ['load', 'networkidle0'] });
+  await page.goto(`${urlPath}/chart/${chart._id}/png?width=${params.width}&height=${params.height}${optionalMargin}${hideStr}`, { waitUntil: ['load', 'networkidle0'] });
 
   const png = await page.screenshot({
     clip: {
@@ -54,12 +55,12 @@ export async function generatePNG(chart, params) {
     type: params.type ? params.type : 'png'
   });
   await page.close();
-  await browser.close();
+  await browser.disconnect();
   return png;
 }
 
 export async function generateThumb(chart, params) {
-  const browser = await puppeteer.launch(puppeteerSettings);
+  const browser = await puppeteer.connect(puppeteerSettings);
   const page = await browser.newPage();
   await page.setViewport({
     width: params.width,
@@ -68,7 +69,7 @@ export async function generateThumb(chart, params) {
   });
   const optionalMargin = params.margin ? `&margin=${params.margin}` : '',
     optionalHeight = params.height ? `&height=${params.height}` : '';
-  await page.goto(`${Meteor.absoluteUrl()}chart/${chart._id}/png?width=${params.width}&dynamicHeight=${params.dynamicHeight}${optionalHeight}${optionalMargin}`, { waitUntil: ['load', 'networkidle0'] });
+  await page.goto(`${urlPath}/chart/${chart._id}/png?width=${params.width}&dynamicHeight=${params.dynamicHeight}${optionalHeight}${optionalMargin}`, { waitUntil: ['load', 'networkidle0'] });
 
   const chartElement = await page.$('.chart-png');
   const chartBBox = await chartElement.boundingBox();
@@ -90,8 +91,7 @@ export async function generateThumb(chart, params) {
   });
 
   await page.close();
-
-  await browser.close();
+  await browser.disconnect();
 
   if (app_settings.s3.enable) {
 

@@ -18,7 +18,6 @@ export default {
 
   meteorPort: 3000,
   browserSyncPort: 3030,
-  browserSyncUIPort: 3060,
 
   meteorPath,
   meteorBundle,

@@ -15,12 +15,11 @@ function reload(done) {
 function serve(done) {
   browserSyncServer.init({
     port: gulpConfig.browserSyncPort,
-    ui: { port: gulpConfig.browserSyncUIPort },
-    server: {
-      baseDir: './',
-      open: false
-    },
-    ghostMode: false
+    ui: false,
+    ghostMode: false,
+    open: false,
+    notify: false,
+    server: { baseDir: './', }
   });
   done();
 }

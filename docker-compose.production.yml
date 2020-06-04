@@ -1,19 +1,18 @@
+# we can probably comment out the mongo service eventually, as we'll be directly
+# connecting to an AWS service?
 version: '3'
 services:
   app:
-    volumes:
-      - ./:/chart-tool
     build:
       context: .
-      dockerfile: docker/dev.Dockerfile
+      dockerfile: docker/prod.Dockerfile
     ports:
       - '3000:3000'
-      - '3030:3030'
     depends_on:
       - mongo
       - browserless
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       MONGO_URL: mongodb://mongo:27017/meteor
       MAIL_URL: smtp://user:password@mailhost:port/
       DOCKER: 'TRUE'

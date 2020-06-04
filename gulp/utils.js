@@ -37,6 +37,7 @@ export function cleanMeteorBuild() {
 export function cleanMeteorLibs() {
   return del([
     `${gulpConfig.meteorBundle}/chart-tool.js`,
+    `${gulpConfig.meteorBundle}/chart-tool.min.js`,
     `${gulpConfig.meteorBundle}/settings.js`,
     `${gulpConfig.meteorPath}/imports/ui/style/chart-tool.css`
   ], { force: true });

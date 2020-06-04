@@ -13,7 +13,7 @@ export function isFloat(n) {
 export function isEmpty(val) {
   if (val.constructor === Object) {
     for (let prop in val) {
-      if (val.hasOwnProperty(prop)) { return false; }
+      if (Object.prototype.hasOwnProperty.call(val, prop)) { return false; }
     }
     return true;
   } else if (val.constructor === Array) {

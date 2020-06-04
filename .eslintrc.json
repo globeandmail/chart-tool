@@ -40,8 +40,12 @@
     "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
-    "max-statements": 45,
-    "max-depth": 4
+    "max-statements": 0,
+    "max-depth": 0,
+    "node/no-unsupported-features/es-syntax": ["error", {
+      "version": ">=8.0.0",
+      "ignores": ["modules"]
+    }]
   },
   "globals": {
     "DocumentTouch": false
