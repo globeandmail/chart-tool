@@ -1,9 +1,9 @@
 # Chart Tool's front end API
 
-Chart Tool's front end library binds itself to the window and exposes a basic API that can be used to add, remove, update or manipulate charts. 
+Chart Tool's front end library binds itself to the window and exposes a basic API that can be used to add, remove, update or manipulate charts.
 
 ----------
-   
+
 ### Methods
 
 All methods are bound to the `ChartTool` object, which is itself bound to the `window`.
@@ -51,7 +51,7 @@ Returns some general information about the Chart Tool library.
 
 ### Custom events
 
-Chart Tool also fires a series of custom events using [d3.dispatch](https://github.com/mbostock/d3/wiki/Internals#d3_dispatch). 
+Chart Tool also fires a series of custom events using [d3.dispatch](https://github.com/mbostock/d3/wiki/Internals#d3_dispatch).
 
 To use the `dispatch` events, place a `<script>` tag **before** both `d3` and the Chart Tool library have been loaded, then hook into the dispatcher functions by adding your behaviour to a `__charttooldispatcher` object bound to the window. We recommend using closures to ensure that your dispatcher functions don't pollute the global scope.
 
@@ -60,19 +60,19 @@ For example:
 ```html
 <script type="text/javascript">
   (function(root) {
-  
+
     root.__charttooldispatcher = root.__charttooldispatcher || {};
-  
+
     var dispatcher = root.__charttooldispatcher;
-  
+
     dispatcher.start = function(d) {
       console.log("Chart starts being drawn");
     };
-  
+
     dispatcher.finish = function(d) {
-      console.log("Chart of id " + d.id + " is finished drawing!");
+      console.log(`Chart of id ${d.id} is finished drawing!`);
     };
-  
+
   })(this);
 </script>
 ```

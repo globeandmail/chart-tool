@@ -67,4 +67,4 @@ ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
 EXPOSE 3030
 
-CMD ["/bin/sh" , "-c" , "cd ./app && meteor --no-release-check"]
+CMD ["/bin/sh" , "-c" , "cd ./app && meteor --no-release-check --exclude-archs 'web.browser.legacy, web.cordova'"]

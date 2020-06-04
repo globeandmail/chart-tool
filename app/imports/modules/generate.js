@@ -9,7 +9,7 @@ const puppeteerArgs = [
 ];
 
 const puppeteerSettings = {
-  browserWSEndpoint: `${urlPath}?${puppeteerArgs.join('&')}`
+  browserWSEndpoint: `${process.env.CHROME_REMOTE_URL}?${puppeteerArgs.join('&')}`
 };
 
 export async function generatePDF(chart, width, height) {

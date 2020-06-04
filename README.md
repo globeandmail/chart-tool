@@ -15,7 +15,7 @@ Chart Tool is a platform for creating, storing and displaying beautiful, respons
 
 * [How it works](#how-it-works)
 * [Features](#features)
-* [Examples and demo](#examples-and-demo)
+* [Examples](#examples)
 * [Getting started](#getting-started)
 * [Tutorials](#tutorials)
 * [Version](#version)
@@ -61,44 +61,44 @@ Chart Tool is made up of two parts:
 * **Lightweight libraries:** The front-end CSS and JS libraries clock in at a combined **45.536kB** minified and gzipped
 
 
-## Examples and demo
+## Examples
 
 Examples of the types of charts Chart Tool can generate can be found [here](http://globeandmail.github.io/chart-tool).
-
-For a demo of the back end interface used to generate charts, images and PDFs, check out our [demo app](https://chart-tool-demo.herokuapp.com/).
 
 
 ## Getting started
 
-*Curious to try out Chart Tool, but don't want to go through the process of setting it up? Try out our [hosted demo version](https://chart-tool-demo.herokuapp.com/).*
+Chart Tool is designed to work with Docker, a popular virtualization platform that simplifies development and deployment. If using Docker, you won't have to install any of the project's dependencies.
 
-First, you'll need [Node.js](https://nodejs.org) 14.3.0 or greater installed. We recommend using [nvm](https://github.com/creationix/nvm) to keep your Node version in sync with what Chart Tool expects.
+You'll need both Docker and docker-compose for this project. To install them, follow the [instructions here](https://docs.docker.com/compose/install/). You may want to [increase your docker-machine memory size](https://gist.github.com/scotthaleen/f7ba55ca3cedd4a8097f2f139177ddc7) to 2048mb or 4096mb if you can afford it.
 
-Next, you'll need to [install Meteor](https://www.meteor.com/install).
-
-You'll also need [Gulp](http://gulpjs.com/).
+Once that's done, clone the Chart Tool repo to your computer.
 
 ```sh
-$ npm install -g gulp
+$ git clone git@github.com:globeandmail/chart-tool.git && cd chart-tool
 ```
 
-Then, clone the Chart Tool repo and install your NPM dependencies for both the root project and the backend, which will make sure Gulp is set up and can run your project:
+You can now set up the Chart Tool in either development mode — useful for tweaking styles and exploring the tool — or production mode, which is ready to be deployed to a Linux server.
+
+To run Chart Tool in deployment mode, you'll need to build the image (this may take up to 10 minutes the first time as Docker downloads and sets up the virtual environment):
 
 ```sh
-$ git clone [git-repo-url] && cd chart-tool
-$ npm install
+docker-compose -f docker-compose.yml build
 ```
 
-After that, you'll need to do `cd meteor && meteor` to get Meteor running for the first time, which provisions the Mongo database and installs all the dependencies it'll need (this might take a minute). Once that's done, you're in business. Stop the Meteor server (`CTRL-C` on a Mac) and `cd` back to the parent directory.
-
-Then, all you need to do is:
+After that, you can stand up the server by running:
 
 ```sh
-$ gulp
+docker-compose -f docker-compose.yml up
 ```
 
 That's it! You're running your own development copy of Chart Tool!  :tada: :tada: :tada:
 
+If you'd like to work on the front-end interface, the command is slightly different:
+
+```sh
+docker-compose -f docker-compose.yml run --service-ports app npm run serve
+```
 
 ## Tutorials
 
@@ -112,7 +112,6 @@ Otherwise, these are some other tutorials you might want to check out:
 * [Hook up your Chart Tool to AWS for automatic fallback image generation](https://github.com/globeandmail/chart-tool/blob/master/tutorials/thumbnails.md)
 * [Set up print PDF export](https://github.com/globeandmail/chart-tool/blob/master/tutorials/print.md)
 * [Deploy Chart Tool to your own server](https://github.com/globeandmail/chart-tool/blob/master/tutorials/deploying.md)
-* [Check out other available gulp commands](https://github.com/globeandmail/chart-tool/blob/master/tutorials/gulp.md)
 * [Read up on the front-end API](https://github.com/globeandmail/chart-tool/blob/master/tutorials/api.md)
 * [Learn more about the interface](https://github.com/globeandmail/chart-tool/blob/master/tutorials/interface.md)
 
@@ -124,13 +123,13 @@ Otherwise, these are some other tutorials you might want to check out:
 
 ## License
 
-Chart Tool © 2017 The Globe and Mail. It is free software, and may be redistributed under the terms specified in our [MIT license](https://github.com/globeandmail/chart-tool/blob/master/LICENSE.md).
+Chart Tool © 2020 The Globe and Mail. It is free software, and may be redistributed under the terms specified in our [MIT license](https://github.com/globeandmail/chart-tool/blob/master/LICENSE.md).
 
 
 ## Get in touch
 
 If you've got any questions, feel free to send us an email, or give us a shout on Twitter:
 
-[![Tom Cardoso](https://avatars0.githubusercontent.com/u/2408118?v=3&s=200)](https://github.com/tomcardoso) | [![Jeremy Agius](https://pbs.twimg.com/profile_images/1817572938/jagius_200x200.jpeg)](https://github.com/jagius) | [![Michael Pereira](https://avatars0.githubusercontent.com/u/212666?v=3&s=200)](https://github.com/monkeycycle) | [![Matt Frehner](https://avatars0.githubusercontent.com/u/768618?v=3&s=200)](https://github.com/mattfrehner)
+[![Tom Cardoso](https://avatars0.githubusercontent.com/u/2408118?v=3&s=200)](https://github.com/tomcardoso) | [![Jeremy Agius](https://pbs.twimg.com/profile_images/1817572938/jagius_200x200.jpeg)](https://github.com/jagius) | [![Matt Frehner](https://avatars0.githubusercontent.com/u/768618?v=3&s=200)](https://github.com/mattfrehner)
 ---|---|---|---
-[Tom Cardoso](mailto:tcardoso@globeandmail.com) <br> [@tom_cardoso](https://www.twitter.com/tom_cardoso) | [Jeremy Agius](mailto:jagius@globeandmail.com) <br> [@j_agius](https://www.twitter.com/j_agius) | [Michael Pereira](mailto:mpereira@globeandmail.com) <br> [@monkeycycle_org](https://www.twitter.com/monkeycycle_org) | [Matt Frehner](mailto:mfrehner@globeandmail.com) <br> [@mattfrehner](https://www.twitter.com/mattfrehner)
+[Tom Cardoso](mailto:tcardoso@globeandmail.com) <br> [@tom_cardoso](https://www.twitter.com/tom_cardoso) | [Jeremy Agius](mailto:jagius@globeandmail.com) <br> [@j_agius](https://www.twitter.com/j_agius) | [Matt Frehner](mailto:mfrehner@globeandmail.com) <br> [@mattfrehner](https://www.twitter.com/mattfrehner)

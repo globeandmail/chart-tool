@@ -2,3 +2,7 @@
 **/.meteor/local
 **/.meteor/dev_bundle
 .DS_Store
+examples
+tutorials
+dist
+**/.git

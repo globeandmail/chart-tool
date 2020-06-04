@@ -69,10 +69,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "cd app && meteor npm ci",
-    "libServe": "./node_modules/.bin/gulp libServe",
-    "meteorPrebuild": "./node_modules/.bin/gulp meteorPrebuild",
-    "libBuild": "./node_modules/.bin/gulp libBuild",
-    "gulp": "./node_modules/.bin/gulp default"
+    "serve": "./node_modules/.bin/gulp serve",
+    "build": "./node_modules/.bin/gulp build"
   },
   "keywords": [
     "charts",
