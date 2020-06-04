@@ -3,8 +3,6 @@ setup:
   - plan: mongolab:sandbox
     as: MONGODB
 build:
-  languages:
-  - nodejs
   docker:
     web: docker/prod.Dockerfile
   config:
