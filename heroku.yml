@@ -19,4 +19,4 @@ release:
   image: worker
 run:
   web: /docker/entrypoint.sh node main.js
-    image: web
+  image: web
