@@ -1,16 +1,16 @@
 setup:
-  addons:
-  - plan: mongolab:sandbox
-    as: MONGODB
-build:
-  docker:
-    web: docker/prod.Dockerfile
   config:
     NODE_ENV: production
     MAIL_URL: smtp://user:password@mailhost:port/
     DOCKER: 'TRUE'
     PORT: 3000
     ROOT_URL: http://chart-tool-demo.herokuapp.com
+  addons:
+  - plan: mongolab:sandbox
+    as: MONGODB
+build:
+  docker:
+    web: docker/prod.Dockerfile
 release:
   image: web
   command:
