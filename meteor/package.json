@@ -21,7 +21,7 @@
     "history": "^4.7.2",
     "indexof": "0.0.1",
     "meteor-node-stubs": "^0.3.3",
-    "papaparse": "^4.3.7",
+    "papaparse": "^5.2.0",
     "path-to-regexp": "^2.2.0",
     "puppeteer": "^1.2.0",
     "query-string": "^6.0.0",
