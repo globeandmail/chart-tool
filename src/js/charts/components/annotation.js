@@ -441,9 +441,11 @@ export function drawTextAnnotation(i, config, obj) {
   if (lines > 1) {
     if (config.valign === 'central') {
       textNode.attr('y', Number(textNode.attr('y')) - (textMeasurement.height - tspanHeight) / 2);
+      // textNode.selectAll('tspan').attr('y', Number(textNode.attr('y')));
     }
     if (config.valign === 'baseline') {
       textNode.attr('y', Number(textNode.attr('y')) + tspanHeight - textMeasurement.height);
+      // textNode.selectAll('tspan').attr('y', Number(textNode.attr('y')));
     }
   }
 
@@ -451,10 +453,12 @@ export function drawTextAnnotation(i, config, obj) {
 
   if (Number(textNode.attr('y')) < 0) {
     textNode.attr('y', 0);
+    // textNode.selectAll('tspan').attr('y', 0);
   }
 
   if (Number(textNode.attr('y')) > obj.dimensions.computedHeight() - textMeasurement.height) {
     textNode.attr('y', obj.dimensions.computedHeight() - textMeasurement.height);
+    // textNode.selectAll('tspan').attr('y', Number(textNode.attr('y')));
   }
 
   // x bounds positioning

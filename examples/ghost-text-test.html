@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Chart Tool — chart tests</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <style type="text/css">
+    .wrapper {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <!-- CHART TOOL v1.4.1-16 -->
+    <!-- edited: Mon May 04 2020 18:06:17 GMT-0400 (Eastern Daylight Time) -->
+    <!-- slug: 0504-nw-na-covid-travel_land-crossings -->
+    <div class="ct-chart" data-chartid="ct-Wky5wsAcih47hfy9u">
+      <script type="text/javascript">
+        (function(root) {
+          var data = {
+            "version": "1.4.1",
+            "id": "Wky5wsAcih47hfy9u",
+            "heading": "Cumulative number of Canadians crossing by land from U.S. into Canada",
+            "qualifier": "In millions",
+            "source": "THE GLOBE AND MAIL, SOURCE: statistics canada. Note: Only those crossing in a Canadian-licensed automobile.",
+            "tags": [],
+            "chart": {
+              "class": "primary",
+              "hasHours": false,
+              "data": "Day,\"March, 2020\",\"March, 2019\"\n0001-01-01,0.087192,0.055419\n0002-01-01,0.139399,0.1342\n0003-01-01,0.185701,0.223754\n0004-01-01,0.233079,0.274141\n0005-01-01,0.285551,0.320567\n0006-01-01,0.344905,0.367594\n0007-01-01,0.426282,0.417259\n0008-01-01,0.516854,0.479793\n0009-01-01,0.567067,0.567846\n0010-01-01,0.60569,0.656195\n0011-01-01,0.645789,0.715266\n0012-01-01,0.68683,0.775557\n0013-01-01,0.728396,0.836449\n0014-01-01,0.771135,0.903249\n0015-01-01,0.815362,0.987598\n0016-01-01,0.858281,1.100595\n0017-01-01,0.90043,1.231513\n0018-01-01,0.948612,1.294118\n0019-01-01,0.99757,1.34659\n0020-01-01,1.048475,1.404963\n0021-01-01,1.088491,1.457287\n0022-01-01,1.122676,1.515144\n0023-01-01,1.145541,1.600552\n0024-01-01,1.162076,1.702212\n0025-01-01,1.175136,1.761466\n0026-01-01,1.185755,1.816674\n0027-01-01,1.195188,1.876082\n0028-01-01,1.201847,1.936335\n0029-01-01,1.207277,2.005215\n0030-01-01,1.213034,2.097167\n0031-01-01,1.218779,2.207502",
+              "options": {
+                "annotations": true,
+                "expanded": false,
+                "footer": true,
+                "head": true,
+                "indexed": false,
+                "interpolation": "linear",
+                "legend": true,
+                "qualifier": true,
+                "share_data": false,
+                "social": false,
+                "stacked": false,
+                "tips": false,
+                "type": "line",
+                "x_axis": true,
+                "y_axis": true
+              },
+              "x_axis": {
+                "display": true,
+                "scale": "time",
+                "ticks": "auto",
+                "orient": "bottom",
+                "format": "comma",
+                "nice": false
+              },
+              "y_axis": {
+                "display": true,
+                "scale": "linear",
+                "ticks": "6",
+                "orient": "right",
+                "format": "round1",
+                "max": "2.5",
+                "nice": false
+              },
+              "annotations": {
+                "highlight": [],
+                "range": [
+                  {
+                    "axis": "x",
+                    "start": "0010-01-01"
+                  }
+                ],
+                "text": [
+                  {
+                    "text": "By March 10,\ncrossings had\nfallen out of\nsync with 2019",
+                    "valign": "bottom",
+                    "text-align": "left",
+                    "position": {
+                      "x": 0.3183,
+                      "y": 0.1849
+                    }
+                  },
+                  {
+                    "text": "Border\nclosed",
+                    "valign": "top",
+                    "text-align": "left",
+                    "position": {
+                      "x": 0.6728,
+                      "y": 0.6824
+                    }
+                  }
+                ],
+                "pointer": [
+                  {
+                    "curve": 0.3,
+                    "position": [
+                      {
+                        "x": 0.3963,
+                        "y": 0.222
+                      },
+                      {
+                        "x": 0.334,
+                        "y": 0.2788
+                      }
+                    ]
+                  },
+                  {
+                    "curve": 0.2,
+                    "position": [
+                      {
+                        "x": 0.6611,
+                        "y": 0.6736
+                      },
+                      {
+                        "x": 0.6358,
+                        "y": 0.6225
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          };
+          root.ChartTool = root.ChartTool || [];
+          root.ChartTool.push({id: "ct-" + data.id, data: data});
+          var b = document.getElementsByTagName("body")[0];
+          if (!b.classList.contains('ct-charttool-init')) {
+            b.classList.add('ct-charttool-init');
+            var c = document.createElement('link');
+            var j = document.createElement('script');
+            c.href = '../dist/dev/chart-tool.css'; c.rel = 'stylesheet';
+            j.src = '../dist/dev/chart-tool.js'; j.async = true; j.defer = true;
+            document.getElementsByTagName('head')[0].appendChild(c);
+            document.getElementsByTagName('head')[0].appendChild(j);
+          }
+        })(this);
+      </script>
+    </div>
+
+  </div>
+</body>
+</html>

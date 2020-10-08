@@ -89,6 +89,7 @@ export function wrapAnnoText(textNode) {
         tspan = text.append('tspan')
           .attr('x', x)
           .attr('dy', `${++lineNumber > 0 ? lineHeight : 0}em`)
+          // .attr('dy', `${++lineNumber > 0 ? lineHeight * lineNumber : 0}em`)
           .text(word);
       }
     }
